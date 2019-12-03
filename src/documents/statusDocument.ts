@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Repository } from './typings/git';
+import { Repository } from '../typings/git';
 
 export default class StatusDocument {
 
@@ -17,6 +17,11 @@ export default class StatusDocument {
 
     // Start with printing a header and start resolving
     this._lines = [];
+
+    repository.getCommit(repository.state.HEAD!.commit!)
+      .then(c => {
+        console.log(c.message);
+      });
 
     this._lines.push(`Head: ${repository.state.HEAD!.name} ${repository.state.HEAD!.commit!}`);
     this._lines.push('');

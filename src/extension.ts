@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import { workspace, languages, window, extensions, commands, ExtensionContext, Disposable, ViewColumn, FileChangeType } from 'vscode';
-import ContentProvider, { encodeLocation } from './provider';
+import ContentProvider, { encodeLocation } from './contentProvider';
 import { API as GitAPI, GitExtension, APIState, Status } from './typings/git';
 
 

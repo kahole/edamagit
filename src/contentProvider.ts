@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import StatusDocument from './statusDocument';
+import StatusDocument from './documents/statusDocument';
 import { Repository } from './typings/git';
 
-export default class Provider implements vscode.TextDocumentContentProvider {
+export default class ContentProvider implements vscode.TextDocumentContentProvider {
 
   static scheme = 'magit';
 
@@ -71,7 +71,7 @@ let seq = 0;
 
 export function encodeLocation(uri: string): vscode.Uri {
   const query = uri;
-  return vscode.Uri.parse(`${Provider.scheme}:status.magit?${query}#${seq++}`);
+  return vscode.Uri.parse(`${ContentProvider.scheme}:status.magit?${query}#${seq++}`);
 }
 
 export function decodeLocation(uri: vscode.Uri): [vscode.Uri, vscode.Position] {

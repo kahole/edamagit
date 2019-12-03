@@ -1,5 +1,7 @@
 # magit README
 
+Inspired/port by/of Magit https://magit.vc/
+
 This is the README for your extension "magit". After writing up a brief description, we recommend including the following sections.
 
 ## Features
