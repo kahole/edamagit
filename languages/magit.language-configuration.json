@@ -1,7 +1,7 @@
 {
 	"folding": {
 		"markers": {
-			"start": "^(Unstaged changes)|(Recent commits)",
+			"start": "^(Unstaged changes)|(Staged changes)|(Recent commits)",
 			"end": "^\\.$"
 		}
 	}

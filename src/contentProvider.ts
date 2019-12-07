@@ -73,7 +73,7 @@ export function encodeLocation(uri: string): vscode.Uri {
   //return vscode.Uri.parse(`${ContentProvider.scheme}:status.magit?${query}#${seq++}`);
 }
 
-export function decodeLocation(uri: vscode.Uri): [vscode.Uri, vscode.Position] {
-  let [target, line, character] = <[string, number, number]>JSON.parse(uri.query);
-  return [vscode.Uri.parse(target), new vscode.Position(line, character)];
-}
+// export function decodeLocation(uri: vscode.Uri): [vscode.Uri, vscode.Position] {
+//   let [target, line, character] = <[string, number, number]>JSON.parse(uri.query);
+//   return [vscode.Uri.parse(target), new vscode.Position(line, character)];
+// }

@@ -1,3 +1,76 @@
+# TODO
+
+## General
+  - Use existing tooling as much as possible
+    make magit, but the fancy stuff should be vscode like
+
+## Git
+  - Git: either use vscode.git or run commands and "parse"
+     Nice example:
+       https://github.com/DonJayamanne/gitHistoryVSCode/blob/master/src/adapter/exec/gitCommandExec.ts
+
+  - Git extension API
+        https://github.com/microsoft/vscode/blob/master/extensions/git/src/api/api1.ts
+     noe svakt, men exposer git executable
+
+## UI
+  - Transient interface:
+    - Enkel: See section: languages->custom keybindings
+     Avansert (HELST IKKE):Key presses: https://github.com/lucax88x/CodeAceJumper/blob/master/src/inline-input.ts#L81
+
+  - Command pallete
+      When a command should be available: https://code.visualstudio.com/api/extension-guides/command#controlling-when-a-command-shows-up-in-the-command-palette
+      https://code.visualstudio.com/api/extension-guides/command#enablement-of-commands
+     - Dynamic selection, filter with `executeCommand("workbench.action.quickOpen", ">commandPREFIX");`
+
+  - Helm like branch selector: QuickPick https://code.visualstudio.com/api/references/vscode-api#QuickInput
+        window.showQuickPick(repository.state.refs.map( r => r.name!));
+          repository.checkout(branch.name)
+
+  - Name stuff: InputBox
+      e.g `window.showInputBox({prompt: "Name of your branch or whatever"});`
+
+  - Commit message: language mode "git-commit message"
+         should just open buffer. Git supports this out of the box, like when it opens $EDITOR
+
+### Folding: 
+    - enkel
+       https://code.visualstudio.com/api/language-extensions/language-configuration-guide
+    - avansert folding (HELST IKKE)
+       https://stackoverflow.com/questions/56509396/vscode-extension-folding-section-based-on-first-blank-line-found-or-to-the-sta
+       https://code.visualstudio.com/api/references/vscode-api#FoldingRangeProvider
+      https://code.visualstudio.com/api/references/vscode-api#languages.registerFoldingRangeProvider
+
+### Feedback, errors:
+  - Status bar message for git feedback stuff
+  - Erorrs: show ErrorMessage for feil
+
+## Languages
+  - Custom keybindings for buffer: define a language mode
+    - Example
+      ```json
+      {
+        "command": "editor.toggleFold",
+        "key": "tab",
+        "when": "editorTextFocus && editorLangId == magit-status"
+      },
+      ```
+  - Syntax
+    - Embedded Diff language mode syntax!
+      language mode "diff"
+    - Highlight branch names dynamically
+       https://code.visualstudio.com/api/references/vscode-api#languages.registerDocumentHighlightProvider
+
+## Notes
+  - VsVim:
+     Needs to work well with VsVim as well
+
+  - God inspo - REST client mode
+      https://github.com/Huachao/vscode-restclient
+
+
+-----
+
 # magit README
 
 Inspired/port by/of Magit https://magit.vc/

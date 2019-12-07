@@ -23,12 +23,21 @@
         "command": "extension.magit-choose",
         "title": "Magit Choose",
         "when": "editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit-branch",
+        "title": "Magit Branch",
+        "when": "editorLangId == magit-status"
       }
     ],
     "menus": {
       "commandPalette": [
         {
           "command": "extension.magit-choose",
+          "when": "editorLangId == magit-status"
+        },
+        {
+          "command": "extension.magit-branch",
           "when": "editorLangId == magit-status"
         }
       ]
@@ -57,6 +66,11 @@
       {
         "command": "extension.magit-choose",
         "key": "enter",
+        "when": "editorTextFocus && editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit-branch",
+        "key": "b",
         "when": "editorTextFocus && editorLangId == magit-status"
       }
     ]

@@ -8,7 +8,7 @@ export default class StatusDocument {
 
   private readonly _lines: string[];
 
-  private readonly SECTION_FOLD_REGION_END: string = ".";
+  private readonly SECTION_FOLD_REGION_END: string = '.';
 
   constructor(uri: vscode.Uri, magitStatus: MagitStatus, emitter: vscode.EventEmitter<vscode.Uri>) {
     this._uri = uri;
@@ -22,37 +22,39 @@ export default class StatusDocument {
 
     this._lines.push(`Head: ${magitStatus._state.HEAD!.name} ${magitStatus.commitCache[magitStatus._state.HEAD!.commit!].message}`);
     this._lines.push('');
-    this._lines.push(`Unstaged changes (${magitStatus._state.workingTreeChanges.length})`);
 
-    let unstagedChanges = magitStatus._state.workingTreeChanges
-      .map(change => {
-        return change.uri.toString() + "";
-      });
+    if (magitStatus.workingTreeChanges) {
 
-    // this._lines.push(...unstagedChanges);
-    this._lines.push(magitStatus.untrackedDiffTestProperty);
+      this._lines.push(`Unstaged changes (${magitStatus._state.workingTreeChanges.length})`);
 
-    this._lines.push(this.SECTION_FOLD_REGION_END);
+      let unstagedChanges = magitStatus.workingTreeChanges
+        .map(change => change.uri.path + "\n" + change.diff);
 
-    if (magitStatus.log) {
-      magitStatus.log
-      .forEach(commit => {
-        this._lines.push(`Recent commits`);
-        this._lines.push(`${commit.hash.slice(0, 7)} ${commit.message}`);
-      });
+      this._lines.push(...unstagedChanges);
       this._lines.push(this.SECTION_FOLD_REGION_END);
     }
 
-    // repository.log({ maxEntries: 10 })
-    //   .then(commits => {
-    //     let recentCommits = commits.map(commit =>
-    //       `${commit.hash.slice(0, 5)} ${commit.message}`);
+    if (magitStatus.indexChanges) {
 
-    //     this._lines.push(`Recent commits`);
-    //     this._lines.push(...recentCommits);
-    //   });
+      this._lines.push(`Staged changes (${magitStatus._state.indexChanges.length})`);
 
-    this._lines.push("");
+      let stagedChanges = magitStatus.indexChanges
+        .map(change => change.uri.path + "\n" + change.diff);
+
+      this._lines.push(...stagedChanges);
+      this._lines.push(this.SECTION_FOLD_REGION_END);
+    }
+
+    if (magitStatus.log) {
+      magitStatus.log
+        .forEach(commit => {
+          this._lines.push(`Recent commits`);
+          this._lines.push(`${commit.hash.slice(0, 7)} ${commit.message}`);
+        });
+      this._lines.push(this.SECTION_FOLD_REGION_END);
+    }
+
+    this._lines.push('');
   }
 
   get value() {

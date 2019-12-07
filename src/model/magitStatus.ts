@@ -1,22 +1,22 @@
 import { RepositoryState, Commit, Repository, Status, Change as GitChange } from "../typings/git";
 
 export interface Change extends GitChange {
-  readonly diff: string;
+  diff?: string;
 }
 
 export interface MagitStatus {
   _state: RepositoryState;
-  readonly stashes: Commit[] | undefined;
-  readonly log: Commit[] | undefined;
-  readonly commitCache: { [id: string] : Commit; };
-  readonly workingTreeChanges: Change[]| undefined;
-  readonly indexChanges: Change[]| undefined;
-  readonly mergeChanges: Change[]| undefined;
+  readonly stashes?: Commit[];
+  readonly log?: Commit[];
+  readonly commitCache: { [id: string]: Commit; };
+  readonly workingTreeChanges?: Change[];
+  readonly indexChanges?: Change[];
+  readonly mergeChanges?: Change[];
   // test:
   readonly untrackedDiffTestProperty: string;
 }
 
-export async function InflateStatus(repository: Repository) : Promise<MagitStatus> {
+export async function InflateStatus(repository: Repository): Promise<MagitStatus> {
 
   await repository.status();
 
@@ -24,25 +24,47 @@ export async function InflateStatus(repository: Repository) : Promise<MagitStatu
 
   let commitTasks = Promise.all(
     [repository.state.HEAD!.commit!]
-    .map(c => repository.getCommit(c)));
-    //.map(repository.getCommit);
+      .map(c => repository.getCommit(c)));
+  // .map(repository.getCommit));
 
-    repository.state.workingTreeChanges.map(c => {
-      console.log(c.uri.query);
-    });
+  let workingTreeChangesTasks = Promise.all(repository.state.workingTreeChanges
+    .map(change =>
+      repository.diffWithHEAD(change.uri.path)
+        .then<Change>(diff => {
+          let magitChange: Change = change;
+          magitChange.diff = diff;
+          return magitChange;
+        })
+    ));
 
-  let [log, commits, untrackedDiffTestProperty] = await Promise.all([logTask, commitTasks, repository.diff()]);
+    let indexChangesTasks = Promise.all(repository.state.indexChanges
+      .map(change =>
+        repository.diffIndexWithHEAD(change.uri.path)
+          .then<Change>(diff => {
+            let magitChange: Change = change;
+            magitChange.diff = diff;
+            return magitChange;
+          })
+      ));
 
-  let commitCache = commits.reduce( (prev, commit) => ({...prev, [commit.hash]: commit}), {});
+  let [log, commits, workingTreeChanges, indexChanges] =
+    await Promise.all([
+      logTask,
+      commitTasks,
+      workingTreeChangesTasks,
+      indexChangesTasks
+    ]);
+
+  let commitCache = commits.reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});
 
   return {
     _state: repository.state,
     stashes: undefined,
     log,
     commitCache,
-    workingTreeChanges: undefined,
-    indexChanges: undefined,
+    workingTreeChanges,
+    indexChanges,
     mergeChanges: undefined,
-    untrackedDiffTestProperty
+    untrackedDiffTestProperty: ""
   };
 }
