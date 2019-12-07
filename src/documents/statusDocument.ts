@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Repository } from '../typings/git';
+import { MagitStatus } from '../model/magitStatus';
 
 export default class StatusDocument {
 
@@ -8,7 +8,9 @@ export default class StatusDocument {
 
   private readonly _lines: string[];
 
-  constructor(uri: vscode.Uri, repository: Repository, emitter: vscode.EventEmitter<vscode.Uri>) {
+  private readonly SECTION_FOLD_REGION_END: string = ".";
+
+  constructor(uri: vscode.Uri, magitStatus: MagitStatus, emitter: vscode.EventEmitter<vscode.Uri>) {
     this._uri = uri;
 
     // The ReferencesDocument has access to the event emitter from
@@ -18,31 +20,39 @@ export default class StatusDocument {
     // Start with printing a header and start resolving
     this._lines = [];
 
-    repository.getCommit(repository.state.HEAD!.commit!)
-      .then(c => {
-        console.log(c.message);
-      });
-
-    this._lines.push(`Head: ${repository.state.HEAD!.name} ${repository.state.HEAD!.commit!}`);
+    this._lines.push(`Head: ${magitStatus._state.HEAD!.name} ${magitStatus.commitCache[magitStatus._state.HEAD!.commit!].message}`);
     this._lines.push('');
-    this._lines.push(`Unstaged changes (${repository.state.workingTreeChanges.length})`);
+    this._lines.push(`Unstaged changes (${magitStatus._state.workingTreeChanges.length})`);
 
-    let unstagedFiles = repository.state.workingTreeChanges
+    let unstagedChanges = magitStatus._state.workingTreeChanges
       .map(change => {
         return change.uri.toString() + "";
       });
 
-    this._lines.push(...unstagedFiles);
+    // this._lines.push(...unstagedChanges);
+    this._lines.push(magitStatus.untrackedDiffTestProperty);
 
-    repository.log({ maxEntries: 10 })
-      .then(commits => {
-        let recentCommits = commits.map(commit =>
-          `${commit.hash.slice(0, 5)} ${commit.message}`);
+    this._lines.push(this.SECTION_FOLD_REGION_END);
 
+    if (magitStatus.log) {
+      magitStatus.log
+      .forEach(commit => {
         this._lines.push(`Recent commits`);
-        this._lines.push(...recentCommits);
-
+        this._lines.push(`${commit.hash.slice(0, 5)} ${commit.message}`);
       });
+      this._lines.push(this.SECTION_FOLD_REGION_END);
+    }
+
+    // repository.log({ maxEntries: 10 })
+    //   .then(commits => {
+    //     let recentCommits = commits.map(commit =>
+    //       `${commit.hash.slice(0, 5)} ${commit.message}`);
+
+    //     this._lines.push(`Recent commits`);
+    //     this._lines.push(...recentCommits);
+    //   });
+
+    this._lines.push("");
   }
 
   get value() {

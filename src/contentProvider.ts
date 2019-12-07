@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import StatusDocument from './documents/statusDocument';
-import { Repository } from './typings/git';
+import { MagitStatus } from './model/magitStatus';
+import { magitStatuses } from './extension';
 
 export default class ContentProvider implements vscode.TextDocumentContentProvider {
 
@@ -11,11 +12,7 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
   private _editorDecoration = vscode.window.createTextEditorDecorationType({ textDecoration: 'underline' });
   private _subscriptions: vscode.Disposable;
 
-  public repository: Repository;
-
-  constructor(repository: Repository) {
-
-    this.repository = repository;
+  constructor() {
 
     // Listen to the `closeTextDocument`-event which means we must
     // clear the corresponding model object - `ReferencesDocument`
@@ -50,8 +47,9 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
     // `reference provider` command (https://code.visualstudio.com/api/references/commands).
     // From the result create a references document which is in charge of loading,
     // printing, and formatting references
-    let document = new StatusDocument(uri, this.repository, this._onDidChange);
-    this._documents.set(uri.toString(), document);
+    let document = new StatusDocument(uri, magitStatuses[uri.query], this._onDidChange);
+
+    this._documents.set(uri.query, document);
     return document.value;
   }
 
@@ -71,7 +69,8 @@ let seq = 0;
 
 export function encodeLocation(uri: string): vscode.Uri {
   const query = uri;
-  return vscode.Uri.parse(`${ContentProvider.scheme}:status.magit?${query}#${seq++}`);
+  return vscode.Uri.parse(`${ContentProvider.scheme}:status.magit?${query}`);
+  //return vscode.Uri.parse(`${ContentProvider.scheme}:status.magit?${query}#${seq++}`);
 }
 
 export function decodeLocation(uri: vscode.Uri): [vscode.Uri, vscode.Position] {

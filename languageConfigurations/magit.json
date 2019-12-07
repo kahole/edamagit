@@ -1,0 +1,8 @@
+{
+	"folding": {
+		"markers": {
+			"start": "^(Unstaged changes)|(Recent commits)",
+			"end": "^.$"
+		}
+	}
+}

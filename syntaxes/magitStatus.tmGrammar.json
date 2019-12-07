@@ -1,0 +1,27 @@
+{
+  "scopeName": "source.magit",
+  "patterns": [{ "include": "#expression"}, {"include": "#diff" }],
+  "repository": {
+    "expression": {
+      "patterns": [{ "include": "#sectionHeader" }, { "include": "#branchName" }, { "include": "#changeHeader" }]
+    },
+    "sectionHeader": {
+      "match": "Unstaged changes|Recent commits",
+      "name": "keyword.sectionHeader"
+    },
+    "branchName": {
+      "match": "master",
+      "name": "support.master"
+    },
+    "changeHeader": {
+      "match": "^@@.*",
+      "name": "support.master"
+    },
+    "diff": {
+      "begin": "^@@",
+      "end": "^$",
+      "name": "source.diff",
+      "patterns": [{ "include": "source.diff"}]
+    }
+  }
+}

@@ -18,6 +18,49 @@
       {
         "command": "extension.magit",
         "title": "Magit Status"
+      },
+      {
+        "command": "extension.magit-choose",
+        "title": "Magit Choose",
+        "when": "editorLangId == magit-status"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "extension.magit-choose",
+          "when": "editorLangId == magit-status"
+        }
+      ]
+    },
+    "languages": [
+      {
+        "id": "magit-status",
+        "aliases": ["Magit"],
+        "extensions": [".magit"],
+        "configuration": "./languageConfigurations/magit.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "magit-status",
+        "scopeName": "source.magit",
+        "path": "./syntaxes/magitStatus.tmGrammar.json",
+        "embeddedLanguages": {
+          "meta.embedded.inline.diff": "source.diff"
+        }
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "editor.toggleFold",
+        "key": "tab",
+        "when": "editorTextFocus && editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit-choose",
+        "key": "enter",
+        "when": "editorTextFocus && editorLangId == magit-status"
       }
     ]
   },

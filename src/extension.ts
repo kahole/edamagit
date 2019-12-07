@@ -8,6 +8,7 @@ import { API as GitAPI, GitExtension, APIState, Status } from './typings/git';
 
 // https://github.com/microsoft/vscode/blob/f667462a2a8a12c92dbcdd8acf92df7354063691/extensions/git/src/util.ts#L309
 import { dirname, sep } from 'path';
+import { InflateStatus, MagitStatus } from './model/magitStatus';
 function isWindowsPath(path: string): boolean {
   return /^[a-zA-Z]:\\/.test(path);
 }
@@ -30,6 +31,8 @@ function isDescendant(parent: string, descendant: string): boolean {
   return descendant.startsWith(parent);
 }
 //------------------------------------
+
+export let magitStatuses: {[id: string]: MagitStatus} = {};
 
 export function activate(context: ExtensionContext) {
 
@@ -66,21 +69,33 @@ export function activate(context: ExtensionContext) {
 
   // Name stuff: InputBox
 
-  // Diff: language mode "diff"
-
   // Commit message: language mode "git-commit message"
   //       should just open buffer. Git supports this out of the box, like when it opens $EDITOR
 
-  // Folding: https://code.visualstudio.com/api/references/vscode-api#languages.registerFoldingRangeProvider
-  // Register <tab> for folding for the language mode!
-  // { "key": "tab", "command": "cursorHome", "when": "mightBeUseful to have when
+  // Folding: 
+    // enkel
+    // https://code.visualstudio.com/api/language-extensions/language-configuration-guide
+    // avansert folding (HELST IKKE)
+    // https://stackoverflow.com/questions/56509396/vscode-extension-folding-section-based-on-first-blank-line-found-or-to-the-sta
+      // https://code.visualstudio.com/api/references/vscode-api#FoldingRangeProvider
+      //https://code.visualstudio.com/api/references/vscode-api#languages.registerFoldingRangeProvider
 
-  // Status bar message for git feedback stuff
+  // Feedback / results:
+  //  Status bar message for git feedback stuff
 
   // Erorrs: show ErrorMessage for feil
 
+  // Syntax
+    // - Embedded Diff language mode syntax!
+    // - Highlight branch names dynamically
+      // https://code.visualstudio.com/api/references/vscode-api#languages.registerDocumentHighlightProvider
+    // Diff: language mode "diff"
+    
   // VsVim:
-  // Needs to work well with VsVim as well
+    // Needs to work well with VsVim as well
+
+  // God inspo - REST client mode
+  //  https://github.com/Huachao/vscode-restclient
 
   if (workspace.workspaceFolders && workspace.workspaceFolders[0]) {
 
@@ -92,19 +107,7 @@ export function activate(context: ExtensionContext) {
 
     const repository = gitApi.repositories.filter(r => isDescendant(r.rootUri.fsPath, rootPath))[0];
 
-    // repository.diff()
-    repository.status()
-      .then(console.log)
-      .then(() => {
-        //console.log(repository.state.indexChanges);
-        console.log(repository.state.HEAD);
-        console.log(repository.state.remotes);
-        console.log(repository.state.refs)
-        console.log(repository.state.workingTreeChanges)
-
-      });
-
-    const provider = new ContentProvider(repository);
+    const provider = new ContentProvider();
 
     const providerRegistrations = Disposable.from(
       workspace.registerTextDocumentContentProvider(ContentProvider.scheme, provider)
@@ -112,9 +115,17 @@ export function activate(context: ExtensionContext) {
 
     let disposable = commands.registerCommand('extension.magit', async () => {
 
-      const uri = encodeLocation("gitstatus");
-      workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside));
 
+      const uri = encodeLocation(rootPath);
+
+      InflateStatus(repository)
+        .then(m => {
+          console.log(m);
+          magitStatuses[uri.query] = m;
+          
+          workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside));
+          
+        });
 
       //return commands.executeCommand("workbench.action.quickOpen", ">bdd/halla");
 
