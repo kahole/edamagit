@@ -1,22 +1,21 @@
-import { RepositoryState, Commit, Repository, Status, Change as GitChange } from "../typings/git";
+import { RepositoryState, Commit, Repository, Change as GitChange, Status } from "../typings/git";
 
 export interface Change extends GitChange {
   diff?: string;
 }
 
-export interface MagitStatus {
-  _state: RepositoryState;
+export interface MagitState {
+  _state: RepositoryState; // TODO: shouldnt need this?
   readonly stashes?: Commit[];
   readonly log?: Commit[];
-  readonly commitCache: { [id: string]: Commit; };
+  readonly commitCache: { [id: string]: Commit; }; // TODO: rigid model with everything needed better?
   readonly workingTreeChanges?: Change[];
   readonly indexChanges?: Change[];
   readonly mergeChanges?: Change[];
-  // test:
-  readonly untrackedDiffTestProperty: string;
+  readonly untrackedFiles?: Change[];
 }
 
-export async function InflateStatus(repository: Repository): Promise<MagitStatus> {
+export async function MagitStatus(repository: Repository): Promise<MagitState> {
 
   await repository.status();
 
@@ -27,9 +26,22 @@ export async function InflateStatus(repository: Repository): Promise<MagitStatus
       .map(c => repository.getCommit(c)));
   // .map(repository.getCommit));
 
-  let workingTreeChangesTasks = Promise.all(repository.state.workingTreeChanges
+  let untrackedFiles: Change[] = [];
+
+  let workingTreeChanges_NoUntracked = repository.state.workingTreeChanges
+    .filter( c => {
+      if (c.status === Status.UNTRACKED) {
+        untrackedFiles.push(c);
+        return false;
+      } else {
+        return true;
+      }
+    });
+
+  let workingTreeChangesTasks = Promise.all(workingTreeChanges_NoUntracked
     .map(change =>
       repository.diffWithHEAD(change.uri.path)
+        .then(getOnlyChunksFromDiff)
         .then<Change>(diff => {
           let magitChange: Change = change;
           magitChange.diff = diff;
@@ -37,15 +49,16 @@ export async function InflateStatus(repository: Repository): Promise<MagitStatus
         })
     ));
 
-    let indexChangesTasks = Promise.all(repository.state.indexChanges
-      .map(change =>
-        repository.diffIndexWithHEAD(change.uri.path)
-          .then<Change>(diff => {
-            let magitChange: Change = change;
-            magitChange.diff = diff;
-            return magitChange;
-          })
-      ));
+  let indexChangesTasks = Promise.all(repository.state.indexChanges
+    .map(change =>
+      repository.diffIndexWithHEAD(change.uri.path)
+        .then(getOnlyChunksFromDiff)
+        .then<Change>(diff => {
+          let magitChange: Change = change;
+          magitChange.diff = diff;
+          return magitChange;
+        })
+    ));
 
   let [log, commits, workingTreeChanges, indexChanges] =
     await Promise.all([
@@ -65,6 +78,23 @@ export async function InflateStatus(repository: Repository): Promise<MagitStatus
     workingTreeChanges,
     indexChanges,
     mergeChanges: undefined,
-    untrackedDiffTestProperty: ""
+    untrackedFiles
   };
 }
+
+function getOnlyChunksFromDiff(diff: string): string {
+  return diff.substring(diff.indexOf("@@"));
+}
+
+// function inflateChanges(changes: GitChange[]) : Promise<Change[]> {
+//   return Promise.all(changes
+//     .map(change =>
+//       repository.diffIndexWithHEAD(change.uri.path)
+//         .then(getOnlyChunksFromDiff)
+//         .then<Change>(diff => {
+//           let magitChange: Change = change;
+//           magitChange.diff = diff;
+//           return magitChange;
+//         })
+//     ));
+// }

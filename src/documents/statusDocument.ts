@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
-import { MagitStatus } from '../model/magitStatus';
+import { MagitState, Change } from '../model/magitStatus';
+import { Status } from '../typings/git';
 
 export default class StatusDocument {
 
@@ -10,7 +11,7 @@ export default class StatusDocument {
 
   private readonly SECTION_FOLD_REGION_END: string = '.';
 
-  constructor(uri: vscode.Uri, magitStatus: MagitStatus, emitter: vscode.EventEmitter<vscode.Uri>) {
+  constructor(uri: vscode.Uri, magitStatus: MagitState, emitter: vscode.EventEmitter<vscode.Uri>) {
     this._uri = uri;
 
     // The ReferencesDocument has access to the event emitter from
@@ -23,24 +24,23 @@ export default class StatusDocument {
     this._lines.push(`Head: ${magitStatus._state.HEAD!.name} ${magitStatus.commitCache[magitStatus._state.HEAD!.commit!].message}`);
     this._lines.push('');
 
+    if (magitStatus.untrackedFiles) {
+      this._lines.push(`Untracked files (${magitStatus.untrackedFiles.length})`);
+      let untrackedFiles = this.renderChanges(magitStatus.untrackedFiles);
+      this._lines.push(...untrackedFiles);
+      this._lines.push(this.SECTION_FOLD_REGION_END);
+    }
+
     if (magitStatus.workingTreeChanges) {
-
-      this._lines.push(`Unstaged changes (${magitStatus._state.workingTreeChanges.length})`);
-
-      let unstagedChanges = magitStatus.workingTreeChanges
-        .map(change => change.uri.path + "\n" + change.diff);
-
+      this._lines.push(`Unstaged changes (${magitStatus.workingTreeChanges.length})`);
+      let unstagedChanges = this.renderChanges(magitStatus.workingTreeChanges);
       this._lines.push(...unstagedChanges);
       this._lines.push(this.SECTION_FOLD_REGION_END);
     }
 
     if (magitStatus.indexChanges) {
-
-      this._lines.push(`Staged changes (${magitStatus._state.indexChanges.length})`);
-
-      let stagedChanges = magitStatus.indexChanges
-        .map(change => change.uri.path + "\n" + change.diff);
-
+      this._lines.push(`Staged changes (${magitStatus.indexChanges.length})`);
+      let stagedChanges = this.renderChanges(magitStatus.indexChanges);
       this._lines.push(...stagedChanges);
       this._lines.push(this.SECTION_FOLD_REGION_END);
     }
@@ -57,7 +57,33 @@ export default class StatusDocument {
     this._lines.push('');
   }
 
+  private renderChanges(changes: Change[]) : string[] {
+    return changes
+      .map(change => `${mapFileStatusToLabel(change.status)} ${change.uri.path}${change.diff ? '\n' + change.diff : ''}`);
+  }
+
   get value() {
     return this._lines.join('\n');
+  }
+}
+
+function mapFileStatusToLabel(status: Status): string {
+  switch (status) {
+    case Status.INDEX_MODIFIED:
+    case Status.MODIFIED:
+      return "modified";
+    case Status.INDEX_ADDED:
+      return "added";
+    case Status.INDEX_DELETED:
+    case Status.DELETED:
+      return "deleted";
+    case Status.INDEX_RENAMED:
+      return "renamed";
+    case Status.INDEX_COPIED:
+      return "copied";
+    case Status.UNTRACKED:
+      return "";
+    default:
+      return "";
   }
 }

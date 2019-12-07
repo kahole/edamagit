@@ -6,7 +6,7 @@
       "patterns": [{ "include": "#sectionHeader" }, { "include": "#branchName" }]
     },
     "sectionHeader": {
-      "match": "((Unstaged|Staged) changes)|Recent commits",
+      "match": "Untracked files|((Unstaged|Staged) changes)|Recent commits",
       "name": "keyword.sectionHeader",
       "comment": ";; kan bruke markup.bold.sectionHeader"
     },

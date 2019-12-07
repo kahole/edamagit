@@ -25,7 +25,7 @@
         "when": "editorLangId == magit-status"
       },
       {
-        "command": "extension.magit-branch",
+        "command": "extension.magit-key-b",
         "title": "Magit Branch",
         "when": "editorLangId == magit-status"
       }
@@ -37,8 +37,8 @@
           "when": "editorLangId == magit-status"
         },
         {
-          "command": "extension.magit-branch",
-          "when": "editorLangId == magit-status"
+          "command": "extension.magit-key-b",
+          "when": "false && editorLangId == magit-status"
         }
       ]
     },
@@ -69,7 +69,7 @@
         "when": "editorTextFocus && editorLangId == magit-status"
       },
       {
-        "command": "extension.magit-branch",
+        "command": "extension.magit-key-b",
         "key": "b",
         "when": "editorTextFocus && editorLangId == magit-status"
       }

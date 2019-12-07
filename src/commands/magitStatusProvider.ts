@@ -1,4 +1,4 @@
-import { MagitStatus } from "../model/magitStatus";
+import { MagitState } from "../model/magitStatus";
 
 // export async function magitStatus() : Promise<MagitStatus> {
 //   return {
