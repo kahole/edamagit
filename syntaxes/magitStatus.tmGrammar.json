@@ -3,24 +3,20 @@
   "patterns": [{ "include": "#expression"}, {"include": "#diff" }],
   "repository": {
     "expression": {
-      "patterns": [{ "include": "#sectionHeader" }, { "include": "#branchName" }, { "include": "#changeHeader" }]
+      "patterns": [{ "include": "#sectionHeader" }, { "include": "#branchName" }]
     },
     "sectionHeader": {
       "match": "Unstaged changes|Recent commits",
-      "name": "keyword.sectionHeader"
+      "name": "keyword.sectionHeader",
+      "comment": "kan bruke markup.bold.sectionHeader"
     },
     "branchName": {
       "match": "master",
       "name": "support.master"
     },
-    "changeHeader": {
-      "match": "^@@.*",
-      "name": "support.master"
-    },
     "diff": {
       "begin": "^@@",
       "end": "^$",
-      "name": "source.diff",
       "patterns": [{ "include": "source.diff"}]
     }
   }

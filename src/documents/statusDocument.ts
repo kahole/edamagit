@@ -38,7 +38,7 @@ export default class StatusDocument {
       magitStatus.log
       .forEach(commit => {
         this._lines.push(`Recent commits`);
-        this._lines.push(`${commit.hash.slice(0, 5)} ${commit.message}`);
+        this._lines.push(`${commit.hash.slice(0, 7)} ${commit.message}`);
       });
       this._lines.push(this.SECTION_FOLD_REGION_END);
     }

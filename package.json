@@ -38,17 +38,14 @@
         "id": "magit-status",
         "aliases": ["Magit"],
         "extensions": [".magit"],
-        "configuration": "./languageConfigurations/magit.json"
+        "configuration": "./languages/magit.language-configuration.json"
       }
     ],
     "grammars": [
       {
         "language": "magit-status",
         "scopeName": "source.magit",
-        "path": "./syntaxes/magitStatus.tmGrammar.json",
-        "embeddedLanguages": {
-          "meta.embedded.inline.diff": "source.diff"
-        }
+        "path": "./syntaxes/magitStatus.tmGrammar.json"
       }
     ],
     "keybindings": [
