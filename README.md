@@ -30,8 +30,17 @@
   - Name stuff: InputBox
       e.g `window.showInputBox({prompt: "Name of your branch or whatever"});`
 
-  - Commit message: language mode "git-commit message"
-         should just open buffer. Git supports this out of the box, like when it opens $EDITOR
+  - Commit message: EASY
+        `git config core.editor "code --wait"`
+         opens commit msg editor in vscode
+
+        Change back and forth:
+        ```bash
+        previousEditor = git config core.editor
+        git config core.editor "code --wait"
+        git commit
+        git config core.editor "$previousEditor"
+        ```
 
 ### Folding: 
     - enkel
@@ -42,8 +51,8 @@
       https://code.visualstudio.com/api/references/vscode-api#languages.registerFoldingRangeProvider
 
 ### Feedback, errors:
-  - Status bar message for git feedback stuff
-  - Erorrs: show ErrorMessage for feil
+  - Status bar message for git feedback or Info Box
+  - Errors: show ErrorMessage for feil
 
 ## Languages
   - Custom keybindings for buffer: define a language mode

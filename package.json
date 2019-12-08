@@ -25,6 +25,11 @@
         "when": "editorLangId == magit-status"
       },
       {
+        "command": "extension.magit-commit",
+        "title": "Magit Commit",
+        "when": "editorLangId == magit-status"
+      },
+      {
         "command": "extension.magit-key-b",
         "title": "Magit Branching",
         "when": "editorLangId == magit-status"
@@ -38,21 +43,34 @@
         "command": "extension.magit-help",
         "title": "Magit Help",
         "when": "editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit-save-and-close-commit-msg",
+        "title": "Magit Save and close commit message",
+        "when": "false"
       }
     ],
     "menus": {
       "commandPalette": [
         {
           "command": "extension.magit-key-b",
-          "when": "false"
+          "when": "editorLangId == magit-status"
         },
         {
           "command": "extension.magit-choose",
           "when": "editorLangId == magit-status"
         },
         {
+          "command": "extension.magit-commit",
+          "when": "editorLangId == magit-status"
+        },
+        {
           "command": "extension.magit-pushing",
           "when": "editorLangId == magit-status"
+        },
+        {
+          "command": "extension.magit-save-and-close-commit-msg",
+          "when": "false"
         }
       ]
     },
@@ -83,6 +101,11 @@
         "when": "editorTextFocus && editorLangId == magit-status"
       },
       {
+        "command": "extension.magit-commit",
+        "key": "c",
+        "when": "editorTextFocus && editorLangId == magit-status"
+      },
+      {
         "command": "extension.magit-key-b",
         "key": "b",
         "when": "editorTextFocus && editorLangId == magit-status"
@@ -96,6 +119,16 @@
         "command": "extension.magit-help",
         "key": "?",
         "when": "editorTextFocus && editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit-save-and-close-commit-msg",
+        "key": "ctrl+c ctrl+c",
+        "when": "editorTextFocus && editorLangId == git-commit"
+      },
+      {
+        "command": "workbench.action.closeActiveEditor",
+        "key": "ctrl+c ctrl+k",
+        "when": "editorTextFocus && editorLangId == git-commit"
       }
     ]
   },

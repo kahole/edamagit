@@ -2,25 +2,43 @@ import { MagitState } from "../models/magitStatus";
 import { MagitChange } from "../models/magitChange";
 import { encodeLocation } from "../contentProvider";
 import { workspace, window, ViewColumn } from "vscode";
-import { gitApi, magitStates } from "../extension";
+import { gitApi, magitRepositories } from "../extension";
 import { Repository, Status } from "../typings/git";
 import { FilePathUtils } from "../utils/filePathUtils";
 import { GitTextUtils } from "../utils/gitTextUtils";
+import { MagitRepository } from "../models/magitRepository";
 
 export function magitStatus() {
 
   if (workspace.workspaceFolders && workspace.workspaceFolders[0]) {
 
     const rootPath = workspace.workspaceFolders[0].uri.fsPath;
-    const repository = gitApi.repositories.filter(r => FilePathUtils.isDescendant(r.rootUri.fsPath, rootPath))[0];
 
-    const uri = encodeLocation(rootPath);
+    let repository: MagitRepository | undefined;
+    
+    // TODO: clean up this mess
 
-    MagitStatus(repository)
-      .then(m => {
-        magitStates[uri.query] = m;
-        workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside));
-      });
+    // [, repository] = Object.entries(magitRepositories).filter(
+      // ([key, repo]) => FilePathUtils.isDescendant(key, rootPath))[0];
+
+    if (!repository) {
+      repository = gitApi.repositories.filter(r => FilePathUtils.isDescendant(r.rootUri.fsPath, rootPath))[0];
+    }
+
+    if (repository) {
+      let magitRepo: MagitRepository = repository;
+      magitRepositories[repository.rootUri.fsPath] = repository;
+
+      MagitStatus(repository)
+        .then(m => {
+          magitRepo.magitState = m;
+          const uri = encodeLocation(magitRepo.rootUri.fsPath);
+          workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside));
+        });
+    }
+  }
+  else {
+    throw new Error("No workspace open");
   }
 }
 
@@ -40,7 +58,7 @@ async function MagitStatus(repository: Repository): Promise<MagitState> {
   let untrackedFiles: MagitChange[] = [];
 
   let workingTreeChanges_NoUntracked = repository.state.workingTreeChanges
-    .filter( c => {
+    .filter(c => {
       if (c.status === Status.UNTRACKED) {
         untrackedFiles.push(c);
         return false;

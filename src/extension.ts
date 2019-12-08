@@ -5,10 +5,13 @@ import { pushing } from './commands/pushingCommands';
 import { branching } from './commands/branchingCommands';
 import { magitHelp } from './commands/helpCommands';
 import { magitStatus } from './commands/statusCommands';
-import { MagitState } from './models/magitStatus';
 import { magitChoose } from './commands/chooseCommands';
+import { MagitRepository } from './models/magitRepository';
+import { magitCommit } from './commands/commitCommands';
+import { saveClose } from './commands/macros';
 
-export let magitStates: { [id: string]: MagitState } = {};
+export const magitRepositories: { [id: string]: MagitRepository } = {};
+
 export let gitApi: API;
 
 export function activate(context: ExtensionContext) {
@@ -24,7 +27,6 @@ export function activate(context: ExtensionContext) {
   //   }
   // });
   gitApi = gitExtension.getAPI(1);
-  // gitExecutablePath = gitApi.git.path;
 
   const provider = new ContentProvider();
 
@@ -37,6 +39,7 @@ export function activate(context: ExtensionContext) {
   );
 
   context.subscriptions.push(commands.registerCommand('extension.magit', magitStatus));
+  context.subscriptions.push(commands.registerCommand('extension.magit-commit', magitCommit));
   context.subscriptions.push(commands.registerCommand('extension.magit-choose', magitChoose));
   context.subscriptions.push(commands.registerCommand('extension.magit-help', magitHelp));
   context.subscriptions.push(commands.registerCommand('extension.magit-key-F', async () => {
@@ -45,6 +48,8 @@ export function activate(context: ExtensionContext) {
   }));
   context.subscriptions.push(commands.registerCommand('extension.magit-pushing', pushing));
   context.subscriptions.push(commands.registerCommand('extension.magit-key-b', branching));
+
+  context.subscriptions.push(commands.registerCommand('extension.magit-save-and-close-commit-msg', saveClose));
 }
 
 // this method is called when your extension is deactivated

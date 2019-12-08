@@ -1,6 +1,6 @@
 import { Repository } from "../typings/git";
 
-export interface BaseRepository extends Repository {
+interface BaseRepository {
   getStashes(): Promise<Stash[]>;
   pushTo(remote?: string, name?: string, setUpstream?: boolean, forcePushMode?: ForcePushMode): Promise<void>;
 }

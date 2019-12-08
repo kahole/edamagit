@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import StatusDocument from './views/statusDocument';
-import { MagitState } from './models/magitStatus';
-import { magitStates } from './extension';
+import { magitRepositories } from './extension';
 
 export default class ContentProvider implements vscode.TextDocumentContentProvider {
 
@@ -47,7 +46,7 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
     // `reference provider` command (https://code.visualstudio.com/api/references/commands).
     // From the result create a references document which is in charge of loading,
     // printing, and formatting references
-    document = new StatusDocument(uri, magitStates[uri.query], this._onDidChange);
+    document = new StatusDocument(uri, magitRepositories[uri.query].magitState!, this._onDidChange);
 
     this._documents.set(uri.query, document);
     return document.value;
