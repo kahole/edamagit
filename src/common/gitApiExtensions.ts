@@ -1,4 +1,4 @@
-import { Repository } from "./typings/git";
+import { Repository } from "../typings/git";
 
 export interface BaseRepository extends Repository {
   getStashes(): Promise<Stash[]>;
@@ -9,7 +9,7 @@ export interface BaseRepository extends Repository {
 //   return this._repository.getStashes();
 // };
 
-declare module "./typings/git" {
+declare module "../typings/git" {
   export interface Repository {
     readonly _repository: BaseRepository;
   }

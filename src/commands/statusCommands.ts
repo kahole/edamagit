@@ -1,9 +1,9 @@
-import { MagitState } from "../model/magitStatus";
-import { MagitChange } from "../model/magitChange";
+import { MagitState } from "../models/magitStatus";
+import { MagitChange } from "../models/magitChange";
 import { encodeLocation } from "../contentProvider";
 import { workspace, window, ViewColumn } from "vscode";
 import { gitApi, magitStates } from "../extension";
-import { isDescendant, keepOnlyChunksFromDiff } from "../util";
+import { isDescendant, keepOnlyChunksFromDiff } from "../common/util";
 import { Repository, Status } from "../typings/git";
 
 export function magitStatus() {

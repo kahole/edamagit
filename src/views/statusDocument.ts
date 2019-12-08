@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { MagitState } from '../model/magitStatus';
-import { MagitChange } from "../model/magitChange";
+import { MagitState } from '../models/magitStatus';
+import { MagitChange } from "../models/magitChange";
 import { Status } from '../typings/git';
 
 export default class StatusDocument {

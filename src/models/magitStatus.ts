@@ -1,6 +1,6 @@
 import { RepositoryState, Commit } from "../typings/git";
-import { Stash } from "../gitApiExtensions";
 import { MagitChange } from "./magitChange";
+import { Stash } from "../common/gitApiExtensions";
 
 export interface MagitState {
   _state: RepositoryState; // TODO: shouldnt need this?

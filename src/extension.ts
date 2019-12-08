@@ -5,7 +5,8 @@ import { pushing } from './commands/pushingCommands';
 import { branching } from './commands/branchingCommands';
 import { magitHelp } from './commands/helpCommands';
 import { magitStatus } from './commands/statusCommands';
-import { MagitState } from './model/magitStatus';
+import { MagitState } from './models/magitStatus';
+import { magitChoose } from './commands/chooseCommands';
 
 export let magitStates: { [id: string]: MagitState } = {};
 export let gitApi: API;
@@ -36,6 +37,7 @@ export function activate(context: ExtensionContext) {
   );
 
   context.subscriptions.push(commands.registerCommand('extension.magit', magitStatus));
+  context.subscriptions.push(commands.registerCommand('extension.magit-choose', magitChoose));
   context.subscriptions.push(commands.registerCommand('extension.magit-help', magitHelp));
   context.subscriptions.push(commands.registerCommand('extension.magit-key-F', async () => {
     // TODO: Options should be dynamically decided based on whether or not they can be done
