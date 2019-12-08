@@ -26,19 +26,33 @@
       },
       {
         "command": "extension.magit-key-b",
-        "title": "Magit Branch",
+        "title": "Magit Branching",
+        "when": "editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit-pushing",
+        "title": "Magit Pushing",
+        "when": "editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit-help",
+        "title": "Magit Help",
         "when": "editorLangId == magit-status"
       }
     ],
     "menus": {
       "commandPalette": [
         {
+          "command": "extension.magit-key-b",
+          "when": "false"
+        },
+        {
           "command": "extension.magit-choose",
           "when": "editorLangId == magit-status"
         },
         {
-          "command": "extension.magit-key-b",
-          "when": "false && editorLangId == magit-status"
+          "command": "extension.magit-pushing",
+          "when": "editorLangId == magit-status"
         }
       ]
     },
@@ -71,6 +85,16 @@
       {
         "command": "extension.magit-key-b",
         "key": "b",
+        "when": "editorTextFocus && editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit-pushing",
+        "key": "shift+p",
+        "when": "editorTextFocus && editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit-help",
+        "key": "?",
         "when": "editorTextFocus && editorLangId == magit-status"
       }
     ]

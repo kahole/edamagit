@@ -22,3 +22,7 @@ export function isDescendant(parent: string, descendant: string): boolean {
 
   return descendant.startsWith(parent);
 }
+
+export function keepOnlyChunksFromDiff(diff: string): string {
+  return diff.substring(diff.indexOf("@@"));
+}

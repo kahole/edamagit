@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
-import { MagitState, Change } from '../model/magitStatus';
+import { MagitState } from '../model/magitStatus';
+import { MagitChange } from "../model/magitChange";
 import { Status } from '../typings/git';
 
 export default class StatusDocument {
@@ -45,10 +46,19 @@ export default class StatusDocument {
       this._lines.push(this.SECTION_FOLD_REGION_END);
     }
 
+    if (magitStatus.stashes) {
+      this._lines.push(`Stashes (${magitStatus.stashes.length})`);
+      magitStatus.stashes
+        .forEach(stash => {
+          this._lines.push(`stash@{${stash.index}} ${stash.description}`);
+        });
+      this._lines.push(this.SECTION_FOLD_REGION_END);
+    }
+
     if (magitStatus.log) {
+      this._lines.push(`Recent commits`);
       magitStatus.log
         .forEach(commit => {
-          this._lines.push(`Recent commits`);
           this._lines.push(`${commit.hash.slice(0, 7)} ${commit.message}`);
         });
       this._lines.push(this.SECTION_FOLD_REGION_END);
@@ -57,7 +67,7 @@ export default class StatusDocument {
     this._lines.push('');
   }
 
-  private renderChanges(changes: Change[]) : string[] {
+  private renderChanges(changes: MagitChange[]) : string[] {
     return changes
       .map(change => `${mapFileStatusToLabel(change.status)} ${change.uri.path}${change.diff ? '\n' + change.diff : ''}`);
   }
