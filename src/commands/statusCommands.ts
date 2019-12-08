@@ -3,15 +3,16 @@ import { MagitChange } from "../models/magitChange";
 import { encodeLocation } from "../contentProvider";
 import { workspace, window, ViewColumn } from "vscode";
 import { gitApi, magitStates } from "../extension";
-import { isDescendant, keepOnlyChunksFromDiff } from "../common/util";
 import { Repository, Status } from "../typings/git";
+import { FilePathUtils } from "../utils/filePathUtils";
+import { GitTextUtils } from "../utils/gitTextUtils";
 
 export function magitStatus() {
 
   if (workspace.workspaceFolders && workspace.workspaceFolders[0]) {
 
     const rootPath = workspace.workspaceFolders[0].uri.fsPath;
-    const repository = gitApi.repositories.filter(r => isDescendant(r.rootUri.fsPath, rootPath))[0];
+    const repository = gitApi.repositories.filter(r => FilePathUtils.isDescendant(r.rootUri.fsPath, rootPath))[0];
 
     const uri = encodeLocation(rootPath);
 
@@ -51,7 +52,7 @@ async function MagitStatus(repository: Repository): Promise<MagitState> {
   let workingTreeChangesTasks = Promise.all(workingTreeChanges_NoUntracked
     .map(change =>
       repository.diffWithHEAD(change.uri.path)
-        .then(keepOnlyChunksFromDiff)
+        .then(GitTextUtils.keepOnlyChunksFromDiff)
         .then<MagitChange>(diff => {
           let magitChange: MagitChange = change;
           magitChange.diff = diff;
@@ -62,7 +63,7 @@ async function MagitStatus(repository: Repository): Promise<MagitState> {
   let indexChangesTasks = Promise.all(repository.state.indexChanges
     .map(change =>
       repository.diffIndexWithHEAD(change.uri.path)
-        .then(keepOnlyChunksFromDiff)
+        .then(GitTextUtils.keepOnlyChunksFromDiff)
         .then<MagitChange>(diff => {
           let magitChange: MagitChange = change;
           magitChange.diff = diff;
