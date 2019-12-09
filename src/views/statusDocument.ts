@@ -68,8 +68,13 @@ export default class StatusDocument {
   }
 
   private renderChanges(changes: MagitChange[]) : string[] {
+
     return changes
-      .map(change => `${mapFileStatusToLabel(change.status)} ${change.uri.path}${change.diff ? '\n' + change.diff : ''}`);
+      .map(change => {
+        
+        let hunkRender = change.hunks ? change.hunks.map( h => h.diff ).join('\n') : '\n';
+        return `${mapFileStatusToLabel(change.status)} ${change.uri.path}${hunkRender}`;
+      });
   }
 
   get value() {

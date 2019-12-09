@@ -34,6 +34,7 @@ export async function magitCommit() {
       
     } catch (e) {
       //YES: Aborting due to empty commit message will appear here
+      window.setStatusBarMessage(`Commit canceled.`);
       console.log(e);
     } finally {
       if (userEditor) {

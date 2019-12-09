@@ -70,10 +70,10 @@ async function MagitStatus(repository: Repository): Promise<MagitState> {
   let workingTreeChangesTasks = Promise.all(workingTreeChanges_NoUntracked
     .map(change =>
       repository.diffWithHEAD(change.uri.path)
-        .then(GitTextUtils.keepOnlyChunksFromDiff)
-        .then<MagitChange>(diff => {
+        .then(GitTextUtils.diffToHunks)
+        .then<MagitChange>(hunks => {
           let magitChange: MagitChange = change;
-          magitChange.diff = diff;
+          magitChange.hunks = hunks;
           return magitChange;
         })
     ));
@@ -81,10 +81,10 @@ async function MagitStatus(repository: Repository): Promise<MagitState> {
   let indexChangesTasks = Promise.all(repository.state.indexChanges
     .map(change =>
       repository.diffIndexWithHEAD(change.uri.path)
-        .then(GitTextUtils.keepOnlyChunksFromDiff)
-        .then<MagitChange>(diff => {
+        .then(GitTextUtils.diffToHunks)
+        .then<MagitChange>(hunks => {
           let magitChange: MagitChange = change;
-          magitChange.diff = diff;
+          magitChange.hunks = hunks;
           return magitChange;
         })
     ));
