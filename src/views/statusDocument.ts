@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { MagitState } from '../models/magitStatus';
 import { MagitChange } from "../models/magitChange";
 import { Status } from '../typings/git';
+import { ChangeView } from './changeView';
 
 export default class StatusDocument {
 
@@ -71,9 +72,11 @@ export default class StatusDocument {
 
     return changes
       .map(change => {
+
+        return new ChangeView(change).render(0).join('\n');
         
-        let hunkRender = change.hunks ? change.hunks.map( h => h.diff ).join('\n') : '\n';
-        return `${mapFileStatusToLabel(change.status)} ${change.uri.path}${hunkRender}`;
+        // let hunkRender = change.hunks ? change.hunks.map( h => h.diff ).join('\n') : '\n';
+        // return `${mapFileStatusToLabel(change.status)} ${change.uri.path}${hunkRender}`;
       });
   }
 

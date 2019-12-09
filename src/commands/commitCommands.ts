@@ -19,7 +19,7 @@ export async function magitCommit() {
 
     let userEditor: string | undefined;
     try {
-      userEditor = await execPromise("git config core.editor", cwd);
+      userEditor = (await execPromise("git config core.editor", cwd)).trim();
 
       await execPromise("git config core.editor \"code --wait\"", cwd);
 

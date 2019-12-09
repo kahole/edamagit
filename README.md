@@ -4,28 +4,14 @@
   - Use existing tooling as much as possible
     make magit, but the fancy stuff should be vscode like
 
-## Git
-  - Git: either use vscode.git or run commands and "parse"
-     Nice example:
-       https://github.com/DonJayamanne/gitHistoryVSCode/blob/master/src/adapter/exec/gitCommandExec.ts
-
-  - Git extension API
-        https://github.com/microsoft/vscode/blob/master/extensions/git/src/api/api1.ts
-     noe svakt, men exposer git executable
-
 ## UI
-  - Transient interface:
-    - Enkel: See section: languages->custom keybindings
-     Avansert (HELST IKKE):Key presses: https://github.com/lucax88x/CodeAceJumper/blob/master/src/inline-input.ts#L81
-
   - Command pallete
       When a command should be available: https://code.visualstudio.com/api/extension-guides/command#controlling-when-a-command-shows-up-in-the-command-palette
       https://code.visualstudio.com/api/extension-guides/command#enablement-of-commands
      - Dynamic selection, filter with `executeCommand("workbench.action.quickOpen", ">commandPREFIX");`
 
   - Helm like branch selector: QuickPick https://code.visualstudio.com/api/references/vscode-api#QuickInput
-        window.showQuickPick(repository.state.refs.map( r => r.name!));
-          repository.checkout(branch.name)
+    !REMOVE KEY-SHORTCUTS FROM QUICKPICK? HARD DECISION
 
   - Name stuff: InputBox
       e.g `window.showInputBox({prompt: "Name of your branch or whatever"});`
@@ -45,7 +31,8 @@
 ### Folding: 
     - enkel
        https://code.visualstudio.com/api/language-extensions/language-configuration-guide
-    - avansert folding (HELST IKKE)
+    - avansert folding
+      !! MED VIEW-MODELLEN ER DET ENKELT Å LAGE FOLDING-PROVIDER
        https://stackoverflow.com/questions/56509396/vscode-extension-folding-section-based-on-first-blank-line-found-or-to-the-sta
        https://code.visualstudio.com/api/references/vscode-api#FoldingRangeProvider
       https://code.visualstudio.com/api/references/vscode-api#languages.registerFoldingRangeProvider
@@ -71,6 +58,8 @@
        https://code.visualstudio.com/api/references/vscode-api#languages.registerDocumentHighlightProvider
 
 ## Notes
+  - Test on every platform
+
   - VsVim:
      Needs to work well with VsVim as well
 

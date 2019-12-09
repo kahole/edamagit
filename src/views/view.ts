@@ -17,7 +17,7 @@ export abstract class View {
         render.push(...subViewRender);
       }
     );
-    this.range = new Range(startLineNumber, 0, currentLineNumber, render[render.length-1].length);
+    this.range = new Range(startLineNumber, 0, currentLineNumber, render.length > 0 ? render[render.length-1].length : 0);
 
     return render;
   }
