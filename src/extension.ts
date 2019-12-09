@@ -8,6 +8,7 @@ import { magitStatus } from './commands/statusCommands';
 import { magitChoose } from './commands/chooseCommands';
 import { MagitRepository } from './models/magitRepository';
 import { magitCommit } from './commands/commitCommands';
+import { magitStage, magitStageAll } from './commands/stagingCommands';
 import { saveClose } from './commands/macros';
 
 export const magitRepositories: { [id: string]: MagitRepository } = {};
@@ -42,12 +43,14 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerCommand('extension.magit-commit', magitCommit));
   context.subscriptions.push(commands.registerCommand('extension.magit-choose', magitChoose));
   context.subscriptions.push(commands.registerCommand('extension.magit-help', magitHelp));
-  context.subscriptions.push(commands.registerCommand('extension.magit-key-F', async () => {
+  context.subscriptions.push(commands.registerCommand('extension.magit-pulling', async () => {
     // TODO: Options should be dynamically decided based on whether or not they can be done
     // e.g Pull in magit with no remotes results in: e elsewhere
   }));
   context.subscriptions.push(commands.registerCommand('extension.magit-pushing', pushing));
-  context.subscriptions.push(commands.registerCommand('extension.magit-key-b', branching));
+  context.subscriptions.push(commands.registerCommand('extension.magit-branching', branching));
+  context.subscriptions.push(commands.registerCommand('extension.magit-stage', magitStage));
+  context.subscriptions.push(commands.registerCommand('extension.magit-stage-all', magitStageAll));
 
   context.subscriptions.push(commands.registerCommand('extension.magit-save-and-close-commit-msg', saveClose));
 }

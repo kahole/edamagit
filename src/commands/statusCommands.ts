@@ -3,7 +3,7 @@ import { MagitChange } from "../models/magitChange";
 import { encodeLocation } from "../contentProvider";
 import { workspace, window, ViewColumn } from "vscode";
 import { gitApi, magitRepositories } from "../extension";
-import { Repository, Status } from "../typings/git";
+import { Repository, Status, Change } from "../typings/git";
 import { FilePathUtils } from "../utils/filePathUtils";
 import { GitTextUtils } from "../utils/gitTextUtils";
 import { MagitRepository } from "../models/magitRepository";

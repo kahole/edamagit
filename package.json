@@ -30,13 +30,23 @@
         "when": "editorLangId == magit-status"
       },
       {
-        "command": "extension.magit-key-b",
+        "command": "extension.magit-branching",
         "title": "Magit Branching",
         "when": "editorLangId == magit-status"
       },
       {
         "command": "extension.magit-pushing",
         "title": "Magit Pushing",
+        "when": "editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit-stage",
+        "title": "Magit Stage",
+        "when": "editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit-stage-all",
+        "title": "Magit Stage All",
         "when": "editorLangId == magit-status"
       },
       {
@@ -53,11 +63,19 @@
     "menus": {
       "commandPalette": [
         {
-          "command": "extension.magit-key-b",
+          "command": "extension.magit-branching",
           "when": "editorLangId == magit-status"
         },
         {
           "command": "extension.magit-choose",
+          "when": "editorLangId == magit-status"
+        },
+        {
+          "command": "extension.magit-stage",
+          "when": "editorLangId == magit-status"
+        },
+        {
+          "command": "extension.magit-stage-all",
           "when": "editorLangId == magit-status"
         },
         {
@@ -106,7 +124,7 @@
         "when": "editorTextFocus && editorLangId == magit-status"
       },
       {
-        "command": "extension.magit-key-b",
+        "command": "extension.magit-branching",
         "key": "b",
         "when": "editorTextFocus && editorLangId == magit-status"
       },
@@ -118,6 +136,16 @@
       {
         "command": "extension.magit-help",
         "key": "?",
+        "when": "editorTextFocus && editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit-stage",
+        "key": "s",
+        "when": "editorTextFocus && editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit-stage-all",
+        "key": "shift+s",
         "when": "editorTextFocus && editorLangId == magit-status"
       },
       {

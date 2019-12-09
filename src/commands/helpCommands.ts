@@ -1,5 +1,10 @@
 import { window } from "vscode";
 
+// TODO:
+// to be dynamic
+// Just show the keymap for vscode magit
+// that way its updated with users changes
+
 export function magitHelp() {
   window.showInformationMessage(`Popup and dwim commands
   A Cherry-picking    b Branching         B Bisecting         c Committing

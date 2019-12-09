@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { MagitState } from '../models/magitStatus';
 import { MagitChange } from "../models/magitChange";
 import { Status } from '../typings/git';
-import { ChangeView } from './changeView';
+import { ChangeView } from './changes/changeView';
 
 export default class StatusDocument {
 
