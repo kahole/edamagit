@@ -28,14 +28,10 @@
         git config core.editor "$previousEditor"
         ```
 
-### Folding: 
-    - enkel
-       https://code.visualstudio.com/api/language-extensions/language-configuration-guide
-    - avansert folding
-      !! MED VIEW-MODELLEN ER DET ENKELT Å LAGE FOLDING-PROVIDER
-       https://stackoverflow.com/questions/56509396/vscode-extension-folding-section-based-on-first-blank-line-found-or-to-the-sta
-       https://code.visualstudio.com/api/references/vscode-api#FoldingRangeProvider
-      https://code.visualstudio.com/api/references/vscode-api#languages.registerFoldingRangeProvider
+### Highlighting
+  highlight what "object" you are hovering over.
+  essentially just a click
+  and some "provider" for highlighting, similar to the folding provider i imagine
 
 ### Feedback, errors:
   - Status bar message for git feedback or Info Box
