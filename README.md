@@ -60,6 +60,8 @@
 ## Notes
   - Test on every platform
 
+  - Proper use of dispose().. les litteratur
+
   - VsVim:
      Needs to work well with VsVim as well
 

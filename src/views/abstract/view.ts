@@ -8,18 +8,18 @@ export abstract class View {
 
   render(startLineNumber: number): string[] {
     let currentLineNumber = startLineNumber;
-    let render: string[] = [];
+    let renderedContent: string[] = [];
 
     this.subViews.forEach(
       v => {
         let subViewRender = v.render(currentLineNumber);
-        currentLineNumber += v.range.end.line - v.range.start.line;
-        render.push(...subViewRender);
+        currentLineNumber += (v.range.end.line - v.range.start.line) + 1;
+        renderedContent.push(...subViewRender);
       }
     );
-    this.range = new Range(startLineNumber, 0, currentLineNumber, render.length > 0 ? render[render.length-1].length : 0);
+    this.range = new Range(startLineNumber, 0, currentLineNumber-1, renderedContent.length > 0 ? renderedContent[renderedContent.length-1].length : 0);
 
-    return render;
+    return renderedContent;
   }
 
   click(position: Position): any {

@@ -20,8 +20,8 @@
         "title": "Magit Status"
       },
       {
-        "command": "extension.magit-choose",
-        "title": "Magit Choose",
+        "command": "extension.magit-visit-at-point",
+        "title": "Magit Visit-at-point",
         "when": "editorLangId == magit-status"
       },
       {
@@ -67,7 +67,7 @@
           "when": "editorLangId == magit-status"
         },
         {
-          "command": "extension.magit-choose",
+          "command": "extension.magit-visit-at-point",
           "when": "editorLangId == magit-status"
         },
         {
@@ -114,7 +114,7 @@
         "when": "editorTextFocus && editorLangId == magit-status"
       },
       {
-        "command": "extension.magit-choose",
+        "command": "extension.magit-visit-at-point",
         "key": "enter",
         "when": "editorTextFocus && editorLangId == magit-status"
       },

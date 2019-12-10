@@ -10,7 +10,11 @@ export function magitStage() {
 
   if (currentRepository) {
 
-    currentRepository.apply("my cool diff");
+    
+
+    // currentRepository
+    //   .apply("my cool diff")
+    //   .catch(err => {});
   }
 }
 

@@ -15,5 +15,5 @@ export class ChangeView extends View {
     }
   }
 
-  onClicked(): any { }
+  onClicked(): any {}
 }

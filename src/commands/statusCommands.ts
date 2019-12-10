@@ -1,7 +1,7 @@
 import { MagitState } from "../models/magitStatus";
 import { MagitChange } from "../models/magitChange";
 import { encodeLocation } from "../contentProvider";
-import { workspace, window, ViewColumn } from "vscode";
+import { workspace, window, ViewColumn, Range } from "vscode";
 import { gitApi, magitRepositories } from "../extension";
 import { Repository, Status, Change } from "../typings/git";
 import { FilePathUtils } from "../utils/filePathUtils";

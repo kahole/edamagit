@@ -1,57 +1,58 @@
 import * as vscode from 'vscode';
-import StatusDocument from './views/statusDocument';
+import MagitStatusView from './views/magitStatusView';
 import { magitRepositories } from './extension';
+import { View } from './views/abstract/view';
 
 export default class ContentProvider implements vscode.TextDocumentContentProvider {
 
   static scheme = 'magit';
 
   private _onDidChange = new vscode.EventEmitter<vscode.Uri>();
-  private _documents = new Map<string, StatusDocument>();
-  private _editorDecoration = vscode.window.createTextEditorDecorationType({ textDecoration: 'underline' });
+  onDidChange = this._onDidChange.event;
+
+  // private _documents = new Map<string, MagitStatusView>();
+
+  // TODO: can be used for BOLD, gutter displays, and other bonus styles:
+  // private _editorDecoration = vscode.window.createTextEditorDecorationType({ textDecoration: 'underline' });
   private _subscriptions: vscode.Disposable;
 
   constructor() {
 
     // Listen to the `closeTextDocument`-event which means we must
-    // clear the corresponding model object - `ReferencesDocument`
-    this._subscriptions = vscode.workspace.onDidCloseTextDocument(doc => this._documents.delete(doc.uri.toString()));
+    // clear the corresponding View
+    this._subscriptions = vscode.workspace.onDidCloseTextDocument(
+      doc => magitRepositories[doc.uri.query].views!.delete(doc.uri.toString()));
   }
 
   dispose() {
     this._subscriptions.dispose();
-    this._documents.clear();
-    this._editorDecoration.dispose();
+    // this._documents.clear();
+    // this._editorDecoration.dispose();
     this._onDidChange.dispose();
   }
 
-  // Expose an event to signal changes of _virtual_ documents
-  // to the editor
-  get onDidChange() {
-    return this._onDidChange.event;
-  }
-
-  // Provider method that takes an uri of the `references`-scheme and
-  // resolves its content by (1) running the reference search command
-  // and (2) formatting the results
   provideTextDocumentContent(uri: vscode.Uri): string | Thenable<string> {
 
+    console.log("provide text content call");
     // already loaded?
-    let document = this._documents.get(uri.toString());
-    if (document) {
-    	return document.value;
+    // let document = this._documents.get(uri.toString());
+    // if (document) {
+    // 	return document.value;
+    // }
+
+    let magitRepo = magitRepositories[uri.query];
+
+    let statusView = new MagitStatusView(uri, magitRepo.magitState!, this._onDidChange);
+
+    if (!magitRepo.views) {
+      magitRepo.views = new Map<string, View>();
     }
 
-    // Decode target-uri and target-position from the provided uri and execute the
-    // `reference provider` command (https://code.visualstudio.com/api/references/commands).
-    // From the result create a references document which is in charge of loading,
-    // printing, and formatting references
-    document = new StatusDocument(uri, magitRepositories[uri.query].magitState!, this._onDidChange);
+    magitRepo.views!.set(uri.toString(), statusView);
 
-    this._documents.set(uri.query, document);
-    return document.value;
+    // this._documents.set(uri.toString(), statusView);
+    return statusView.value;
   }
-
 
   // provideDocumentLinks(document: vscode.TextDocument, token: vscode.CancellationToken): vscode.DocumentLink[] | undefined {
   // 	// While building the virtual document we have already created the links.

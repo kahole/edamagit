@@ -5,7 +5,7 @@ import { pushing } from './commands/pushingCommands';
 import { branching } from './commands/branchingCommands';
 import { magitHelp } from './commands/helpCommands';
 import { magitStatus } from './commands/statusCommands';
-import { magitChoose } from './commands/chooseCommands';
+import { magitVisitAtPoint } from './commands/visitAtPointCommands';
 import { MagitRepository } from './models/magitRepository';
 import { magitCommit } from './commands/commitCommands';
 import { magitStage, magitStageAll } from './commands/stagingCommands';
@@ -41,7 +41,7 @@ export function activate(context: ExtensionContext) {
 
   context.subscriptions.push(commands.registerCommand('extension.magit', magitStatus));
   context.subscriptions.push(commands.registerCommand('extension.magit-commit', magitCommit));
-  context.subscriptions.push(commands.registerCommand('extension.magit-choose', magitChoose));
+  context.subscriptions.push(commands.registerCommand('extension.magit-visit-at-point', magitVisitAtPoint));
   context.subscriptions.push(commands.registerCommand('extension.magit-help', magitHelp));
   context.subscriptions.push(commands.registerCommand('extension.magit-pulling', async () => {
     // TODO: Options should be dynamically decided based on whether or not they can be done
