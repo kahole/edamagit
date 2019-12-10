@@ -5,6 +5,7 @@ import { Section, SectionHeaderView } from "../sectionHeader";
 import { LineBreakView } from "../lineBreakView";
 
 export class ChangeSectionView extends View {
+  isFoldable = true;
 
   constructor(section: Section, private changes: MagitChange[]) {
     super();

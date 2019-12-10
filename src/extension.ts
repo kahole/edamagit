@@ -1,4 +1,4 @@
-import { workspace, extensions, commands, ExtensionContext, Disposable } from 'vscode';
+import { workspace, extensions, commands, ExtensionContext, Disposable, languages } from 'vscode';
 import ContentProvider from './contentProvider';
 import { GitExtension, API } from './typings/git';
 import { pushing } from './commands/pushingCommands';
@@ -10,6 +10,7 @@ import { MagitRepository } from './models/magitRepository';
 import { magitCommit } from './commands/commitCommands';
 import { magitStage, magitStageAll } from './commands/stagingCommands';
 import { saveClose } from './commands/macros';
+import FoldingRangeProvider from './foldingRangeProvider';
 
 export const magitRepositories: { [id: string]: MagitRepository } = {};
 
@@ -29,13 +30,15 @@ export function activate(context: ExtensionContext) {
   // });
   gitApi = gitExtension.getAPI(1);
 
-  const provider = new ContentProvider();
+  const contentProvider = new ContentProvider();
+  const foldingRangeProvider = new FoldingRangeProvider();
 
   const providerRegistrations = Disposable.from(
-    workspace.registerTextDocumentContentProvider(ContentProvider.scheme, provider)
+    workspace.registerTextDocumentContentProvider(ContentProvider.scheme, contentProvider),
+    languages.registerFoldingRangeProvider(FoldingRangeProvider.scheme, foldingRangeProvider)
   );
   context.subscriptions.push(
-    provider,
+    contentProvider,
     providerRegistrations,
   );
 

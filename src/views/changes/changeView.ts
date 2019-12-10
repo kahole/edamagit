@@ -6,6 +6,7 @@ import { Status } from "../../typings/git";
 import { ChangeHeaderView } from "./changeHeaderView";
 
 export class ChangeView extends View {
+  isFoldable = true;
 
   constructor(private change: MagitChange) {
     super();
