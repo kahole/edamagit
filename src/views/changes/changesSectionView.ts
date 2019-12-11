@@ -16,9 +16,9 @@ export class ChangeSectionView extends View {
     ];
   }
 
-  onClicked(): any {
+  onClicked() {
     // If clicked on section, call section header onClick
     // subView clicks are prioritized
-    return this.subViews[0].onClicked();
+    return this.subViews[0];
   }
 }

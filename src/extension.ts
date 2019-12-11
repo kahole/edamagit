@@ -11,6 +11,7 @@ import { magitCommit } from './commands/commitCommands';
 import { magitStage, magitStageAll } from './commands/stagingCommands';
 import { saveClose } from './commands/macros';
 import FoldingRangeProvider from './foldingRangeProvider';
+import HighlightProvider from './highlightProvider';
 
 export const magitRepositories: { [id: string]: MagitRepository } = {};
 
@@ -32,10 +33,12 @@ export function activate(context: ExtensionContext) {
 
   const contentProvider = new ContentProvider();
   const foldingRangeProvider = new FoldingRangeProvider();
+  const highlightProvider = new HighlightProvider();
 
   const providerRegistrations = Disposable.from(
     workspace.registerTextDocumentContentProvider(ContentProvider.scheme, contentProvider),
-    languages.registerFoldingRangeProvider(FoldingRangeProvider.scheme, foldingRangeProvider)
+    languages.registerFoldingRangeProvider(FoldingRangeProvider.scheme, foldingRangeProvider),
+    languages.registerDocumentHighlightProvider(HighlightProvider.scheme, highlightProvider)
   );
   context.subscriptions.push(
     contentProvider,

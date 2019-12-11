@@ -6,6 +6,4 @@ export class LineBreakView extends TextView {
     super();
     this.textContent = "\n".repeat(number-1);
   }
-
-  onClicked(): any {}
 }

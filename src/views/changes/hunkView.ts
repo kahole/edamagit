@@ -8,8 +8,4 @@ export class HunkView extends TextView {
     super();
     this.textContent = changeHunk.diff;
   }
-
-  onClicked(): any {
-    return this.changeHunk;
-  }
 }

@@ -9,8 +9,6 @@ import { RestView } from './restView';
 
 export default class MagitStatusView extends View {
 
-  onClicked() {}
-
   private readonly _uri: vscode.Uri;
   private readonly _emitter: vscode.EventEmitter<vscode.Uri>;
 

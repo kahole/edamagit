@@ -15,6 +15,4 @@ export class ChangeView extends View {
       this.subViews.push(...this.change.hunks.map(hunk => new HunkView(hunk)));
     }
   }
-
-  onClicked(): any {}
 }

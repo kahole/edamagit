@@ -5,7 +5,8 @@ export abstract class View {
   subViews: View[] = [];
   range: Range = new Range(0, 0, 0, 0);
   isFoldable: boolean = false;
-  abstract onClicked(): any;
+  
+  onClicked(): View | undefined { return this; }
 
   render(startLineNumber: number): string[] {
     let currentLineNumber = startLineNumber;
@@ -23,7 +24,7 @@ export abstract class View {
     return renderedContent;
   }
 
-  click(position: Position): any {
+  click(position: Position): View | undefined {
     if (this.range.contains(position)) {
       let result = this.onClicked();
       let subResults = this.subViews

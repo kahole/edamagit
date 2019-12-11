@@ -35,8 +35,4 @@ export class RestView extends TextView {
 
     this.textContent = this._lines.join('\n');
   }
-
-  onClicked(): any {
-    return "rest view";
-  }
 }
