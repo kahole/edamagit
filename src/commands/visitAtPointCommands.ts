@@ -3,8 +3,7 @@ import MagitUtils from "../utils/magitUtils";
 
 export function magitVisitAtPoint() {
 
-  let repository = MagitUtils.getCurrentMagitRepo();
-  let currentView = repository?.views?.get(window.activeTextEditor?.document.uri.toString() ?? "");
+  let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView();
 
   if (currentView) {
     let clickedView = currentView.click(window.activeTextEditor!.selection.active);

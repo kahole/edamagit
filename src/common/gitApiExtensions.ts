@@ -6,6 +6,7 @@ interface BaseRepository {
   pushTo(remote?: string, name?: string, setUpstream?: boolean, forcePushMode?: ForcePushMode): Promise<void>;
   add(resources: Uri[], opts?: { update?: boolean }): Promise<void>;
   stage(resource: Uri, contents: string): Promise<void>;
+  reset(treeish: string, hard?: boolean): Promise<void>;
 }
 
 // Repository.prototype.getStashes = function(this: any) {

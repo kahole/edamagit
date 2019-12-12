@@ -1,17 +1,14 @@
-import { window, workspace, commands } from "vscode";
+import { window, commands } from "vscode";
 import { HunkView } from "../views/changes/HunkView";
 import { ChangeView } from "../views/changes/changeView";
 import MagitUtils from "../utils/magitUtils";
 import FilePathUtils from "../utils/filePathUtils";
 import { ChangeSectionView } from "../views/changes/changesSectionView";
 import { Section } from "../views/sectionHeader";
-import { internalMagitStatus } from "./statusCommands";
-import MagitStatusView from "../views/magitStatusView";
 
 export function magitStage() {
 
-  let repository = MagitUtils.getCurrentMagitRepo();
-  let currentView = repository?.views?.get(window.activeTextEditor?.document.uri.toString() ?? "");
+  let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView();
 
   if (currentView) {
     let clickedView = currentView.click(window.activeTextEditor!.selection.active);
@@ -33,9 +30,7 @@ export function magitStage() {
       currentRepository
         ._repository
         .add([magitChange.uri], { update: true }) // TODO: litt usikker om update eller ikke
-        .then(() => internalMagitStatus(currentRepository))
-        .then(() => (currentView as MagitStatusView).triggerUpdate())
-        .catch(err => { console.log(err); });
+        .then(MagitUtils.maggitStatusAndUpdate(currentRepository, currentView));
 
     } else if (clickedView instanceof ChangeSectionView) {
       let section = (clickedView as ChangeSectionView).section;
@@ -66,8 +61,7 @@ export function magitStage() {
         .then(chosenFilePath => {
 
         })
-        .then(() => internalMagitStatus(currentRepository))
-        .then(() => (currentView as MagitStatusView).triggerUpdate());
+        .then(MagitUtils.maggitStatusAndUpdate(currentRepository, currentView));
     }
 
     // NB! Trenger kanskje headeren til hele diffen for å utføre disse.
@@ -83,19 +77,26 @@ export enum StageAllKind {
 
 export function magitStageAll(kind: StageAllKind = StageAllKind.AllTracked) {
 
-  const editor = window.activeTextEditor;
-  const currentRepository = MagitUtils.getCurrentMagitRepo();
+  let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView();
 
-  if (!editor || !currentRepository) {
-    return;
-  }
-
-  let currentView = currentRepository.views?.get(editor.document.uri.toString());
-
-  if (currentView instanceof MagitStatusView) {
+  // if (currentView instanceof MagitStatusView) {
 
     commands.executeCommand("git." + kind.valueOf())
-      .then(() => internalMagitStatus(currentRepository))
-      .then(() => (currentView as MagitStatusView).triggerUpdate());
-  }
+      .then(MagitUtils.maggitStatusAndUpdate(repository, currentView));
+  // }
+}
+
+export function magitUnstage() {
+
+}
+
+export function magitUnstageAll() {
+
+  let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView();
+
+  // if (currentView instanceof MagitStatusView) {
+
+    commands.executeCommand("git.unstageAll")
+      .then(MagitUtils.maggitStatusAndUpdate(repository, currentView));
+  // }
 }

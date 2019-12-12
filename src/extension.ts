@@ -8,7 +8,7 @@ import { magitStatus } from './commands/statusCommands';
 import { magitVisitAtPoint } from './commands/visitAtPointCommands';
 import { MagitRepository } from './models/magitRepository';
 import { magitCommit } from './commands/commitCommands';
-import { magitStage, magitStageAll } from './commands/stagingCommands';
+import { magitStage, magitStageAll, magitUnstageAll, magitUnstage } from './commands/stagingCommands';
 import { saveClose } from './commands/macros';
 import FoldingRangeProvider from './foldingRangeProvider';
 import HighlightProvider from './highlightProvider';
@@ -57,6 +57,8 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerCommand('extension.magit-branching', branching));
   context.subscriptions.push(commands.registerCommand('extension.magit-stage', magitStage));
   context.subscriptions.push(commands.registerCommand('extension.magit-stage-all', magitStageAll));
+  context.subscriptions.push(commands.registerCommand('extension.magit-unstage', magitUnstage));
+  context.subscriptions.push(commands.registerCommand('extension.magit-unstage-all', magitUnstageAll));
 
   context.subscriptions.push(commands.registerCommand('extension.magit-save-and-close-commit-msg', saveClose));
 }

@@ -12,8 +12,7 @@ import { Status } from "../typings/git";
 export function magitStatus() {
 
   // Magit status already open?
-  let repository = MagitUtils.getCurrentMagitRepo();
-  let currentView = repository?.views?.get(window.activeTextEditor?.document.uri.toString() ?? "");
+  let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView();
 
   if (currentView instanceof MagitStatusView) {
     let currentRepository = repository!;

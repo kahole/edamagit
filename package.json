@@ -50,6 +50,16 @@
         "when": "editorLangId == magit-status"
       },
       {
+        "command": "extension.magit-unstage",
+        "title": "Magit Unstage",
+        "when": "editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit-unstage-all",
+        "title": "Magit Unstage All",
+        "when": "editorLangId == magit-status"
+      },
+      {
         "command": "extension.magit-help",
         "title": "Magit Help",
         "when": "editorLangId == magit-status"
@@ -76,6 +86,14 @@
         },
         {
           "command": "extension.magit-stage-all",
+          "when": "editorLangId == magit-status"
+        },
+        {
+          "command": "extension.magit-unstage",
+          "when": "editorLangId == magit-status"
+        },
+        {
+          "command": "extension.magit-unstage-all",
           "when": "editorLangId == magit-status"
         },
         {
@@ -155,6 +173,16 @@
       {
         "command": "extension.magit-stage-all",
         "key": "shift+s",
+        "when": "editorTextFocus && editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit-unstage",
+        "key": "u",
+        "when": "editorTextFocus && editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit-unstage-all",
+        "key": "shift+u",
         "when": "editorTextFocus && editorLangId == magit-status"
       },
       {
