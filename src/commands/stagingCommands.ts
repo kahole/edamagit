@@ -8,6 +8,13 @@ import { Section } from "../views/sectionHeader";
 
 export function magitStage() {
 
+  // TODO:
+  // Can make a command runner thing
+  // so that repository and currentView get passed in NOT nullable
+  // multiple types of commands:
+  //   view + repo
+  //   only repo
+
   let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView();
 
   if (currentView) {
