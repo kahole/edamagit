@@ -18,9 +18,11 @@ export function magitStage() {
     if (clickedView instanceof HunkView) {
       let changeHunkDiff = (clickedView as HunkView).changeHunk.diff;
 
-      // Apply diff
+      // TODO
+
+      // stage hunk
       // currentRepository
-      //   .apply((clickedView as HunkView).changeHunk.diffHeader + changeHunkDiff)
+      //   .stage((clickedView as HunkView).changeHunk.diffHeader + changeHunkDiff)
       //   .catch(err => { console.log(err); });
 
     } else if (clickedView instanceof ChangeView) {
@@ -60,6 +62,8 @@ export function magitStage() {
       )
         .then(chosenFilePath => {
 
+          // TODO
+
         })
         .then(MagitUtils.maggitStatusAndUpdate(currentRepository, currentView));
     }
@@ -81,22 +85,31 @@ export function magitStageAll(kind: StageAllKind = StageAllKind.AllTracked) {
 
   // if (currentView instanceof MagitStatusView) {
 
-    commands.executeCommand("git." + kind.valueOf())
-      .then(MagitUtils.maggitStatusAndUpdate(repository, currentView));
+  commands.executeCommand("git." + kind.valueOf())
+    .then(MagitUtils.maggitStatusAndUpdate(repository, currentView));
   // }
 }
 
 export function magitUnstage() {
 
+  // TODO
+
+  // repository._repository.reset()
+
 }
 
 export function magitUnstageAll() {
 
-  let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView();
+  window.showInputBox({ prompt: "Unstage all changes?" })
+    .then(response => {
+      if (response !== undefined) {
+        let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView();
 
-  // if (currentView instanceof MagitStatusView) {
+        // if (currentView instanceof MagitStatusView) {
 
-    commands.executeCommand("git.unstageAll")
-      .then(MagitUtils.maggitStatusAndUpdate(repository, currentView));
-  // }
+        commands.executeCommand("git.unstageAll")
+          .then(MagitUtils.maggitStatusAndUpdate(repository, currentView));
+        // }
+      }
+    });
 }
