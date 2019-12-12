@@ -9,6 +9,8 @@ export class ChangeHeaderView extends TextView {
     let statusLabel = mapFileStatusToLabel(this.change.status);
     this.textContent = `${statusLabel ? statusLabel + " " : ""}${this.change.uri.path}`;
   }
+
+  onClicked() { return undefined; }
 }
 
 function mapFileStatusToLabel(status: Status): string {

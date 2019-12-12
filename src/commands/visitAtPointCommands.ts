@@ -1,6 +1,7 @@
 import { window, TextEditor, Range, workspace } from "vscode";
 import * as Constants from '../common/constants';
 import { magitRepositories } from "../extension";
+import { HunkView } from "../views/changes/HunkView";
 
 export function magitVisitAtPoint() {
 
@@ -16,28 +17,19 @@ export function magitVisitAtPoint() {
     let currentView = currentRepository.views!.get(editor.document.uri.toString());
 
     if (currentView) {
-      let result = currentView.click(editor.selection.active);
+      let clickedView = currentView.click(editor.selection.active);
       console.log(editor.selection.active.line);
-      console.log(result);
+      console.log(clickedView);
+
+      // TODO: Is this a good way of solving this?
+      if (clickedView instanceof HunkView) {
+        // (clickedView as HunkView).changeHunk.diff
+      }
+
+
     }
 
     // let selectedLine = editor.document.getText().split(Constants.LineSplitterRegex)[editor.selection.active.line];
     // console.log(selectedLine);
   }
 }
-
-// function getRequestText(editor: TextEditor): string | null {
-//   if (!editor || !editor.document) {
-//       return null;
-//   }
-
-//   let selectedText: string | null;
-//   if (editor.selection.isEmpty || range) {
-//       const activeLine = !range ? editor.selection.active.line : range.start.line;
-//       selectedText = Selector.getDelimitedText(editor.document.getText(), activeLine);
-//   } else {
-//       selectedText = editor.document.getText(editor.selection);
-//   }
-
-//   return selectedText;
-// }

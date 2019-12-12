@@ -4,7 +4,7 @@ import { TextView } from "../abstract/textView";
 export class HunkView extends TextView {
   isFoldable = true;
 
-  constructor(private changeHunk: MagitChangeHunk) {
+  constructor(public changeHunk: MagitChangeHunk) {
     super();
     this.textContent = changeHunk.diff;
   }

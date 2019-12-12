@@ -15,10 +15,4 @@ export class ChangeSectionView extends View {
       new LineBreakView()
     ];
   }
-
-  onClicked() {
-    // If clicked on section, call section header onClick
-    // subView clicks are prioritized
-    return this.subViews[0];
-  }
 }

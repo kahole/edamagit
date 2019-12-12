@@ -18,8 +18,13 @@ export function magitStatus() {
     
     // TODO: clean up this mess
 
-    // [, repository] = Object.entries(magitRepositories).filter(
-      // ([key, repo]) => FilePathUtils.isDescendant(key, rootPath))[0];
+    let repos = Object.entries(magitRepositories).filter(
+      ([key, repo]) => FilePathUtils.isDescendant(key, rootPath));
+
+    if (repos.length > 0) {
+      console.log("reuse repo");
+      [, repository] = repos[0];
+    }
 
     if (!repository) {
       repository = gitApi.repositories.filter(r => FilePathUtils.isDescendant(r.rootUri.fsPath, rootPath))[0];

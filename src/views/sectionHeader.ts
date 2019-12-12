@@ -14,4 +14,6 @@ export class SectionHeaderView extends TextView {
     super();
     this.textContent = `${_section.valueOf()}${count ? " (" + count + ")" : ""}`;
   }
+
+  onClicked() { return undefined; }
 }

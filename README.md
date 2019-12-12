@@ -1,4 +1,3 @@
-# TODO
 
 ## General
   - Use existing tooling as much as possible
