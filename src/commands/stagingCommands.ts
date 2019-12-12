@@ -1,10 +1,11 @@
-import { window, commands } from "vscode";
+import { window, commands, workspace, Uri } from "vscode";
 import { HunkView } from "../views/changes/HunkView";
 import { ChangeView } from "../views/changes/changeView";
 import MagitUtils from "../utils/magitUtils";
 import FilePathUtils from "../utils/filePathUtils";
 import { ChangeSectionView } from "../views/changes/changesSectionView";
 import { Section } from "../views/sectionHeader";
+import { TextEncoder } from "util";
 
 export function magitStage() {
 
@@ -15,22 +16,28 @@ export function magitStage() {
   //   view + repo
   //   only repo
 
+  // TODO:
+  // Bytt til ASYNC-AWAIT!!!!!??????
+
   let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView();
 
   if (currentView) {
     let clickedView = currentView.click(window.activeTextEditor!.selection.active);
     let currentRepository = repository!;
 
-    // TODO: Is this a good way of solving this?
     if (clickedView instanceof HunkView) {
       let changeHunkDiff = (clickedView as HunkView).changeHunk.diff;
 
       // TODO
-
-      // stage hunk
-      // currentRepository
-      //   .stage((clickedView as HunkView).changeHunk.diffHeader + changeHunkDiff)
-      //   .catch(err => { console.log(err); });
+      var enc = new TextEncoder();
+      workspace.fs.writeFile(Uri.parse("file:///tmp/minmagitdiffpatchting"),
+        enc.encode(clickedView.changeHunk.diffHeader + changeHunkDiff + "\n"))
+        .then( () => {
+          // stage hunk
+          currentRepository
+            .apply("/tmp/minmagitdiffpatchting")
+            .then(MagitUtils.magitStatusAndUpdate(currentRepository, currentView));
+        });
 
     } else if (clickedView instanceof ChangeView) {
 
@@ -39,7 +46,7 @@ export function magitStage() {
       currentRepository
         ._repository
         .add([magitChange.uri], { update: true }) // TODO: litt usikker om update eller ikke
-        .then(MagitUtils.maggitStatusAndUpdate(currentRepository, currentView));
+        .then(MagitUtils.magitStatusAndUpdate(currentRepository, currentView));
 
     } else if (clickedView instanceof ChangeSectionView) {
       let section = (clickedView as ChangeSectionView).section;
@@ -72,7 +79,7 @@ export function magitStage() {
           // TODO
 
         })
-        .then(MagitUtils.maggitStatusAndUpdate(currentRepository, currentView));
+        .then(MagitUtils.magitStatusAndUpdate(currentRepository, currentView));
     }
 
     // NB! Trenger kanskje headeren til hele diffen for å utføre disse.
@@ -93,7 +100,7 @@ export function magitStageAll(kind: StageAllKind = StageAllKind.AllTracked) {
   // if (currentView instanceof MagitStatusView) {
 
   commands.executeCommand("git." + kind.valueOf())
-    .then(MagitUtils.maggitStatusAndUpdate(repository, currentView));
+    .then(MagitUtils.magitStatusAndUpdate(repository, currentView));
   // }
 }
 
@@ -115,7 +122,7 @@ export function magitUnstageAll() {
         // if (currentView instanceof MagitStatusView) {
 
         commands.executeCommand("git.unstageAll")
-          .then(MagitUtils.maggitStatusAndUpdate(repository, currentView));
+          .then(MagitUtils.magitStatusAndUpdate(repository, currentView));
         // }
       }
     });

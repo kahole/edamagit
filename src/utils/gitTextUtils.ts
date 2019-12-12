@@ -1,9 +1,10 @@
 import { MagitChangeHunk } from "../models/magitChangeHunk";
 import { FinalLineBreakRegex } from "../common/constants";
+import { Uri } from "vscode";
 
 export default class GitTextUtils {
   
-  public static diffToHunks(diff: string): MagitChangeHunk[] {
+  public static diffToHunks(diff: string, uri: Uri): MagitChangeHunk[] {
 
     let hunksStart = diff.indexOf("@@");
     let diffHeader = diff.slice(0, hunksStart);
@@ -12,6 +13,6 @@ export default class GitTextUtils {
       .replace(FinalLineBreakRegex, '') // removes extra line break at the end
       .slice(hunksStart)
       .split(/\n(?=^@@.*@@.*$)/gm)
-      .map(hunkText => ({ diff: hunkText, diffHeader }));
+      .map(hunkText => ({ diff: hunkText, diffHeader, uri }));
   }
 }

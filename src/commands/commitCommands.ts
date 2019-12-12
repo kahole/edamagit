@@ -19,14 +19,19 @@ export async function magitCommit() {
 
     let userEditor: string | undefined;
     try {
-      userEditor = (await execPromise("git config core.editor", cwd)).trim();
+      // userEditor = (await execPromise("git config core.editor", cwd)).trim();
+      userEditor = await currentRepository.getConfig("core.editor");
 
-      await execPromise("git config core.editor \"code --wait\"", cwd);
+      // await execPromise("git config core.editor \"code --wait\"", cwd);
+      await currentRepository.setConfig("core.editor", "code --wait");
 
       // TODO:
       // - Open staged changes document to the left!
 
       window.setStatusBarMessage(`Type C-c C-c to finish, or C-c C-k to cancel`);
+
+      // TODO: use gitExecutablePath = gitApi.git.path;
+      //     and cross platform solution
 
       let commitSuccessMessage = await execPromise("git commit", cwd);
 
@@ -38,7 +43,8 @@ export async function magitCommit() {
       console.log(e);
     } finally {
       if (userEditor) {
-        execPromise(`git config core.editor "${userEditor}"`, cwd);
+        // execPromise(`git config core.editor "${userEditor}"`, cwd);
+        currentRepository.setConfig("core.editor", userEditor);
       }
     }
 

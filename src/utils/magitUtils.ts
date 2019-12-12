@@ -18,7 +18,7 @@ export default class MagitUtils {
     return [repository, currentView];
   }
 
-  public static maggitStatusAndUpdate(currentRepository: MagitRepository | undefined, statusView: View | undefined) {
+  public static magitStatusAndUpdate(currentRepository: MagitRepository | undefined, statusView: View | undefined) {
     if (currentRepository && statusView instanceof MagitStatusView) {
       return () => internalMagitStatus(currentRepository)
       .then(() => statusView.triggerUpdate());

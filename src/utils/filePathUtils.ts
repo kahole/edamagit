@@ -28,6 +28,7 @@ export default class FilePathUtils {
   }
 
   public static pathRelativeTo(uri: Uri, root: Uri) {
+    // TODO: sikkert ikke god nok implementasjon
     return uri.path.slice(root.path.length + 1);
   }
 }
