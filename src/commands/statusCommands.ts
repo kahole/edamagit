@@ -1,21 +1,34 @@
-import { MagitState } from "../models/magitStatus";
 import { MagitChange } from "../models/magitChange";
 import { encodeLocation } from "../contentProvider";
 import { workspace, window, ViewColumn, Range } from "vscode";
 import { gitApi, magitRepositories } from "../extension";
-import { Repository, Status, Change } from "../typings/git";
-import { FilePathUtils } from "../utils/filePathUtils";
-import { GitTextUtils } from "../utils/gitTextUtils";
+import FilePathUtils from "../utils/filePathUtils";
+import GitTextUtils from "../utils/gitTextUtils";
 import { MagitRepository } from "../models/magitRepository";
+import MagitUtils from "../utils/magitUtils";
+import MagitStatusView from "../views/magitStatusView";
+import { Status } from "../typings/git";
 
 export function magitStatus() {
 
+  // Magit status already open?
+  let repository = MagitUtils.getCurrentMagitRepo();
+  let currentView = repository?.views?.get(window.activeTextEditor?.document.uri.toString() ?? "");
+
+  if (currentView instanceof MagitStatusView) {
+    let currentRepository = repository!;
+    internalMagitStatus(currentRepository)
+      .then(() => (currentView as MagitStatusView).triggerUpdate())
+    return;
+  }
+
+  // New magit status document
   if (workspace.workspaceFolders && workspace.workspaceFolders[0]) {
 
     const rootPath = workspace.workspaceFolders[0].uri.fsPath;
 
     let repository: MagitRepository | undefined;
-    
+
     // TODO: clean up this mess
 
     let repos = Object.entries(magitRepositories).filter(
@@ -34,9 +47,8 @@ export function magitStatus() {
       let magitRepo: MagitRepository = repository;
       magitRepositories[repository.rootUri.fsPath] = repository;
 
-      MagitStatus(repository)
-        .then(m => {
-          magitRepo.magitState = m;
+      internalMagitStatus(magitRepo)
+        .then(() => {
           const uri = encodeLocation(magitRepo.rootUri.fsPath);
           workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside));
         });
@@ -47,7 +59,7 @@ export function magitStatus() {
   }
 }
 
-async function MagitStatus(repository: Repository): Promise<MagitState> {
+export async function internalMagitStatus(repository: MagitRepository): Promise<void> {
 
   await repository.status();
 
@@ -105,7 +117,7 @@ async function MagitStatus(repository: Repository): Promise<MagitState> {
 
   let commitCache = commits.reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});
 
-  return {
+  repository.magitState = {
     _state: repository.state,
     stashes,
     log,

@@ -1,11 +1,11 @@
 import { gitApi } from "../extension";
 import { exec, spawn, ExecException } from "child_process";
-import { getCurrentMagitRepo } from "../utils/magitUtils";
 import { window } from "vscode";
+import MagitUtils from "../utils/magitUtils";
 
 export async function magitCommit() {
 
-  let currentRepository = getCurrentMagitRepo();
+  let currentRepository = MagitUtils.getCurrentMagitRepo();
 
   // TODO: show menu etc..
 

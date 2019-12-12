@@ -1,10 +1,10 @@
 import { MagitPicker } from "../menus/magitPicker";
 import { PushingMenu } from "../menus/pushing/pushingMenu";
-import { getCurrentMagitRepo } from "../utils/magitUtils";
+import MagitUtils from "../utils/magitUtils";
 
 export function pushing() {
 
-  let currentRepository = getCurrentMagitRepo();
+  let currentRepository = MagitUtils.getCurrentMagitRepo();
 
   if (currentRepository) {
     console.log("Working tree changes, but from pushing command");

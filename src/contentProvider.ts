@@ -14,18 +14,22 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
 
   // TODO: can be used for BOLD, gutter displays, and other bonus styles:
   // private _editorDecoration = vscode.window.createTextEditorDecorationType({ textDecoration: 'underline' });
-  private _subscriptions: vscode.Disposable;
+
+  // private _subscriptions: vscode.Disposable;
 
   constructor() {
 
-    // Listen to the `closeTextDocument`-event which means we must
-    // clear the corresponding View
-    this._subscriptions = vscode.workspace.onDidCloseTextDocument(
-      doc => magitRepositories[doc.uri.query].views!.delete(doc.uri.toString()));
+    // TODO:
+    // Might not need to delete all views. Keep magit-status view?
+    //                             and then just update
+    //   might wanna delete other types of views though
+
+    // this._subscriptions = vscode.workspace.onDidCloseTextDocument(
+      // doc => magitRepositories[doc.uri.query].views!.delete(doc.uri.toString()));
   }
 
   dispose() {
-    this._subscriptions.dispose();
+    // this._subscriptions.dispose();
     // this._documents.clear();
     // this._editorDecoration.dispose();
     this._onDidChange.dispose();
@@ -42,16 +46,14 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
 
     let magitRepo = magitRepositories[uri.query];
 
-    let statusView = new MagitStatusView(uri, magitRepo.magitState!, this._onDidChange);
-
     if (!magitRepo.views) {
       magitRepo.views = new Map<string, View>();
     }
 
-    magitRepo.views!.set(uri.toString(), statusView);
+    let statusView = new MagitStatusView(uri, this._onDidChange, magitRepo.magitState!);
+    magitRepo.views.set(uri.toString(), statusView);
 
-    // this._documents.set(uri.toString(), statusView);
-    return statusView.value;
+    return statusView.render(0).join('\n');
   }
 
   // provideDocumentLinks(document: vscode.TextDocument, token: vscode.CancellationToken): vscode.DocumentLink[] | undefined {

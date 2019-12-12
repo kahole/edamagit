@@ -8,7 +8,7 @@ import { ChangeHeaderView } from "./changeHeaderView";
 export class ChangeView extends View {
   isFoldable = true;
 
-  constructor(private change: MagitChange) {
+  constructor(public change: MagitChange) {
     super();
     this.subViews = [new ChangeHeaderView(change)];
     if (this.change.hunks) {

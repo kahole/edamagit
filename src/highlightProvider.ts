@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
-import { View } from './views/abstract/view';
-import { getCurrentMagitRepo } from './utils/magitUtils';
+import MagitUtils from './utils/magitUtils';
 
 export default class HighlightProvider implements vscode.DocumentHighlightProvider {
   
@@ -12,7 +11,7 @@ export default class HighlightProvider implements vscode.DocumentHighlightProvid
 
     let highlights: vscode.DocumentHighlight[] = [];
 
-    let currentRepository = getCurrentMagitRepo();
+    let currentRepository = MagitUtils.getCurrentMagitRepo();
 
     if (currentRepository && currentRepository.views) {
       let currentView = currentRepository.views.get(document.uri.toString());

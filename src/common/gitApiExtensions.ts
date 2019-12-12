@@ -1,8 +1,11 @@
 import { Repository } from "../typings/git";
+import { Uri } from "vscode";
 
 interface BaseRepository {
   getStashes(): Promise<Stash[]>;
   pushTo(remote?: string, name?: string, setUpstream?: boolean, forcePushMode?: ForcePushMode): Promise<void>;
+  add(resources: Uri[], opts?: { update?: boolean }): Promise<void>;
+  stage(resource: Uri, contents: string): Promise<void>;
 }
 
 // Repository.prototype.getStashes = function(this: any) {

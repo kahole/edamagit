@@ -19,7 +19,7 @@ function mapFileStatusToLabel(status: Status): string {
     case Status.MODIFIED:
       return "modified";
     case Status.INDEX_ADDED:
-      return "added";
+      return "new file";
     case Status.INDEX_DELETED:
     case Status.DELETED:
       return "deleted";

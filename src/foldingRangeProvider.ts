@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { View } from './views/abstract/view';
-import { getCurrentMagitRepo } from './utils/magitUtils';
+import MagitUtils from './utils/magitUtils';
 
 export default class FoldingRangeProvider implements vscode.FoldingRangeProvider {
 
@@ -12,7 +12,7 @@ export default class FoldingRangeProvider implements vscode.FoldingRangeProvider
 
     let foldingRanges: vscode.FoldingRange[] = [];
 
-    let currentRepository = getCurrentMagitRepo();
+    let currentRepository = MagitUtils.getCurrentMagitRepo();
 
     if (currentRepository && currentRepository.views) {
       let currentView = currentRepository.views.get(document.uri.toString());

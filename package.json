@@ -95,8 +95,12 @@
     "languages": [
       {
         "id": "magit-status",
-        "aliases": ["Magit"],
-        "extensions": [".magit"],
+        "aliases": [
+          "Magit"
+        ],
+        "extensions": [
+          ".magit"
+        ],
         "configuration": "./languages/magit.language-configuration.json"
       }
     ],
@@ -111,6 +115,11 @@
       {
         "command": "editor.toggleFold",
         "key": "tab",
+        "when": "editorTextFocus && editorLangId == magit-status"
+      },
+      {
+        "command": "extension.magit",
+        "key": "g",
         "when": "editorTextFocus && editorLangId == magit-status"
       },
       {
@@ -174,8 +183,8 @@
     "@types/vscode": "^1.40.0",
     "glob": "^7.1.5",
     "mocha": "^6.2.2",
-    "typescript": "^3.6.4",
-    "tslint": "^5.20.0",
+    "typescript": "^3.7.3",
+    "tslint": "^5.20.1",
     "vscode-test": "^1.2.2"
   }
 }
