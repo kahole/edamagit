@@ -18,7 +18,7 @@ export function magitStatus() {
   if (currentView instanceof MagitStatusView) {
     let currentRepository = repository!;
     internalMagitStatus(currentRepository)
-      .then(() => (currentView as MagitStatusView).triggerUpdate())
+      .then(() => (currentView as MagitStatusView).triggerUpdate());
     return;
   }
 
