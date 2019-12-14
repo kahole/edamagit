@@ -4,11 +4,15 @@ import { ChangeSectionView } from './changes/changesSectionView';
 import { Section } from './sectionHeader';
 import { RestView } from './restView';
 import { DocumentView } from './abstract/documentView';
+import { StashSectionView } from './stashes/stashSectionView';
+import { CommitSectionView } from './commits/commitSectionView';
 
 export default class MagitStatusView extends DocumentView {
 
   constructor(uri: vscode.Uri, emitter: vscode.EventEmitter<vscode.Uri>, magitState: MagitState) {
     super(uri, emitter);
+
+    this.subViews.push(new RestView(magitState));
 
     if (magitState.untrackedFiles && magitState.untrackedFiles.length > 0) {
       this.subViews.push(new ChangeSectionView(Section.Untracked, magitState.untrackedFiles));
@@ -22,7 +26,13 @@ export default class MagitStatusView extends DocumentView {
       this.subViews.push(new ChangeSectionView(Section.Staged, magitState.indexChanges));
     }
 
-    this.subViews.push(new RestView(magitState));
+    if (magitState.stashes && magitState.stashes?.length > 0) {
+      this.subViews.push(new StashSectionView(magitState.stashes));
+    }
+
+    if (magitState.log && magitState.log.length > 0) {
+      this.subViews.push(new CommitSectionView(magitState.log));
+    }
   }
 
   public triggerUpdate() {

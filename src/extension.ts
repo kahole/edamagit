@@ -12,6 +12,7 @@ import { magitStage, magitStageAll, magitUnstageAll, magitUnstage } from './comm
 import { saveClose } from './commands/macros';
 import FoldingRangeProvider from './foldingRangeProvider';
 import HighlightProvider from './highlightProvider';
+import { CommandPrimer } from './commands/commandPrimer';
 
 export const magitRepositories: { [id: string]: MagitRepository } = {};
 
@@ -55,7 +56,7 @@ export function activate(context: ExtensionContext) {
   }));
   context.subscriptions.push(commands.registerCommand('extension.magit-pushing', pushing));
   context.subscriptions.push(commands.registerCommand('extension.magit-branching', branching));
-  context.subscriptions.push(commands.registerCommand('extension.magit-stage', magitStage));
+  context.subscriptions.push(commands.registerCommand('extension.magit-stage', CommandPrimer.prime(magitStage, true, true)));
   context.subscriptions.push(commands.registerCommand('extension.magit-stage-all', magitStageAll));
   context.subscriptions.push(commands.registerCommand('extension.magit-unstage', magitUnstage));
   context.subscriptions.push(commands.registerCommand('extension.magit-unstage-all', magitUnstageAll));

@@ -122,6 +122,11 @@
         "configuration": "./languages/magit.language-configuration.json"
       }
     ],
+    "configurationDefaults": {
+      "[magit-status]": {
+        "editor.lineNumbers": "off"
+      }
+    },
     "grammars": [
       {
         "language": "magit-status",

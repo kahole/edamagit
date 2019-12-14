@@ -10,15 +10,15 @@ export function pushing() {
     console.log("Working tree changes, but from pushing command");
     console.log(currentRepository.magitState!.workingTreeChanges);
 
-    MagitPicker.showMagitPicker(new PushingMenu());
+    MagitPicker.showMagitPicker(new PushingMenu(undefined, undefined));
 
     // Hvordan git push kommandoen bygges opp:
     // https://github.com/microsoft/vscode/blob/master/extensions/git/src/git.ts#L1491
 
     // kun "git push" slik den står nå
-    currentRepository._repository.pushTo()
-      .then(() => console.log("klarte å pushe ?"))
-      .catch(console.log);
+    // currentRepository._repository.pushTo()
+    //   .then(() => console.log("klarte å pushe ?"))
+    //   .catch(console.log);
   }
 
   // _repository pushTo(remote?: string, name?: string, setUpstream?: boolean, forcePushMode?: ForcePushMode): Promise<void>

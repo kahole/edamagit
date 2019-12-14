@@ -1,6 +1,5 @@
 import { Menu } from "../abstract/menu";
 import { MenuItem } from "../abstract/menuItem";
-import { MagitState } from "../../models/magitStatus";
 import { PushingSwitches } from "./switches";
 
 enum Items {
@@ -12,7 +11,7 @@ export class PushingMenu implements Menu {
   title: string = "Pushing";
   items: MenuItem[];
 
-  constructor() {
+  constructor(remote?: string, upstream?: string) {
     // TODO: take in some state to customize and narrow selection!
     this.items = [{id: Items.Switches, label: "-", description: "Switches"}];
   }
