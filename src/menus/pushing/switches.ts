@@ -1,6 +1,6 @@
 import { Menu } from "../abstract/menu";
 import { MenuItem } from "../abstract/menuItem";
-import { MagitState } from "../../models/magitStatus";
+import { MagitState } from "../../models/magitState";
 
 enum Items {
   ForceWithLease,

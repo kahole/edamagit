@@ -1,4 +1,4 @@
-import { View } from "../abstract/view";
+import { View } from "../general/view";
 import { Range } from "vscode";
 import { MagitChange } from "../../models/magitChange";
 import { HunkView } from "./HunkView";

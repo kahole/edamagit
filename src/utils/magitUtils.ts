@@ -1,7 +1,7 @@
 import { MagitRepository } from "../models/magitRepository";
 import { magitRepositories } from "../extension";
 import { window } from "vscode";
-import { View } from "../views/abstract/view";
+import { View } from "../views/general/view";
 import MagitStatusView from "../views/magitStatusView";
 import { internalMagitStatus } from "../commands/statusCommands";
 

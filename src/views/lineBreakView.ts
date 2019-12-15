@@ -1,4 +1,4 @@
-import { TextView } from "./abstract/textView";
+import { TextView } from "./general/textView";
 
 export class LineBreakView extends TextView {
 

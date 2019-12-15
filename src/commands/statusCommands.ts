@@ -1,5 +1,5 @@
 import { MagitChange } from "../models/magitChange";
-import { encodeLocation } from "../contentProvider";
+import { encodeLocation } from "../providers/contentProvider";
 import { workspace, window, ViewColumn, Range } from "vscode";
 import { gitApi, magitRepositories } from "../extension";
 import FilePathUtils from "../utils/filePathUtils";
@@ -7,7 +7,8 @@ import GitTextUtils from "../utils/gitTextUtils";
 import { MagitRepository } from "../models/magitRepository";
 import MagitUtils from "../utils/magitUtils";
 import MagitStatusView from "../views/magitStatusView";
-import { Status } from "../typings/git";
+import { Status, Commit } from "../typings/git";
+import { MagitBranch } from "../models/magitBranch";
 
 export function magitStatus() {
 
@@ -108,10 +109,16 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       logTask
     ]);
 
-  let commitCache = commits.reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});
+  let commitCache: { [id: string]: Commit; } = commits.reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});
+
+  let HEAD = repository.state.HEAD as MagitBranch;
+  if (HEAD) {
+    HEAD.commitDetails = commitCache[HEAD!.commit!];
+  }
 
   repository.magitState = {
     _state: repository.state,
+    HEAD,
     stashes,
     log,
     commitCache,

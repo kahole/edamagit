@@ -1,22 +1,8 @@
 import { Menu } from "../abstract/menu";
 import { MenuItem } from "../abstract/menuItem";
-import { MagitState } from "../../models/magitStatus";
+import { MagitState } from "../../models/magitState";
+import { BranchingMenuItem } from "./branchingMenuSelection";
 
-enum Items {
-  Checkout,
-  Configure,
-  CreateNewSpinoff,
-  CheckoutNewBranch,
-  Reset,
-  CreateNewWorktree,
-  CheckoutPullRequest,
-  CheckoutLocalBranch,
-  Rename,
-  CreateNewBranch,
-  CheckoutNewWorktree,
-  Delete,
-  CreateFromPullRequest
-}
 
 export class BranchingMenu implements Menu {
 
@@ -25,19 +11,19 @@ export class BranchingMenu implements Menu {
 
   constructor() {
     this.items = [
-      {id: Items.Checkout , label: "b", description: "Checkout"},
-      {id: Items.Configure , label: "C", description: "Configure"},
-      {id: Items.CreateNewSpinoff , label: "s", description: "Create new spin-off"},
-      {id: Items.CheckoutNewBranch , label: "c", description: "Checkout new branch"},
-      {id: Items.Reset , label: "x", description: "Reset"},
-      {id: Items.CreateNewWorktree , label: "W", description: "Create new worktree"},
-      {id: Items.CheckoutPullRequest , label: "y", description: "Checkout pull-request"},
-      {id: Items.CheckoutLocalBranch , label: "l", description: "Checkout local branch"},
-      {id: Items.Rename , label: "m", description: "Rename"},
-      {id: Items.CreateNewBranch , label: "n", description: "Create new branch"},
-      {id: Items.CheckoutNewWorktree , label: "w", description: "Checkout new worktree"},
-      {id: Items.Delete , label: "k", description: "Delete"},
-      {id: Items.CreateFromPullRequest , label: "Y", description: "Create from pull-request"}
+      {id: BranchingMenuItem.Checkout , label: "b", description: "Checkout"},
+      {id: BranchingMenuItem.Configure , label: "C", description: "Configure"},
+      {id: BranchingMenuItem.CreateNewSpinoff , label: "s", description: "Create new spin-off"},
+      {id: BranchingMenuItem.CheckoutNewBranch , label: "c", description: "Checkout new branch"},
+      {id: BranchingMenuItem.Reset , label: "x", description: "Reset"},
+      {id: BranchingMenuItem.CreateNewWorktree , label: "W", description: "Create new worktree"},
+      {id: BranchingMenuItem.CheckoutPullRequest , label: "y", description: "Checkout pull-request"},
+      {id: BranchingMenuItem.CheckoutLocalBranch , label: "l", description: "Checkout local branch"},
+      {id: BranchingMenuItem.Rename , label: "m", description: "Rename"},
+      {id: BranchingMenuItem.CreateNewBranch , label: "n", description: "Create new branch"},
+      {id: BranchingMenuItem.CheckoutNewWorktree , label: "w", description: "Checkout new worktree"},
+      {id: BranchingMenuItem.Delete , label: "k", description: "Delete"},
+      {id: BranchingMenuItem.CreateFromPullRequest , label: "Y", description: "Create from pull-request"}
     ];
   }
 
@@ -47,7 +33,7 @@ export class BranchingMenu implements Menu {
     let firstItem = acceptedItems[0];
 
     switch (firstItem.id) {
-      case Items.Checkout:
+      case BranchingMenuItem.Checkout:
         // branchQuickPick.hide();
         // window.showQuickPick(["master", "exp", "origin/master"]);
       default:

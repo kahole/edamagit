@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import MagitUtils from './utils/magitUtils';
+import MagitUtils from '../utils/magitUtils';
 
 export default class HighlightProvider implements vscode.DocumentHighlightProvider {
   

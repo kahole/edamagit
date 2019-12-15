@@ -1,4 +1,4 @@
-import { TextView } from "../abstract/textView";
+import { TextView } from "../general/textView";
 import { MagitChange } from "../../models/magitChange";
 import { Status } from "../../typings/git";
 

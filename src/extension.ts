@@ -1,5 +1,5 @@
 import { workspace, extensions, commands, ExtensionContext, Disposable, languages } from 'vscode';
-import ContentProvider from './contentProvider';
+import ContentProvider from './providers/contentProvider';
 import { GitExtension, API } from './typings/git';
 import { pushing } from './commands/pushingCommands';
 import { branching } from './commands/branchingCommands';
@@ -10,8 +10,8 @@ import { MagitRepository } from './models/magitRepository';
 import { magitCommit } from './commands/commitCommands';
 import { magitStage, magitStageAll, magitUnstageAll, magitUnstage } from './commands/stagingCommands';
 import { saveClose } from './commands/macros';
-import FoldingRangeProvider from './foldingRangeProvider';
-import HighlightProvider from './highlightProvider';
+import FoldingRangeProvider from './providers/foldingRangeProvider';
+import HighlightProvider from './providers/highlightProvider';
 import { CommandPrimer } from './commands/commandPrimer';
 
 export const magitRepositories: { [id: string]: MagitRepository } = {};

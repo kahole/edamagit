@@ -1,4 +1,4 @@
-import { View } from "../abstract/view";
+import { View } from "../general/view";
 import { MagitChange } from "../../models/magitChange";
 import { ChangeView } from "./changeView";
 import { Section, SectionHeaderView } from "../sectionHeader";

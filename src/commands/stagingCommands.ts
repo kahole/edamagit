@@ -7,7 +7,7 @@ import { ChangeSectionView } from "../views/changes/changesSectionView";
 import { Section } from "../views/sectionHeader";
 import { TextEncoder } from "util";
 import { MagitRepository } from "../models/magitRepository";
-import { View } from "../views/abstract/view";
+import { View } from "../views/general/view";
 
 export function magitStage(repository: MagitRepository, currentView: View) {
 

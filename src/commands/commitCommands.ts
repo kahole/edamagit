@@ -2,18 +2,24 @@ import { gitApi } from "../extension";
 import { exec, spawn, ExecException } from "child_process";
 import { window } from "vscode";
 import MagitUtils from "../utils/magitUtils";
+import { LineSplitterRegex } from "../common/constants";
+import { execPath } from "process";
 
 export async function magitCommit() {
 
   let currentRepository = MagitUtils.getCurrentMagitRepo();
 
   // TODO: show menu etc..
-
+  
   if (currentRepository) {
 
     // TODO: code is not always in PATH!
-    //   get and use full path to vscode executable?
+    //   get and use full path to vscode executable
     //  ofc, there is the vscode command: Shell command: Install 'code' command in PATH
+    let vscodeExecutablePath = execPath; // Different in debug / developing extension mode than normal vscode mode??
+    console.log(vscodeExecutablePath);
+
+    let gitExecutablePath = gitApi.git.path;
 
     let cwd = currentRepository.rootUri.fsPath;
 
@@ -33,9 +39,9 @@ export async function magitCommit() {
       // TODO: use gitExecutablePath = gitApi.git.path;
       //     and cross platform solution
 
-      let commitSuccessMessage = await execPromise("git commit", cwd);
+      let commitSuccessMessage = await execPromise(`${gitExecutablePath} commit`, cwd);
 
-      window.setStatusBarMessage(`Git finished: ${commitSuccessMessage}`);
+      window.setStatusBarMessage(`Git finished: ${commitSuccessMessage.replace(LineSplitterRegex, ' ')}`);
       
     } catch (e) {
       //YES: Aborting due to empty commit message will appear here
@@ -50,7 +56,6 @@ export async function magitCommit() {
 
     // TODO:
     // Is spawn more reliable? given the gitExecutablePath etc?
-    let gitExecutablePath = gitApi.git.path;
 
     // let a = spawn(gitExecutablePath, ["config", "core.editor"], { cwd: currentRepository.rootUri.fsPath });
     // spawn(gitExecutablePath, ["config", "core.editor", "\"code --wait\""], { cwd: currentRepository.rootUri.fsPath });
@@ -74,3 +79,24 @@ function execPromise(command: string, cwd: string): Promise<string> {
     });
   });
 }
+
+// function spawnPromise(command: string, args: string[], cwd: string): Promise<string> {
+//   return new Promise( async (resolve, reject) => {
+
+//     let process = spawn(command, args, { cwd });
+
+//     for await (const data of process.stdout) {
+//       console.log(`stdout from the child: ${data}`);
+//     }
+    
+
+//     exec(command, { cwd }, (error, stdout, stderr) => {
+//       if (error) {
+//         reject(stderr);
+//       }
+//       else {
+//         resolve(stdout);
+//       }
+//     });
+//   });
+// }

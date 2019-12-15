@@ -2,9 +2,11 @@ import { View } from "./view";
 import { Range, Position } from "vscode";
 import * as Constants from '../../common/constants';
 
-export abstract class TextView extends View {
+export class TextView extends View {
 
-  textContent: string = "";
+  constructor(public textContent: string = "") {
+    super();
+  }
 
   render(startLineNumber: number): string[] {
 

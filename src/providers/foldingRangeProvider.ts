@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { View } from './views/abstract/view';
-import MagitUtils from './utils/magitUtils';
+import { View } from '../views/general/view';
+import MagitUtils from '../utils/magitUtils';
 
 export default class FoldingRangeProvider implements vscode.FoldingRangeProvider {
 

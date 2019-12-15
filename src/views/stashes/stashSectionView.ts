@@ -1,8 +1,8 @@
-import { View } from "../abstract/view";
+import { View } from "../general/view";
 import { Section, SectionHeaderView } from "../sectionHeader";
 import { LineBreakView } from "../lineBreakView";
 import { Stash } from "../../common/gitApiExtensions";
-import { TextView } from "../abstract/textView";
+import { TextView } from "../general/textView";
 
 export class StashSectionView extends View {
   isFoldable = true;

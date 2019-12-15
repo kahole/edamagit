@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import MagitStatusView from './views/magitStatusView';
-import { magitRepositories } from './extension';
-import { View } from './views/abstract/view';
+import MagitStatusView from '../views/magitStatusView';
+import { magitRepositories } from '../extension';
+import { View } from '../views/general/view';
 
 export default class ContentProvider implements vscode.TextDocumentContentProvider {
 
