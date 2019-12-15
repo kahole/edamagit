@@ -1,5 +1,12 @@
 import { Repository } from "../typings/git";
 import { Uri } from "vscode";
+import { SpawnOptions } from "child_process";
+
+interface BaseBaseRepository {
+  run(args: string[], options?: SpawnOptions): Promise<IExecutionResult<string>>;
+  // same as run, included for future-proofing:
+  exec(args: string[], options?: SpawnOptions): Promise<IExecutionResult<string>>;
+}
 
 interface BaseRepository {
   getStashes(): Promise<Stash[]>;
@@ -8,6 +15,7 @@ interface BaseRepository {
   stage(resource: Uri, contents: string): Promise<void>;
   // TODO: hva blir brukt
   reset(treeish: string, hard?: boolean): Promise<void>;
+  repository: BaseBaseRepository;
 }
 
 // Repository.prototype.getStashes = function(this: any) {
@@ -30,6 +38,12 @@ declare module "../typings/git" {
 // }
 
 // types from /extensions/git/src/git.ts
+
+export interface IExecutionResult<T extends string | Buffer> {
+	exitCode: number;
+	stdout: T;
+	stderr: string;
+}
 
 export interface Stash {
 	index: number;

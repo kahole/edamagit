@@ -13,9 +13,10 @@ import { saveClose } from './commands/macros';
 import FoldingRangeProvider from './providers/foldingRangeProvider';
 import HighlightProvider from './providers/highlightProvider';
 import { CommandPrimer } from './commands/commandPrimer';
+import MagitUtils from './utils/magitUtils';
+import MagitStatusView from './views/magitStatusView';
 
 export const magitRepositories: { [id: string]: MagitRepository } = {};
-
 export let gitApi: API;
 
 export function activate(context: ExtensionContext) {
@@ -46,6 +47,21 @@ export function activate(context: ExtensionContext) {
     providerRegistrations,
   );
 
+  workspace.onDidSaveTextDocument(() => {
+    // TODO:
+    // Needs cleaning up!
+    // Should only be when status view open?
+    // How should other views be stored and handled?
+
+    let repository = MagitUtils.getCurrentMagitRepo();
+
+    let currentView = repository?.views?.values().next();
+
+    if (repository && currentView) {
+      MagitUtils.magitStatusAndUpdate(repository, currentView as any);
+    }
+  });
+
   context.subscriptions.push(commands.registerCommand('extension.magit', magitStatus));
   context.subscriptions.push(commands.registerCommand('extension.magit-commit', magitCommit));
   context.subscriptions.push(commands.registerCommand('extension.magit-visit-at-point', magitVisitAtPoint));
@@ -58,7 +74,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerCommand('extension.magit-branching', CommandPrimer.prime(branching, true)));
   context.subscriptions.push(commands.registerCommand('extension.magit-stage', CommandPrimer.prime(magitStage, true, true)));
   context.subscriptions.push(commands.registerCommand('extension.magit-stage-all', magitStageAll));
-  context.subscriptions.push(commands.registerCommand('extension.magit-unstage', magitUnstage));
+  context.subscriptions.push(commands.registerCommand('extension.magit-unstage', CommandPrimer.prime(magitUnstage, true, true)));
   context.subscriptions.push(commands.registerCommand('extension.magit-unstage-all', CommandPrimer.prime(magitUnstageAll, true)));
 
   context.subscriptions.push(commands.registerCommand('extension.magit-save-and-close-commit-msg', saveClose));

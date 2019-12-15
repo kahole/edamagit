@@ -12,9 +12,11 @@ export default class MagitUtils {
     }
   }
 
-  public static getCurrentMagitRepoAndView(): [MagitRepository | undefined, View | undefined] {
+  public static getCurrentMagitRepoAndView(): [MagitRepository | undefined, MagitStatusView | undefined] {
     let repository = MagitUtils.getCurrentMagitRepo();
-    let currentView = repository?.views?.get(window.activeTextEditor?.document.uri.toString() ?? "");
+    // TODO: clean up, always MagitStatus view?
+    //     how should other views be handled
+    let currentView = repository?.views?.get(window.activeTextEditor?.document.uri.toString() ?? "") as MagitStatusView;
     return [repository, currentView];
   }
 

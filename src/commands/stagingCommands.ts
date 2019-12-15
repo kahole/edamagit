@@ -16,32 +16,38 @@ export async function magitStage(repository: MagitRepository, currentView: Magit
   // Bytt til ASYNC-AWAIT!!!!!??????
 
   let selectedView = currentView.click(window.activeTextEditor!.selection.active);
-  let currentRepository = repository!;
 
   if (selectedView instanceof HunkView) {
     let changeHunkDiff = (selectedView as HunkView).changeHunk.diff;
 
-    // TODO
+    // Clean up
     var enc = new TextEncoder();
-    workspace.fs.writeFile(Uri.parse("file:///tmp/minmagitdiffpatchting"),
+    let tmpPatchFilePath = "/tmp/minmagitdiffpatchting";
+    workspace.fs.writeFile(Uri.parse("file://" + tmpPatchFilePath),
+      // TODO: this linebreak might be fucked on windows
       enc.encode(selectedView.changeHunk.diffHeader + changeHunkDiff + "\n"))
       .then(async () => {
         // stage hunk
-        await currentRepository
-          .apply("/tmp/minmagitdiffpatchting");
+        // await currentRepository
+          // .apply("/tmp/minmagitdiffpatchting");
 
-        MagitUtils.magitStatusAndUpdate(currentRepository, currentView);
+        let args = ["apply", tmpPatchFilePath, "--cached"];
+
+        let result = await repository._repository.repository.run(args);
+        console.log(result);
+        MagitUtils.magitStatusAndUpdate(repository, currentView);
+
       });
 
   } else if (selectedView instanceof ChangeView) {
 
     let magitChange = (selectedView as ChangeView).change;
 
-    await currentRepository
+    await repository
       ._repository
       .add([magitChange.uri], { update: false/*magitChange.status !== Status.UNTRACKED*/ }); // TODO: litt usikker om update eller ikke
 
-    MagitUtils.magitStatusAndUpdate(currentRepository, currentView);
+    MagitUtils.magitStatusAndUpdate(repository, currentView);
 
   } else if (selectedView instanceof ChangeSectionView) {
     let section = (selectedView as ChangeSectionView).section;
@@ -62,11 +68,11 @@ export async function magitStage(repository: MagitRepository, currentView: Magit
     // Maybe make a simple wrapper
     // This should NOT be the same as a menu!
     await window.showQuickPick([
-      ...currentRepository.magitState?.workingTreeChanges!,
-      ...currentRepository.magitState?.indexChanges!,
-      ...currentRepository.magitState?.untrackedFiles!,
+      ...repository.magitState?.workingTreeChanges!,
+      ...repository.magitState?.indexChanges!,
+      ...repository.magitState?.untrackedFiles!,
       // ...currentRepository.magitState?.mergeChanges
-    ].map(c => FilePathUtils.pathRelativeTo(c.uri, currentRepository.rootUri)),
+    ].map(c => FilePathUtils.pathRelativeTo(c.uri, repository.rootUri)),
       { placeHolder: "Stage" }
     )
       .then(chosenFilePath => {
@@ -74,7 +80,7 @@ export async function magitStage(repository: MagitRepository, currentView: Magit
         // TODO
 
       });
-    MagitUtils.magitStatusAndUpdate(currentRepository, currentView);
+    MagitUtils.magitStatusAndUpdate(repository, currentView);
   }
 }
 
@@ -97,11 +103,15 @@ export async function magitStageAll(kind: StageAllKind = StageAllKind.AllTracked
   // }
 }
 
-export function magitUnstage() {
+export function magitUnstage(repository: MagitRepository, currentView: MagitStatusView) {
 
   // TODO
 
+  // For files:
   // repository._repository.reset()
+
+  // For hunks:
+  //  git apply --cached --reverse
 
 }
 
