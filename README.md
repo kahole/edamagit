@@ -3,9 +3,10 @@
   - Use existing tooling as much as possible
     make magit, but the fancy stuff should be vscode like
 
-## UI
-  - Hide line numbers?
+## Auto refresh
+  - FileChangeEvent
 
+## UI
   - Command pallete
       When a command should be available: https://code.visualstudio.com/api/extension-guides/command#controlling-when-a-command-shows-up-in-the-command-palette
       https://code.visualstudio.com/api/extension-guides/command#enablement-of-commands

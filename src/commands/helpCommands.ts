@@ -1,7 +1,7 @@
 import { window } from "vscode";
 
 // TODO:
-// to be dynamic
+// be dynamic
 // Just show the keymap for vscode magit
 // that way its updated with users changes
 

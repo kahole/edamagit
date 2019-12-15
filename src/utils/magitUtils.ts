@@ -18,10 +18,8 @@ export default class MagitUtils {
     return [repository, currentView];
   }
 
-  public static magitStatusAndUpdate(currentRepository: MagitRepository | undefined, statusView: View | undefined) {
-    if (currentRepository && statusView instanceof MagitStatusView) {
-      return () => internalMagitStatus(currentRepository)
+  public static magitStatusAndUpdate(currentRepository: MagitRepository, statusView: MagitStatusView) {
+      internalMagitStatus(currentRepository)
       .then(() => statusView.triggerUpdate());
-    }
   }
 }

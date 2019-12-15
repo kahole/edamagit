@@ -55,11 +55,11 @@ export function activate(context: ExtensionContext) {
     // e.g Pull in magit with no remotes results in: e elsewhere
   }));
   context.subscriptions.push(commands.registerCommand('extension.magit-pushing', pushing));
-  context.subscriptions.push(commands.registerCommand('extension.magit-branching', branching));
+  context.subscriptions.push(commands.registerCommand('extension.magit-branching', CommandPrimer.prime(branching, true)));
   context.subscriptions.push(commands.registerCommand('extension.magit-stage', CommandPrimer.prime(magitStage, true, true)));
   context.subscriptions.push(commands.registerCommand('extension.magit-stage-all', magitStageAll));
   context.subscriptions.push(commands.registerCommand('extension.magit-unstage', magitUnstage));
-  context.subscriptions.push(commands.registerCommand('extension.magit-unstage-all', magitUnstageAll));
+  context.subscriptions.push(commands.registerCommand('extension.magit-unstage-all', CommandPrimer.prime(magitUnstageAll, true)));
 
   context.subscriptions.push(commands.registerCommand('extension.magit-save-and-close-commit-msg', saveClose));
 }
