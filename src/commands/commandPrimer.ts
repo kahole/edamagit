@@ -2,6 +2,9 @@ import MagitUtils from "../utils/magitUtils";
 
 export class CommandPrimer {
 
+  // TODO: make type safe, with the function input.
+  //    might not need the variables based on the type signature of the function
+
   static prime(command: Function, needsView?: boolean, needsSelectedView?: boolean) {
 
     if (needsView) {

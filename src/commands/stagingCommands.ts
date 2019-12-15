@@ -29,7 +29,7 @@ export async function magitStage(repository: MagitRepository, currentView: Magit
       .then(async () => {
         // stage hunk
         // await currentRepository
-          // .apply("/tmp/minmagitdiffpatchting");
+        // .apply("/tmp/minmagitdiffpatchting");
 
         let args = ["apply", tmpPatchFilePath, "--cached"];
 
@@ -115,17 +115,12 @@ export function magitUnstage(repository: MagitRepository, currentView: MagitStat
 
 }
 
-export function magitUnstageAll(repository: MagitRepository, currentView: MagitStatusView) {
+export async function magitUnstageAll(repository: MagitRepository, currentView: MagitStatusView) {
 
-  window.showInputBox({ prompt: "Unstage all changes?" })
-    .then(async response => {
-      if (response !== undefined) {
+  let response = await window.showInputBox({ prompt: "Unstage all changes?" });
 
-        // if (currentView instanceof MagitStatusView) {
-
-        await commands.executeCommand("git.unstageAll");
-        MagitUtils.magitStatusAndUpdate(repository, currentView);
-        // }
-      }
-    });
+  if (response !== undefined) {
+    await commands.executeCommand("git.unstageAll");
+    MagitUtils.magitStatusAndUpdate(repository, currentView);
+  }
 }

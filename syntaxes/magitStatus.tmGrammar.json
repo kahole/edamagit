@@ -7,12 +7,12 @@
     },
     "sectionHeader": {
       "match": "Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits",
-      "name": "keyword.sectionHeader",
+      "name": "markup.bold keyword.section.header.magit",
       "comment": ";; kan bruke markup.bold.sectionHeader"
     },
     "branchName": {
       "match": "master",
-      "name": "support.master"
+      "name": "meta string support.master.magit"
     },
     "diff": {
       "begin": "(?=^@@)",
