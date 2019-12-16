@@ -1,16 +1,14 @@
 import { window, TextEditor, Range, workspace } from "vscode";
 import MagitUtils from "../utils/magitUtils";
+import { MagitRepository } from "../models/magitRepository";
+import MagitStatusView from "../views/magitStatusView";
 
-export function magitVisitAtPoint() {
+export async function magitVisitAtPoint(repository: MagitRepository, currentView: MagitStatusView) {
 
-  let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView();
-
-  if (currentView) {
     let clickedView = currentView.click(window.activeTextEditor!.selection.active);
-    let currentRepository = repository!;
+
     console.log(window.activeTextEditor!.selection.active.line);
     console.log(clickedView);
-  }
 
   // let selectedLine = editor.document.getText().split(Constants.LineSplitterRegex)[editor.selection.active.line];
   // console.log(selectedLine);

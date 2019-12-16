@@ -12,7 +12,7 @@ export default class FoldingRangeProvider implements vscode.FoldingRangeProvider
 
     let foldingRanges: vscode.FoldingRange[] = [];
 
-    let currentRepository = MagitUtils.getCurrentMagitRepo();
+    let currentRepository = MagitUtils.getCurrentMagitRepo(document);
 
     if (currentRepository && currentRepository.views) {
       let currentView = currentRepository.views.get(document.uri.toString());

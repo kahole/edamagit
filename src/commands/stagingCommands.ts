@@ -54,10 +54,10 @@ export async function magitStage(repository: MagitRepository, currentView: Magit
 
     switch (section) {
       case Section.Untracked:
-        magitStageAll(StageAllKind.AllUntracked);
+        magitStageAll(repository, currentView, StageAllKind.AllUntracked);
         break;
       case Section.Unstaged:
-        magitStageAll(StageAllKind.AllTracked);
+        magitStageAll(repository, currentView, StageAllKind.AllTracked);
         break;
       default:
         break;
@@ -88,16 +88,13 @@ export enum StageAllKind {
   AllUntracked = "stageAllUntracked"
 }
 
-export async function magitStageAll(kind: StageAllKind = StageAllKind.AllTracked) {
-
-  let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView();
+export async function magitStageAll(repository: MagitRepository, currentView: MagitStatusView, kind: StageAllKind = StageAllKind.AllTracked) {
 
   // if (currentView instanceof MagitStatusView) {
 
-  if (repository && currentView) {
-    await commands.executeCommand("git." + kind.valueOf());
-    MagitUtils.magitStatusAndUpdate(repository, currentView as MagitStatusView);
-  }
+  await commands.executeCommand("git." + kind.valueOf());
+  MagitUtils.magitStatusAndUpdate(repository, currentView);
+
   // }
 }
 

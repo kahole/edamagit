@@ -98,6 +98,10 @@
         {
           "command": "extension.magit-save-and-close-commit-msg",
           "when": "false"
+        },
+        {
+          "command": "extension.magit-stage-all",
+          "when": "inQuickOpen"
         }
       ]
     },
@@ -190,6 +194,11 @@
         "command": "workbench.action.closeActiveEditor",
         "key": "ctrl+c ctrl+k",
         "when": "editorTextFocus && editorLangId == git-commit"
+      },
+      {
+        "command": "extension.magit-bananas",
+        "key": "c",
+        "when": "inQuickOpen && magitBranching"
       }
     ]
   },

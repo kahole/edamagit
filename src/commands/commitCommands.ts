@@ -4,14 +4,13 @@ import { window } from "vscode";
 import MagitUtils from "../utils/magitUtils";
 import { LineSplitterRegex } from "../common/constants";
 import { execPath } from "process";
+import { MagitRepository } from "../models/magitRepository";
+import MagitStatusView from "../views/magitStatusView";
 
-export async function magitCommit() {
-
-  let currentRepository = MagitUtils.getCurrentMagitRepo();
+export async function magitCommit(repository: MagitRepository, currentView: MagitStatusView) {
 
   // TODO: show menu etc..
-  
-  if (currentRepository) {
+  if (repository) {
 
     // TODO: code is not always in PATH!
     //   get and use full path to vscode executable
@@ -21,14 +20,14 @@ export async function magitCommit() {
 
     let gitExecutablePath = gitApi.git.path;
 
-    let cwd = currentRepository.rootUri.fsPath;
+    let cwd = repository.rootUri.fsPath;
 
     let userEditor: string | undefined;
     try {
       
-      userEditor = await currentRepository.getConfig("core.editor");
+      userEditor = await repository.getConfig("core.editor");
 
-      await currentRepository.setConfig("core.editor", "code --wait");
+      await repository.setConfig("core.editor", "code --wait");
 
       // TODO:
       // - Open staged changes document to the left!
@@ -49,7 +48,7 @@ export async function magitCommit() {
       console.log(e);
     } finally {
       if (userEditor) {
-        currentRepository.setConfig("core.editor", userEditor);
+        repository.setConfig("core.editor", userEditor);
       }
     }
   }

@@ -14,32 +14,40 @@
 ## File menu. Magit activate menu for a file in the repo
 
 ## Main menu
-// Alle views i magit støtter hovedmenyen
-// Burde være DocumentView som sendes rundt!
-// Da tror jeg modellen som den er nå er grei.
-// Hadde vært amazing om jeg klarer alt med 1 og samme language også
-//    altså kun "magit"... ikke "magit-status" etc
+  Alle views i magit støtter hovedmenyen
+   Burde være DocumentView som sendes rundt!
+   Da tror jeg modellen som den er nå er grei.
+   Hadde vært amazing om jeg klarer alt med 1 og samme language også
+      altså kun "magit"... ikke "magit-status" etc
 
 ## UI
+  - icons
+        https://code.visualstudio.com/api/references/icons-in-labels
+
   - Transient interface:
      CONFIGURE should be just one action in the list.
        too much noise otherwise
        When selected bring up some configure interface i guess.
 
+// HER: https://stackoverflow.com/questions/58483907/how-to-add-the-custom-when-clause-in-vs-code
+//   vscode.commands.executeCommand('setContext', 'myContext', `value`);
+//     when: myContext == value
+// TODO
+// LøST:
+// {
+//   "command": "extension.magit-checkout",
+//   "key": "c",
+//   "when": "inQuickOpen && branching == true"
+// }
+// QuickPick blir da bare en visuell hjelpe-popup!
+//       da blir den context-aware begrensinger av kommandoer visuell (til å begynne med i hvertfall)
+//    også for å velge branches og switches etc!
+
+
   - Helm like branch selector: QuickPick https://code.visualstudio.com/api/references/vscode-api#QuickInput
-    !REMOVE KEY-SHORTCUTS FROM QUICKPICK? HARD DECISION
 
   - Name stuff: InputBox
       e.g `window.showInputBox({prompt: "Name of your branch or whatever"});`
-
-### Highlighting
-  highlight what "object" you are hovering over.
-  essentially just a click
-  and some "provider" for highlighting, similar to the folding provider i imagine
-
-### Feedback, errors:
-  - Status bar message for git feedback or Info Box
-  - Errors: show ErrorMessage for feil
 
 ## Languages
   - Custom keybindings for buffer: define a language mode
@@ -55,7 +63,7 @@
   - Proper use of dispose().. les litteratur
 
   - VsVim:
-     Needs to work well with VsVim as well
+     Needs to work with VsVim as well
 
   - God inspo - REST client mode
       https://github.com/Huachao/vscode-restclient

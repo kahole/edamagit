@@ -12,14 +12,17 @@ import { MagitBranch } from "../models/magitBranch";
 
 export function magitStatus() {
 
-  // Magit status already open?
-  let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView();
+  if (window.activeTextEditor?.document) {
 
-  if (currentView instanceof MagitStatusView) {
-    let currentRepository = repository!;
-    internalMagitStatus(currentRepository)
-      .then(() => (currentView as MagitStatusView).triggerUpdate());
-    return;
+    // Magit status already open?
+    let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(window.activeTextEditor);
+
+    if (currentView instanceof MagitStatusView) {
+      let currentRepository = repository!;
+      internalMagitStatus(currentRepository)
+        .then(() => (currentView as MagitStatusView).triggerUpdate());
+      return;
+    }
   }
 
   // New magit status document

@@ -1,22 +1,19 @@
 import { MagitRepository } from "../models/magitRepository";
 import { magitRepositories } from "../extension";
-import { window } from "vscode";
-import { View } from "../views/general/view";
+import { window, TextEditor, TextDocument } from "vscode";
 import MagitStatusView from "../views/magitStatusView";
 import { internalMagitStatus } from "../commands/statusCommands";
 
 export default class MagitUtils {
-  public static getCurrentMagitRepo(): MagitRepository | undefined {
-    if (window.activeTextEditor) {
-      return magitRepositories[window.activeTextEditor.document.uri.query];
-    }
+  public static getCurrentMagitRepo(document: TextDocument): MagitRepository | undefined {
+    return magitRepositories[document.uri.query];
   }
 
-  public static getCurrentMagitRepoAndView(): [MagitRepository | undefined, MagitStatusView | undefined] {
-    let repository = MagitUtils.getCurrentMagitRepo();
+  public static getCurrentMagitRepoAndView(editor: TextEditor): [MagitRepository | undefined, MagitStatusView | undefined] {
+    let repository = magitRepositories[editor.document.uri.query];
     // TODO: clean up, always MagitStatus view?
     //     how should other views be handled
-    let currentView = repository?.views?.get(window.activeTextEditor?.document.uri.toString() ?? "") as MagitStatusView;
+    let currentView = repository?.views?.get(editor.document.uri.toString() ?? "") as MagitStatusView;
     return [repository, currentView];
   }
 
