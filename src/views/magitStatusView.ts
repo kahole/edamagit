@@ -9,7 +9,25 @@ import { BranchHeaderView } from './branches/branchHeaderView';
 import { TextView } from './general/textView';
 import { LineBreakView } from './lineBreakView';
 
-export default class MagitStatusView extends DocumentView {
+export default class MagitStatusView extends DocumentView implements vscode.Disposable {
+
+  dispose() {
+    throw new Error("Method not implemented.");
+  }
+    // workspace.onDidSaveTextDocument(() => {
+    //   // TODO:
+    //   // Needs cleaning up!
+    //   // Should only be when status view open?
+    //   // How should other views be stored and handled?
+  
+    //   let repository = MagitUtils.getCurrentMagitRepo();
+  
+    //   let currentView = repository?.views?.values().next();
+  
+    //   if (repository && currentView) {
+    //     MagitUtils.magitStatusAndUpdate(repository, currentView as any);
+    //   }
+    // });
 
   constructor(uri: vscode.Uri, emitter: vscode.EventEmitter<vscode.Uri>, magitState: MagitState) {
     super(uri, emitter);

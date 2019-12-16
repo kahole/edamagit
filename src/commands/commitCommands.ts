@@ -25,10 +25,9 @@ export async function magitCommit() {
 
     let userEditor: string | undefined;
     try {
-      // userEditor = (await execPromise("git config core.editor", cwd)).trim();
+      
       userEditor = await currentRepository.getConfig("core.editor");
 
-      // await execPromise("git config core.editor \"code --wait\"", cwd);
       await currentRepository.setConfig("core.editor", "code --wait");
 
       // TODO:
@@ -36,8 +35,9 @@ export async function magitCommit() {
 
       window.setStatusBarMessage(`Type C-c C-c to finish, or C-c C-k to cancel`);
 
-      // TODO: use gitExecutablePath = gitApi.git.path;
-      //     and cross platform solution
+      // TODO:
+      // Is spawn faster? doesnt spawn a shell
+      // spawn(gitExecutablePath, ["commit"], { cwd: currentRepository.rootUri.fsPath });
 
       let commitSuccessMessage = await execPromise(`${gitExecutablePath} commit`, cwd);
 
@@ -49,20 +49,9 @@ export async function magitCommit() {
       console.log(e);
     } finally {
       if (userEditor) {
-        // execPromise(`git config core.editor "${userEditor}"`, cwd);
         currentRepository.setConfig("core.editor", userEditor);
       }
     }
-
-    // TODO:
-    // Is spawn more reliable? given the gitExecutablePath etc?
-
-    // let a = spawn(gitExecutablePath, ["config", "core.editor"], { cwd: currentRepository.rootUri.fsPath });
-    // spawn(gitExecutablePath, ["config", "core.editor", "\"code --wait\""], { cwd: currentRepository.rootUri.fsPath });
-    // need to wait until each finished
-
-    // spawn(gitExecutablePath, ["commit"], { cwd: currentRepository.rootUri.fsPath });
-    // spawn(gitExecutablePath, ["config", "core.editor", `"${userEditor}"`], { cwd: currentRepository.rootUri.fsPath });
   }
 }
 

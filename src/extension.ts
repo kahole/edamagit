@@ -47,21 +47,6 @@ export function activate(context: ExtensionContext) {
     providerRegistrations,
   );
 
-  workspace.onDidSaveTextDocument(() => {
-    // TODO:
-    // Needs cleaning up!
-    // Should only be when status view open?
-    // How should other views be stored and handled?
-
-    let repository = MagitUtils.getCurrentMagitRepo();
-
-    let currentView = repository?.views?.values().next();
-
-    if (repository && currentView) {
-      MagitUtils.magitStatusAndUpdate(repository, currentView as any);
-    }
-  });
-
   context.subscriptions.push(commands.registerCommand('extension.magit', magitStatus));
   context.subscriptions.push(commands.registerCommand('extension.magit-commit', magitCommit));
   context.subscriptions.push(commands.registerCommand('extension.magit-visit-at-point', magitVisitAtPoint));
@@ -70,15 +55,24 @@ export function activate(context: ExtensionContext) {
     // TODO: Options should be dynamically decided based on whether or not they can be done
     // e.g Pull in magit with no remotes results in: e elsewhere
   }));
+
+  // TODO:
+  // løses renere med: commands.registerTextEditorCommand
+  // Slipper det krøllet med currentEditor etc..
+  // MYE BEDRE
+
   context.subscriptions.push(commands.registerCommand('extension.magit-pushing', pushing));
-  context.subscriptions.push(commands.registerCommand('extension.magit-branching', CommandPrimer.prime(branching, true)));
-  context.subscriptions.push(commands.registerCommand('extension.magit-stage', CommandPrimer.prime(magitStage, true, true)));
+  context.subscriptions.push(commands.registerCommand('extension.magit-branching', CommandPrimer.primeRepoAndView(branching)));
+  context.subscriptions.push(commands.registerCommand('extension.magit-stage', CommandPrimer.primeRepoAndView(magitStage, true)));
   context.subscriptions.push(commands.registerCommand('extension.magit-stage-all', magitStageAll));
-  context.subscriptions.push(commands.registerCommand('extension.magit-unstage', CommandPrimer.prime(magitUnstage, true, true)));
-  context.subscriptions.push(commands.registerCommand('extension.magit-unstage-all', CommandPrimer.prime(magitUnstageAll, true)));
+  context.subscriptions.push(commands.registerCommand('extension.magit-unstage', CommandPrimer.primeRepoAndView(magitUnstage, true)));
+  context.subscriptions.push(commands.registerCommand('extension.magit-unstage-all', CommandPrimer.primeRepoAndView(magitUnstageAll)));
 
   context.subscriptions.push(commands.registerCommand('extension.magit-save-and-close-commit-msg', saveClose));
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() { }
+export function deactivate() { 
+  // TODO:
+  // cleanup?
+}

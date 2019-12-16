@@ -1,28 +1,27 @@
 import MagitUtils from "../utils/magitUtils";
+import { MagitRepository } from "../models/magitRepository";
+import MagitStatusView from "../views/magitStatusView";
 
 export class CommandPrimer {
 
-  // TODO: make type safe, with the function input.
-  //    might not need the variables based on the type signature of the function
+  static primeRepo(command: (repository: MagitRepository) => Promise<void>) {
+    return () => {
+      let repository = MagitUtils.getCurrentMagitRepo();
 
-  static prime(command: Function, needsView?: boolean, needsSelectedView?: boolean) {
+      if (repository) {
+        command(repository);
+      }
+    };
+  }
 
-    if (needsView) {
-      return () => {
-        let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView();
+  static primeRepoAndView(command: (repository: MagitRepository, view: MagitStatusView) => Promise<void>, needsSelectedView?: boolean) {
 
-        if (currentView) {
-          command(repository, currentView);
-        }
-      };
-    } else {
-      return () => {
-        let repository = MagitUtils.getCurrentMagitRepo();
+    return () => {
+      let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView();
 
-        if (repository) {
-          command(repository);
-        }
-      };
-    }
+      if (repository && currentView) {
+        command(repository, currentView);
+      }
+    };
   }
 }

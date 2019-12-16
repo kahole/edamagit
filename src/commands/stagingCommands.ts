@@ -77,8 +77,6 @@ export async function magitStage(repository: MagitRepository, currentView: Magit
     )
       .then(chosenFilePath => {
 
-        // TODO
-
       });
     MagitUtils.magitStatusAndUpdate(repository, currentView);
   }
@@ -103,7 +101,7 @@ export async function magitStageAll(kind: StageAllKind = StageAllKind.AllTracked
   // }
 }
 
-export function magitUnstage(repository: MagitRepository, currentView: MagitStatusView) {
+export async function magitUnstage(repository: MagitRepository, currentView: MagitStatusView) {
 
   // TODO
 

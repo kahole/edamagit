@@ -6,29 +6,31 @@
 ## Auto refresh
   - FileChangeEvent
 
+## Workspaces
+  - Needs to support multiple workspaces (Already does this somewhat)
+  - Find out how to deal with status views and other views
+  - Dispose of stuff when quit workspace etc..
+
+## File menu. Magit activate menu for a file in the repo
+
+## Main menu
+// Alle views i magit støtter hovedmenyen
+// Burde være DocumentView som sendes rundt!
+// Da tror jeg modellen som den er nå er grei.
+// Hadde vært amazing om jeg klarer alt med 1 og samme language også
+//    altså kun "magit"... ikke "magit-status" etc
+
 ## UI
-  - Command pallete
-      When a command should be available: https://code.visualstudio.com/api/extension-guides/command#controlling-when-a-command-shows-up-in-the-command-palette
-      https://code.visualstudio.com/api/extension-guides/command#enablement-of-commands
-     - Dynamic selection, filter with `executeCommand("workbench.action.quickOpen", ">commandPREFIX");`
+  - Transient interface:
+     CONFIGURE should be just one action in the list.
+       too much noise otherwise
+       When selected bring up some configure interface i guess.
 
   - Helm like branch selector: QuickPick https://code.visualstudio.com/api/references/vscode-api#QuickInput
     !REMOVE KEY-SHORTCUTS FROM QUICKPICK? HARD DECISION
 
   - Name stuff: InputBox
       e.g `window.showInputBox({prompt: "Name of your branch or whatever"});`
-
-  - Commit message: EASY
-        `git config core.editor "code --wait"`
-         opens commit msg editor in vscode
-
-        Change back and forth:
-        ```bash
-        previousEditor = git config core.editor
-        git config core.editor "code --wait"
-        git commit
-        git config core.editor "$previousEditor"
-        ```
 
 ### Highlighting
   highlight what "object" you are hovering over.
@@ -41,14 +43,6 @@
 
 ## Languages
   - Custom keybindings for buffer: define a language mode
-    - Example
-      ```json
-      {
-        "command": "editor.toggleFold",
-        "key": "tab",
-        "when": "editorTextFocus && editorLangId == magit-status"
-      },
-      ```
   - Syntax
     - Embedded Diff language mode syntax!
       language mode "diff"

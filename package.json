@@ -21,48 +21,39 @@
       },
       {
         "command": "extension.magit-visit-at-point",
-        "title": "Magit Visit-at-point",
-        "when": "editorLangId == magit-status"
+        "title": "Magit Visit-at-point"
       },
       {
         "command": "extension.magit-commit",
-        "title": "Magit Commit",
-        "when": "editorLangId == magit-status"
+        "title": "Magit Commit"
       },
       {
         "command": "extension.magit-branching",
-        "title": "Magit Branching",
-        "when": "editorLangId == magit-status"
+        "title": "Magit Branching"
       },
       {
         "command": "extension.magit-pushing",
-        "title": "Magit Pushing",
-        "when": "editorLangId == magit-status"
+        "title": "Magit Pushing"
       },
       {
         "command": "extension.magit-stage",
-        "title": "Magit Stage",
-        "when": "editorLangId == magit-status"
+        "title": "Magit Stage"
       },
       {
         "command": "extension.magit-stage-all",
-        "title": "Magit Stage All",
-        "when": "editorLangId == magit-status"
+        "title": "Magit Stage All"
       },
       {
         "command": "extension.magit-unstage",
-        "title": "Magit Unstage",
-        "when": "editorLangId == magit-status"
+        "title": "Magit Unstage"
       },
       {
         "command": "extension.magit-unstage-all",
-        "title": "Magit Unstage All",
-        "when": "editorLangId == magit-status"
+        "title": "Magit Unstage All"
       },
       {
         "command": "extension.magit-help",
-        "title": "Magit Help",
-        "when": "editorLangId == magit-status"
+        "title": "Magit Help"
       },
       {
         "command": "extension.magit-save-and-close-commit-msg",
