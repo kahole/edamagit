@@ -33,7 +33,10 @@ export class Menu {
   show() {
     
     this._quickPick.show();
-    // this._quickPick.enabled = false;
+    this._quickPick.ignoreFocusOut = true;
+    this._quickPick.enabled = false;
+
+    // this._quickPick.dispose(); 
     
   }
 

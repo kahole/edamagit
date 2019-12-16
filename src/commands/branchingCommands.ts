@@ -1,4 +1,4 @@
-import { window } from "vscode";
+import { window, commands } from "vscode";
 import { Menu } from "../menu/menu";
 import { MagitRepository } from "../models/magitRepository";
 import MagitUtils from "../utils/magitUtils";
@@ -49,6 +49,8 @@ export async function branchingOld(repository: MagitRepository, currentView: Mag
 
 
 export async function branching(repository: MagitRepository, currentView: MagitStatusView, switches: any = {}) {
+
+  commands.executeCommand('setContext', 'magitBranching', true);
 
   let menu = new Menu(branchingMap, false, repository, currentView);
   menu.show();

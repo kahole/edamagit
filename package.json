@@ -54,11 +54,6 @@
       {
         "command": "extension.magit-help",
         "title": "Magit Help"
-      },
-      {
-        "command": "extension.magit-save-and-close-commit-msg",
-        "title": "Magit Save and close commit message",
-        "when": "false"
       }
     ],
     "menus": {
@@ -94,14 +89,6 @@
         {
           "command": "extension.magit-pushing",
           "when": "editorLangId == magit-status"
-        },
-        {
-          "command": "extension.magit-save-and-close-commit-msg",
-          "when": "false"
-        },
-        {
-          "command": "extension.magit-stage-all",
-          "when": "inQuickOpen"
         }
       ]
     },

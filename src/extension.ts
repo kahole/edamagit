@@ -68,7 +68,6 @@ export function activate(context: ExtensionContext) {
   // TODO: !! TREnger altå ikke å contribute commands i package.json!!!!
   //    de sub commandsa kan defineres bare i keymap og her!!
   context.subscriptions.push(commands.registerCommand("extension.magit-bananas", magitHelp));
-  commands.executeCommand('setContext', 'magitBranching', true);
 }
 
 // this method is called when your extension is deactivated
