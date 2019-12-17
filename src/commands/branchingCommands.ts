@@ -1,5 +1,5 @@
 import { window, commands } from "vscode";
-import { Menu } from "../menu/menu";
+import { Menu, MenuState } from "../menu/menu";
 import { MagitRepository } from "../models/magitRepository";
 import MagitUtils from "../utils/magitUtils";
 import MagitStatusView from "../views/magitStatusView";
@@ -50,16 +50,15 @@ export async function branchingOld(repository: MagitRepository, currentView: Mag
 
 export async function branching(repository: MagitRepository, currentView: MagitStatusView, switches: any = {}) {
 
-  commands.executeCommand('setContext', 'magitBranching', true);
-
-  let menu = new Menu(branchingMap, false, repository, currentView);
-  menu.show();
+  // commands.executeCommand('setContext', 'magit.branching', true);
+  
+  Menu.showMenu(branchingMap, { repository, currentView });
 }
 
 const branchingMap = [
   { label: "b", description: "$(git-branch) Checkout", action: checkout },
   { label: "l", description: "Checkout local branch", action: checkout  },
-  { label: "c", description: "Checkout new branch", action: checkout  },
+  { label: "c", description: "Checkout new branch", action: checkoutNewBranch  },
   { label: "w", description: "Checkout new worktree", action: checkout  },
   { label: "y", description: "Checkout pull-request", action: checkout  },
   { label: "s", description: "Create new spin-off", action: checkout  },
@@ -72,7 +71,9 @@ const branchingMap = [
   { label: "k", description: "Delete", action: checkout  },
 ];
 
-async function checkout(repository: MagitRepository, currentView: MagitStatusView) {
+async function checkout(menuState: MenuState) {
+
+  let { repository, currentView } = menuState;
 
   // TODO: menu-title
   let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Checkout" });
@@ -82,7 +83,33 @@ async function checkout(repository: MagitRepository, currentView: MagitStatusVie
       await repository.checkout(ref);
       MagitUtils.magitStatusAndUpdate(repository, currentView);
     } catch (error) {
-
+      window.showErrorMessage(error.stderr);
     }
   }
+}
+
+async function checkoutNewBranch(menuState: MenuState) {
+
+  let { repository, currentView } = menuState;
+  
+  let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Create and checkout branch starting at:" });
+  
+  if (ref) {
+    let newBranchName = await window.showInputBox({ prompt: "Name for new branch" })
+
+    if (newBranchName && newBranchName.length > 0) {
+
+      try {
+        await repository.createBranch(newBranchName, true, ref);
+        MagitUtils.magitStatusAndUpdate(repository, currentView);
+      } catch (error) {
+        window.showErrorMessage(error.stderr);
+      }
+    } else {
+      // TODO
+      // Show error
+    }
+  }
+
+  // createBranch(name: string, checkout: boolean, ref?: string)
 }

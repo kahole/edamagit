@@ -181,11 +181,6 @@
         "command": "workbench.action.closeActiveEditor",
         "key": "ctrl+c ctrl+k",
         "when": "editorTextFocus && editorLangId == git-commit"
-      },
-      {
-        "command": "extension.magit-bananas",
-        "key": "c",
-        "when": "inQuickOpen && magitBranching"
       }
     ]
   },

@@ -16,6 +16,10 @@
 ## Main menu
   Alle views i magit støtter hovedmenyen
    Burde være DocumentView som sendes rundt!
+   Alle disse trenger update når det skjer noe uansett.
+   Dog forskjellig update, e.g magit Log state
+   Finn ut av multiplexingen her
+
    Da tror jeg modellen som den er nå er grei.
    Hadde vært amazing om jeg klarer alt med 1 og samme language også
       altså kun "magit"... ikke "magit-status" etc
@@ -29,20 +33,29 @@
        too much noise otherwise
        When selected bring up some configure interface i guess.
 
-// HER: https://stackoverflow.com/questions/58483907/how-to-add-the-custom-when-clause-in-vs-code
-//   vscode.commands.executeCommand('setContext', 'myContext', `value`);
-//     when: myContext == value
-// TODO
-// LøST:
-// {
-//   "command": "extension.magit-checkout",
-//   "key": "c",
-//   "when": "inQuickOpen && branching == true"
-// }
-// QuickPick blir da bare en visuell hjelpe-popup!
-//       da blir den context-aware begrensinger av kommandoer visuell (til å begynne med i hvertfall)
-//    også for å velge branches og switches etc!
+#### SOLUTION 1:
+```
+    this._quickPick.onDidChangeValue( (e) => {
+      console.log(e);
+      console.log(this._quickPick.value);
+      this._quickPick.value = "";
+      magitCommand();
+    });
+```
+#### SOLUTION 2:
+       her: https://stackoverflow.com/questions/58483907/how-to-add-the-custom-when-clause-in-vs-code
+```
+  commands.executeCommand('setContext', 'magit.branching', true);
 
+{
+  "command": "extension.magit.branching.checkout",
+  "key": "c",
+  "when": "inQuickOpen && magit.branching"
+}
+QuickPick blir da bare en visuell hjelpe-popup!
+      da blir den context-aware begrensinger av kommandoer visuell (til å begynne med i hvertfall)
+   også for å velge branches og switches etc!
+```
 
   - Helm like branch selector: QuickPick https://code.visualstudio.com/api/references/vscode-api#QuickInput
 
@@ -57,10 +70,15 @@
     - Highlight branch names dynamically
        https://code.visualstudio.com/api/references/vscode-api#languages.registerDocumentHighlightProvider
 
+## Dispose
+
+  - Proper use of dispose()
+    https://vscode-docs.readthedocs.io/en/stable/extensions/patterns-and-principles/#disposables
+
+    "This applies to event listening, commands, interacting with the UI, and various language contributions."
+
 ## Notes
   - Test on every platform
-
-  - Proper use of dispose().. les litteratur
 
   - VsVim:
      Needs to work with VsVim as well
