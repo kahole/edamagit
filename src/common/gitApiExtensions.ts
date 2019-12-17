@@ -12,8 +12,9 @@ interface BaseRepository {
   getStashes(): Promise<Stash[]>;
   pushTo(remote?: string, name?: string, setUpstream?: boolean, forcePushMode?: ForcePushMode): Promise<void>;
   add(resources: Uri[], opts?: { update?: boolean }): Promise<void>;
-  stage(resource: Uri, contents: string): Promise<void>;
+  renameBranch(name: string): Promise<void>;
   // TODO: hva blir brukt
+  stage(resource: Uri, contents: string): Promise<void>;
   reset(treeish: string, hard?: boolean): Promise<void>;
   repository: BaseBaseRepository;
 }
