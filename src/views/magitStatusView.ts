@@ -21,12 +21,13 @@ export default class MagitStatusView extends DocumentView {
 
     if (magitState.HEAD) {
       this.subViews.push(new BranchHeaderView("Head", magitState.HEAD));
+
+      this.subViews.push(new TextView("Upstream/Merge/rebase: " + magitState.HEAD.upstream?.remote + "/" + magitState.HEAD?.upstream?.name + " WHAT COMMIT MSG"));
+      this.subViews.push(new TextView("Push: " + magitState.HEAD.pushRemote?.remote + "/" + magitState.HEAD?.pushRemote?.name + " WHAT COMMIT MSG"));
+
     } else {
       this.subViews.push(new TextView("In the beginning there was darkness"));
     }
-
-    this.subViews.push(new TextView("Upstream/Merge/rebase: " + magitState.HEAD?.upstream?.remote + "/" + magitState.HEAD?.upstream?.name + " WHAT COMMIT MSG"));
-    this.subViews.push(new TextView("Push: " + magitState.HEAD?.pushRemote?.remote + "/" + magitState.HEAD?.pushRemote?.name + " WHAT COMMIT MSG"));
 
     this.subViews.push(new LineBreakView());
 
@@ -46,9 +47,11 @@ export default class MagitStatusView extends DocumentView {
       this.subViews.push(new StashSectionView(magitState.stashes));
     }
 
-    // TODO: if Unmerged into origin/master, show that section
+    // TODO: This has to do with TRACKING? 
+    //   if Unmerged into origin/master, show that section
     //    probably something for Unpulled changes as well
     //  otherwise Recent commits:
+
     if (magitState.log && magitState.log.length > 0) {
       this.subViews.push(new CommitSectionView(magitState.log));
     }
