@@ -1,8 +1,6 @@
 import { commands } from "vscode";
 
-export function saveClose() {
-  commands.executeCommand("workbench.action.files.save")
-    .then(() => {
-      commands.executeCommand("workbench.action.closeActiveEditor");
-    });
+export async function saveClose() {
+  await commands.executeCommand("workbench.action.files.save");
+  return commands.executeCommand("workbench.action.closeActiveEditor");
 }

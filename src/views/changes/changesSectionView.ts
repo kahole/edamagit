@@ -2,7 +2,7 @@ import { View } from "../general/view";
 import { MagitChange } from "../../models/magitChange";
 import { ChangeView } from "./changeView";
 import { Section, SectionHeaderView } from "../sectionHeader";
-import { LineBreakView } from "../lineBreakView";
+import { LineBreakView } from "../general/lineBreakView";
 
 export class ChangeSectionView extends View {
   isFoldable = true;

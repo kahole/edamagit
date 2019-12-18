@@ -1,13 +1,13 @@
 
 ## General
-  - Use existing tooling as much as possible
-    make magit, but the fancy stuff should be vscode like
+  - Go for MVP consisting of 90% of common use
+  - plus all convenient features that come along with it
 
 ## Auto refresh
   - FileChangeEvent
 
 ## Workspaces
-  - Needs to support multiple workspaces (Already does this somewhat)
+  - Needs to support multiple workspaces (Already do this somewhat)
   - Find out how to deal with status views and other views
   - Dispose of stuff when quit workspace etc..
 
@@ -27,6 +27,7 @@
 ## UI
   - icons
         https://code.visualstudio.com/api/references/icons-in-labels
+        e.g $(git-branch)
 
   - Transient interface:
      CONFIGURE should be just one action in the list.

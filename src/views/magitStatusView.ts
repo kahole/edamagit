@@ -7,7 +7,7 @@ import { StashSectionView } from './stashes/stashSectionView';
 import { CommitSectionView } from './commits/commitSectionView';
 import { BranchHeaderView } from './branches/branchHeaderView';
 import { TextView } from './general/textView';
-import { LineBreakView } from './lineBreakView';
+import { LineBreakView } from './general/lineBreakView';
 
 export default class MagitStatusView extends DocumentView implements vscode.Disposable {
 

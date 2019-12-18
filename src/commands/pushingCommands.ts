@@ -1,15 +1,13 @@
-import { MagitPicker } from "../menus/magitPicker";
-import { PushingMenu } from "../menus/pushing/pushingMenu";
 import MagitUtils from "../utils/magitUtils";
 import { MagitRepository } from "../models/magitRepository";
 import MagitStatusView from "../views/magitStatusView";
 
-export function pushing(repository: MagitRepository, currentView: MagitStatusView) {
+export async function pushing(repository: MagitRepository, currentView: MagitStatusView) {
 
   console.log("Working tree changes, but from pushing command");
   console.log(repository.magitState!.workingTreeChanges);
 
-  MagitPicker.showMagitPicker(new PushingMenu(undefined, undefined));
+
 
     // Hvordan git push kommandoen bygges opp:
     // https://github.com/microsoft/vscode/blob/master/extensions/git/src/git.ts#L1491

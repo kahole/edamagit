@@ -2,7 +2,7 @@ import { gitApi } from "../extension";
 import { exec, spawn, ExecException } from "child_process";
 import { window } from "vscode";
 import MagitUtils from "../utils/magitUtils";
-import { LineSplitterRegex } from "../common/constants";
+import * as Constants from "../common/constants";
 import { execPath } from "process";
 import { MagitRepository } from "../models/magitRepository";
 import MagitStatusView from "../views/magitStatusView";
@@ -18,9 +18,8 @@ export async function magitCommit(repository: MagitRepository, currentView: Magi
     let vscodeExecutablePath = execPath; // Different in debug / developing extension mode than normal vscode mode??
     console.log(vscodeExecutablePath);
 
-    let gitExecutablePath = gitApi.git.path;
-
-    let cwd = repository.rootUri.fsPath;
+    // let gitExecutablePath = gitApi.git.path;
+    // let cwd = repository.rootUri.fsPath;
 
     let userEditor: string | undefined;
     try {
@@ -35,17 +34,19 @@ export async function magitCommit(repository: MagitRepository, currentView: Magi
       window.setStatusBarMessage(`Type C-c C-c to finish, or C-c C-k to cancel`);
 
       // TODO:
-      // Is spawn faster? doesnt spawn a shell
-      // spawn(gitExecutablePath, ["commit"], { cwd: currentRepository.rootUri.fsPath });
+      // Which one:
 
-      let commitSuccessMessage = await execPromise(`${gitExecutablePath} commit`, cwd);
+      // let commitSuccessMessage = await execPromise(`${gitExecutablePath} commit`, cwd);
 
-      window.setStatusBarMessage(`Git finished: ${commitSuccessMessage.replace(LineSplitterRegex, ' ')}`);
+      // TODO: this needs to be wrapped, and it needs to decide between run and exec!
+      let args = ["commit"];
+      let commitSuccessMessage = await repository._repository.repository.run(args);
+
+      window.setStatusBarMessage(`Git finished: ${commitSuccessMessage.stdout.replace(Constants.LineSplitterRegex, ' ')}`, Constants.StatusMessageDisplayTimeout);
       
     } catch (e) {
       //YES: Aborting due to empty commit message will appear here
-      window.setStatusBarMessage(`Commit canceled.`);
-      console.log(e);
+      window.setStatusBarMessage(`Commit canceled.`, Constants.StatusMessageDisplayTimeout);
     } finally {
       if (userEditor) {
         repository.setConfig("core.editor", userEditor);
@@ -54,19 +55,19 @@ export async function magitCommit(repository: MagitRepository, currentView: Magi
   }
 }
 
-function execPromise(command: string, cwd: string): Promise<string> {
-  return new Promise( (resolve, reject) => {
+// function execPromise(command: string, cwd: string): Promise<string> {
+//   return new Promise( (resolve, reject) => {
 
-    exec(command, { cwd }, (error, stdout, stderr) => {
-      if (error) {
-        reject(stderr);
-      }
-      else {
-        resolve(stdout);
-      }
-    });
-  });
-}
+//     exec(command, { cwd }, (error, stdout, stderr) => {
+//       if (error) {
+//         reject(stderr);
+//       }
+//       else {
+//         resolve(stdout);
+//       }
+//     });
+//   });
+// }
 
 // function spawnPromise(command: string, args: string[], cwd: string): Promise<string> {
 //   return new Promise( async (resolve, reject) => {

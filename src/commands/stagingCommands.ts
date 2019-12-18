@@ -10,75 +10,57 @@ import { MagitRepository } from "../models/magitRepository";
 import MagitStatusView from "../views/magitStatusView";
 import { Status } from "../typings/git";
 
-export async function magitStage(repository: MagitRepository, currentView: MagitStatusView) {
+export async function magitStage(repository: MagitRepository, currentView: MagitStatusView): Promise<any> {
 
-  // TODO:
-  // Bytt til ASYNC-AWAIT!!!!!??????
-
-  let selectedView = currentView.click(window.activeTextEditor!.selection.active);
+  const selectedView = currentView.click(window.activeTextEditor!.selection.active);
 
   if (selectedView instanceof HunkView) {
-    let changeHunkDiff = (selectedView as HunkView).changeHunk.diff;
+    const changeHunk = (selectedView as HunkView).changeHunk;
 
-    // Clean up
-    var enc = new TextEncoder();
-    let tmpPatchFilePath = "/tmp/minmagitdiffpatchting";
-    workspace.fs.writeFile(Uri.parse("file://" + tmpPatchFilePath),
-      // TODO: this linebreak might be fucked on windows
-      enc.encode(selectedView.changeHunk.diffHeader + changeHunkDiff + "\n"))
-      .then(async () => {
-        // stage hunk
-        // await currentRepository
-        // .apply("/tmp/minmagitdiffpatchting");
+    const patch = changeHunk.diffHeader + changeHunk.diff + "\n";
 
-        let args = ["apply", tmpPatchFilePath, "--cached"];
+    // TODO: this needs to be wrapped, and it needs to decide between run and exec!
+    const args = ["apply", "--cached"];
+    return repository._repository.repository.run(args, { input: patch});
 
-        let result = await repository._repository.repository.run(args);
-        console.log(result);
-        MagitUtils.magitStatusAndUpdate(repository, currentView);
-
-      });
 
   } else if (selectedView instanceof ChangeView) {
 
-    let magitChange = (selectedView as ChangeView).change;
+    const magitChange = (selectedView as ChangeView).change;
 
-    await repository
+    return repository
       ._repository
       .add([magitChange.uri], { update: false/*magitChange.status !== Status.UNTRACKED*/ }); // TODO: litt usikker om update eller ikke
 
-    MagitUtils.magitStatusAndUpdate(repository, currentView);
 
   } else if (selectedView instanceof ChangeSectionView) {
     let section = (selectedView as ChangeSectionView).section;
 
+    // TODO: Add confirmation question?
+    //        only for lowercase s command, not for big S
+
     switch (section) {
       case Section.Untracked:
-        magitStageAll(repository, currentView, StageAllKind.AllUntracked);
-        break;
+        return magitStageAll(repository, currentView, StageAllKind.AllUntracked);
       case Section.Unstaged:
-        magitStageAll(repository, currentView, StageAllKind.AllTracked);
-        break;
+        return magitStageAll(repository, currentView, StageAllKind.AllTracked);
       default:
         break;
     }
   } else {
-    // TODO:
-    // Switch to a quick pick where i can pass data, and have a title
-    // Maybe make a simple wrapper
-    // This should NOT be the same as a menu!
-    await window.showQuickPick([
+
+    const choosenFilePath = await window.showQuickPick([
       ...repository.magitState?.workingTreeChanges!,
       ...repository.magitState?.indexChanges!,
       ...repository.magitState?.untrackedFiles!,
       // ...currentRepository.magitState?.mergeChanges
     ].map(c => FilePathUtils.pathRelativeTo(c.uri, repository.rootUri)),
       { placeHolder: "Stage" }
-    )
-      .then(chosenFilePath => {
+    );
 
-      });
-    MagitUtils.magitStatusAndUpdate(repository, currentView);
+    // TODO: stage file
+    // return repo . add ( filePath )
+
   }
 }
 
@@ -88,14 +70,9 @@ export enum StageAllKind {
   AllUntracked = "stageAllUntracked"
 }
 
-export async function magitStageAll(repository: MagitRepository, currentView: MagitStatusView, kind: StageAllKind = StageAllKind.AllTracked) {
+export async function magitStageAll(repository: MagitRepository, currentView: MagitStatusView, kind: StageAllKind = StageAllKind.AllTracked): Promise<void> {
 
-  // if (currentView instanceof MagitStatusView) {
-
-  await commands.executeCommand("git." + kind.valueOf());
-  MagitUtils.magitStatusAndUpdate(repository, currentView);
-
-  // }
+  return commands.executeCommand("git." + kind.valueOf());
 }
 
 export async function magitUnstage(repository: MagitRepository, currentView: MagitStatusView) {
@@ -103,19 +80,19 @@ export async function magitUnstage(repository: MagitRepository, currentView: Mag
   // TODO
 
   // For files:
-  // repository._repository.reset()
+  // repository._repository.reset(, false);
 
   // For hunks:
   //  git apply --cached --reverse
 
+  // return async task
+
 }
 
-export async function magitUnstageAll(repository: MagitRepository, currentView: MagitStatusView) {
+export async function magitUnstageAll(repository: MagitRepository, currentView: MagitStatusView): Promise<void> {
 
-  let response = await window.showInputBox({ prompt: "Unstage all changes?" });
-
-  if (response !== undefined) {
-    await commands.executeCommand("git.unstageAll");
-    MagitUtils.magitStatusAndUpdate(repository, currentView);
+  let confirmed = await window.showInputBox({ prompt: "Unstage all changes?" });
+  if (confirmed !== undefined) {
+    return commands.executeCommand("git.unstageAll");
   }
 }

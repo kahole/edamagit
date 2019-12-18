@@ -59,7 +59,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerCommand('extension.magit-pushing', pushing));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-branching', CommandPrimer.primeRepoAndView(branching)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-stage', CommandPrimer.primeRepoAndView(magitStage)));
-  context.subscriptions.push(commands.registerCommand('extension.magit-stage-all', CommandPrimer.primeRepoAndView(magitStageAll)));
+  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-stage-all', CommandPrimer.primeRepoAndView(magitStageAll)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-unstage', CommandPrimer.primeRepoAndView(magitUnstage)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-unstage-all', CommandPrimer.primeRepoAndView(magitUnstageAll)));
 

@@ -1,6 +1,6 @@
 import { Repository } from "../typings/git";
 import { Uri } from "vscode";
-import { SpawnOptions } from "child_process";
+import * as cp from "child_process";
 
 interface BaseBaseRepository {
   run(args: string[], options?: SpawnOptions): Promise<IExecutionResult<string>>;
@@ -54,4 +54,12 @@ export interface Stash {
 export enum ForcePushMode {
 	Force,
 	ForceWithLease
+}
+
+interface SpawnOptions extends cp.SpawnOptions {
+	input?: string;
+	encoding?: string;
+	log?: boolean;
+	// cancellationToken?: CancellationToken;
+	// onSpawn?: (childProcess: cp.ChildProcess) => void;
 }

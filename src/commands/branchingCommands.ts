@@ -1,47 +1,47 @@
-import { window, commands } from "vscode";
-import { Menu, MenuState } from "../menu/menu";
+import { window } from "vscode";
+import { Menu, MenuState, MenuUtil } from "../menu/menu";
 import { MagitRepository } from "../models/magitRepository";
-import MagitUtils from "../utils/magitUtils";
 import MagitStatusView from "../views/magitStatusView";
 import { Ref } from "../typings/git";
 
-export async function branching(repository: MagitRepository, currentView: MagitStatusView, switches: any = {}) {
+const branchingMenu = {
+  title: "Branching",
+  commands: [
+    { label: "b", description: "Checkout", action: checkout },
+    { label: "l", description: "Checkout local branch", action: checkoutLocal },
+    { label: "c", description: "Checkout new branch", action: checkoutNewBranch },
+    // { label: "w", description: "Checkout new worktree", action: checkout },
+    // { label: "y", description: "Checkout pull-request", action: checkout },
+    { label: "s", description: "Create new spin-off", action: createNewSpinoff },
+    { label: "n", description: "Create new branch", action: createNewBranch },
+    // { label: "W", description: "Create new worktree", action: checkout },
+    // { label: "Y", description: "Create from pull-request", action: checkout },
+    { label: "C", description: "Configure", action: checkout },
+    { label: "m", description: "Rename", action: renameBranch },
+    { label: "x", description: "Reset", action: resetBranch },
+    { label: "k", description: "Delete", action: deleteBranch },
+  ]
+};
 
+export async function branching(repository: MagitRepository, currentView: MagitStatusView) {
   // commands.executeCommand('setContext', 'magit.branching', true);
-  
-  Menu.showMenu(branchingMap, { repository, currentView });
+  return MenuUtil.showMenu(branchingMenu, { repository, currentView });
 }
 
-const branchingMap = [
-  { label: "b", description: "$(git-branch) Checkout", action: checkout },
-  { label: "l", description: "Checkout local branch", action: checkoutLocal },
-  { label: "c", description: "Checkout new branch", action: checkoutNewBranch },
-  { label: "w", description: "Checkout new worktree", action: checkout },
-  { label: "y", description: "Checkout pull-request", action: checkout },
-  { label: "s", description: "Create new spin-off", action: createNewSpinoff },
-  { label: "n", description: "Create new branch", action: createNewBranch },
-  { label: "W", description: "Create new worktree", action: checkout },
-  { label: "Y", description: "Create from pull-request", action: checkout },
-  { label: "C", description: "Configure", action: checkout },
-  { label: "m", description: "Rename", action: renameBranch },
-  { label: "x", description: "Reset", action: checkout },
-  { label: "k", description: "Delete", action: deleteBranch },
-];
-
 async function checkout(menuState: MenuState) {
-  _checkout(menuState, menuState.repository.state.refs);
+  return _checkout(menuState, menuState.repository.state.refs);
 }
 
 async function checkoutLocal(menuState: MenuState) {
-  _checkout(menuState, menuState.repository.state.refs);
+  return _checkout(menuState, menuState.repository.state.refs);
 }
 
 async function checkoutNewBranch(menuState: MenuState) {
-  _createBranch(menuState, true);
+  return _createBranch(menuState, true);
 }
 
 async function createNewBranch(menuState: MenuState) {
-  _createBranch(menuState, false);
+  return _createBranch(menuState, false);
 }
 
 async function createNewSpinoff(menuState: MenuState) {
@@ -52,85 +52,78 @@ async function createNewSpinoff(menuState: MenuState) {
   //  C-h F magit-branch-spinoff
 }
 
-async function renameBranch(menuState: MenuState) {
+async function renameBranch({ repository, currentView }: MenuState) {
 
-  let { repository, currentView } = menuState;
+  let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Rename branch" });
 
-  let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Create and checkout branch starting at:" });
-  
   if (ref) {
     let newName = await window.showInputBox({ prompt: `Rename branch '${ref}' to:` });
 
     if (newName && newName.length > 0) {
-      try {
-        // TODO: denne kan kun rename current branch
-        await repository._repository.renameBranch(newName);
-        MagitUtils.magitStatusAndUpdate(repository, currentView);
-      } catch (error) {
-        window.showErrorMessage(error.stderr);
-      }
+
+      // TODO: denne kan kun rename current branch
+      return await repository._repository.renameBranch(newName);
+
     } else {
-      window.showErrorMessage("No name given");
+      throw new Error("No name given for branch rename");
     }
   }
 }
 
-async function deleteBranch(menuState: MenuState) {
+async function deleteBranch({ repository, currentView }: MenuState) {
 
-  let { repository, currentView } = menuState;
-
-  // TODO: menu-title
   let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Delete" });
 
-  // TODO
   let force = false;
 
+  // TODO:
+  // If unmerged
+  //  How: maybe try deleting and check the error response for "not fully merged"? 
+  let confirmed = await window.showInputBox({ prompt: `Delete unmerged branch ${ref}?` });
+  if (confirmed !== undefined) {
+    force = true;
+  }
+
   if (ref) {
-    try {
-      await repository.deleteBranch(ref, force);
-      MagitUtils.magitStatusAndUpdate(repository, currentView);
-    } catch (error) {
-      window.showErrorMessage(error.stderr);
-    }
+    return repository.deleteBranch(ref, force);
+  }
+}
+
+async function resetBranch({ repository, currentView }: MenuState) {
+
+  // TODO
+
+  let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Rename branch" });
+
+  let resetToRef = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Rename branch" });
+
+  if (ref) {
+    // repository._repository.reset()
   }
 }
 
 //--------------------------------
 
-async function _checkout(menuState: MenuState, refs: Ref[]) {
+async function _checkout({ repository, currentView }: MenuState, refs: Ref[]) {
 
-  let { repository, currentView } = menuState;
-
-  // TODO: menu-title
   let ref = await window.showQuickPick(refs.map(r => r.name!), { placeHolder: "Checkout" });
 
   if (ref) {
-    try {
-      await repository.checkout(ref);
-      MagitUtils.magitStatusAndUpdate(repository, currentView);
-    } catch (error) {
-      window.showErrorMessage(error.stderr);
-    }
+    return repository.checkout(ref);
   }
 }
 
-async function _createBranch(menuState: MenuState, checkout: boolean) {
+async function _createBranch({ repository, currentView }: MenuState, checkout: boolean) {
 
-  let { repository, currentView } = menuState;
-  
-  let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Create and checkout branch starting at:" });
-  
+  let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Create and checkout branch starting at" });
+
   if (ref) {
     let newBranchName = await window.showInputBox({ prompt: "Name for new branch" });
 
     if (newBranchName && newBranchName.length > 0) {
 
-      try {
-        await repository.createBranch(newBranchName, checkout, ref);
-        MagitUtils.magitStatusAndUpdate(repository, currentView);
-      } catch (error) {
-        window.showErrorMessage(error.stderr);
-      }
+      return repository.createBranch(newBranchName, checkout, ref);
+
     } else {
       window.showErrorMessage("No name given for new branch");
     }

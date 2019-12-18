@@ -1,9 +1,13 @@
-import { QuickPick, window, QuickPickItem, Disposable } from "vscode";
+import { window } from "vscode";
 import { MenuItem } from "./menuItem";
 import { MagitRepository } from "../models/magitRepository";
 import MagitStatusView from "../views/magitStatusView";
-import { DocumentView } from "../views/general/documentView";
 
+export interface Menu {
+  title: string;
+  commands: MenuItem[];
+  isSwitchesMenu?: boolean;
+}
 
 export interface MenuState {
   repository: MagitRepository;
@@ -12,65 +16,58 @@ export interface MenuState {
   switches?: any;
 }
 
-export class Menu {
+export class MenuUtil {
 
-  private _quickPick: QuickPick<MenuItem>;
-  activeSwitches: any[] = [];
+  static showMenu(menu: Menu, menuState: MenuState): Promise<void> {
+
+    return new Promise((resolve, reject) => {
+
+      let _quickPick = window.createQuickPick<MenuItem>();
+
+      _quickPick.title = menu.title;
+      _quickPick.ignoreFocusOut = true;
   
-  constructor(menu: MenuItem[], menuState: MenuState, isSwitchesMenu?: boolean) {
-    
-    this._quickPick = window.createQuickPick<MenuItem>();
-
-    this._quickPick.title = "Wow wow we we   C - Configure";
-
-    if (isSwitchesMenu) {
-      this._quickPick.canSelectMany = true;
-      this._quickPick.title = "Switches (select with <space>)";
-    }
-
-    this._quickPick.items = menu;
-
-    // Experiments
-    // TODO: THIS ALSO WORKS PRETTY NICELY
-    //    no duplicate definitions of keybindings+menu keys
-    //      menu becomes actual menu, not just a visual element
-    //        and if it cant be enabled=false anyways, might as well just do it like this
-    //          but keep the notes about the other method
-    this._quickPick.onDidChangeValue( (e) => {
-      console.log(e);
-      console.log(this._quickPick.value);
-      // TODO
-      // clean up
-      let selectedItem = this._quickPick.activeItems.filter(i => i.label === this._quickPick.value);
-      this._quickPick.value = "";
-      console.log(selectedItem);
-      selectedItem[0].action(menuState);
-      this._quickPick.dispose(); //??
-    });
-
-    // end Experiments
-
-    this._quickPick.onDidAccept(() => {
-
-      if (this._quickPick.activeItems.length > 0) {
-        let chosenItem = this._quickPick.activeItems[0] as MenuItem;
-        chosenItem.action(menuState);
+      if (menu.isSwitchesMenu) {
+        _quickPick.canSelectMany = true;
+        _quickPick.title = "Switches (select with <space>)";
       }
+  
+      _quickPick.items = menu.commands;
+
+      let eventListenerDisposable = _quickPick.onDidChangeValue( async (e) => {
+        console.log(e);
+        console.log(_quickPick.value);
+        // TODO
+        // clean up
+        let chosenItem = _quickPick.activeItems.filter(i => i.label === _quickPick.value);
+        _quickPick.value = "";
+        try {
+          await chosenItem[0].action(menuState);
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
+        _quickPick.dispose(); //??
+        eventListenerDisposable.dispose(); //??
+      });
+
+      // Keep both of these (Select with key or with arrows + enter)
+  
+      _quickPick.onDidAccept(async () => {
+  
+        if (_quickPick.activeItems.length > 0) {
+          let chosenItem = _quickPick.activeItems[0] as MenuItem;
+          try {
+            await chosenItem.action(menuState);
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        }
+      });
+
+      _quickPick.show();
+
     });
   }
-  
-  show() {
-    
-    this._quickPick.show();
-    this._quickPick.ignoreFocusOut = true;
-    // this._quickPick.enabled = false;
-
-    // this._quickPick.dispose(); 
-    
-  }
-
-  static showMenu(menu: MenuItem[], menuState: MenuState, isSwitchesMenu?: boolean) {
-    new Menu(menu, menuState, isSwitchesMenu).show();
-  }
-
 }
