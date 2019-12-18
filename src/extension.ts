@@ -65,9 +65,13 @@ export function activate(context: ExtensionContext) {
 
   context.subscriptions.push(commands.registerCommand('extension.magit-save-and-close-commit-msg', saveClose));
 
-  // TODO: !! TREnger altå ikke å contribute commands i package.json!!!!
-  //    de sub commandsa kan defineres bare i keymap og her!!
-  context.subscriptions.push(commands.registerCommand("extension.magit.branching.bananas", magitHelp));
+  context.subscriptions.push(workspace.onDidSaveTextDocument(() => {
+    // TODO:
+    // Doesn work, magitStatus currently doesnt find the correct view when unfocused
+    // Should only be when status view open?
+    // How should other views be stored and handled?
+    magitStatus();
+  }));
 }
 
 // this method is called when your extension is deactivated

@@ -14,6 +14,7 @@ export function magitStatus() {
 
   if (window.activeTextEditor?.document) {
 
+    // TODO: this doesnt find unfocused magit status view
     // Magit status already open?
     let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(window.activeTextEditor);
 
@@ -73,7 +74,6 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
   let commitTasks = Promise.all(
     [repository.state.HEAD!.commit!]
       .map(c => repository.getCommit(c)));
-  // .map(repository.getCommit));
 
   let untrackedFiles: MagitChange[] = [];
 
@@ -114,20 +114,33 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   let commitCache: { [id: string]: Commit; } = commits.reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});
 
-  let HEAD = repository.state.HEAD as MagitBranch;
+  let HEAD = repository.state.HEAD as MagitBranch | undefined;
+
+  let pushRemotePromise;
+
   if (HEAD) {
     HEAD.commitDetails = commitCache[HEAD!.commit!];
+
+    pushRemotePromise = repository.getConfig(`branch.${HEAD.name}.pushRemote`)
+    .then( remote => {
+      // TODO: clean up
+      HEAD!.pushRemote = { remote, name: HEAD!.name! };
+    })
+    .catch(console.log);
   }
 
+
   repository.magitState = {
-    _state: repository.state,
     HEAD,
     stashes,
     log,
-    commitCache,
+    commitCache, // TODO: remove commit cache
     workingTreeChanges,
     indexChanges,
     mergeChanges: undefined,
     untrackedFiles
   };
+
+  // TODO: cleanup
+  await pushRemotePromise;
 }

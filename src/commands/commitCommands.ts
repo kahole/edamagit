@@ -1,4 +1,3 @@
-import { gitApi } from "../extension";
 import { exec, spawn, ExecException } from "child_process";
 import { window } from "vscode";
 import MagitUtils from "../utils/magitUtils";

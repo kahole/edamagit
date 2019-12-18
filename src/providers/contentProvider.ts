@@ -10,8 +10,6 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
   private _onDidChange = new vscode.EventEmitter<vscode.Uri>();
   onDidChange = this._onDidChange.event;
 
-  // private _documents = new Map<string, MagitStatusView>();
-
   // TODO: can be used for BOLD, gutter displays, and other bonus styles:
   // private _editorDecoration = vscode.window.createTextEditorDecorationType({ textDecoration: 'underline' });
 
@@ -19,8 +17,8 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
 
   constructor() {
 
-    // TODO:
-    // Might not need to delete all views. Keep magit view?
+    // TODO: VIEW DELETION
+    // Might not need to delete all views. Keep magitStatus view?
     //                             and then just update
     //   might wanna delete other types of views though
 
@@ -28,6 +26,7 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
       // doc => magitRepositories[doc.uri.query].views!.delete(doc.uri.toString()));
   }
 
+  // TODO: manage dispose properly
   dispose() {
     // this._subscriptions.dispose();
     // this._documents.clear();
@@ -55,6 +54,7 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
     return statusView.render(0).join('\n');
   }
 
+  // TODO: links might be useful
   // provideDocumentLinks(document: vscode.TextDocument, token: vscode.CancellationToken): vscode.DocumentLink[] | undefined {
   // 	// While building the virtual document we have already created the links.
   // 	// Those are composed from the range inside the document and a target uri

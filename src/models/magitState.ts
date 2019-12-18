@@ -4,7 +4,6 @@ import { Stash } from "../common/gitApiExtensions";
 import { MagitBranch } from "./magitBranch";
 
 export interface MagitState {
-  _state: RepositoryState; // TODO: shouldnt need this?
   readonly commitCache: { [id: string]: Commit; }; // TODO: rigid model with everything needed better?
   readonly HEAD?: MagitBranch;
   readonly workingTreeChanges?: MagitChange[];
