@@ -77,11 +77,13 @@ QuickPick blir da bare en visuell hjelpe-popup!
 ## Notes
   - Test on every platform
 
+  - Licensing
+      o Magit name trademark? vscodemagit / Magit for VSCode / VSCodeMagit
+      o 100% gi credit Magit ofc
+      o GPL2/3, MIT, etc
+      o git.d.ts microsoft licence, effects?
   - VsVim:
      Needs to work with VsVim as well
-
-  - God inspo - REST client mode
-      https://github.com/Huachao/vscode-restclient
 
 
 -----
@@ -89,6 +91,8 @@ QuickPick blir da bare en visuell hjelpe-popup!
 # magit README
 
 Inspired/port by/of Magit https://magit.vc/
+
+
 
 This is the README for your extension "magit". After writing up a brief description, we recommend including the following sections.
 

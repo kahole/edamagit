@@ -16,7 +16,7 @@ const branchingMenu = {
     { label: "n", description: "Create new branch", action: createNewBranch },
     // { label: "W", description: "Create new worktree", action: checkout },
     // { label: "Y", description: "Create from pull-request", action: checkout },
-    { label: "C", description: "Configure", action: checkout },
+    { label: "C", description: "Configure", action: configureBranch },
     { label: "m", description: "Rename", action: renameBranch },
     { label: "x", description: "Reset", action: resetBranch },
     { label: "k", description: "Delete", action: deleteBranch },
@@ -45,11 +45,23 @@ async function createNewBranch(menuState: MenuState) {
 }
 
 async function createNewSpinoff(menuState: MenuState) {
-  await _createBranch(menuState, true);
-  // await menuState.repository.setBranchUpstream("nameOfNewBranch", "nameOfOldBranch that should be tracked");
 
   // TODO:
   //  C-h F magit-branch-spinoff
+
+  // Sammendrag:
+  //  on branch master:
+  //  1. Remove all unpublished commits
+  //  2. checkout new branch with input name
+  //  3. Add all the unpublished/now removed commits from master to $NEW_BRANCH
+}
+
+async function configureBranch(menuState: MenuState) {
+
+  // 1. Select branch? or take current?
+  // 2. Read all configs: menuState.repository.getConfigs
+  //    maybe they are already read in the repo state?
+  // 3. repository.setConfig("branch.${ref}.theCoolProperty")
 }
 
 async function renameBranch({ repository, currentView }: MenuState) {
