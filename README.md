@@ -20,10 +20,6 @@
    Dog forskjellig update, e.g magit Log state
    Finn ut av multiplexingen her
 
-   Da tror jeg modellen som den er nå er grei.
-   Hadde vært amazing om jeg klarer alt med 1 og samme language også
-      altså kun "magit"... ikke "magit-status" etc
-
 ## UI
   - icons
         https://code.visualstudio.com/api/references/icons-in-labels

@@ -60,41 +60,41 @@
       "commandPalette": [
         {
           "command": "extension.magit-branching",
-          "when": "editorLangId == magit-status"
+          "when": "editorLangId == magit"
         },
         {
           "command": "extension.magit-visit-at-point",
-          "when": "editorLangId == magit-status"
+          "when": "editorLangId == magit"
         },
         {
           "command": "extension.magit-stage",
-          "when": "editorLangId == magit-status"
+          "when": "editorLangId == magit"
         },
         {
           "command": "extension.magit-stage-all",
-          "when": "editorLangId == magit-status"
+          "when": "editorLangId == magit"
         },
         {
           "command": "extension.magit-unstage",
-          "when": "editorLangId == magit-status"
+          "when": "editorLangId == magit"
         },
         {
           "command": "extension.magit-unstage-all",
-          "when": "editorLangId == magit-status"
+          "when": "editorLangId == magit"
         },
         {
           "command": "extension.magit-commit",
-          "when": "editorLangId == magit-status"
+          "when": "editorLangId == magit"
         },
         {
           "command": "extension.magit-pushing",
-          "when": "editorLangId == magit-status"
+          "when": "editorLangId == magit"
         }
       ]
     },
     "languages": [
       {
-        "id": "magit-status",
+        "id": "magit",
         "aliases": [
           "Magit"
         ],
@@ -105,72 +105,72 @@
       }
     ],
     "configurationDefaults": {
-      "[magit-status]": {
+      "[magit]": {
         "editor.lineNumbers": "off"
       }
     },
     "grammars": [
       {
-        "language": "magit-status",
+        "language": "magit",
         "scopeName": "source.magit",
-        "path": "./syntaxes/magitStatus.tmGrammar.json"
+        "path": "./syntaxes/magit.tmGrammar.json"
       }
     ],
     "keybindings": [
       {
         "command": "editor.toggleFold",
         "key": "tab",
-        "when": "editorTextFocus && editorLangId == magit-status"
+        "when": "editorTextFocus && editorLangId == magit"
       },
       {
         "command": "extension.magit",
         "key": "g",
-        "when": "editorTextFocus && editorLangId == magit-status"
+        "when": "editorTextFocus && editorLangId == magit"
       },
       {
         "command": "extension.magit-visit-at-point",
         "key": "enter",
-        "when": "editorTextFocus && editorLangId == magit-status"
+        "when": "editorTextFocus && editorLangId == magit"
       },
       {
         "command": "extension.magit-commit",
         "key": "c",
-        "when": "editorTextFocus && editorLangId == magit-status"
+        "when": "editorTextFocus && editorLangId == magit"
       },
       {
         "command": "extension.magit-branching",
         "key": "b",
-        "when": "editorTextFocus && editorLangId == magit-status"
+        "when": "editorTextFocus && editorLangId == magit"
       },
       {
         "command": "extension.magit-pushing",
         "key": "shift+p",
-        "when": "editorTextFocus && editorLangId == magit-status"
+        "when": "editorTextFocus && editorLangId == magit"
       },
       {
         "command": "extension.magit-help",
         "key": "?",
-        "when": "editorTextFocus && editorLangId == magit-status"
+        "when": "editorTextFocus && editorLangId == magit"
       },
       {
         "command": "extension.magit-stage",
         "key": "s",
-        "when": "editorTextFocus && editorLangId == magit-status"
+        "when": "editorTextFocus && editorLangId == magit"
       },
       {
         "command": "extension.magit-stage-all",
         "key": "shift+s",
-        "when": "editorTextFocus && editorLangId == magit-status"
+        "when": "editorTextFocus && editorLangId == magit"
       },
       {
         "command": "extension.magit-unstage",
         "key": "u",
-        "when": "editorTextFocus && editorLangId == magit-status"
+        "when": "editorTextFocus && editorLangId == magit"
       },
       {
         "command": "extension.magit-unstage-all",
         "key": "shift+u",
-        "when": "editorTextFocus && editorLangId == magit-status"
+        "when": "editorTextFocus && editorLangId == magit"
       },
       {
         "command": "extension.magit-save-and-close-commit-msg",

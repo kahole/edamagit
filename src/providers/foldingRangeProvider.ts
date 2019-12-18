@@ -4,7 +4,7 @@ import MagitUtils from '../utils/magitUtils';
 
 export default class FoldingRangeProvider implements vscode.FoldingRangeProvider {
 
-  static scheme = { scheme: 'magit', language: 'magit-status' };
+  static scheme = { scheme: 'magit', language: 'magit' };
 
   dispose() { }
 

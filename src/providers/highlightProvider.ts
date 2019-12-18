@@ -3,7 +3,7 @@ import MagitUtils from '../utils/magitUtils';
 
 export default class HighlightProvider implements vscode.DocumentHighlightProvider {
   
-  static scheme = { scheme: 'magit', language: 'magit-status' };
+  static scheme = { scheme: 'magit', language: 'magit' };
   
   dispose() { }
   

@@ -20,7 +20,7 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
   constructor() {
 
     // TODO:
-    // Might not need to delete all views. Keep magit-status view?
+    // Might not need to delete all views. Keep magit view?
     //                             and then just update
     //   might wanna delete other types of views though
 
@@ -37,7 +37,6 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
 
   provideTextDocumentContent(uri: vscode.Uri): string | Thenable<string> {
 
-    console.log("provide text content call");
     // already loaded?
     // let document = this._documents.get(uri.toString());
     // if (document) {
@@ -67,7 +66,17 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
   // }
 }
 
-let seq = 0;
+// TODO: 
+//  - Creation of new views shouldnt be done from this class
+//  - Only getting views from view stock based on uri.
+//  - Uri generation should probably happen in the view class itself
+//    or somewhere else
+// - This way to perfect multiplexing
+// Updating:
+//  - View lifecycle management: care about existing views?
+//       simpler to just replace
+//  - Need to get onDidChange into the views somehow.
+//  - Maybe this class should be responsible for all view creation after all.. hmm
 
 export function encodeLocation(uri: string): vscode.Uri {
   const query = uri;
