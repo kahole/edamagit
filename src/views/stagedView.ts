@@ -41,7 +41,7 @@ export default class MagitStagedView extends DocumentView {
     }
   }
 
-  encodeLocation(workspacePath: string): Uri {
+  static encodeLocation(workspacePath: string): Uri {
     return Uri.parse(`${Constants.MagitUriScheme}:${MagitStagedView.UriPath}?${workspacePath}`);
   }
 }

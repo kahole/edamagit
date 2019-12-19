@@ -1,5 +1,4 @@
 import { MagitChange } from "../models/magitChange";
-import { encodeLocation } from "../providers/contentProvider";
 import { workspace, window, ViewColumn, Range } from "vscode";
 import { gitApi, magitRepositories } from "../extension";
 import FilePathUtils from "../utils/filePathUtils";
@@ -53,7 +52,7 @@ export function magitStatus() {
 
       internalMagitStatus(magitRepo)
         .then(() => {
-          const uri = encodeLocation(magitRepo.rootUri.fsPath);
+          const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.fsPath);
           workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside));
         });
     }
@@ -122,11 +121,11 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     HEAD.commitDetails = commitCache[HEAD!.commit!];
 
     pushRemotePromise = repository.getConfig(`branch.${HEAD.name}.pushRemote`)
-    .then( remote => {
-      // TODO: clean up
-      HEAD!.pushRemote = { remote, name: HEAD!.name! };
-    })
-    .catch(console.log);
+      .then(remote => {
+        // TODO: clean up
+        HEAD!.pushRemote = { remote, name: HEAD!.name! };
+      })
+      .catch(console.log);
   }
 
 

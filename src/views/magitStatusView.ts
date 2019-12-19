@@ -55,7 +55,7 @@ export default class MagitStatusView extends DocumentView {
     }
   }
 
-  encodeLocation(workspacePath: string): Uri {
+  static encodeLocation(workspacePath: string): Uri {
     return Uri.parse(`${Constants.MagitUriScheme}:${MagitStatusView.UriPath}?${workspacePath}`);
   }
 }
