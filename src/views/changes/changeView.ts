@@ -10,9 +10,9 @@ export class ChangeView extends View {
 
   constructor(public change: MagitChange) {
     super();
-    this.subViews = [new ChangeHeaderView(change)];
+    this.addSubview(new ChangeHeaderView(change));
     if (this.change.hunks) {
-      this.subViews.push(...this.change.hunks.map(hunk => new HunkView(hunk)));
+      this.addSubview(...this.change.hunks.map(hunk => new HunkView(hunk)));
     }
   }
 }

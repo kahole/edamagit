@@ -82,8 +82,9 @@ QuickPick blir da bare en visuell hjelpe-popup!
       o 100% gi credit Magit ofc
       o GPL2/3, MIT, etc
       o git.d.ts microsoft licence, effects?
-  - VsVim:
-     Needs to work with VsVim as well
+
+  - VsVim?
+    Maybe.. Is it possible to disable VSVim for certain languages / file extensions / etc?
 
 
 -----

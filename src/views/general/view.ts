@@ -34,4 +34,8 @@ export abstract class View {
       return subResults.length > 0 ? subResults[0] : result;
     }
   }
+
+  addSubview(...views: View[]) {
+    this.subViews.push(...views);
+  }
 }
