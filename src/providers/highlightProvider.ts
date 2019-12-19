@@ -2,11 +2,9 @@ import * as vscode from 'vscode';
 import MagitUtils from '../utils/magitUtils';
 
 export default class HighlightProvider implements vscode.DocumentHighlightProvider {
-  
-  static scheme = { scheme: 'magit', language: 'magit' };
-  
+
   dispose() { }
-  
+
   provideDocumentHighlights(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.DocumentHighlight[]> {
 
     let highlights: vscode.DocumentHighlight[] = [];

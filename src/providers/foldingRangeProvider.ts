@@ -4,8 +4,6 @@ import MagitUtils from '../utils/magitUtils';
 
 export default class FoldingRangeProvider implements vscode.FoldingRangeProvider {
 
-  static scheme = { scheme: 'magit', language: 'magit' };
-
   dispose() { }
 
   provideFoldingRanges(document: vscode.TextDocument, context: vscode.FoldingContext, token: vscode.CancellationToken): vscode.ProviderResult<vscode.FoldingRange[]> {
@@ -19,7 +17,7 @@ export default class FoldingRangeProvider implements vscode.FoldingRangeProvider
       if (currentView) {
         let views = this.flattenSubviews(currentView.subViews);
 
-        views.forEach( v => {
+        views.forEach(v => {
           if (v.isFoldable) {
             foldingRanges.push(new vscode.FoldingRange(v.range.start.line, v.range.end.line));
           }

@@ -2,10 +2,12 @@ import * as vscode from 'vscode';
 import MagitStatusView from '../views/magitStatusView';
 import { magitRepositories } from '../extension';
 import { View } from '../views/general/view';
+import { DocumentView } from '../views/general/documentView';
+import MagitStagedView from '../views/stagedView';
 
 export default class ContentProvider implements vscode.TextDocumentContentProvider {
 
-  static scheme = 'magit';
+  // static scheme = 'magit';
 
   private _onDidChange = new vscode.EventEmitter<vscode.Uri>();
   onDidChange = this._onDidChange.event;
@@ -23,7 +25,7 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
     //   might wanna delete other types of views though
 
     // this._subscriptions = vscode.workspace.onDidCloseTextDocument(
-      // doc => magitRepositories[doc.uri.query].views!.delete(doc.uri.toString()));
+    // doc => magitRepositories[doc.uri.query].views!.delete(doc.uri.toString()));
   }
 
   // TODO: manage dispose properly
@@ -36,11 +38,18 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
 
   provideTextDocumentContent(uri: vscode.Uri): string | Thenable<string> {
 
+    // TODO: caching of documents?
+    //   if document with uri is still open, what happens
+    //   if document is closed, should it be deleted?
+    //     if not, how to utilize cached views
+
     // already loaded?
     // let document = this._documents.get(uri.toString());
     // if (document) {
     // 	return document.value;
     // }
+
+    let documentView: DocumentView | undefined;
 
     let magitRepo = magitRepositories[uri.query];
 
@@ -48,10 +57,27 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
       magitRepo.views = new Map<string, View>();
     }
 
-    let statusView = new MagitStatusView(uri, this._onDidChange, magitRepo.magitState!);
-    magitRepo.views.set(uri.toString(), statusView);
+    // Multiplexing should happen here
 
-    return statusView.render(0).join('\n');
+    switch (uri.path) {
+      case MagitStatusView.UriPath:
+        documentView = new MagitStatusView(uri, this._onDidChange, magitRepo.magitState!);
+        break;
+      case MagitStagedView.UriPath:
+
+        break;
+
+      default:
+        break;
+    }
+
+    if (documentView) {
+      magitRepo.views.set(uri.toString(), documentView);
+      return documentView.render(0).join('\n');
+    }
+
+    // End multiplexing
+    return "";
   }
 
   // TODO: links might be useful
@@ -78,11 +104,11 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
 //  - Need to get onDidChange into the views somehow.
 //  - Maybe this class should be responsible for all view creation after all.. hmm
 
-export function encodeLocation(uri: string): vscode.Uri {
-  const query = uri;
-  return vscode.Uri.parse(`${ContentProvider.scheme}:status.magit?${query}`);
-  //return vscode.Uri.parse(`${ContentProvider.scheme}:status.magit?${query}#${seq++}`);
-}
+// export function encodeLocation(workspacePath: string): vscode.Uri {
+//   const query = workspacePath;
+//   return vscode.Uri.parse(`${ContentProvider.scheme}:status.magit?${query}`);
+//   //return vscode.Uri.parse(`${ContentProvider.scheme}:status.magit?${query}#${seq++}`);
+// }
 
 // export function decodeLocation(uri: vscode.Uri): [vscode.Uri, vscode.Position] {
 //   let [target, line, character] = <[string, number, number]>JSON.parse(uri.query);

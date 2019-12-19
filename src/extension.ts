@@ -13,8 +13,7 @@ import { saveClose } from './commands/macros';
 import FoldingRangeProvider from './providers/foldingRangeProvider';
 import HighlightProvider from './providers/highlightProvider';
 import { CommandPrimer } from './commands/commandPrimer';
-import MagitUtils from './utils/magitUtils';
-import MagitStatusView from './views/magitStatusView';
+import * as Constants from "./common/constants";
 
 export const magitRepositories: { [id: string]: MagitRepository } = {};
 export let gitApi: API;
@@ -38,9 +37,9 @@ export function activate(context: ExtensionContext) {
   const highlightProvider = new HighlightProvider();
 
   const providerRegistrations = Disposable.from(
-    workspace.registerTextDocumentContentProvider(ContentProvider.scheme, contentProvider),
-    languages.registerFoldingRangeProvider(FoldingRangeProvider.scheme, foldingRangeProvider),
-    languages.registerDocumentHighlightProvider(HighlightProvider.scheme, highlightProvider)
+    workspace.registerTextDocumentContentProvider(Constants.MagitUriScheme, contentProvider),
+    languages.registerFoldingRangeProvider(Constants.MagitDocumentSelector, foldingRangeProvider),
+    languages.registerDocumentHighlightProvider(Constants.MagitDocumentSelector, highlightProvider)
   );
   context.subscriptions.push(
     contentProvider,
@@ -75,7 +74,7 @@ export function activate(context: ExtensionContext) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() { 
+export function deactivate() {
   // TODO:
   // cleanup?
 }

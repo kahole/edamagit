@@ -1,9 +1,23 @@
 {
   "scopeName": "source.magit",
-  "patterns": [{ "include": "#expression"}, {"include": "#diff" }],
+  "patterns": [
+    {
+      "include": "#expression"
+    },
+    {
+      "include": "#diff"
+    }
+  ],
   "repository": {
     "expression": {
-      "patterns": [{ "include": "#sectionHeader" }, { "include": "#branchName" }]
+      "patterns": [
+        {
+          "include": "#sectionHeader"
+        },
+        {
+          "include": "#branchName"
+        }
+      ]
     },
     "sectionHeader": {
       "match": "Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits",
@@ -17,7 +31,11 @@
     "diff": {
       "begin": "(?=^@@)",
       "end": "^$",
-      "patterns": [{ "include": "source.diff"}]
+      "patterns": [
+        {
+          "include": "source.diff"
+        }
+      ]
     }
   }
 }

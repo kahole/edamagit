@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import * as Constants from "../common/constants";
 import { MagitState } from '../models/magitState';
 import { ChangeSectionView } from './changes/changesSectionView';
 import { Section } from './sectionHeader';
@@ -8,15 +8,13 @@ import { CommitSectionView } from './commits/commitSectionView';
 import { BranchHeaderView } from './branches/branchHeaderView';
 import { TextView } from './general/textView';
 import { LineBreakView } from './general/lineBreakView';
+import { Uri, EventEmitter } from 'vscode';
 
 export default class MagitStatusView extends DocumentView {
 
-  // TODO: probably need dispose for document views
-  dispose() {
-    throw new Error("Method not implemented.");
-  }
+  static UriPath: string = "status.magit";
 
-  constructor(uri: vscode.Uri, emitter: vscode.EventEmitter<vscode.Uri>, magitState: MagitState) {
+  constructor(uri: Uri, emitter: EventEmitter<Uri>, magitState: MagitState) {
     super(uri, emitter);
 
     if (magitState.HEAD) {
@@ -55,5 +53,9 @@ export default class MagitStatusView extends DocumentView {
     if (magitState.log && magitState.log.length > 0) {
       this.addSubview(new CommitSectionView(magitState.log));
     }
+  }
+
+  encodeLocation(workspacePath: string): Uri {
+    return Uri.parse(`${Constants.MagitUriScheme}:${MagitStatusView.UriPath}?${workspacePath}`);
   }
 }

@@ -10,35 +10,38 @@
 //      Supervisor.start_link(children, opts)
 // +
 // +    # Adding some comment
-     
+
 //    end
 //  end
 
-import * as vscode from 'vscode';
+import * as Constants from "../common/constants";
 import { MagitState } from '../models/magitState';
 import { Section, SectionHeaderView } from './sectionHeader';
 import { DocumentView } from './general/documentView';
 import { TextView } from './general/textView';
+import { ChangeView } from './changes/changeView';
+import { LineBreakView } from './general/lineBreakView';
+import { Uri, EventEmitter } from "vscode";
 
 export default class MagitStagedView extends DocumentView {
 
-  // TODO: probably need dispose for document views
-  dispose() {
-    throw new Error("Method not implemented.");
-  }
+  static UriPath: string = "staged.magit";
 
-  constructor(uri: vscode.Uri, emitter: vscode.EventEmitter<vscode.Uri>, magitState: MagitState) {
+  constructor(uri: Uri, emitter: EventEmitter<Uri>, magitState: MagitState) {
     super(uri, emitter);
-
-    // TODO: add the "1 file changed, 2 insertions(+)" lines
 
     if (magitState.indexChanges && magitState.indexChanges.length > 0) {
 
-      this.addSubview(new SectionHeaderView(Section.Staged));
-
-      this.addSubview(new TextView("TODO: X file changed, 2 insertions blabla"));
-
-      // this.addSubview(new ChangeSectionView(Section.Staged, magitState.indexChanges));
+      this.subViews = [
+        new SectionHeaderView(Section.Staged),
+        new TextView("TODO: X file changed, 2 insertions blabla"),
+        new LineBreakView(),
+        ...magitState.indexChanges.map(change => new ChangeView(change))
+      ];
     }
+  }
+
+  encodeLocation(workspacePath: string): Uri {
+    return Uri.parse(`${Constants.MagitUriScheme}:${MagitStagedView.UriPath}?${workspacePath}`);
   }
 }
