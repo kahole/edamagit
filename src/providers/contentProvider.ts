@@ -64,7 +64,7 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
         documentView = new MagitStatusView(uri, this._onDidChange, magitRepo.magitState!);
         break;
       case MagitStagedView.UriPath:
-
+        documentView = new MagitStagedView(uri, this._onDidChange, magitRepo.magitState!);
         break;
 
       default:
@@ -91,26 +91,3 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
   // 	}
   // }
 }
-
-// TODO: 
-//  - Creation of new views shouldnt be done from this class
-//  - Only getting views from view stock based on uri.
-//  - Uri generation should probably happen in the view class itself
-//    or somewhere else
-// - This way to perfect multiplexing
-// Updating:
-//  - View lifecycle management: care about existing views?
-//       simpler to just replace
-//  - Need to get onDidChange into the views somehow.
-//  - Maybe this class should be responsible for all view creation after all.. hmm
-
-// export function encodeLocation(workspacePath: string): vscode.Uri {
-//   const query = workspacePath;
-//   return vscode.Uri.parse(`${ContentProvider.scheme}:status.magit?${query}`);
-//   //return vscode.Uri.parse(`${ContentProvider.scheme}:status.magit?${query}#${seq++}`);
-// }
-
-// export function decodeLocation(uri: vscode.Uri): [vscode.Uri, vscode.Position] {
-//   let [target, line, character] = <[string, number, number]>JSON.parse(uri.query);
-//   return [vscode.Uri.parse(target), new vscode.Position(line, character)];
-// }

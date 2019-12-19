@@ -1,10 +1,10 @@
 import { exec, spawn, ExecException } from "child_process";
-import { window } from "vscode";
-import MagitUtils from "../utils/magitUtils";
+import { window, workspace, ViewColumn } from "vscode";
 import * as Constants from "../common/constants";
 import { execPath } from "process";
 import { MagitRepository } from "../models/magitRepository";
 import MagitStatusView from "../views/magitStatusView";
+import MagitStagedView from "../views/stagedView";
 
 export async function magitCommit(repository: MagitRepository, currentView: MagitStatusView) {
 
@@ -22,7 +22,7 @@ export async function magitCommit(repository: MagitRepository, currentView: Magi
 
     let userEditor: string | undefined;
     try {
-      
+
       userEditor = await repository.getConfig("core.editor");
 
       await repository.setConfig("core.editor", "code --wait");
@@ -37,12 +37,15 @@ export async function magitCommit(repository: MagitRepository, currentView: Magi
 
       // let commitSuccessMessage = await execPromise(`${gitExecutablePath} commit`, cwd);
 
+      const uri = MagitStagedView.encodeLocation(repository.rootUri.fsPath);
+      workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.One, true));
+
       // TODO: this needs to be wrapped, and it needs to decide between run and exec!
       let args = ["commit"];
       let commitSuccessMessage = await repository._repository.repository.run(args);
 
       window.setStatusBarMessage(`Git finished: ${commitSuccessMessage.stdout.replace(Constants.LineSplitterRegex, ' ')}`, Constants.StatusMessageDisplayTimeout);
-      
+
     } catch (e) {
       //YES: Aborting due to empty commit message will appear here
       window.setStatusBarMessage(`Commit canceled.`, Constants.StatusMessageDisplayTimeout);
@@ -76,7 +79,7 @@ export async function magitCommit(repository: MagitRepository, currentView: Magi
 //     for await (const data of process.stdout) {
 //       console.log(`stdout from the child: ${data}`);
 //     }
-    
+
 
 //     exec(command, { cwd }, (error, stdout, stderr) => {
 //       if (error) {
