@@ -12,9 +12,6 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
   private _onDidChange = new vscode.EventEmitter<vscode.Uri>();
   onDidChange = this._onDidChange.event;
 
-  // TODO: can be used for BOLD, gutter displays, and other bonus styles:
-  // private _editorDecoration = vscode.window.createTextEditorDecorationType({ textDecoration: 'underline' });
-
   // private _subscriptions: vscode.Disposable;
 
   constructor() {
@@ -49,7 +46,6 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
     // 	return document.value;
     // }
 
-
     let magitRepo = magitRepositories.get(uri.query);
 
     if (magitRepo) {
@@ -83,15 +79,4 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
     // End multiplexing
     return "";
   }
-
-  // TODO: links might be useful
-  // provideDocumentLinks(document: vscode.TextDocument, token: vscode.CancellationToken): vscode.DocumentLink[] | undefined {
-  // 	// While building the virtual document we have already created the links.
-  // 	// Those are composed from the range inside the document and a target uri
-  // 	// to which they point
-  // 	const doc = this._documents.get(document.uri.toString());
-  // 	if (doc) {
-  // 		return doc.links;
-  // 	}
-  // }
 }

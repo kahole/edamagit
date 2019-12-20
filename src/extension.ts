@@ -1,4 +1,4 @@
-import { workspace, extensions, commands, ExtensionContext, Disposable, languages } from 'vscode';
+import { workspace, extensions, commands, ExtensionContext, Disposable, languages, window } from 'vscode';
 import ContentProvider from './providers/contentProvider';
 import { GitExtension, API } from './typings/git';
 import { pushing } from './commands/pushingCommands';
@@ -25,11 +25,11 @@ export function activate(context: ExtensionContext) {
     throw new Error("vscode.git Git extension not enabled");
   }
   // TODO: Ikke sikkert dette er et problem. Kan være magit virker fortsatt!
-  // gitExtension.onDidChangeEnablement(enabled => {
-  //   if (!enabled) {
-  //     throw new Error("vscode.git Git extension was disabled");
-  //   }
-  // });
+  gitExtension.onDidChangeEnablement(enabled => {
+    if (!enabled) {
+      throw new Error("vscode.git Git extension was disabled");
+    }
+  });
   gitApi = gitExtension.getAPI(1);
 
   const contentProvider = new ContentProvider();

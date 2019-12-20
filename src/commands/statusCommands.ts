@@ -21,9 +21,7 @@ export function magitStatus() {
     let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(activeEditor);
 
     if (currentView instanceof MagitStatusView) {
-      let currentRepository = repository!;
-      internalMagitStatus(currentRepository)
-        .then(() => (currentView as MagitStatusView).triggerUpdate());
+      MagitUtils.magitStatusAndUpdate(repository!, currentView!);
       return;
     }
 
@@ -58,7 +56,16 @@ export function magitStatus() {
         internalMagitStatus(magitRepo)
           .then(() => {
             const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
-            workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside));
+            workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside))
+              // TODO: test only
+              // THIS WORKS
+              // Make it apply to branch names in any editor
+              .then(e => e.setDecorations(
+                window.createTextEditorDecorationType({
+                  color: "rgba(100,200,100,0.5)",
+                  border: "0.1px solid grey"
+                })
+                , [new Range(0, 7, 0, 13)]));
           });
       }
     }

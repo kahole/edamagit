@@ -13,20 +13,12 @@
       "patterns": [
         {
           "include": "#sectionHeader"
-        },
-        {
-          "include": "#branchName"
         }
       ]
     },
     "sectionHeader": {
-      "match": "Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits",
-      "name": "markup.bold keyword.section.header.magit",
-      "comment": ";; kan bruke markup.bold.sectionHeader"
-    },
-    "branchName": {
-      "match": "master",
-      "name": "meta string support.master.magit"
+      "match": "Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits|Unmerged into|Unpulled from|GitError!",
+      "name": "markup.bold keyword.section.header.magit"
     },
     "diff": {
       "begin": "(?=^@@)",
