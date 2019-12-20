@@ -9,9 +9,7 @@ import MagitStagedView from "../views/stagedView";
 export async function magitCommit(repository: MagitRepository, currentView: MagitStatusView) {
 
   // TODO: show menu etc..
-
   // inline menu here, only to set args: --amend, etc
-
   // a - AMEND: commit --amend
   // e - EXTEND: commit --amend --no-edit
   // w - REWORD (git commit --amend --only)
