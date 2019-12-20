@@ -1,5 +1,5 @@
 import { exec, spawn, ExecException } from "child_process";
-import { window, workspace, ViewColumn, TextEditor, commands } from "vscode";
+import { window, workspace, ViewColumn, TextEditor, commands, Uri } from "vscode";
 import * as Constants from "../common/constants";
 import { execPath } from "process";
 import { MagitRepository } from "../models/magitRepository";
@@ -33,14 +33,15 @@ export async function magitCommit(repository: MagitRepository, currentView: Magi
       stagedEditor = workspace.openTextDocument(uri)
         .then(doc => window.showTextDocument(doc, ViewColumn.One, true));
 
-      // TODO: code is not always in PATH!
-      //   get and use full path to vscode executable
-      //  ofc, there is the vscode command: Shell command: Install 'code' command in PATH
-      let vscodeExecutablePath = execPath; // Different in debug / developing extension mode than normal vscode mode??
-      console.log(vscodeExecutablePath);
-      let env = { "GIT_EDITOR": "code --wait" };
+      // TODO: Make Cross-platform
+      let codePath = execPath.split(/(?<=\.app)/)[0] + "/Contents/Resources/app/bin/code";
 
-      let commitSuccessMessage = await repository._repository.repository.run(args, { env });
+      console.log(codePath);
+
+      const env = { "GIT_EDITOR": `"${codePath}" --wait` };
+      // const env = { "GIT_EDITOR": "code --wait" };
+
+      const commitSuccessMessage = await repository._repository.repository.run(args, { env });
 
       window.setStatusBarMessage(`Git finished: ${commitSuccessMessage.stdout.replace(Constants.LineSplitterRegex, ' ')}`, Constants.StatusMessageDisplayTimeout);
 

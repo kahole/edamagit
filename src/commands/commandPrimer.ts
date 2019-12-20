@@ -1,7 +1,7 @@
 import MagitUtils from "../utils/magitUtils";
 import { MagitRepository } from "../models/magitRepository";
-import MagitStatusView from "../views/magitStatusView";
 import { TextEditor, window } from "vscode";
+import { DocumentView } from "../views/general/documentView";
 
 export class CommandPrimer {
 
@@ -15,7 +15,7 @@ export class CommandPrimer {
   //   };
   // }
 
-  static primeRepoAndView(command: (repository: MagitRepository, view: MagitStatusView) => Promise<void>): (editor: TextEditor) => Promise<void> {
+  static primeRepoAndView(command: (repository: MagitRepository, view: DocumentView) => Promise<void>): (editor: TextEditor) => Promise<void> {
 
     return async (editor: TextEditor) => {
       let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(editor);

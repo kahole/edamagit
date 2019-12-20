@@ -4,7 +4,7 @@ import * as cp from "child_process";
 
 interface BaseBaseRepository {
   run(args: string[], options?: SpawnOptions): Promise<IExecutionResult<string>>;
-  // same as run, included for future-proofing:
+  // run might become exec, included for future-proofing:
   exec(args: string[], options?: SpawnOptions): Promise<IExecutionResult<string>>;
 }
 
@@ -13,8 +13,7 @@ interface BaseRepository {
   pushTo(remote?: string, name?: string, setUpstream?: boolean, forcePushMode?: ForcePushMode): Promise<void>;
   add(resources: Uri[], opts?: { update?: boolean }): Promise<void>;
   renameBranch(name: string): Promise<void>;
-  // TODO: remove unused
-  stage(resource: Uri, contents: string): Promise<void>;
+  // stage(resource: Uri, contents: string): Promise<void>;
   reset(treeish: string, hard?: boolean): Promise<void>;
   repository: BaseBaseRepository;
 }
