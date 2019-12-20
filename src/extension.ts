@@ -65,7 +65,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerCommand('extension.magit-save-and-close-commit-msg', saveClose));
 
   context.subscriptions.push(workspace.onDidSaveTextDocument(() => {
-    // TODO:
+    // TODO: onSaveTextDocument listener
     // Doesn work, magitStatus currently doesnt find the correct view when unfocused
     // Should only be when status view open?
     // How should other views be stored and handled?
@@ -75,6 +75,5 @@ export function activate(context: ExtensionContext) {
 
 // this method is called when your extension is deactivated
 export function deactivate() {
-  // TODO:
-  // cleanup?
+  // TODO: cleanup?
 }

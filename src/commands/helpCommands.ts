@@ -1,6 +1,6 @@
 import { window, workspace, commands } from "vscode";
 
-// TODO:
+// TODO: magit-help
 // Should open in a nice way. Quick pick menu is garbage?
 
 // Opening up command prompt cmd+shift+P >Magit
@@ -18,12 +18,12 @@ export function magitHelp() {
   // P Pushing           r Rebasing          t Tagging           T Notes
   // V Reverting         w Apply patches     W Format patches    X Resetting
   // y Show Refs         z Stashing          ! Running           % Worktree
-  
+
   // Applying changes
   // a Apply          s Stage          u Unstage
   // v Reverse        S Stage all      U Unstage all
   // k Discard
-  
+
   // Essential commands
   // g     refresh current buffer
   // TAB   toggle section at point

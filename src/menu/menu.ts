@@ -26,19 +26,18 @@ export class MenuUtil {
 
       _quickPick.title = menu.title;
       _quickPick.ignoreFocusOut = true;
-  
+
       if (menu.isSwitchesMenu) {
         _quickPick.canSelectMany = true;
         _quickPick.title = "Switches (select with <space>)";
       }
-  
+
       _quickPick.items = menu.commands;
 
-      let eventListenerDisposable = _quickPick.onDidChangeValue( async (e) => {
+      let eventListenerDisposable = _quickPick.onDidChangeValue(async (e) => {
         console.log(e);
         console.log(_quickPick.value);
-        // TODO
-        // clean up
+        // TODO: clean up
         let chosenItem = _quickPick.activeItems.filter(i => i.label === _quickPick.value);
         _quickPick.value = "";
         try {
@@ -52,9 +51,9 @@ export class MenuUtil {
       });
 
       // Keep both of these (Select with key or with arrows + enter)
-  
+
       _quickPick.onDidAccept(async () => {
-  
+
         if (_quickPick.activeItems.length > 0) {
           let chosenItem = _quickPick.activeItems[0] as MenuItem;
           try {

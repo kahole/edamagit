@@ -11,55 +11,69 @@ import { MagitBranch } from "../models/magitBranch";
 
 export function magitStatus() {
 
-  if (window.activeTextEditor?.document) {
+  let activeEditor = window.activeTextEditor;
 
-    // TODO: this doesnt find unfocused magit status view
-    // Magit status already open?
-    let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(window.activeTextEditor);
+  // TODO: shouldnt need active editor to launch, or?
+  if (activeEditor) {
 
-    if (currentView instanceof MagitStatusView) {
-      let currentRepository = repository!;
-      internalMagitStatus(currentRepository)
-        .then(() => (currentView as MagitStatusView).triggerUpdate());
-      return;
+    let activeWorkspace = workspace.getWorkspaceFolder(activeEditor.document.uri);
+
+    if (activeWorkspace) {
+
+      // TODO: this doesnt find unfocused magit status view
+      // Magit status already open?
+      let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(activeEditor);
+
+      if (currentView instanceof MagitStatusView) {
+        let currentRepository = repository!;
+        internalMagitStatus(currentRepository)
+          .then(() => (currentView as MagitStatusView).triggerUpdate());
+        return;
+      }
+      else {
+
+        // New status view document
+
+        let workspaceRootPath = activeWorkspace.uri.path;
+
+        let repository: MagitRepository | undefined;
+
+        // TODO: fix
+        let repos = Object.entries(magitRepositories).filter(
+          ([key, repo]) => FilePathUtils.isDescendant(key, workspaceRootPath));
+
+        if (repos.length > 0) {
+          console.log("reuse repo");
+          [, repository] = repos[0];
+        }
+
+        if (!repository) {
+          console.log("load repo from git api (not map)");
+          repository = gitApi.repositories.filter(r => FilePathUtils.isDescendant(r.rootUri.path, workspaceRootPath))[0];
+        }
+
+        // TODO
+        // switch to map for magitRepositories
+        //   better setting, simpler deletion etc
+
+        if (repository) {
+          let magitRepo: MagitRepository = repository;
+          magitRepositories[repository.rootUri.path] = repository;
+
+          internalMagitStatus(magitRepo)
+            .then(() => {
+              const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
+              workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside));
+            });
+        }
+
+      }
+    }
+    else {
+      throw new Error("No workspace open");
     }
   }
 
-  // New magit status document
-  if (workspace.workspaceFolders && workspace.workspaceFolders[0]) {
-
-    const rootPath = workspace.workspaceFolders[0].uri.fsPath;
-
-    let repository: MagitRepository | undefined;
-
-    // TODO: clean up this mess
-
-    let repos = Object.entries(magitRepositories).filter(
-      ([key, repo]) => FilePathUtils.isDescendant(key, rootPath));
-
-    if (repos.length > 0) {
-      console.log("reuse repo");
-      [, repository] = repos[0];
-    }
-
-    if (!repository) {
-      repository = gitApi.repositories.filter(r => FilePathUtils.isDescendant(r.rootUri.fsPath, rootPath))[0];
-    }
-
-    if (repository) {
-      let magitRepo: MagitRepository = repository;
-      magitRepositories[repository.rootUri.fsPath] = repository;
-
-      internalMagitStatus(magitRepo)
-        .then(() => {
-          const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.fsPath);
-          workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside));
-        });
-    }
-  }
-  else {
-    throw new Error("No workspace open");
-  }
 }
 
 export async function internalMagitStatus(repository: MagitRepository): Promise<void> {
@@ -127,7 +141,6 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       })
       .catch(console.log);
   }
-
 
   repository.magitState = {
     HEAD,

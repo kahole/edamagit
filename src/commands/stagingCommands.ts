@@ -21,7 +21,7 @@ export async function magitStage(repository: MagitRepository, currentView: Magit
 
     // TODO: this needs to be wrapped, and it needs to decide between run and exec!
     const args = ["apply", "--cached"];
-    return repository._repository.repository.run(args, { input: patch});
+    return repository._repository.repository.run(args, { input: patch });
 
 
   } else if (selectedView instanceof ChangeView) {
@@ -35,9 +35,6 @@ export async function magitStage(repository: MagitRepository, currentView: Magit
 
   } else if (selectedView instanceof ChangeSectionView) {
     let section = (selectedView as ChangeSectionView).section;
-
-    // TODO: Add confirmation question?
-    //        only for lowercase s command, not for big S
 
     switch (section) {
       case Section.Untracked:
@@ -77,7 +74,7 @@ export async function magitStageAll(repository: MagitRepository, currentView: Ma
 
 export async function magitUnstage(repository: MagitRepository, currentView: MagitStatusView) {
 
-  // TODO
+  // TODO: unstage command
 
   // For files:
   // repository._repository.reset(, false);

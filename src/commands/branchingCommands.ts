@@ -46,7 +46,7 @@ async function createNewBranch(menuState: MenuState) {
 
 async function createNewSpinoff(menuState: MenuState) {
 
-  // TODO:
+  // TODO: spinoff command
   //  C-h F magit-branch-spinoff
 
   // Sammendrag:
@@ -88,7 +88,7 @@ async function deleteBranch({ repository, currentView }: MenuState) {
 
   let force = false;
 
-  // TODO:
+  // TODO: delete branch unmerged check
   // If unmerged
   //  How: maybe try deleting and check the error response for "not fully merged"? 
   let confirmed = await window.showInputBox({ prompt: `Delete unmerged branch ${ref}?` });
@@ -103,7 +103,7 @@ async function deleteBranch({ repository, currentView }: MenuState) {
 
 async function resetBranch({ repository, currentView }: MenuState) {
 
-  // TODO
+  // TODO: reset branch command
 
   let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Rename branch" });
 

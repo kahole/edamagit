@@ -13,7 +13,7 @@ interface BaseRepository {
   pushTo(remote?: string, name?: string, setUpstream?: boolean, forcePushMode?: ForcePushMode): Promise<void>;
   add(resources: Uri[], opts?: { update?: boolean }): Promise<void>;
   renameBranch(name: string): Promise<void>;
-  // TODO: hva blir brukt
+  // TODO: remove unused
   stage(resource: Uri, contents: string): Promise<void>;
   reset(treeish: string, hard?: boolean): Promise<void>;
   repository: BaseBaseRepository;
@@ -41,25 +41,25 @@ declare module "../typings/git" {
 // types from /extensions/git/src/git.ts
 
 export interface IExecutionResult<T extends string | Buffer> {
-	exitCode: number;
-	stdout: T;
-	stderr: string;
+  exitCode: number;
+  stdout: T;
+  stderr: string;
 }
 
 export interface Stash {
-	index: number;
-	description: string;
+  index: number;
+  description: string;
 }
 
 export enum ForcePushMode {
-	Force,
-	ForceWithLease
+  Force,
+  ForceWithLease
 }
 
 interface SpawnOptions extends cp.SpawnOptions {
-	input?: string;
-	encoding?: string;
-	log?: boolean;
-	// cancellationToken?: CancellationToken;
-	// onSpawn?: (childProcess: cp.ChildProcess) => void;
+  input?: string;
+  encoding?: string;
+  log?: boolean;
+  // cancellationToken?: CancellationToken;
+  // onSpawn?: (childProcess: cp.ChildProcess) => void;
 }
