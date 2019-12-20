@@ -49,33 +49,37 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
     // 	return document.value;
     // }
 
-    let documentView: DocumentView | undefined;
 
-    let magitRepo = magitRepositories[uri.query];
+    let magitRepo = magitRepositories.get(uri.query);
 
-    if (!magitRepo.views) {
-      magitRepo.views = new Map<string, View>();
+    if (magitRepo) {
+
+      let documentView: DocumentView | undefined;
+
+      if (magitRepo.views === undefined) {
+        magitRepo.views = new Map<string, View>();
+      }
+
+      // Multiplexing should happen here
+
+      switch (uri.path) {
+        case MagitStatusView.UriPath:
+          documentView = new MagitStatusView(uri, this._onDidChange, magitRepo.magitState!);
+          break;
+        case MagitStagedView.UriPath:
+          documentView = new MagitStagedView(uri, this._onDidChange, magitRepo.magitState!);
+          break;
+
+        default:
+          break;
+      }
+
+      if (documentView) {
+        magitRepo.views.set(uri.toString(), documentView);
+        return documentView.render(0).join('\n');
+      }
+
     }
-
-    // Multiplexing should happen here
-
-    switch (uri.path) {
-      case MagitStatusView.UriPath:
-        documentView = new MagitStatusView(uri, this._onDidChange, magitRepo.magitState!);
-        break;
-      case MagitStagedView.UriPath:
-        documentView = new MagitStagedView(uri, this._onDidChange, magitRepo.magitState!);
-        break;
-
-      default:
-        break;
-    }
-
-    if (documentView) {
-      magitRepo.views.set(uri.toString(), documentView);
-      return documentView.render(0).join('\n');
-    }
-
     // End multiplexing
     return "";
   }

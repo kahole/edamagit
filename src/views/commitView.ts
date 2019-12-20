@@ -1,5 +1,3 @@
 
 
-// TODO: husk at alle keybindings virker her også. Akkurat som statusView
-
-// Derfor må documentView sendes rundt
+// TODO: husk at alle keybindings skal virke her også. Akkurat som statusView

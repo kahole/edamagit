@@ -15,7 +15,7 @@ import HighlightProvider from './providers/highlightProvider';
 import { CommandPrimer } from './commands/commandPrimer';
 import * as Constants from "./common/constants";
 
-export const magitRepositories: { [id: string]: MagitRepository } = {};
+export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export let gitApi: API;
 
 export function activate(context: ExtensionContext) {

@@ -1,7 +1,7 @@
 import { window } from "vscode";
 import { MenuItem } from "./menuItem";
 import { MagitRepository } from "../models/magitRepository";
-import MagitStatusView from "../views/magitStatusView";
+import { DocumentView } from "../views/general/documentView";
 
 export interface Menu {
   title: string;
@@ -11,8 +11,7 @@ export interface Menu {
 
 export interface MenuState {
   repository: MagitRepository;
-  // currentView: DocumentView;
-  currentView: MagitStatusView;
+  currentView: DocumentView;
   switches?: any;
 }
 

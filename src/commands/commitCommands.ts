@@ -21,6 +21,8 @@ export async function magitCommit(repository: MagitRepository, currentView: Magi
 
   if (repository) {
 
+    let args = ["commit"];
+
     let stagedEditor: Thenable<TextEditor> | undefined;
     try {
 
@@ -38,8 +40,6 @@ export async function magitCommit(repository: MagitRepository, currentView: Magi
       console.log(vscodeExecutablePath);
       let env = { "GIT_EDITOR": "code --wait" };
 
-      // TODO: this needs to be wrapped, and it needs to decide between run and exec!
-      let args = ["commit"];
       let commitSuccessMessage = await repository._repository.repository.run(args, { env });
 
       window.setStatusBarMessage(`Git finished: ${commitSuccessMessage.stdout.replace(Constants.LineSplitterRegex, ' ')}`, Constants.StatusMessageDisplayTimeout);

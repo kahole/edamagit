@@ -30,8 +30,7 @@ export async function magitStage(repository: MagitRepository, currentView: Magit
 
     return repository
       ._repository
-      .add([magitChange.uri], { update: false/*magitChange.status !== Status.UNTRACKED*/ }); // TODO: litt usikker om update eller ikke
-
+      .add([magitChange.uri], { update: false });
 
   } else if (selectedView instanceof ChangeSectionView) {
     let section = (selectedView as ChangeSectionView).section;
@@ -51,7 +50,7 @@ export async function magitStage(repository: MagitRepository, currentView: Magit
       ...repository.magitState?.indexChanges!,
       ...repository.magitState?.untrackedFiles!,
       // ...currentRepository.magitState?.mergeChanges
-    ].map(c => FilePathUtils.pathRelativeTo(c.uri, repository.rootUri)),
+    ].map(c => FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri)),
       { placeHolder: "Stage" }
     );
 

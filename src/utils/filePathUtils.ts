@@ -27,8 +27,7 @@ export default class FilePathUtils {
     return descendant.startsWith(parent);
   }
 
-  public static pathRelativeTo(uri: Uri, root: Uri) {
-    // TODO: sikkert ikke god nok implementasjon
+  public static uriPathRelativeTo(uri: Uri, root: Uri) {
     return uri.path.slice(root.path.length + 1);
   }
 }
