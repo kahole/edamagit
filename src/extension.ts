@@ -14,6 +14,7 @@ import FoldingRangeProvider from './providers/foldingRangeProvider';
 import HighlightProvider from './providers/highlightProvider';
 import { CommandPrimer } from './commands/commandPrimer';
 import * as Constants from "./common/constants";
+import { magitFetch } from './commands/fetchingCommands';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export let gitApi: API;
@@ -56,6 +57,7 @@ export function activate(context: ExtensionContext) {
   }));
 
   context.subscriptions.push(commands.registerCommand('extension.magit-pushing', pushing));
+  context.subscriptions.push(commands.registerCommand('extension.magit-fetching', magitFetch));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-branching', CommandPrimer.primeRepoAndView(branching)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-stage', CommandPrimer.primeRepoAndView(magitStage)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-stage-all', CommandPrimer.primeRepoAndView(magitStageAll)));
@@ -65,10 +67,6 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerCommand('extension.magit-save-and-close-commit-msg', saveClose));
 
   context.subscriptions.push(workspace.onDidSaveTextDocument(() => {
-    // TODO: onSaveTextDocument listener
-    // Doesn work, magitStatus currently doesnt find the correct view when unfocused
-    // Should only be when status view open?
-    // How should other views be stored and handled?
     magitStatus();
   }));
 }

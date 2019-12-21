@@ -1,4 +1,4 @@
-import { TextView } from "./general/textView";
+import { TextView } from "./textView";
 
 export enum Section {
   Untracked = "Untracked files",

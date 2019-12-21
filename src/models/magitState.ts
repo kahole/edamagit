@@ -6,10 +6,10 @@ import { MagitBranch } from "./magitBranch";
 export interface MagitState {
   readonly commitCache: { [id: string]: Commit; }; // TODO: rigid model with everything needed better?
   readonly HEAD?: MagitBranch;
-  readonly workingTreeChanges?: MagitChange[];
-  readonly indexChanges?: MagitChange[];
+  readonly workingTreeChanges: MagitChange[];
+  readonly indexChanges: MagitChange[];
   readonly mergeChanges?: MagitChange[];
-  readonly untrackedFiles?: MagitChange[];
-  readonly stashes?: Stash[];
-  readonly log?: Commit[];
+  readonly untrackedFiles: MagitChange[];
+  readonly stashes: Stash[];
+  readonly log: Commit[];
 }

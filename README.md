@@ -3,7 +3,7 @@
   - Go for MVP consisting of 90% of common use
   - plus all convenient features that come along with it
 
-## TODO: USE CONST, not let
+## USE CONST, not let
 
 ## Auto refresh
   - FileChangeEvent

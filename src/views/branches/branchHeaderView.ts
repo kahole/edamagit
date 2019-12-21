@@ -7,7 +7,7 @@ import { MagitBranch } from "../../models/magitBranch";
 
 export class BranchHeaderView extends TextView {
 
-  constructor (name: string, branch: MagitBranch) {
+  constructor(name: string, branch: MagitBranch) {
     super();
     this.textContent = `${name}: ${branch.name} ${branch.commitDetails.message}`;
   }

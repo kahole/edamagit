@@ -1,5 +1,5 @@
 import { View } from "../general/view";
-import { Section, SectionHeaderView } from "../sectionHeader";
+import { Section, SectionHeaderView } from "../general/sectionHeader";
 import { TextView } from "../general/textView";
 import { Commit } from "../../typings/git";
 import { LineBreakView } from "../general/lineBreakView";
@@ -19,7 +19,7 @@ export class CommitSectionView extends View {
 
 export class CommitItemView extends TextView {
 
-  constructor (private commit: Commit) {
+  constructor(public commit: Commit) {
     super();
     this.textContent = `${commit.hash.slice(0, 7)} ${commit.message}`;
   }

@@ -1,7 +1,7 @@
 import * as Constants from "../common/constants";
 import { MagitState } from '../models/magitState';
 import { ChangeSectionView } from './changes/changesSectionView';
-import { Section } from './sectionHeader';
+import { Section } from './general/sectionHeader';
 import { DocumentView } from './general/documentView';
 import { StashSectionView } from './stashes/stashSectionView';
 import { CommitSectionView } from './commits/commitSectionView';
@@ -17,9 +17,14 @@ export default class MagitStatusView extends DocumentView {
   constructor(uri: Uri, emitter: EventEmitter<Uri>, magitState: MagitState) {
     super(uri, emitter);
 
-    if (magitState.HEAD) {
+    console.log(magitState);
+
+    if (magitState.HEAD?.commit) {
       this.addSubview(new BranchHeaderView("Head", magitState.HEAD));
 
+      // TODO: refactor pull out
+      // Commit hash for these is availble throught repository state REFS
+      //   good opportunity to decide what to do with commit cache
       this.addSubview(new TextView("Upstream/Merge/rebase: " + magitState.HEAD.upstream?.remote + "/" + magitState.HEAD?.upstream?.name + " WHAT COMMIT MSG"));
       this.addSubview(new TextView("Push: " + magitState.HEAD.pushRemote?.remote + "/" + magitState.HEAD?.pushRemote?.name + " WHAT COMMIT MSG"));
 
@@ -29,19 +34,19 @@ export default class MagitStatusView extends DocumentView {
 
     this.addSubview(new LineBreakView());
 
-    if (magitState.untrackedFiles && magitState.untrackedFiles.length > 0) {
+    if (magitState.untrackedFiles.length > 0) {
       this.addSubview(new ChangeSectionView(Section.Untracked, magitState.untrackedFiles));
     }
 
-    if (magitState.workingTreeChanges && magitState.workingTreeChanges.length > 0) {
+    if (magitState.workingTreeChanges.length > 0) {
       this.addSubview(new ChangeSectionView(Section.Unstaged, magitState.workingTreeChanges));
     }
 
-    if (magitState.indexChanges && magitState.indexChanges.length > 0) {
+    if (magitState.indexChanges.length > 0) {
       this.addSubview(new ChangeSectionView(Section.Staged, magitState.indexChanges));
     }
 
-    if (magitState.stashes && magitState.stashes?.length > 0) {
+    if (magitState.stashes?.length > 0) {
       this.addSubview(new StashSectionView(magitState.stashes));
     }
 
@@ -50,7 +55,12 @@ export default class MagitStatusView extends DocumentView {
     //    probably something for Unpulled changes as well
     //  otherwise Recent commits:
 
-    if (magitState.log && magitState.log.length > 0) {
+    if (magitState.HEAD?.ahead || magitState.HEAD?.behind) {
+
+      // TODO: umerged into section
+      // and Unpulled from
+
+    } else if (magitState.log.length > 0) {
       this.addSubview(new CommitSectionView(magitState.log));
     }
   }

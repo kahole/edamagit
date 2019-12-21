@@ -16,7 +16,7 @@
 
 import * as Constants from "../common/constants";
 import { MagitState } from '../models/magitState';
-import { Section, SectionHeaderView } from './sectionHeader';
+import { Section, SectionHeaderView } from './general/sectionHeader';
 import { DocumentView } from './general/documentView';
 import { TextView } from './general/textView';
 import { ChangeView } from './changes/changeView';

@@ -8,14 +8,16 @@ export async function pushing(repository: MagitRepository, currentView: MagitSta
   console.log(repository.magitState!.workingTreeChanges);
 
 
+  // TODO: important! can use vscode commands! commands.executeCommand("git.push !!
 
-    // Hvordan git push kommandoen bygges opp:
-    // https://github.com/microsoft/vscode/blob/master/extensions/git/src/git.ts#L1491
 
-    // kun "git push" slik den står nå
-    // currentRepository._repository.pushTo()
-    //   .then(() => console.log("klarte å pushe ?"))
-    //   .catch(console.log);
+  // Hvordan git push kommandoen bygges opp:
+  // https://github.com/microsoft/vscode/blob/master/extensions/git/src/git.ts#L1491
+
+  // kun "git push" slik den står nå
+  // currentRepository._repository.pushTo()
+  //   .then(() => console.log("klarte å pushe ?"))
+  //   .catch(console.log);
 
 
   // _repository pushTo(remote?: string, name?: string, setUpstream?: boolean, forcePushMode?: ForcePushMode): Promise<void>

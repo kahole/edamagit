@@ -4,7 +4,7 @@ import { ChangeView } from "../views/changes/changeView";
 import MagitUtils from "../utils/magitUtils";
 import FilePathUtils from "../utils/filePathUtils";
 import { ChangeSectionView } from "../views/changes/changesSectionView";
-import { Section } from "../views/sectionHeader";
+import { Section } from "../views/general/sectionHeader";
 import { TextEncoder } from "util";
 import { MagitRepository } from "../models/magitRepository";
 import MagitStatusView from "../views/magitStatusView";

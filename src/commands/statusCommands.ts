@@ -1,5 +1,5 @@
 import { MagitChange } from "../models/magitChange";
-import { workspace, window, ViewColumn, Range } from "vscode";
+import { workspace, window, ViewColumn, Range, commands } from "vscode";
 import { gitApi, magitRepositories } from "../extension";
 import FilePathUtils from "../utils/filePathUtils";
 import GitTextUtils from "../utils/gitTextUtils";
@@ -9,17 +9,24 @@ import MagitStatusView from "../views/magitStatusView";
 import { Status, Commit } from "../typings/git";
 import { MagitBranch } from "../models/magitBranch";
 
-export function magitStatus() {
+export async function magitStatus() {
 
-  let activeEditor = window.activeTextEditor;
+  if (window.activeTextEditor) {
 
-  if (activeEditor) {
+    // Updating current view if inside it
+    // TODO: Might move this to separate primed command
+    //    makes things simpler
+    let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(window.activeTextEditor);
 
-    let activeWorkspace = workspace.getWorkspaceFolder(activeEditor.document.uri);
+    if (repository && currentView) {
+      return MagitUtils.magitStatusAndUpdate(repository, currentView);
+    }
 
-    if (activeWorkspace) {
+    const activeWorkspaceFolder = workspace.getWorkspaceFolder(window.activeTextEditor.document.uri);
 
-      let workspaceRootPath = activeWorkspace.uri.path;
+    if (activeWorkspaceFolder) {
+
+      const workspaceRootPath = activeWorkspaceFolder.uri.path;
 
       let repository: MagitRepository | undefined;
 
@@ -31,7 +38,6 @@ export function magitStatus() {
         }
       }
 
-      // Existing magit repo
       if (repository) {
         for (let [uri, view] of repository.views ?? []) {
           if (view instanceof MagitStatusView) {
@@ -46,7 +52,7 @@ export function magitStatus() {
       }
 
       if (repository) {
-        let magitRepo: MagitRepository = repository;
+        const magitRepo: MagitRepository = repository;
         magitRepositories.set(repository.rootUri.path, repository);
 
         internalMagitStatus(magitRepo)
@@ -64,7 +70,9 @@ export function magitStatus() {
                 , [new Range(0, 7, 0, 13)]));
           });
       } else {
-        throw new Error("No git repository found for this workspace");
+        // Prompt to create repo
+        await commands.executeCommand("git.init");
+        magitStatus();
       }
     }
     else {
@@ -77,17 +85,23 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   await repository.status();
 
-  let stashTask = repository._repository.getStashes();
+  const stashTask = repository._repository.getStashes();
 
-  let logTask = repository.log({ maxEntries: 10 });
+  const logTask = repository.state.HEAD?.commit ? repository.log({ maxEntries: 10 }) : [];
 
-  let commitTasks = Promise.all(
-    [repository.state.HEAD!.commit!]
+  const interestingCommits: string[] = [];
+
+  if (repository.state.HEAD?.commit) {
+    interestingCommits.push(repository.state.HEAD?.commit);
+  }
+
+  const commitTasks = Promise.all(
+    interestingCommits
       .map(c => repository.getCommit(c)));
 
-  let untrackedFiles: MagitChange[] = [];
+  const untrackedFiles: MagitChange[] = [];
 
-  let workingTreeChanges_NoUntracked = repository.state.workingTreeChanges
+  const workingTreeChanges_NoUntracked = repository.state.workingTreeChanges
     .filter(c => {
       if (c.status === Status.UNTRACKED) {
         untrackedFiles.push(c);
@@ -97,7 +111,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       }
     });
 
-  let workingTreeChangesTasks = Promise.all(workingTreeChanges_NoUntracked
+  const workingTreeChangesTasks = Promise.all(workingTreeChanges_NoUntracked
     .map(async change => {
       let diff = await repository.diffWithHEAD(change.uri.path);
       let magitChange: MagitChange = change;
@@ -105,7 +119,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       return magitChange;
     }));
 
-  let indexChangesTasks = Promise.all(repository.state.indexChanges
+  const indexChangesTasks = Promise.all(repository.state.indexChanges
     .map(async change => {
       let diff = await repository.diffIndexWithHEAD(change.uri.path);
       let magitChange: MagitChange = change;
@@ -113,7 +127,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       return magitChange;
     }));
 
-  let [commits, workingTreeChanges, indexChanges, stashes, log] =
+  const [commits, workingTreeChanges, indexChanges, stashes, log] =
     await Promise.all([
       commitTasks,
       workingTreeChangesTasks,
@@ -126,18 +140,18 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   let HEAD = repository.state.HEAD as MagitBranch | undefined;
 
-  let pushRemotePromise;
+  if (HEAD?.commit) {
+    HEAD.commitDetails = commitCache[HEAD.commit];
 
-  if (HEAD) {
-    HEAD.commitDetails = commitCache[HEAD!.commit!];
-
-    pushRemotePromise = repository.getConfig(`branch.${HEAD.name}.pushRemote`)
+    await repository.getConfig(`branch.${HEAD.name}.pushRemote`)
       .then(remote => {
         // TODO: clean up
         HEAD!.pushRemote = { remote, name: HEAD!.name! };
       })
       .catch(console.log);
   }
+
+  console.log(repository.state);
 
   repository.magitState = {
     HEAD,
@@ -149,7 +163,4 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     mergeChanges: undefined,
     untrackedFiles
   };
-
-  // TODO: cleanup
-  await pushRemotePromise;
 }
