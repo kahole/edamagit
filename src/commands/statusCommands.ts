@@ -13,38 +13,34 @@ export function magitStatus() {
 
   let activeEditor = window.activeTextEditor;
 
-  // TODO: shouldnt need active editor to launch, or?
   if (activeEditor) {
-
-    // TODO: this doesnt find unfocused magit status view
-    // Magit status already open?
-    let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(activeEditor);
-
-    if (currentView instanceof MagitStatusView) {
-      MagitUtils.magitStatusAndUpdate(repository!, currentView!);
-      return;
-    }
 
     let activeWorkspace = workspace.getWorkspaceFolder(activeEditor.document.uri);
 
     if (activeWorkspace) {
 
-      // New status view document
-
       let workspaceRootPath = activeWorkspace.uri.path;
 
       let repository: MagitRepository | undefined;
 
-      // TODO: fix
-      let repos = Object.entries(magitRepositories).filter(
-        ([key, repo]) => FilePathUtils.isDescendant(key, workspaceRootPath));
-
-      if (repos.length > 0) {
-        console.log("reuse repo");
-        [, repository] = repos[0];
+      // Any point in reusing repo?
+      for (let [key, repo] of magitRepositories.entries()) {
+        if (FilePathUtils.isDescendant(key, workspaceRootPath)) {
+          repository = repo;
+          break;
+        }
       }
 
-      if (!repository) {
+      // Existing magit repo
+      if (repository) {
+        for (let [uri, view] of repository.views ?? []) {
+          if (view instanceof MagitStatusView) {
+            MagitUtils.magitStatusAndUpdate(repository!, view);
+            console.log("Update existing view");
+            return;
+          }
+        }
+      } else {
         console.log("load repo from git api (not map)");
         repository = gitApi.repositories.filter(r => FilePathUtils.isDescendant(r.rootUri.path, workspaceRootPath))[0];
       }
@@ -59,7 +55,7 @@ export function magitStatus() {
             workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside))
               // TODO: test only
               // THIS WORKS
-              // Make it apply to branch names in any editor
+              // Decorations should be added by the views in the view hierarchy?
               .then(e => e.setDecorations(
                 window.createTextEditorDecorationType({
                   color: "rgba(100,200,100,0.5)",
@@ -67,6 +63,8 @@ export function magitStatus() {
                 })
                 , [new Range(0, 7, 0, 13)]));
           });
+      } else {
+        throw new Error("No git repository found for this workspace");
       }
     }
     else {

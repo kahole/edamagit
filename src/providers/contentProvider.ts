@@ -7,27 +7,19 @@ import MagitStagedView from '../views/stagedView';
 
 export default class ContentProvider implements vscode.TextDocumentContentProvider {
 
-  // static scheme = 'magit';
-
   private _onDidChange = new vscode.EventEmitter<vscode.Uri>();
   onDidChange = this._onDidChange.event;
 
-  // private _subscriptions: vscode.Disposable;
+  private _subscriptions: vscode.Disposable;
 
   constructor() {
 
-    // TODO: VIEW DELETION
-    // Might not need to delete all views. Keep magitStatus view?
-    //                             and then just update
-    //   might wanna delete other types of views though
-
-    // this._subscriptions = vscode.workspace.onDidCloseTextDocument(
-    // doc => magitRepositories[doc.uri.query].views!.delete(doc.uri.toString()));
+    this._subscriptions = vscode.workspace.onDidCloseTextDocument(
+      doc => magitRepositories.get(doc.uri.query)?.views?.delete(doc.uri.toString()));
   }
 
-  // TODO: manage dispose properly
   dispose() {
-    // this._subscriptions.dispose();
+    this._subscriptions.dispose();
     // this._documents.clear();
     // this._editorDecoration.dispose();
     this._onDidChange.dispose();
