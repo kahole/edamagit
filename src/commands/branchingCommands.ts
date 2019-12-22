@@ -105,9 +105,9 @@ async function resetBranch({ repository, currentView }: MenuState) {
 
   // TODO: reset branch command
 
-  let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Rename branch" });
+  let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Reset branch" });
 
-  let resetToRef = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Rename branch" });
+  let resetToRef = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Reset branch" });
 
   if (ref) {
     // repository._repository.reset()

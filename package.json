@@ -158,6 +158,11 @@
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
+        "command": "extension.magit-stashing",
+        "key": "z",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
         "command": "extension.magit-fetching",
         "key": "f",
         "when": "editorTextFocus && editorLangId == magit"

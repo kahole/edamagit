@@ -16,6 +16,7 @@ import { CommandPrimer } from './commands/commandPrimer';
 import * as Constants from "./common/constants";
 import { magitFetch } from './commands/fetchingCommands';
 import { pulling } from './commands/pullingCommands';
+import { stashing } from './commands/stashingCommands';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export let gitApi: API;
@@ -54,6 +55,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerCommand('extension.magit-help', magitHelp));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-pulling', CommandPrimer.primeRepoAndView(pulling)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-pushing', CommandPrimer.primeRepoAndView(pushing)));
+  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-stashing', CommandPrimer.primeRepoAndView(stashing)));
 
   context.subscriptions.push(commands.registerCommand('extension.magit-fetching', magitFetch));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-branching', CommandPrimer.primeRepoAndView(branching)));
