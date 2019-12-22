@@ -153,6 +153,11 @@
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
+        "command": "extension.magit-pulling",
+        "key": "shift+f",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
         "command": "extension.magit-fetching",
         "key": "f",
         "when": "editorTextFocus && editorLangId == magit"

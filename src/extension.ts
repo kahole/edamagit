@@ -52,7 +52,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-commit', CommandPrimer.primeRepoAndView(magitCommit)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-visit-at-point', CommandPrimer.primeRepoAndView(magitVisitAtPoint)));
   context.subscriptions.push(commands.registerCommand('extension.magit-help', magitHelp));
-  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-pulling', pulling));
+  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-pulling', CommandPrimer.primeRepoAndView(pulling)));
 
   context.subscriptions.push(commands.registerCommand('extension.magit-pushing', pushing));
   context.subscriptions.push(commands.registerCommand('extension.magit-fetching', magitFetch));
