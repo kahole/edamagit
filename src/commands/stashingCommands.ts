@@ -1,6 +1,5 @@
 import { MagitRepository } from "../models/magitRepository";
 import { DocumentView } from "../views/general/documentView";
-import { MenuItem } from "../menu/menuItem";
 import { MenuUtil } from "../menu/menu";
 import { commands } from "vscode";
 
@@ -9,9 +8,9 @@ const stashingMenu = {
   commands: [
     { label: "z", description: "Save", action: stash },
     //
-
     { label: "p", description: "Pop", action: popStash },
-    { label: "a", description: "Apply", action: applyStash }
+    { label: "a", description: "Apply", action: applyStash },
+    { label: "k", description: "Drop", action: dropStash }
   ]
 };
 
@@ -26,6 +25,10 @@ function stash() {
 
 function applyStash() {
   return commands.executeCommand("git.stashApply");
+}
+
+function dropStash() {
+  return commands.executeCommand("git.stashDrop");
 }
 
 function popStash() {

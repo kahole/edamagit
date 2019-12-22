@@ -54,6 +54,10 @@
       {
         "command": "extension.magit-help",
         "title": "Magit Help"
+      },
+      {
+        "command": "extension.magit-stashing",
+        "title": "Magit Stashing"
       }
     ],
     "menus": {
@@ -88,6 +92,10 @@
         },
         {
           "command": "extension.magit-pushing",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "extension.magit-stashing",
           "when": "editorLangId == magit"
         }
       ]
