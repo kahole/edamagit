@@ -4,7 +4,7 @@ import { MenuUtil } from "../menu/menu";
 import { commands } from "vscode";
 
 const stashingMenu = {
-  title: "Branching",
+  title: "Stashing",
   commands: [
     { label: "z", description: "Save", action: stash },
     //

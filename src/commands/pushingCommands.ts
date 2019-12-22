@@ -25,6 +25,8 @@ export async function pushing(repository: MagitRepository, currentView: Document
 
   pushingMenuItems.push({ label: "e", description: "elsewhere", action: pushElsewhere });
 
+  // TODO: fill out rest of pushing menu
+
   return MenuUtil.showMenu({ title: "Pushing", commands: pushingMenuItems }, { repository, currentView });
 }
 
