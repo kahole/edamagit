@@ -14,7 +14,7 @@ import FoldingRangeProvider from './providers/foldingRangeProvider';
 import HighlightProvider from './providers/highlightProvider';
 import { CommandPrimer } from './commands/commandPrimer';
 import * as Constants from "./common/constants";
-import { magitFetch } from './commands/fetchingCommands';
+import { fetching } from './commands/fetchingCommands';
 import { pulling } from './commands/pullingCommands';
 import { stashing } from './commands/stashingCommands';
 
@@ -57,7 +57,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-pushing', CommandPrimer.primeRepoAndView(pushing)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-stashing', CommandPrimer.primeRepoAndView(stashing)));
 
-  context.subscriptions.push(commands.registerCommand('extension.magit-fetching', magitFetch));
+  context.subscriptions.push(commands.registerCommand('extension.magit-fetching', fetching));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-branching', CommandPrimer.primeRepoAndView(branching)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-stage', CommandPrimer.primeRepoAndView(magitStage)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-stage-all', CommandPrimer.primeRepoAndView(magitStageAll)));
