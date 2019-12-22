@@ -1,8 +1,8 @@
 import { window } from "vscode";
 import { Menu, MenuState, MenuUtil } from "../menu/menu";
 import { MagitRepository } from "../models/magitRepository";
-import MagitStatusView from "../views/magitStatusView";
 import { Ref } from "../typings/git";
+import { DocumentView } from "../views/general/documentView";
 
 const branchingMenu = {
   title: "Branching",
@@ -23,7 +23,7 @@ const branchingMenu = {
   ]
 };
 
-export async function branching(repository: MagitRepository, currentView: MagitStatusView) {
+export async function branching(repository: MagitRepository, currentView: DocumentView) {
   // commands.executeCommand('setContext', 'magit.branching', true);
   return MenuUtil.showMenu(branchingMenu, { repository, currentView });
 }

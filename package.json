@@ -128,6 +128,11 @@
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
+        "command": "extension.magit-help",
+        "key": "shift+/",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
         "command": "extension.magit-visit-at-point",
         "key": "enter",
         "when": "editorTextFocus && editorLangId == magit"
@@ -150,11 +155,6 @@
       {
         "command": "extension.magit-fetching",
         "key": "f",
-        "when": "editorTextFocus && editorLangId == magit"
-      },
-      {
-        "command": "extension.magit-help",
-        "key": "?",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {

@@ -4,6 +4,7 @@ import { magitRepositories } from '../extension';
 import { View } from '../views/general/view';
 import { DocumentView } from '../views/general/documentView';
 import MagitStagedView from '../views/stagedView';
+import * as Constants from "../common/constants";
 
 export default class ContentProvider implements vscode.TextDocumentContentProvider {
 
@@ -15,7 +16,11 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
   constructor() {
 
     this._subscriptions = vscode.workspace.onDidCloseTextDocument(
-      doc => magitRepositories.get(doc.uri.query)?.views?.delete(doc.uri.toString()));
+      doc => {
+        if (doc.uri.scheme === Constants.MagitUriScheme) {
+          magitRepositories.get(doc.uri.query)?.views?.delete(doc.uri.toString());
+        }
+      });
   }
 
   dispose() {
@@ -37,6 +42,8 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
     // if (document) {
     // 	return document.value;
     // }
+
+    console.log("call to provide");
 
     let magitRepo = magitRepositories.get(uri.query);
 

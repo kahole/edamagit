@@ -17,8 +17,6 @@ export default class MagitStatusView extends DocumentView {
   constructor(uri: Uri, emitter: EventEmitter<Uri>, magitState: MagitState) {
     super(uri, emitter);
 
-    console.log(magitState);
-
     if (magitState.HEAD?.commit) {
       this.addSubview(new BranchHeaderView("Head", magitState.HEAD));
 
@@ -49,11 +47,6 @@ export default class MagitStatusView extends DocumentView {
     if (magitState.stashes?.length > 0) {
       this.addSubview(new StashSectionView(magitState.stashes));
     }
-
-    // TODO: This has to do with TRACKING? 
-    //   if Unmerged into origin/master, show that section
-    //    probably something for Unpulled changes as well
-    //  otherwise Recent commits:
 
     if (magitState.HEAD?.ahead || magitState.HEAD?.behind) {
 

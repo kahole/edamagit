@@ -14,6 +14,7 @@ export async function magitStatus() {
   if (window.activeTextEditor) {
 
     // Updating current view if inside it
+    // AKA g - keybinding
     // TODO: Might move this to separate primed command
     //    makes things simpler
     let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(window.activeTextEditor);
@@ -30,7 +31,8 @@ export async function magitStatus() {
 
       let repository: MagitRepository | undefined;
 
-      // Any point in reusing repo?
+      // TODO: Any point in reusing repo?
+      // This might make magit LESS resilient to changes in workspace etc.
       for (let [key, repo] of magitRepositories.entries()) {
         if (FilePathUtils.isDescendant(key, workspaceRootPath)) {
           repository = repo;
@@ -41,6 +43,10 @@ export async function magitStatus() {
       if (repository) {
         for (let [uri, view] of repository.views ?? []) {
           if (view instanceof MagitStatusView) {
+            // Resuses doc, if still exists. Which it should if the view still exists
+            // Open and focus magit status view
+            await workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside));
+            // Run update
             MagitUtils.magitStatusAndUpdate(repository!, view);
             console.log("Update existing view");
             return;

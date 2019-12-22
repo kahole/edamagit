@@ -3,7 +3,7 @@ import { Uri, EventEmitter, Disposable } from "vscode";
 
 export abstract class DocumentView extends View {
 
-  constructor(protected uri: Uri, protected emitter: EventEmitter<Uri>) {
+  constructor(public uri: Uri, protected emitter: EventEmitter<Uri>) {
     super();
   }
 

@@ -3,10 +3,10 @@ import { window, workspace, ViewColumn, TextEditor, commands, Uri } from "vscode
 import * as Constants from "../common/constants";
 import { execPath } from "process";
 import { MagitRepository } from "../models/magitRepository";
-import MagitStatusView from "../views/magitStatusView";
 import MagitStagedView from "../views/stagedView";
+import { DocumentView } from "../views/general/documentView";
 
-export async function magitCommit(repository: MagitRepository, currentView: MagitStatusView) {
+export async function magitCommit(repository: MagitRepository, currentView: DocumentView) {
 
   // TODO: show menu etc..
   // inline menu here, only to set args: --amend, etc

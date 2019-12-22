@@ -15,6 +15,7 @@ import HighlightProvider from './providers/highlightProvider';
 import { CommandPrimer } from './commands/commandPrimer';
 import * as Constants from "./common/constants";
 import { magitFetch } from './commands/fetchingCommands';
+import { pulling } from './commands/pullingCommands';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export let gitApi: API;
@@ -51,10 +52,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-commit', CommandPrimer.primeRepoAndView(magitCommit)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-visit-at-point', CommandPrimer.primeRepoAndView(magitVisitAtPoint)));
   context.subscriptions.push(commands.registerCommand('extension.magit-help', magitHelp));
-  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-pulling', async () => {
-    // TODO: Options should be dynamically decided based on whether or not they can be done
-    // e.g Pull in magit with no remotes results in: e elsewhere
-  }));
+  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-pulling', pulling));
 
   context.subscriptions.push(commands.registerCommand('extension.magit-pushing', pushing));
   context.subscriptions.push(commands.registerCommand('extension.magit-fetching', magitFetch));
@@ -66,7 +64,9 @@ export function activate(context: ExtensionContext) {
 
   context.subscriptions.push(commands.registerCommand('extension.magit-save-and-close-commit-msg', saveClose));
 
+  // Move to contentProvider?
   context.subscriptions.push(workspace.onDidSaveTextDocument(() => {
+    //TODO: if magitStatusView open:
     magitStatus();
   }));
 }

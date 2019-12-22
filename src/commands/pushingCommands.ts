@@ -1,15 +1,11 @@
 import MagitUtils from "../utils/magitUtils";
 import { MagitRepository } from "../models/magitRepository";
-import MagitStatusView from "../views/magitStatusView";
+import { commands } from "vscode";
+import { DocumentView } from "../views/general/documentView";
 
-export async function pushing(repository: MagitRepository, currentView: MagitStatusView) {
-
-  console.log("Working tree changes, but from pushing command");
-  console.log(repository.magitState!.workingTreeChanges);
-
+export async function pushing(repository: MagitRepository, currentView: DocumentView) {
 
   // TODO: important! can use vscode commands! commands.executeCommand("git.push !!
-
 
   // Hvordan git push kommandoen bygges opp:
   // https://github.com/microsoft/vscode/blob/master/extensions/git/src/git.ts#L1491
@@ -28,4 +24,16 @@ export async function pushing(repository: MagitRepository, currentView: MagitSta
   //  )
   //  .catch(
   //        handleError somehow
+}
+
+async function pushToPushRemote() {
+
+}
+
+async function pushUpstream() {
+  return commands.executeCommand("git.push");
+}
+
+async function pushElsewhere() {
+
 }

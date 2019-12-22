@@ -12,8 +12,6 @@ export default class MagitUtils {
 
   public static getCurrentMagitRepoAndView(editor: TextEditor): [MagitRepository | undefined, DocumentView | undefined] {
     let repository = magitRepositories.get(editor.document.uri.query);
-    // TODO: clean up, always MagitStatus view?
-    //     how should other views be handled
     let currentView = repository?.views?.get(editor.document.uri.toString() ?? "") as DocumentView;
     return [repository, currentView];
   }

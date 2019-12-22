@@ -7,10 +7,10 @@ import { ChangeSectionView } from "../views/changes/changesSectionView";
 import { Section } from "../views/general/sectionHeader";
 import { TextEncoder } from "util";
 import { MagitRepository } from "../models/magitRepository";
-import MagitStatusView from "../views/magitStatusView";
 import { Status } from "../typings/git";
+import { DocumentView } from "../views/general/documentView";
 
-export async function magitStage(repository: MagitRepository, currentView: MagitStatusView): Promise<any> {
+export async function magitStage(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
   const selectedView = currentView.click(window.activeTextEditor!.selection.active);
 
@@ -66,12 +66,12 @@ export enum StageAllKind {
   AllUntracked = "stageAllUntracked"
 }
 
-export async function magitStageAll(repository: MagitRepository, currentView: MagitStatusView, kind: StageAllKind = StageAllKind.AllTracked): Promise<void> {
+export async function magitStageAll(repository: MagitRepository, currentView: DocumentView, kind: StageAllKind = StageAllKind.AllTracked): Promise<void> {
 
   return commands.executeCommand("git." + kind.valueOf());
 }
 
-export async function magitUnstage(repository: MagitRepository, currentView: MagitStatusView) {
+export async function magitUnstage(repository: MagitRepository, currentView: DocumentView) {
 
   // TODO: unstage command
 
@@ -85,7 +85,7 @@ export async function magitUnstage(repository: MagitRepository, currentView: Mag
 
 }
 
-export async function magitUnstageAll(repository: MagitRepository, currentView: MagitStatusView): Promise<void> {
+export async function magitUnstageAll(repository: MagitRepository, currentView: DocumentView): Promise<void> {
 
   let confirmed = await window.showInputBox({ prompt: "Unstage all changes?" });
   if (confirmed !== undefined) {

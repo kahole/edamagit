@@ -1,10 +1,10 @@
 import { window, TextEditor, Range, workspace } from "vscode";
 import MagitUtils from "../utils/magitUtils";
 import { MagitRepository } from "../models/magitRepository";
-import MagitStatusView from "../views/magitStatusView";
 import { CommitItemView } from "../views/commits/commitSectionView";
+import { DocumentView } from "../views/general/documentView";
 
-export async function magitVisitAtPoint(repository: MagitRepository, currentView: MagitStatusView) {
+export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 
   let selectedView = currentView.click(window.activeTextEditor!.selection.active);
 
@@ -18,6 +18,9 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
     // TODO: open up commit view in view column 1
   }
 
-  // TODO: important! can use VSCODE diff command to show diff for a file? or something
+  // TODO: UNRELATED TO visitAtPoint. relevant for diff: can use VSCODE diff command to show diff for a file? or something
+
+
+  // Link-provider can be used for file links.. but it brings with it a lot of functionality and style
 
 }
