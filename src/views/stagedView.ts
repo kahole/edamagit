@@ -16,12 +16,10 @@
 
 import * as Constants from "../common/constants";
 import { MagitState } from '../models/magitState';
-import { Section, SectionHeaderView } from './general/sectionHeader';
+import { Section } from './general/sectionHeader';
 import { DocumentView } from './general/documentView';
-import { TextView } from './general/textView';
-import { ChangeView } from './changes/changeView';
-import { LineBreakView } from './general/lineBreakView';
 import { Uri, EventEmitter } from "vscode";
+import { ChangeSectionView } from "./changes/changesSectionView";
 
 export default class MagitStagedView extends DocumentView {
 
@@ -33,10 +31,10 @@ export default class MagitStagedView extends DocumentView {
     if (magitState.indexChanges && magitState.indexChanges.length > 0) {
 
       this.subViews = [
-        new SectionHeaderView(Section.Staged),
-        new TextView("TODO: X file changed, 2 insertions blabla"),
-        new LineBreakView(),
-        ...magitState.indexChanges.map(change => new ChangeView(change))
+        new ChangeSectionView(Section.Staged, magitState.indexChanges)
+        // without count of changes:
+        // new SectionHeaderView(Section.Staged),
+        // ...magitState.indexChanges.map(change => new ChangeView(change))
       ];
     }
   }
