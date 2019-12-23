@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import MagitStatusView from '../views/magitStatusView';
-import { magitRepositories } from '../extension';
+import { magitRepositories, views } from '../extension';
 import { View } from '../views/general/view';
 import { DocumentView } from '../views/general/documentView';
 import MagitStagedView from '../views/stagedView';
@@ -18,7 +18,7 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
     this._subscriptions = vscode.workspace.onDidCloseTextDocument(
       doc => {
         if (doc.uri.scheme === Constants.MagitUriScheme) {
-          magitRepositories.get(doc.uri.query)?.views?.delete(doc.uri.toString());
+          views.delete(doc.uri.toString());
         }
       });
   }
@@ -51,10 +51,6 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
 
       let documentView: DocumentView | undefined;
 
-      if (magitRepo.views === undefined) {
-        magitRepo.views = new Map<string, View>();
-      }
-
       // Multiplexing should happen here
 
       switch (uri.path) {
@@ -70,7 +66,7 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
       }
 
       if (documentView) {
-        magitRepo.views.set(uri.toString(), documentView);
+        views.set(uri.toString(), documentView);
         return documentView.render(0).join('\n');
       }
 

@@ -4,5 +4,4 @@ import { View } from "../views/general/view";
 
 export interface MagitRepository extends Repository {
   magitState?: MagitState;
-  views?: Map<string, View>;
 }

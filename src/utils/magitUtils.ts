@@ -1,5 +1,5 @@
 import { MagitRepository } from "../models/magitRepository";
-import { magitRepositories } from "../extension";
+import { magitRepositories, views } from "../extension";
 import { window, TextEditor, TextDocument } from "vscode";
 import MagitStatusView from "../views/magitStatusView";
 import { internalMagitStatus } from "../commands/statusCommands";
@@ -12,7 +12,7 @@ export default class MagitUtils {
 
   public static getCurrentMagitRepoAndView(editor: TextEditor): [MagitRepository | undefined, DocumentView | undefined] {
     let repository = magitRepositories.get(editor.document.uri.query);
-    let currentView = repository?.views?.get(editor.document.uri.toString() ?? "") as DocumentView;
+    let currentView = views.get(editor.document.uri.toString() ?? "") as DocumentView;
     return [repository, currentView];
   }
 

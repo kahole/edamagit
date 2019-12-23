@@ -17,8 +17,10 @@ import * as Constants from "./common/constants";
 import { fetching } from './commands/fetchingCommands';
 import { pulling } from './commands/pullingCommands';
 import { stashing } from './commands/stashingCommands';
+import { View } from './views/general/view';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
+export const views: Map<string, View> = new Map<string, View>();
 export let gitApi: API;
 
 export function activate(context: ExtensionContext) {

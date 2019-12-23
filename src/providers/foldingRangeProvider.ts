@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { View } from '../views/general/view';
 import MagitUtils from '../utils/magitUtils';
+import { views } from '../extension';
 
 export default class FoldingRangeProvider implements vscode.FoldingRangeProvider {
 
@@ -17,8 +18,8 @@ export default class FoldingRangeProvider implements vscode.FoldingRangeProvider
 
     let currentRepository = MagitUtils.getCurrentMagitRepo(document);
 
-    if (currentRepository && currentRepository.views) {
-      let currentView = currentRepository.views.get(document.uri.toString());
+    if (currentRepository) {
+      let currentView = views.get(document.uri.toString());
       if (currentView) {
         let views = this.flattenSubviews(currentView.subViews);
 

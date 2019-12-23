@@ -1,6 +1,6 @@
 import { MagitChange } from "../models/magitChange";
 import { workspace, window, ViewColumn, Range, commands } from "vscode";
-import { gitApi, magitRepositories } from "../extension";
+import { gitApi, magitRepositories, views } from "../extension";
 import FilePathUtils from "../utils/filePathUtils";
 import GitTextUtils from "../utils/gitTextUtils";
 import { MagitRepository } from "../models/magitRepository";
@@ -41,13 +41,13 @@ export async function magitStatus() {
       }
 
       if (repository) {
-        for (let [uri, view] of repository.views ?? []) {
+        for (let [uri, view] of views ?? []) {
           if (view instanceof MagitStatusView) {
             // Resuses doc, if still exists. Which it should if the view still exists
             // Open and focus magit status view
             await workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside));
             // Run update
-            MagitUtils.magitStatusAndUpdate(repository!, view);
+            MagitUtils.magitStatusAndUpdate(repository, view);
             console.log("Update existing view");
             return;
           }
