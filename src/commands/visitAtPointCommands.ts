@@ -1,8 +1,11 @@
-import { window, TextEditor, Range, workspace } from "vscode";
+import { window, TextEditor, Range, workspace, ViewColumn } from "vscode";
 import MagitUtils from "../utils/magitUtils";
 import { MagitRepository } from "../models/magitRepository";
 import { CommitItemView } from "../views/commits/commitSectionView";
 import { DocumentView } from "../views/general/documentView";
+import { gitRun } from "../utils/gitRawRunner";
+import { CommitDetailView } from "../views/commitDetailView";
+import { views } from "../extension";
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 
@@ -17,19 +20,23 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
 
     console.log(repository);
 
-    // let result = await repository.show(commit.hash, repository.rootUri.fsPath);
+    let result = await gitRun(repository, ["show", commit.hash]);
 
-    // let result = await repository.diffBetween(commit.parents[0], commit.hash); // commit.parents[0]
-    // diffBetween returns Change[].. wtf why
-    // console.log(result);
+    console.log(result.stdout);
 
-    // (selectedView as CommitItemView).commit
+    // TODO: gitTextUtils.something
+    //  then pack into some model
 
-    // TODO: open up commit view in view column 1
+    const uri = CommitDetailView.encodeLocation(commit.hash);
+
+    views.set(uri.toString(), new CommitDetailView(uri, commit));
+
+    workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.One));
+
   }
 
-  // TODO: UNRELATED TO visitAtPoint. relevant for diff: can use VSCODE diff command to show diff for a file? or something
-
+  // TODO: UNRELATED TO visitAtPoint.
+  // relevant for diff: can use VSCODE diff command to show diff for a file? or something
 
   // Link-provider can be used for file links.. but it brings with it a lot of functionality and style
 

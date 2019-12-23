@@ -5,6 +5,7 @@ import { View } from '../views/general/view';
 import { DocumentView } from '../views/general/documentView';
 import MagitStagedView from '../views/stagedView';
 import * as Constants from "../common/constants";
+import { CommitDetailView } from '../views/commitDetailView';
 
 export default class ContentProvider implements vscode.TextDocumentContentProvider {
 
@@ -60,7 +61,6 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
         case MagitStagedView.UriPath:
           documentView = new MagitStagedView(uri, this._onDidChange, magitRepo.magitState!);
           break;
-
         default:
           break;
       }
@@ -69,9 +69,10 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
         views.set(uri.toString(), documentView);
         return documentView.render(0).join('\n');
       }
-
     }
-    // End multiplexing
-    return "";
+    // TODO: create views outside provider, and then:
+    // Should just lookuop view in views ofc!
+    // How to update? when using this method?
+    return views.get(uri.toString())?.render(0).join('\n') ?? "";
   }
 }

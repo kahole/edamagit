@@ -15,7 +15,7 @@ export class CommandPrimer {
   //   };
   // }
 
-  static primeRepoAndView(command: (repository: MagitRepository, view: DocumentView) => Promise<void>): (editor: TextEditor) => Promise<void> {
+  static primeRepoAndView(command: (repository: MagitRepository, view: DocumentView) => Promise<void>, needsUpdate: boolean = true): (editor: TextEditor) => Promise<void> {
 
     return async (editor: TextEditor) => {
       let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(editor);
@@ -24,7 +24,9 @@ export class CommandPrimer {
 
         try {
           await command(repository, currentView);
-          MagitUtils.magitStatusAndUpdate(repository, currentView);
+          if (needsUpdate) {
+            MagitUtils.magitStatusAndUpdate(repository, currentView);
+          }
         } catch (error) {
 
           // TODO: statusView error message:

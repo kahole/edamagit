@@ -1,7 +1,6 @@
 import { MagitRepository } from "../models/magitRepository";
 import { magitRepositories, views } from "../extension";
-import { window, TextEditor, TextDocument } from "vscode";
-import MagitStatusView from "../views/magitStatusView";
+import { TextEditor, TextDocument } from "vscode";
 import { internalMagitStatus } from "../commands/statusCommands";
 import { DocumentView } from "../views/general/documentView";
 

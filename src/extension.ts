@@ -54,7 +54,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerCommand('extension.magit', magitStatus));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-refresh', CommandPrimer.primeRepoAndView(magitRefresh)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-commit', CommandPrimer.primeRepoAndView(magitCommit)));
-  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-visit-at-point', CommandPrimer.primeRepoAndView(magitVisitAtPoint)));
+  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-visit-at-point', CommandPrimer.primeRepoAndView(magitVisitAtPoint, false)));
   context.subscriptions.push(commands.registerCommand('extension.magit-help', magitHelp));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-pulling', CommandPrimer.primeRepoAndView(pulling)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-pushing', CommandPrimer.primeRepoAndView(pushing)));
