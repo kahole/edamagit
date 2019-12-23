@@ -9,6 +9,7 @@ import { BranchHeaderView } from './branches/branchHeaderView';
 import { TextView } from './general/textView';
 import { LineBreakView } from './general/lineBreakView';
 import { Uri, EventEmitter } from 'vscode';
+import { RemoteBranchHeaderView } from "./branches/remoteBranchHeaderView";
 
 export default class MagitStatusView extends DocumentView {
 
@@ -20,11 +21,13 @@ export default class MagitStatusView extends DocumentView {
     if (magitState.HEAD?.commit) {
       this.addSubview(new BranchHeaderView("Head", magitState.HEAD));
 
-      // TODO: refactor pull out
-      // Commit hash for these is availble throught repository state REFS
-      //   good opportunity to decide what to do with commit cache
-      this.addSubview(new TextView("Upstream/Merge/rebase: " + magitState.HEAD.upstream?.remote + "/" + magitState.HEAD?.upstream?.name + " WHAT COMMIT MSG"));
-      this.addSubview(new TextView("Push: " + magitState.HEAD.pushRemote?.remote + "/" + magitState.HEAD?.pushRemote?.name + " WHAT COMMIT MSG"));
+      if (magitState.HEAD.upstream) {
+        this.addSubview(new RemoteBranchHeaderView("Upstream/Merge/rebase", magitState.HEAD.upstream));
+      }
+
+      if (magitState.HEAD.pushRemote) {
+        this.addSubview(new RemoteBranchHeaderView("Push", magitState.HEAD.pushRemote));
+      }
 
     } else {
       this.addSubview(new TextView("In the beginning there was darkness"));

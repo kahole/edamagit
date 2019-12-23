@@ -5,6 +5,7 @@ import { execPath } from "process";
 import { MagitRepository } from "../models/magitRepository";
 import MagitStagedView from "../views/stagedView";
 import { DocumentView } from "../views/general/documentView";
+import { gitRun } from "../utils/gitRawRunner";
 
 export async function magitCommit(repository: MagitRepository, currentView: DocumentView) {
 
@@ -41,7 +42,7 @@ export async function magitCommit(repository: MagitRepository, currentView: Docu
       const env = { "GIT_EDITOR": `"${codePath}" --wait` };
       // const env = { "GIT_EDITOR": "code --wait" };
 
-      const commitSuccessMessage = await repository._repository.repository.run(args, { env });
+      const commitSuccessMessage = await gitRun(repository, args, { env });
 
       window.setStatusBarMessage(`Git finished: ${commitSuccessMessage.stdout.replace(Constants.LineSplitterRegex, ' ')}`, Constants.StatusMessageDisplayTimeout);
 

@@ -157,8 +157,6 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       .catch(console.log);
   }
 
-  console.log(repository.state);
-
   repository.magitState = {
     HEAD,
     stashes,

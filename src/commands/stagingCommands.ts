@@ -9,6 +9,7 @@ import { TextEncoder } from "util";
 import { MagitRepository } from "../models/magitRepository";
 import { Status } from "../typings/git";
 import { DocumentView } from "../views/general/documentView";
+import { gitRun } from "../utils/gitRawRunner";
 
 export async function magitStage(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
@@ -19,10 +20,8 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
 
     const patch = changeHunk.diffHeader + changeHunk.diff + "\n";
 
-    // TODO: this needs to be wrapped, and it needs to decide between run and exec!
     const args = ["apply", "--cached"];
-    return repository._repository.repository.run(args, { input: patch });
-
+    return gitRun(repository, args, { input: patch });
 
   } else if (selectedView instanceof ChangeView) {
 

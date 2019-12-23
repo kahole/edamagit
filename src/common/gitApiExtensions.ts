@@ -3,9 +3,9 @@ import { Uri } from "vscode";
 import * as cp from "child_process";
 
 interface BaseBaseRepository {
-  run(args: string[], options?: SpawnOptions): Promise<IExecutionResult<string>>;
+  run?(args: string[], options?: SpawnOptions): Promise<IExecutionResult<string>>;
   // run might become exec, included for future-proofing:
-  exec(args: string[], options?: SpawnOptions): Promise<IExecutionResult<string>>;
+  exec?(args: string[], options?: SpawnOptions): Promise<IExecutionResult<string>>;
 }
 
 interface BaseRepository {
@@ -55,7 +55,7 @@ export enum ForcePushMode {
   ForceWithLease
 }
 
-interface SpawnOptions extends cp.SpawnOptions {
+export interface SpawnOptions extends cp.SpawnOptions {
   input?: string;
   encoding?: string;
   log?: boolean;

@@ -13,6 +13,16 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
 
   if (selectedView instanceof CommitItemView) {
 
+    const commit = (selectedView as CommitItemView).commit;
+
+    console.log(repository);
+
+    // let result = await repository.show(commit.hash, repository.rootUri.fsPath);
+
+    // let result = await repository.diffBetween(commit.parents[0], commit.hash); // commit.parents[0]
+    // diffBetween returns Change[].. wtf why
+    // console.log(result);
+
     // (selectedView as CommitItemView).commit
 
     // TODO: open up commit view in view column 1
