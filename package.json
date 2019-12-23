@@ -131,7 +131,7 @@
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit",
+        "command": "extension.magit-refresh",
         "key": "g",
         "when": "editorTextFocus && editorLangId == magit"
       },

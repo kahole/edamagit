@@ -9,19 +9,13 @@ import MagitStatusView from "../views/magitStatusView";
 import { Status, Commit } from "../typings/git";
 import { MagitBranch } from "../models/magitBranch";
 
+export async function magitRefresh() {
+  return;
+}
+
 export async function magitStatus() {
 
   if (window.activeTextEditor) {
-
-    // Updating current view if inside it
-    // AKA g - keybinding
-    // TODO: Might move this to separate primed command
-    //    makes things simpler
-    let [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(window.activeTextEditor);
-
-    if (repository && currentView) {
-      return MagitUtils.magitStatusAndUpdate(repository, currentView);
-    }
 
     const activeWorkspaceFolder = workspace.getWorkspaceFolder(window.activeTextEditor.document.uri);
 

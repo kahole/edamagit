@@ -11,11 +11,6 @@ export default class FoldingRangeProvider implements vscode.FoldingRangeProvider
 
     let foldingRanges: vscode.FoldingRange[] = [];
 
-    //TODO: ineffective?
-    //     should be able to adress view independently and directly with doc-uri.
-    //     view should just be a separate map, next to repo map!
-    // SAme in highlightProvider!!
-
     let currentRepository = MagitUtils.getCurrentMagitRepo(document);
 
     if (currentRepository) {

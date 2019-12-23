@@ -4,7 +4,7 @@ import { GitExtension, API } from './typings/git';
 import { pushing } from './commands/pushingCommands';
 import { branching } from './commands/branchingCommands';
 import { magitHelp } from './commands/helpCommands';
-import { magitStatus } from './commands/statusCommands';
+import { magitStatus, magitRefresh } from './commands/statusCommands';
 import { magitVisitAtPoint } from './commands/visitAtPointCommands';
 import { MagitRepository } from './models/magitRepository';
 import { magitCommit } from './commands/commitCommands';
@@ -52,6 +52,7 @@ export function activate(context: ExtensionContext) {
   );
 
   context.subscriptions.push(commands.registerCommand('extension.magit', magitStatus));
+  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-refresh', CommandPrimer.primeRepoAndView(magitRefresh)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-commit', CommandPrimer.primeRepoAndView(magitCommit)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-visit-at-point', CommandPrimer.primeRepoAndView(magitVisitAtPoint)));
   context.subscriptions.push(commands.registerCommand('extension.magit-help', magitHelp));
@@ -71,7 +72,9 @@ export function activate(context: ExtensionContext) {
   // Move to contentProvider?
   context.subscriptions.push(workspace.onDidSaveTextDocument(() => {
     //TODO: if magitStatusView open:
-    magitStatus();
+    // magitStatus();
+    // OR, should really be:
+    // magitRefresh();
   }));
 }
 
