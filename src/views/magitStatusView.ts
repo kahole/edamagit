@@ -15,6 +15,9 @@ export default class MagitStatusView extends DocumentView {
 
   static UriPath: string = "status.magit";
 
+  // TODO: rebasing
+  //      repository.state.rebaseCommit
+
   constructor(uri: Uri, emitter: EventEmitter<Uri>, magitState: MagitState) {
     super(uri, emitter);
 
@@ -55,9 +58,16 @@ export default class MagitStatusView extends DocumentView {
 
       // TODO: umerged into section
       // and Unpulled from
+      if (magitState.HEAD?.commitsAhead) {
+        this.addSubview(new CommitSectionView(Section.UnmergedInto, magitState.HEAD.commitsAhead));
+      }
+
+      if (magitState.HEAD?.commitsBehind) {
+        this.addSubview(new CommitSectionView(Section.UnpulledFrom, magitState.HEAD.commitsBehind));
+      }
 
     } else if (magitState.log.length > 0) {
-      this.addSubview(new CommitSectionView(magitState.log));
+      this.addSubview(new CommitSectionView(Section.RecentCommits, magitState.log));
     }
   }
 

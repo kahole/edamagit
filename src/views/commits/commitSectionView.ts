@@ -7,10 +7,10 @@ import { LineBreakView } from "../general/lineBreakView";
 export class CommitSectionView extends View {
   isFoldable = true;
 
-  constructor(private commits: Commit[]) {
+  constructor(section: Section, commits: Commit[]) {
     super();
     this.subViews = [
-      new SectionHeaderView(Section.RecentCommits),
+      new SectionHeaderView(section),
       ...commits.map(commit => new CommitItemView(commit)),
       new LineBreakView()
     ];
