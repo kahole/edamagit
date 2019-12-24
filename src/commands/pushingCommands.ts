@@ -13,14 +13,14 @@ export async function pushing(repository: MagitRepository, currentView: Document
     const pushRemote = repository.magitState?.HEAD?.pushRemote;
     pushingMenuItems.push({ label: "p", description: `${pushRemote.remote}/${pushRemote.name}`, action: pushToPushRemote });
   } else {
-    // TODO: pushRemote, after setting that
+    pushingMenuItems.push({ label: "p", description: `pushRemote, after setting that`, action: pushSetPushRemote });
   }
 
   if (repository.magitState?.HEAD?.upstream) {
     const upstream = repository.magitState?.HEAD?.upstream;
     pushingMenuItems.push({ label: "u", description: `${upstream.remote}/${upstream.name}`, action: pushUpstream });
   } else {
-    // TODO: @{upstream}, after setting that
+    pushingMenuItems.push({ label: "u", description: `@{upstream}, after setting that`, action: pushSetUpstream });
   }
 
   pushingMenuItems.push({ label: "e", description: "elsewhere", action: pushElsewhere });
@@ -55,9 +55,19 @@ async function pushToPushRemote() {
 
 }
 
+async function pushSetPushRemote() {
+
+}
+
 async function pushUpstream() {
   // This is probably correct
   return commands.executeCommand("git.push");
+}
+
+async function pushSetUpstream() {
+  // TODO: choose upstream from list
+  //  OR: if no match, use the freeform input as a new upstream
+  return pushUpstream();
 }
 
 async function pushElsewhere() {
