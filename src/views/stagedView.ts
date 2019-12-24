@@ -25,8 +25,8 @@ export default class MagitStagedView extends DocumentView {
 
   static UriPath: string = "staged.magit";
 
-  constructor(uri: Uri, emitter: EventEmitter<Uri>, magitState: MagitState) {
-    super(uri, emitter);
+  constructor(uri: Uri, magitState: MagitState) {
+    super(uri);
 
     if (magitState.indexChanges && magitState.indexChanges.length > 0) {
 

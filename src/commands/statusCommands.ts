@@ -39,9 +39,9 @@ export async function magitStatus() {
           if (view instanceof MagitStatusView) {
             // Resuses doc, if still exists. Which it should if the view still exists
             // Open and focus magit status view
-            await workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside));
             // Run update
-            MagitUtils.magitStatusAndUpdate(repository, view);
+            await MagitUtils.magitStatusAndUpdate(repository, view);
+            workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside));
             console.log("Update existing view");
             return;
           }
@@ -57,7 +57,9 @@ export async function magitStatus() {
 
         internalMagitStatus(magitRepo)
           .then(() => {
+            // TODO: Pull out, make general
             const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
+            views.set(uri.toString(), new MagitStatusView(uri, magitRepo.magitState!));
             workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside))
               // TODO: test only
               // THIS WORKS

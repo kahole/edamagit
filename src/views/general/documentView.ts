@@ -3,11 +3,15 @@ import { Uri, EventEmitter, Disposable } from "vscode";
 
 export abstract class DocumentView extends View {
 
-  constructor(public uri: Uri, protected emitter: EventEmitter<Uri>) {
+  public emitter?: EventEmitter<Uri>;
+
+  constructor(public uri: Uri) {
     super();
   }
 
   public triggerUpdate() {
-    this.emitter.fire(this.uri);
+    if (this.emitter) {
+      this.emitter.fire(this.uri);
+    }
   }
 }

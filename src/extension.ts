@@ -1,4 +1,4 @@
-import { workspace, extensions, commands, ExtensionContext, Disposable, languages, window } from 'vscode';
+import { workspace, extensions, commands, ExtensionContext, Disposable, languages, window, EventEmitter, Uri } from 'vscode';
 import ContentProvider from './providers/contentProvider';
 import { GitExtension, API } from './typings/git';
 import { pushing } from './commands/pushingCommands';
@@ -17,10 +17,10 @@ import * as Constants from "./common/constants";
 import { fetching } from './commands/fetchingCommands';
 import { pulling } from './commands/pullingCommands';
 import { stashing } from './commands/stashingCommands';
-import { View } from './views/general/view';
+import { DocumentView } from './views/general/documentView';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
-export const views: Map<string, View> = new Map<string, View>();
+export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
 export let gitApi: API;
 
 export function activate(context: ExtensionContext) {
