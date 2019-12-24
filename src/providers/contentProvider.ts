@@ -71,8 +71,8 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
       }
     }
     // TODO: create views outside provider, and then:
-    // Should just lookuop view in views ofc!
     // How to update? when using this method?
+    // REQUIRES A SLICK SOLUTION
     return views.get(uri.toString())?.render(0).join('\n') ?? "";
   }
 }
