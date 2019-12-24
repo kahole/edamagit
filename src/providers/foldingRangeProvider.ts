@@ -11,20 +11,17 @@ export default class FoldingRangeProvider implements vscode.FoldingRangeProvider
 
     let foldingRanges: vscode.FoldingRange[] = [];
 
-    let currentRepository = MagitUtils.getCurrentMagitRepo(document);
+    let currentView = views.get(document.uri.toString());
+    if (currentView) {
+      let views = this.flattenSubviews(currentView.subViews);
 
-    if (currentRepository) {
-      let currentView = views.get(document.uri.toString());
-      if (currentView) {
-        let views = this.flattenSubviews(currentView.subViews);
-
-        views.forEach(v => {
-          if (v.isFoldable) {
-            foldingRanges.push(new vscode.FoldingRange(v.range.start.line, v.range.end.line));
-          }
-        });
-      }
+      views.forEach(v => {
+        if (v.isFoldable) {
+          foldingRanges.push(new vscode.FoldingRange(v.range.start.line, v.range.end.line));
+        }
+      });
     }
+
     return foldingRanges;
   }
 
