@@ -10,15 +10,11 @@ export default class HighlightProvider implements vscode.DocumentHighlightProvid
 
     let highlights: vscode.DocumentHighlight[] = [];
 
-    let currentRepository = MagitUtils.getCurrentMagitRepo(document);
-
-    if (currentRepository) {
-      let currentView = views.get(document.uri.toString());
-      if (currentView) {
-        let clickedView = currentView.click(position);
-        if (clickedView) {
-          highlights.push(new vscode.DocumentHighlight(clickedView.range, vscode.DocumentHighlightKind.Text));
-        }
+    let currentView = views.get(document.uri.toString());
+    if (currentView) {
+      let clickedView = currentView.click(position);
+      if (clickedView) {
+        highlights.push(new vscode.DocumentHighlight(clickedView.range, vscode.DocumentHighlightKind.Text));
       }
     }
     return highlights;
