@@ -90,7 +90,8 @@ async function deleteBranch({ repository, currentView }: MenuState) {
 
   // TODO: delete branch unmerged check
   // If unmerged
-  //  How: maybe try deleting and check the error response for "not fully merged"? 
+  //    git branch --no-merged ??? master
+  //  How: maybe try deleting and check the error response for "not fully merged"?
   let confirmed = await window.showInputBox({ prompt: `Delete unmerged branch ${ref}?` });
   if (confirmed !== undefined) {
     force = true;
@@ -109,7 +110,7 @@ async function resetBranch({ repository, currentView }: MenuState) {
 
   let resetToRef = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Reset branch" });
 
-  if (ref) {
+  if (ref && resetToRef) {
     // repository._repository.reset()
   }
 }
