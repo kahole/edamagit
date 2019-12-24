@@ -30,16 +30,6 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
 
   provideTextDocumentContent(uri: vscode.Uri): string | Thenable<string> {
 
-    // TODO: caching of documents?
-    //   if document with uri is still open, what happens
-    //   if document is closed, should it be deleted?
-    //     if not, how to utilize cached views
-
-    // already loaded?
-    // let document = this._documents.get(uri.toString());
-    // if (document) {
-    // 	return document.value;
-    // }
     console.log("call to provide");
 
     const view = views.get(uri.toString());

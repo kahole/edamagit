@@ -29,12 +29,13 @@ export function activate(context: ExtensionContext) {
   if (!gitExtension.enabled) {
     throw new Error("vscode.git Git extension not enabled");
   }
-  // TODO: Ikke sikkert dette er et problem. Kan være magit virker fortsatt!
-  gitExtension.onDidChangeEnablement(enabled => {
+
+  context.subscriptions.push(gitExtension.onDidChangeEnablement(enabled => {
     if (!enabled) {
       throw new Error("vscode.git Git extension was disabled");
     }
-  });
+  }));
+
   gitApi = gitExtension.getAPI(1);
 
   const contentProvider = new ContentProvider();
