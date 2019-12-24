@@ -3,6 +3,7 @@ import { magitRepositories, views } from "../extension";
 import { TextEditor, TextDocument } from "vscode";
 import { internalMagitStatus } from "../commands/statusCommands";
 import { DocumentView } from "../views/general/documentView";
+import MagitStatusView from "../views/magitStatusView";
 
 export default class MagitUtils {
   public static getCurrentMagitRepo(document: TextDocument): MagitRepository | undefined {
@@ -15,8 +16,13 @@ export default class MagitUtils {
     return [repository, currentView];
   }
 
-  public static magitStatusAndUpdate(repository: MagitRepository, view: DocumentView) {
-    internalMagitStatus(repository)
-      .then(() => view.triggerUpdate());
+  public static async magitStatusAndUpdate(repository: MagitRepository, view: DocumentView) {
+    await internalMagitStatus(repository);
+
+    // TODO: Getting somewhere.. but not perfect
+    // any view should be UPDATEABLE, in a simple manner.
+
+    views.set(view.uri.toString(), new MagitStatusView(view.uri, repository.magitState!));
+    view.triggerUpdate();
   }
 }

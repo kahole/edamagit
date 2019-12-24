@@ -6,6 +6,7 @@ import { MagitRepository } from "../models/magitRepository";
 import MagitStagedView from "../views/stagedView";
 import { DocumentView } from "../views/general/documentView";
 import { gitRun } from "../utils/gitRawRunner";
+import { views } from "../extension";
 
 export async function magitCommit(repository: MagitRepository, currentView: DocumentView) {
 
@@ -30,7 +31,7 @@ export async function magitCommit(repository: MagitRepository, currentView: Docu
       window.setStatusBarMessage(`Type C-c C-c to finish, or C-c C-k to cancel`);
 
       const uri = MagitStagedView.encodeLocation(repository.rootUri.path);
-
+      views.set(uri.toString(), new MagitStagedView(uri, repository.magitState!));
       stagedEditor = workspace.openTextDocument(uri)
         .then(doc => window.showTextDocument(doc, ViewColumn.One, true));
 

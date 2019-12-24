@@ -18,8 +18,8 @@ export default class MagitStatusView extends DocumentView {
   // TODO: rebasing
   //      repository.state.rebaseCommit
 
-  constructor(uri: Uri, emitter: EventEmitter<Uri>, magitState: MagitState) {
-    super(uri, emitter);
+  constructor(uri: Uri, magitState: MagitState) {
+    super(uri);
 
     if (magitState.HEAD?.commit) {
       this.addSubview(new BranchHeaderView("Head", magitState.HEAD));
