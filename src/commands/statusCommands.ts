@@ -161,6 +161,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     workingTreeChanges,
     indexChanges,
     mergeChanges: undefined,
-    untrackedFiles
+    untrackedFiles,
+    latestGitError: repository.magitState?.latestGitError
   };
 }

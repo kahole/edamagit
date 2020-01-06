@@ -90,6 +90,8 @@ async function deleteBranch({ repository, currentView }: MenuState) {
 
   // TODO: delete branch unmerged check
   // If unmerged
+  // repository.getMergeBase()
+
   //    git branch --no-merged ??? master
   //  How: maybe try deleting and check the error response for "not fully merged"?
   let confirmed = await window.showInputBox({ prompt: `Delete unmerged branch ${ref}?` });

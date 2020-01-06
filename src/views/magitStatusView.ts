@@ -18,8 +18,17 @@ export default class MagitStatusView extends DocumentView {
   // TODO: rebasing
   //      repository.state.rebaseCommit
 
+  // TODO: merging
+  //     use 
+  //     repository.state.mergeChanges
+  //     in the same way as the other changes i guess
+
   constructor(uri: Uri, magitState: MagitState) {
     super(uri);
+
+    if (magitState.latestGitError) {
+      this.addSubview(new TextView(magitState.latestGitError));
+    }
 
     if (magitState.HEAD?.commit) {
       this.addSubview(new BranchHeaderView("Head", magitState.HEAD));

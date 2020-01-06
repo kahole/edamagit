@@ -12,4 +12,5 @@ export interface MagitState {
   readonly untrackedFiles: MagitChange[];
   readonly stashes: Stash[];
   readonly log: Commit[];
+  latestGitError?: string;
 }

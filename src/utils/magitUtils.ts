@@ -17,12 +17,26 @@ export default class MagitUtils {
   }
 
   public static async magitStatusAndUpdate(repository: MagitRepository, view: DocumentView) {
+
     await internalMagitStatus(repository);
 
     // TODO: Getting somewhere.. but not perfect
-    // any view should be UPDATEABLE, in a simple manner.
+
+    // GOOD FIRST SOLUTION:
+
+    // A way to route the model to each view for updating them.
+
+    // This might work fine..
+    // maybe mark some views as not updateable, as it might not be necessary to update all views
+
+    // view.triggerUpdate(repository);
+
+    // triggerUpdate {
+    //    views.set(blabla, new SelfView( extractRelevantPartOfRepositoryModel));
+    // }
 
     views.set(view.uri.toString(), new MagitStatusView(view.uri, repository.magitState!));
+
     view.triggerUpdate();
   }
 }

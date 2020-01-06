@@ -29,8 +29,10 @@ export class CommandPrimer {
           }
         } catch (error) {
 
-          // TODO: statusView error message:
+          // TODO: dynamically decide between the two error displays
+
           // e.g top:  GitError! Your local changes to the following files would be overwritten by checkout
+          repository.magitState!.latestGitError = error.stderr ?? error.message;
 
           // This error type, too heavy for most errors?
           //   statusBar message might be better
