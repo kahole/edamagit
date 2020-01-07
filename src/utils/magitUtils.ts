@@ -20,23 +20,22 @@ export default class MagitUtils {
 
     await internalMagitStatus(repository);
 
-    // TODO: Getting somewhere.. but not perfect
-
-    // GOOD FIRST SOLUTION:
-
-    // A way to route the model to each view for updating them.
-
-    // This might work fine..
-    // maybe mark some views as not updateable, as it might not be necessary to update all views
-
-    // view.triggerUpdate(repository);
-
-    // triggerUpdate {
-    //    views.set(blabla, new SelfView( extractRelevantPartOfRepositoryModel));
-    // }
+    // TODO: Update other kinds of views as well?
 
     views.set(view.uri.toString(), new MagitStatusView(view.uri, repository.magitState!));
-
     view.triggerUpdate();
+
+    // let statusView: MagitStatusView | undefined;
+
+    // views.forEach((v) => {
+    //   if (v instanceof MagitStatusView) {
+    //     statusView = v;
+    //   }
+    // });
+
+    // if (statusView) {
+    //   views.set(statusView.uri.toString(), new MagitStatusView(statusView.uri, repository.magitState!));
+    //   statusView.triggerUpdate();
+    // }
   }
 }

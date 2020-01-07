@@ -44,11 +44,12 @@ export class MenuUtil {
         }
         _quickPick.dispose();
         eventListenerDisposable.dispose();
+        acceptListenerDisposable.dispose();
       });
 
       // Keep both of these (Select with key or with arrows + enter)
 
-      _quickPick.onDidAccept(async () => {
+      let acceptListenerDisposable = _quickPick.onDidAccept(async () => {
 
         if (_quickPick.activeItems.length > 0) {
           let chosenItems = _quickPick.activeItems[0] as MenuItem;
@@ -60,6 +61,7 @@ export class MenuUtil {
           }
           _quickPick.dispose();
           eventListenerDisposable.dispose();
+          acceptListenerDisposable.dispose();
         }
       });
 

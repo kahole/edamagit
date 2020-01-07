@@ -1,4 +1,4 @@
-import { window, commands, workspace, Uri } from "vscode";
+import { window, commands, workspace, Uri, QuickPickItem } from "vscode";
 import { HunkView } from "../views/changes/HunkView";
 import { ChangeView } from "../views/changes/changeView";
 import MagitUtils from "../utils/magitUtils";
@@ -10,6 +10,7 @@ import { MagitRepository } from "../models/magitRepository";
 import { Status } from "../typings/git";
 import { DocumentView } from "../views/general/documentView";
 import { gitRun } from "../utils/gitRawRunner";
+import { QuickItem, QuickMenuUtil } from "../menu/quickMenu";
 
 export async function magitStage(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
@@ -44,18 +45,18 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
     }
   } else {
 
-    const choosenFilePath = await window.showQuickPick([
+    let files: QuickItem[] = [
       ...repository.magitState?.workingTreeChanges!,
       ...repository.magitState?.indexChanges!,
       ...repository.magitState?.untrackedFiles!,
       // ...currentRepository.magitState?.mergeChanges
-    ].map(c => FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri)),
-      { placeHolder: "Stage" }
-    );
+    ].map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri), meta: c.uri }));
 
-    // TODO: stage file
-    // return repo . add ( filePath )
+    const chosenFile = await QuickMenuUtil.showMenu(files);
 
+    if (chosenFile) {
+      return repository._repository.add([chosenFile.meta], { update: false });
+    }
   }
 }
 
@@ -82,6 +83,20 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
 
   // return async task
 
+  const selectedView = currentView.click(window.activeTextEditor!.selection.active);
+
+  if (selectedView instanceof HunkView) {
+
+
+  } else if (selectedView instanceof ChangeView) {
+
+
+  } else if (selectedView instanceof ChangeSectionView) {
+
+  } else {
+
+
+  }
 }
 
 export async function magitUnstageAll(repository: MagitRepository, currentView: DocumentView): Promise<void> {
