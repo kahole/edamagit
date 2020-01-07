@@ -3,6 +3,8 @@ import { Menu, MenuState, MenuUtil } from "../menu/menu";
 import { MagitRepository } from "../models/magitRepository";
 import { Ref } from "../typings/git";
 import { DocumentView } from "../views/general/documentView";
+import { gitRun } from "../utils/gitRawRunner";
+import MagitUtils from "../utils/magitUtils";
 
 const branchingMenu = {
   title: "Branching",
@@ -12,7 +14,7 @@ const branchingMenu = {
     { label: "c", description: "Checkout new branch", action: checkoutNewBranch },
     // { label: "w", description: "Checkout new worktree", action: checkout },
     // { label: "y", description: "Checkout pull-request", action: checkout },
-    { label: "s", description: "Create new spin-off", action: createNewSpinoff },
+    // { label: "s", description: "Create new spin-off", action: createNewSpinoff },
     { label: "n", description: "Create new branch", action: createNewBranch },
     // { label: "W", description: "Create new worktree", action: checkout },
     // { label: "Y", description: "Create from pull-request", action: checkout },
@@ -44,17 +46,17 @@ async function createNewBranch(menuState: MenuState) {
   return _createBranch(menuState, false);
 }
 
-async function createNewSpinoff(menuState: MenuState) {
+// async function createNewSpinoff(menuState: MenuState) {
 
-  // TODO: spinoff command
-  //  C-h F magit-branch-spinoff
+//   // Spinoff command
+//   //  C-h F magit-branch-spinoff
 
-  // Sammendrag:
-  //  on branch master:
-  //  1. Remove all unpublished commits
-  //  2. checkout new branch with input name
-  //  3. Add all the unpublished/now removed commits from master to $NEW_BRANCH
-}
+//   // e.g:
+//   //  on branch master:
+//   //  1. Remove all unpublished commits
+//   //  2. checkout new branch with input name
+//   //  3. Add all the unpublished/now removed commits from master to $NEW_BRANCH
+// }
 
 async function configureBranch(menuState: MenuState) {
 
@@ -73,8 +75,8 @@ async function renameBranch({ repository, currentView }: MenuState) {
 
     if (newName && newName.length > 0) {
 
-      // TODO: denne kan kun rename current branch
-      return await repository._repository.renameBranch(newName);
+      const args = ["branch", "--move", ref, newName];
+      return gitRun(repository, args);
 
     } else {
       throw new Error("No name given for branch rename");
@@ -106,18 +108,29 @@ async function deleteBranch({ repository, currentView }: MenuState) {
 
 async function resetBranch({ repository, currentView }: MenuState) {
 
-  // TODO: reset branch command
-
   let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Reset branch" });
 
-  let resetToRef = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Reset branch" });
+  let resetToRef = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: `Reset ${ref} to` });
 
   if (ref && resetToRef) {
-    // repository._repository.reset()
+
+    if (ref === repository.magitState?.HEAD?.name) {
+
+      if (MagitUtils.magitAnythingModified(repository)) {
+
+        let confirmed = await window.showInputBox({ prompt: `Uncommitted changes will be lost. Proceed? (yes or no)` });
+        if (confirmed?.toLowerCase() !== 'yes') {
+          return;
+        }
+      }
+      repository._repository.reset(resetToRef, true);
+
+    } else {
+      const args = ["update-ref", `refs/heads/${ref}`, `refs/heads/${resetToRef}`];
+      return gitRun(repository, args);
+    }
   }
 }
-
-//--------------------------------
 
 async function _checkout({ repository, currentView }: MenuState, refs: Ref[]) {
 

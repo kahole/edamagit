@@ -38,4 +38,11 @@ export default class MagitUtils {
     //   statusView.triggerUpdate();
     // }
   }
+
+  public static magitAnythingModified(repository: MagitRepository) : boolean {
+    return repository.magitState !== undefined && (
+          repository.magitState.indexChanges.length > 0 ||
+          repository.magitState.workingTreeChanges.length > 0 ||
+          (repository.magitState.mergeChanges?.length ?? 0) > 0);
+  }
 }
