@@ -38,9 +38,4 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
     views.set(uri.toString(), new StashDetailView(uri, stash));
     workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.One));
   }
-
-  // TODO: UNRELATED TO visitAtPoint.
-  // relevant for diff: can use VSCODE diff command to show diff for a file? or something
-
-  // Link-provider can be used for file links.. but it brings with it a lot of functionality and style
 }

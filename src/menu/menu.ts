@@ -36,15 +36,15 @@ export class MenuUtil {
       let eventListenerDisposable = _quickPick.onDidChangeValue(async (e) => {
         let chosenItems = _quickPick.activeItems.filter(i => i.label === _quickPick.value);
         _quickPick.value = "";
+        _quickPick.dispose();
+        eventListenerDisposable.dispose();
+        acceptListenerDisposable.dispose();
         try {
           await chosenItems[0].action(menuState);
           resolve();
         } catch (error) {
           reject(error);
         }
-        _quickPick.dispose();
-        eventListenerDisposable.dispose();
-        acceptListenerDisposable.dispose();
       });
 
       // Keep both of these (Select with key or with arrows + enter)
@@ -53,15 +53,15 @@ export class MenuUtil {
 
         if (_quickPick.activeItems.length > 0) {
           let chosenItems = _quickPick.activeItems[0] as MenuItem;
+          _quickPick.dispose();
+          eventListenerDisposable.dispose();
+          acceptListenerDisposable.dispose();
           try {
             await chosenItems.action(menuState);
             resolve();
           } catch (error) {
             reject(error);
           }
-          _quickPick.dispose();
-          eventListenerDisposable.dispose();
-          acceptListenerDisposable.dispose();
         }
       });
 

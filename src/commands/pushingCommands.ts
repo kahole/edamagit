@@ -25,12 +25,10 @@ export async function pushing(repository: MagitRepository, currentView: Document
 
   pushingMenuItems.push({ label: "e", description: "elsewhere", action: pushElsewhere });
 
-  // TODO: fill out rest of pushing menu
-
   return MenuUtil.showMenu({ title: "Pushing", commands: pushingMenuItems }, { repository, currentView });
 }
 
-// TODO: important! can use vscode commands! commands.executeCommand("git.push !!
+// Dont use this.. use Vscode commands as much as possible
 
 // Hvordan git push kommandoen bygges opp:
 // https://github.com/microsoft/vscode/blob/master/extensions/git/src/git.ts#L1491
@@ -39,7 +37,6 @@ export async function pushing(repository: MagitRepository, currentView: Document
 // currentRepository._repository.pushTo()
 //   .then(() => console.log("klarte å pushe ?"))
 //   .catch(console.log);
-
 
 // _repository pushTo(remote?: string, name?: string, setUpstream?: boolean, forcePushMode?: ForcePushMode): Promise<void>
 

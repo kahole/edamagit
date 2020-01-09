@@ -2,6 +2,7 @@
   "name": "magit",
   "displayName": "magit",
   "description": "Magit for VSCode",
+  "publisher": "kahole",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.40.0"

@@ -30,6 +30,8 @@ export class CommandPrimer {
         } catch (error) {
 
           // TODO: dynamically decide between the two error displays
+          //  use type of error to decide?
+          // error instanceof GitError
 
           // e.g top:  GitError! Your local changes to the following files would be overwritten by checkout
           repository.magitState!.latestGitError = error.stderr ?? error.message;

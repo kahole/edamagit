@@ -10,6 +10,9 @@
 ## Auto refresh
   - FileChangeEvent
 
+## DIFF view
+  - can use VSCODE diff command to show diff for a file? or something
+
 ## Workspaces
   - Needs to support multiple workspaces (Already do this somewhat)
   - Find out how to deal with status views and other views
@@ -97,13 +100,7 @@ QuickPick blir da bare en visuell hjelpe-popup!
 
 Inspired/port by/of Magit https://magit.vc/
 
-
-
-This is the README for your extension "magit". After writing up a brief description, we recommend including the following sections.
-
 ## Features
-
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
 
 For example if there is an image subfolder under your extension project workspace:
 
