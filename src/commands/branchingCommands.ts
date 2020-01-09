@@ -1,7 +1,7 @@
 import { window } from "vscode";
 import { Menu, MenuState, MenuUtil } from "../menu/menu";
 import { MagitRepository } from "../models/magitRepository";
-import { Ref } from "../typings/git";
+import { Ref, GitErrorCodes } from "../typings/git";
 import { DocumentView } from "../views/general/documentView";
 import { gitRun } from "../utils/gitRawRunner";
 import MagitUtils from "../utils/magitUtils";
@@ -88,21 +88,17 @@ async function deleteBranch({ repository, currentView }: MenuState) {
 
   let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Delete" });
 
-  let force = false;
-
-  // TODO: delete branch unmerged check
-  // If unmerged
-  // repository.getMergeBase()
-
-  //    git branch --no-merged ??? master
-  //  How: maybe try deleting and check the error response for "not fully merged"?
-  let confirmed = await window.showInputBox({ prompt: `Delete unmerged branch ${ref}?` });
-  if (confirmed !== undefined) {
-    force = true;
-  }
-
   if (ref) {
-    return repository.deleteBranch(ref, force);
+    try {
+      await repository.deleteBranch(ref, false);
+    } catch (error) {
+      if (error.gitErrorCode === GitErrorCodes.BranchNotFullyMerged) {
+        try {
+          await MagitUtils.confirmAction(`Delete unmerged branch ${ref}?`);
+          return repository.deleteBranch(ref, true);
+        } catch {}
+      }
+    }
   }
 }
 
@@ -118,13 +114,11 @@ async function resetBranch({ repository, currentView }: MenuState) {
 
       if (MagitUtils.magitAnythingModified(repository)) {
 
-        let confirmed = await window.showInputBox({ prompt: `Uncommitted changes will be lost. Proceed? (yes or no)` });
-        if (confirmed?.toLowerCase() !== 'yes') {
-          return;
-        }
+        try {
+          await MagitUtils.confirmAction(`Uncommitted changes will be lost. Proceed?`);
+          return repository._repository.reset(resetToRef, true);
+        } catch {}
       }
-      repository._repository.reset(resetToRef, true);
-
     } else {
       const args = ["update-ref", `refs/heads/${ref}`, `refs/heads/${resetToRef}`];
       return gitRun(repository, args);

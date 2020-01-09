@@ -33,6 +33,8 @@ export class CommandPrimer {
           //  use type of error to decide?
           // error instanceof GitError
 
+          // This needs to be cleared somehow as well?
+          // Maybe it gets removed once it is rendered. So next render will not have it?
           // e.g top:  GitError! Your local changes to the following files would be overwritten by checkout
           repository.magitState!.latestGitError = error.stderr ?? error.message;
 
