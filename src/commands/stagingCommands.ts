@@ -45,9 +45,9 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
     }
   } else {
 
-    let files: QuickItem[] = [
+    let files: QuickItem<Uri>[] = [
       ...repository.magitState?.workingTreeChanges!,
-      ...repository.magitState?.indexChanges!,
+      //...repository.magitState?.indexChanges!, // Should not show index changes here ? aka staged changes
       ...repository.magitState?.untrackedFiles!,
       // ...currentRepository.magitState?.mergeChanges
     ].map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri), meta: c.uri }));
@@ -67,42 +67,50 @@ export enum StageAllKind {
 }
 
 export async function magitStageAll(repository: MagitRepository, currentView: DocumentView, kind: StageAllKind = StageAllKind.AllTracked): Promise<void> {
-
   return commands.executeCommand("git." + kind.valueOf());
 }
 
-export async function magitUnstage(repository: MagitRepository, currentView: DocumentView) {
-
-  // TODO: unstage command
-
-  // For files:
-  // repository._repository.reset(, false);
-
-  // For hunks:
-  //  git apply --cached --reverse
-
-  // return async task
+export async function magitUnstage(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
   const selectedView = currentView.click(window.activeTextEditor!.selection.active);
 
   if (selectedView instanceof HunkView) {
+    const changeHunk = (selectedView as HunkView).changeHunk;
 
+    const patch = changeHunk.diffHeader + changeHunk.diff + "\n";
+
+    const args = ['apply', '--cached', '--reverse'];
+    return gitRun(repository, args, { input: patch });
 
   } else if (selectedView instanceof ChangeView) {
 
+    const args = ['reset', '--', selectedView.change.uri.fsPath];
+    return gitRun(repository, args);
 
   } else if (selectedView instanceof ChangeSectionView) {
-
+    if (selectedView.section === Section.Staged) {
+      return magitUnstageAll(repository, currentView);
+    } else {
+      window.setStatusBarMessage('Already unstaged');
+    }
   } else {
 
+    let files: QuickItem<Uri>[] = repository.magitState?.indexChanges!
+      .map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri), meta: c.uri }));
 
+    const chosenFile = await QuickMenuUtil.showMenu<Uri>(files);
+
+    if (chosenFile) {
+      const args = ['reset', '--', chosenFile.meta.fsPath];
+      return gitRun(repository, args);
+    }
   }
 }
 
 export async function magitUnstageAll(repository: MagitRepository, currentView: DocumentView): Promise<void> {
 
-  let confirmed = await window.showInputBox({ prompt: "Unstage all changes?" });
-  if (confirmed !== undefined) {
-    return commands.executeCommand("git.unstageAll");
-  }
+  try {
+    await MagitUtils.confirmAction('Unstage all changes?');
+    return commands.executeCommand('git.unstageAll');
+  } catch { }
 }

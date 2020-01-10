@@ -1,16 +1,16 @@
 import { window, QuickPickItem } from "vscode";
 
-export interface QuickItem extends QuickPickItem {
-  meta: any;
+export interface QuickItem<T> extends QuickPickItem {
+  meta: T;
 }
 
 export class QuickMenuUtil {
 
-  static showMenu(quickItems: QuickItem[]): Promise<QuickItem> {
+  static showMenu<T>(quickItems: QuickItem<T>[]): Promise<QuickItem<T>> {
 
     return new Promise((resolve, reject) => {
 
-      let _quickPick = window.createQuickPick<QuickItem>();
+      let _quickPick = window.createQuickPick<QuickItem<T>>();
 
       _quickPick.items = quickItems;
 
