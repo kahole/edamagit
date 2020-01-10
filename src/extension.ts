@@ -69,14 +69,6 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-unstage-all', CommandPrimer.primeRepoAndView(magitUnstageAll)));
 
   context.subscriptions.push(commands.registerCommand('extension.magit-save-and-close-commit-msg', saveClose));
-
-  // Move to contentProvider?
-  context.subscriptions.push(workspace.onDidSaveTextDocument(() => {
-    //TODO: if magitStatusView open:
-    // magitStatus();
-    // OR, should really be:
-    // magitRefresh();
-  }));
 }
 
 export function deactivate() {

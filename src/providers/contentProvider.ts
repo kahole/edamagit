@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import { views } from '../extension';
 import * as Constants from "../common/constants";
+import MagitStatusView from '../views/magitStatusView';
+import { magitStatus } from '../commands/statusCommands';
 
 export default class ContentProvider implements vscode.TextDocumentContentProvider {
 
@@ -13,12 +15,26 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
 
     this.onDidChange = this.viewUpdatedEmitter.event;
 
-    this._subscriptions = vscode.workspace.onDidCloseTextDocument(
-      doc => {
-        if (doc.uri.scheme === Constants.MagitUriScheme) {
-          views.delete(doc.uri.toString());
-        }
-      });
+    this._subscriptions = vscode.Disposable.from(
+      vscode.workspace.onDidCloseTextDocument(
+        // TODO: this is some fucking bullshit
+        doc => {
+          if (doc.uri.scheme === Constants.MagitUriScheme) {
+            views.delete(doc.uri.toString());
+          }
+        }),
+      vscode.workspace.onDidSaveTextDocument(
+        doc => {
+          let statusViewOpen = false;
+          views.forEach((view) => {
+            if (view instanceof MagitStatusView) {
+              statusViewOpen = true;
+            }
+          });
+          if (statusViewOpen) {
+            magitStatus(true);
+          }
+        }));
   }
 
   dispose() {
@@ -30,14 +46,12 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
 
   provideTextDocumentContent(uri: vscode.Uri): string | Thenable<string> {
 
-    console.log("call to provide");
-
     const view = views.get(uri.toString());
 
     if (view) {
       view.emitter = this.viewUpdatedEmitter;
       return view.render(0).join('\n');
     }
-    return "";
+    return '';
   }
 }

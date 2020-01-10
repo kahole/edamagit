@@ -13,7 +13,7 @@ export async function magitRefresh() {
   return;
 }
 
-export async function magitStatus() {
+export async function magitStatus(preserveFocus = false) {
 
   if (window.activeTextEditor) {
 
@@ -41,7 +41,7 @@ export async function magitStatus() {
             // Open and focus magit status view
             // Run update
             await MagitUtils.magitStatusAndUpdate(repository, view);
-            workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside));
+            workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside, preserveFocus));
             console.log("Update existing view");
             return;
           }
@@ -60,7 +60,7 @@ export async function magitStatus() {
             // TODO: Pull out, make general
             const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
             views.set(uri.toString(), new MagitStatusView(uri, magitRepo.magitState!));
-            workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside))
+            workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside, preserveFocus))
               // TODO: test only
               // THIS WORKS
               // Decorations should be added by the views in the view hierarchy?

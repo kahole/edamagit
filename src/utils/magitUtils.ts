@@ -22,6 +22,8 @@ export default class MagitUtils {
 
     // TODO: Update other kinds of views as well?
 
+    // Update all open views for a given repository?
+
     views.set(view.uri.toString(), new MagitStatusView(view.uri, repository.magitState!));
     view.triggerUpdate();
 
