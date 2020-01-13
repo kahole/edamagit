@@ -1,9 +1,11 @@
 import MagitUtils from '../utils/magitUtils';
 import { MagitRepository } from '../models/magitRepository';
-import { commands } from 'vscode';
+import { commands, window } from 'vscode';
 import { DocumentView } from '../views/general/documentView';
 import { MenuItem } from '../menu/menuItem';
-import { MenuUtil } from '../menu/menu';
+import { MenuUtil, MenuState } from '../menu/menu';
+import { Remote } from '../typings/git';
+import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
 
 export async function pushing(repository: MagitRepository, currentView: DocumentView) {
 
@@ -61,9 +63,30 @@ async function pushUpstream() {
   return commands.executeCommand('git.push');
 }
 
-async function pushSetUpstream() {
-  // TODO: choose upstream from list
+async function pushSetUpstream({ repository, currentView }: MenuState) {
+
+  const refs: QuickItem<string>[] = repository.state.refs
+    .map(r => ({ label: r.name!, meta: r.name! }));
+
+  let chosenRemote = (await QuickMenuUtil.showMenu(refs)).meta;
+
+
+  // Freeform
   //  OR: if no match, use the freeform input as a new upstream
+  // if (chosenRemote === undefined) {
+  // chosenRemote = await window.showInputBox({ prompt: '' });
+  // }
+
+  // TODO: fix and clean up
+
+  const ref = repository.magitState?.HEAD?.name;
+
+  await Promise.all([
+    // CLEAN UP THIS SPLIT MESS
+    repository.setConfig(`branch.${ref}.merge`, `refs/heads/${chosenRemote.split('/')[1]}`),
+    repository.setConfig(`branch.${ref}.remote`, chosenRemote.split('/')[0])
+  ]);
+
   return pushUpstream();
 }
 
