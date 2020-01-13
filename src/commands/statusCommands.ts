@@ -25,7 +25,7 @@ export async function magitStatus(preserveFocus = false) {
 
       let repository: MagitRepository | undefined;
 
-      // TODO: Any point in reusing repo?
+      // MINOR: Any point in reusing repo?
       // This might make magit LESS resilient to changes in workspace etc.
       for (let [key, repo] of magitRepositories.entries()) {
         if (FilePathUtils.isDescendant(key, workspaceRootPath)) {
