@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import { View } from '../views/general/view';
-import MagitUtils from '../utils/magitUtils';
 import { views } from '../extension';
 
 export default class FoldingRangeProvider implements vscode.FoldingRangeProvider {
@@ -9,11 +8,11 @@ export default class FoldingRangeProvider implements vscode.FoldingRangeProvider
 
   provideFoldingRanges(document: vscode.TextDocument, context: vscode.FoldingContext, token: vscode.CancellationToken): vscode.ProviderResult<vscode.FoldingRange[]> {
 
-    let foldingRanges: vscode.FoldingRange[] = [];
+    const foldingRanges: vscode.FoldingRange[] = [];
 
-    let currentView = views.get(document.uri.toString());
+    const currentView = views.get(document.uri.toString());
     if (currentView) {
-      let views = this.flattenSubviews(currentView.subViews);
+      const views = this.flattenSubviews(currentView.subViews);
 
       views.forEach(v => {
         if (v.isFoldable) {
@@ -27,7 +26,7 @@ export default class FoldingRangeProvider implements vscode.FoldingRangeProvider
 
   private flattenSubviews(subviews: View[]): View[] {
 
-    let flattened = [];
+    const flattened = [];
     subviews.forEach(sv => flattened.push(...this.flattenSubviews(sv.subViews)));
 
     flattened.push(...subviews);

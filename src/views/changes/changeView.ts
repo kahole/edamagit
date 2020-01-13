@@ -1,9 +1,7 @@
-import { View } from "../general/view";
-import { Range } from "vscode";
-import { MagitChange } from "../../models/magitChange";
-import { HunkView } from "./HunkView";
-import { Status } from "../../typings/git";
-import { ChangeHeaderView } from "./changeHeaderView";
+import { View } from '../general/view';
+import { MagitChange } from '../../models/magitChange';
+import { HunkView } from './HunkView';
+import { ChangeHeaderView } from './changeHeaderView';
 
 export class ChangeView extends View {
   isFoldable = true;

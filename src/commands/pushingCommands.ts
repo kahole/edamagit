@@ -1,31 +1,31 @@
-import MagitUtils from "../utils/magitUtils";
-import { MagitRepository } from "../models/magitRepository";
-import { commands } from "vscode";
-import { DocumentView } from "../views/general/documentView";
-import { MenuItem } from "../menu/menuItem";
-import { MenuUtil } from "../menu/menu";
+import MagitUtils from '../utils/magitUtils';
+import { MagitRepository } from '../models/magitRepository';
+import { commands } from 'vscode';
+import { DocumentView } from '../views/general/documentView';
+import { MenuItem } from '../menu/menuItem';
+import { MenuUtil } from '../menu/menu';
 
 export async function pushing(repository: MagitRepository, currentView: DocumentView) {
 
-  let pushingMenuItems: MenuItem[] = [];
+  const pushingMenuItems: MenuItem[] = [];
 
   if (repository.magitState?.HEAD?.pushRemote) {
     const pushRemote = repository.magitState?.HEAD?.pushRemote;
-    pushingMenuItems.push({ label: "p", description: `${pushRemote.remote}/${pushRemote.name}`, action: pushToPushRemote });
+    pushingMenuItems.push({ label: 'p', description: `${pushRemote.remote}/${pushRemote.name}`, action: pushToPushRemote });
   } else {
-    pushingMenuItems.push({ label: "p", description: `pushRemote, after setting that`, action: pushSetPushRemote });
+    pushingMenuItems.push({ label: 'p', description: `pushRemote, after setting that`, action: pushSetPushRemote });
   }
 
   if (repository.magitState?.HEAD?.upstream) {
     const upstream = repository.magitState?.HEAD?.upstream;
-    pushingMenuItems.push({ label: "u", description: `${upstream.remote}/${upstream.name}`, action: pushUpstream });
+    pushingMenuItems.push({ label: 'u', description: `${upstream.remote}/${upstream.name}`, action: pushUpstream });
   } else {
-    pushingMenuItems.push({ label: "u", description: `@{upstream}, after setting that`, action: pushSetUpstream });
+    pushingMenuItems.push({ label: 'u', description: `@{upstream}, after setting that`, action: pushSetUpstream });
   }
 
-  pushingMenuItems.push({ label: "e", description: "elsewhere", action: pushElsewhere });
+  pushingMenuItems.push({ label: 'e', description: 'elsewhere', action: pushElsewhere });
 
-  return MenuUtil.showMenu({ title: "Pushing", commands: pushingMenuItems }, { repository, currentView });
+  return MenuUtil.showMenu({ title: 'Pushing', commands: pushingMenuItems }, { repository, currentView });
 }
 
 // Dont use this.. use Vscode commands as much as possible
@@ -58,7 +58,7 @@ async function pushSetPushRemote() {
 
 async function pushUpstream() {
   // This is probably correct
-  return commands.executeCommand("git.push");
+  return commands.executeCommand('git.push');
 }
 
 async function pushSetUpstream() {
@@ -68,5 +68,5 @@ async function pushSetUpstream() {
 }
 
 async function pushElsewhere() {
-  return commands.executeCommand("git.pushTo");
+  return commands.executeCommand('git.pushTo');
 }

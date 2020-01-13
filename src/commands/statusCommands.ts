@@ -1,13 +1,13 @@
-import { MagitChange } from "../models/magitChange";
-import { workspace, window, ViewColumn, Range, commands } from "vscode";
-import { gitApi, magitRepositories, views } from "../extension";
-import FilePathUtils from "../utils/filePathUtils";
-import GitTextUtils from "../utils/gitTextUtils";
-import { MagitRepository } from "../models/magitRepository";
-import MagitUtils from "../utils/magitUtils";
-import MagitStatusView from "../views/magitStatusView";
-import { Status, Commit } from "../typings/git";
-import { MagitBranch } from "../models/magitBranch";
+import { MagitChange } from '../models/magitChange';
+import { workspace, window, ViewColumn, Range, commands } from 'vscode';
+import { gitApi, magitRepositories, views } from '../extension';
+import FilePathUtils from '../utils/filePathUtils';
+import GitTextUtils from '../utils/gitTextUtils';
+import { MagitRepository } from '../models/magitRepository';
+import MagitUtils from '../utils/magitUtils';
+import MagitStatusView from '../views/magitStatusView';
+import { Status, Commit } from '../typings/git';
+import { MagitBranch } from '../models/magitBranch';
 
 export async function magitRefresh() {
   return;
@@ -27,7 +27,7 @@ export async function magitStatus(preserveFocus = false) {
 
       // MINOR: Any point in reusing repo?
       // This might make magit LESS resilient to changes in workspace etc.
-      for (let [key, repo] of magitRepositories.entries()) {
+      for (const [key, repo] of magitRepositories.entries()) {
         if (FilePathUtils.isDescendant(key, workspaceRootPath)) {
           repository = repo;
           break;
@@ -35,19 +35,19 @@ export async function magitStatus(preserveFocus = false) {
       }
 
       if (repository) {
-        for (let [uri, view] of views ?? []) {
+        for (const [uri, view] of views ?? []) {
           if (view instanceof MagitStatusView) {
             // Resuses doc, if still exists. Which it should if the view still exists
             // Open and focus magit status view
             // Run update
             await MagitUtils.magitStatusAndUpdate(repository, view);
             workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside, preserveFocus));
-            console.log("Update existing view");
+            console.log('Update existing view');
             return;
           }
         }
       } else {
-        console.log("load repo from git api (not map)");
+        console.log('load repo from git api (not map)');
         repository = gitApi.repositories.filter(r => FilePathUtils.isDescendant(r.rootUri.path, workspaceRootPath))[0];
       }
 
@@ -66,19 +66,19 @@ export async function magitStatus(preserveFocus = false) {
               // Decorations should be added by the views in the view hierarchy?
               .then(e => e.setDecorations(
                 window.createTextEditorDecorationType({
-                  color: "rgba(100,200,100,0.5)",
-                  border: "0.1px solid grey"
+                  color: 'rgba(100,200,100,0.5)',
+                  border: '0.1px solid grey'
                 })
                 , [new Range(0, 7, 0, 13)]));
           });
       } else {
         // Prompt to create repo
-        await commands.executeCommand("git.init");
+        await commands.executeCommand('git.init');
         magitStatus();
       }
     }
     else {
-      throw new Error("No workspace open");
+      throw new Error('No workspace open');
     }
   }
 }
@@ -115,16 +115,16 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   const workingTreeChangesTasks = Promise.all(workingTreeChanges_NoUntracked
     .map(async change => {
-      let diff = await repository.diffWithHEAD(change.uri.path);
-      let magitChange: MagitChange = change;
+      const diff = await repository.diffWithHEAD(change.uri.path);
+      const magitChange: MagitChange = change;
       magitChange.hunks = GitTextUtils.diffToHunks(diff, change.uri);
       return magitChange;
     }));
 
   const indexChangesTasks = Promise.all(repository.state.indexChanges
     .map(async change => {
-      let diff = await repository.diffIndexWithHEAD(change.uri.path);
-      let magitChange: MagitChange = change;
+      const diff = await repository.diffIndexWithHEAD(change.uri.path);
+      const magitChange: MagitChange = change;
       magitChange.hunks = GitTextUtils.diffToHunks(diff, change.uri);
       return magitChange;
     }));
@@ -138,9 +138,9 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       logTask
     ]);
 
-  let commitCache: { [id: string]: Commit; } = commits.reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});
+  const commitCache: { [id: string]: Commit; } = commits.reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});
 
-  let HEAD = repository.state.HEAD as MagitBranch | undefined;
+  const HEAD = repository.state.HEAD as MagitBranch | undefined;
 
   if (HEAD?.commit) {
     HEAD.commitDetails = commitCache[HEAD.commit];

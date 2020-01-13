@@ -13,7 +13,7 @@ import { saveClose } from './commands/macros';
 import FoldingRangeProvider from './providers/foldingRangeProvider';
 import HighlightProvider from './providers/highlightProvider';
 import { CommandPrimer } from './commands/commandPrimer';
-import * as Constants from "./common/constants";
+import * as Constants from './common/constants';
 import { fetching } from './commands/fetchingCommands';
 import { pulling } from './commands/pullingCommands';
 import { stashing } from './commands/stashingCommands';
@@ -25,14 +25,14 @@ export let gitApi: API;
 
 export function activate(context: ExtensionContext) {
 
-  let gitExtension = extensions.getExtension<GitExtension>('vscode.git')!.exports;
+  const gitExtension = extensions.getExtension<GitExtension>('vscode.git')!.exports;
   if (!gitExtension.enabled) {
-    throw new Error("vscode.git Git extension not enabled");
+    throw new Error('vscode.git Git extension not enabled');
   }
 
   context.subscriptions.push(gitExtension.onDidChangeEnablement(enabled => {
     if (!enabled) {
-      throw new Error("vscode.git Git extension was disabled");
+      throw new Error('vscode.git Git extension was disabled');
     }
   }));
 

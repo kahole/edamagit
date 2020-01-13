@@ -1,6 +1,5 @@
-import { Repository } from "../typings/git";
-import { Uri } from "vscode";
-import * as cp from "child_process";
+import { Uri } from 'vscode';
+import * as cp from 'child_process';
 
 interface BaseBaseRepository {
   run?(args: string[], options?: SpawnOptions): Promise<IExecutionResult<string>>;
@@ -22,7 +21,7 @@ interface BaseRepository {
 //   return this._repository.getStashes();
 // };
 
-declare module "../typings/git" {
+declare module '../typings/git' {
   export interface Repository {
     readonly _repository: BaseRepository;
   }

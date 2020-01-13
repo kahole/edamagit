@@ -10,7 +10,8 @@
       "always"
     ],
     "triple-equals": true,
-    "quotemark": [true, "single"]
+    "quotemark": [true, "single"],
+    "prefer-const": true
   },
   "defaultSeverity": "warning"
 }

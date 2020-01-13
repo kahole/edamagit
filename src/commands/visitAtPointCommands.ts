@@ -1,23 +1,23 @@
-import { window, TextEditor, Range, workspace, ViewColumn, Uri } from "vscode";
-import MagitUtils from "../utils/magitUtils";
-import { MagitRepository } from "../models/magitRepository";
-import { CommitItemView } from "../views/commits/commitSectionView";
-import { DocumentView } from "../views/general/documentView";
-import { gitRun } from "../utils/gitRawRunner";
-import { CommitDetailView } from "../views/commitDetailView";
-import { views } from "../extension";
-import { StashItemView } from "../views/stashes/stashSectionView";
-import { StashDetailView } from "../views/stashDetailView";
+import { window, TextEditor, Range, workspace, ViewColumn, Uri } from 'vscode';
+import MagitUtils from '../utils/magitUtils';
+import { MagitRepository } from '../models/magitRepository';
+import { CommitItemView } from '../views/commits/commitSectionView';
+import { DocumentView } from '../views/general/documentView';
+import { gitRun } from '../utils/gitRawRunner';
+import { CommitDetailView } from '../views/commitDetailView';
+import { views } from '../extension';
+import { StashItemView } from '../views/stashes/stashSectionView';
+import { StashDetailView } from '../views/stashDetailView';
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 
-  let selectedView = currentView.click(window.activeTextEditor!.selection.active);
+  const selectedView = currentView.click(window.activeTextEditor!.selection.active);
 
   if (selectedView instanceof CommitItemView) {
 
     const commit = (selectedView as CommitItemView).commit;
 
-    let result = await gitRun(repository, ["show", commit.hash]);
+    const result = await gitRun(repository, ['show', commit.hash]);
 
     console.log(result.stdout);
 

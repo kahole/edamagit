@@ -1,5 +1,5 @@
-import { View } from "./view";
-import { Uri, EventEmitter, Disposable } from "vscode";
+import { View } from './view';
+import { Uri, EventEmitter } from 'vscode';
 
 export abstract class DocumentView extends View {
 

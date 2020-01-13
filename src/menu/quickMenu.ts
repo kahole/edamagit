@@ -1,4 +1,4 @@
-import { window, QuickPickItem } from "vscode";
+import { window, QuickPickItem } from 'vscode';
 
 export interface QuickItem<T> extends QuickPickItem {
   meta: T;
@@ -10,14 +10,14 @@ export class QuickMenuUtil {
 
     return new Promise((resolve, reject) => {
 
-      let _quickPick = window.createQuickPick<QuickItem<T>>();
+      const _quickPick = window.createQuickPick<QuickItem<T>>();
 
       _quickPick.items = quickItems;
 
-      let eventListenerDisposable = _quickPick.onDidAccept(async () => {
+      const eventListenerDisposable = _quickPick.onDidAccept(async () => {
 
         if (_quickPick.activeItems.length > 0) {
-          let chosenItem = _quickPick.activeItems[0];
+          const chosenItem = _quickPick.activeItems[0];
           resolve(chosenItem);
           _quickPick.dispose();
           eventListenerDisposable.dispose();

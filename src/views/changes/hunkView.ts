@@ -1,5 +1,5 @@
-import { MagitChangeHunk } from "../../models/magitChangeHunk";
-import { TextView } from "../general/textView";
+import { MagitChangeHunk } from '../../models/magitChangeHunk';
+import { TextView } from '../general/textView';
 
 export class HunkView extends TextView {
   isFoldable = true;

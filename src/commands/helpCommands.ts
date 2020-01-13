@@ -1,4 +1,4 @@
-import { window, workspace, commands } from "vscode";
+import { window, workspace, commands } from 'vscode';
 
 // Should open in a nice way. Quick pick menu is garbage?
 
@@ -7,7 +7,7 @@ import { window, workspace, commands } from "vscode";
 
 export function magitHelp() {
 
-  commands.executeCommand("workbench.action.quickOpen", ">Magit ");
+  commands.executeCommand('workbench.action.quickOpen', '>Magit ');
 
   // window.showInformationMessage(`Popup and dwim commands
   // A Cherry-picking    b Branching         B Bisecting         c Committing

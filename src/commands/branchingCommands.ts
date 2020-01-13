@@ -1,27 +1,27 @@
-import { window } from "vscode";
-import { Menu, MenuState, MenuUtil } from "../menu/menu";
-import { MagitRepository } from "../models/magitRepository";
-import { Ref, GitErrorCodes } from "../typings/git";
-import { DocumentView } from "../views/general/documentView";
-import { gitRun } from "../utils/gitRawRunner";
-import MagitUtils from "../utils/magitUtils";
+import { window } from 'vscode';
+import { Menu, MenuState, MenuUtil } from '../menu/menu';
+import { MagitRepository } from '../models/magitRepository';
+import { Ref, GitErrorCodes } from '../typings/git';
+import { DocumentView } from '../views/general/documentView';
+import { gitRun } from '../utils/gitRawRunner';
+import MagitUtils from '../utils/magitUtils';
 
 const branchingMenu = {
-  title: "Branching",
+  title: 'Branching',
   commands: [
-    { label: "b", description: "Checkout", action: checkout },
-    { label: "l", description: "Checkout local branch", action: checkoutLocal },
-    { label: "c", description: "Checkout new branch", action: checkoutNewBranch },
+    { label: 'b', description: 'Checkout', action: checkout },
+    { label: 'l', description: 'Checkout local branch', action: checkoutLocal },
+    { label: 'c', description: 'Checkout new branch', action: checkoutNewBranch },
     // { label: "w", description: "Checkout new worktree", action: checkout },
     // { label: "y", description: "Checkout pull-request", action: checkout },
     // { label: "s", description: "Create new spin-off", action: createNewSpinoff },
-    { label: "n", description: "Create new branch", action: createNewBranch },
+    { label: 'n', description: 'Create new branch', action: createNewBranch },
     // { label: "W", description: "Create new worktree", action: checkout },
     // { label: "Y", description: "Create from pull-request", action: checkout },
-    { label: "C", description: "Configure", action: configureBranch },
-    { label: "m", description: "Rename", action: renameBranch },
-    { label: "x", description: "Reset", action: resetBranch },
-    { label: "k", description: "Delete", action: deleteBranch },
+    { label: 'C', description: 'Configure', action: configureBranch },
+    { label: 'm', description: 'Rename', action: renameBranch },
+    { label: 'x', description: 'Reset', action: resetBranch },
+    { label: 'k', description: 'Delete', action: deleteBranch },
   ]
 };
 
@@ -68,25 +68,25 @@ async function configureBranch(menuState: MenuState) {
 
 async function renameBranch({ repository, currentView }: MenuState) {
 
-  let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Rename branch" });
+  const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Rename branch' });
 
   if (ref) {
-    let newName = await window.showInputBox({ prompt: `Rename branch '${ref}' to:` });
+    const newName = await window.showInputBox({ prompt: `Rename branch '${ref}' to:` });
 
     if (newName && newName.length > 0) {
 
-      const args = ["branch", "--move", ref, newName];
+      const args = ['branch', '--move', ref, newName];
       return gitRun(repository, args);
 
     } else {
-      throw new Error("No name given for branch rename");
+      throw new Error('No name given for branch rename');
     }
   }
 }
 
 async function deleteBranch({ repository, currentView }: MenuState) {
 
-  let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Delete" });
+  const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Delete' });
 
   if (ref) {
     try {
@@ -96,7 +96,7 @@ async function deleteBranch({ repository, currentView }: MenuState) {
         try {
           await MagitUtils.confirmAction(`Delete unmerged branch ${ref}?`);
           return repository.deleteBranch(ref, true);
-        } catch {}
+        } catch { }
       }
     }
   }
@@ -104,9 +104,9 @@ async function deleteBranch({ repository, currentView }: MenuState) {
 
 async function resetBranch({ repository, currentView }: MenuState) {
 
-  let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Reset branch" });
+  const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Reset branch' });
 
-  let resetToRef = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: `Reset ${ref} to` });
+  const resetToRef = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: `Reset ${ref} to` });
 
   if (ref && resetToRef) {
 
@@ -117,10 +117,10 @@ async function resetBranch({ repository, currentView }: MenuState) {
         try {
           await MagitUtils.confirmAction(`Uncommitted changes will be lost. Proceed?`);
           return repository._repository.reset(resetToRef, true);
-        } catch {}
+        } catch { }
       }
     } else {
-      const args = ["update-ref", `refs/heads/${ref}`, `refs/heads/${resetToRef}`];
+      const args = ['update-ref', `refs/heads/${ref}`, `refs/heads/${resetToRef}`];
       return gitRun(repository, args);
     }
   }
@@ -128,7 +128,7 @@ async function resetBranch({ repository, currentView }: MenuState) {
 
 async function _checkout({ repository, currentView }: MenuState, refs: Ref[]) {
 
-  let ref = await window.showQuickPick(refs.map(r => r.name!), { placeHolder: "Checkout" });
+  const ref = await window.showQuickPick(refs.map(r => r.name!), { placeHolder: 'Checkout' });
 
   if (ref) {
     return repository.checkout(ref);
@@ -137,17 +137,17 @@ async function _checkout({ repository, currentView }: MenuState, refs: Ref[]) {
 
 async function _createBranch({ repository, currentView }: MenuState, checkout: boolean) {
 
-  let ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: "Create and checkout branch starting at" });
+  const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Create and checkout branch starting at' });
 
   if (ref) {
-    let newBranchName = await window.showInputBox({ prompt: "Name for new branch" });
+    const newBranchName = await window.showInputBox({ prompt: 'Name for new branch' });
 
     if (newBranchName && newBranchName.length > 0) {
 
       return repository.createBranch(newBranchName, checkout, ref);
 
     } else {
-      window.showErrorMessage("No name given for new branch");
+      window.showErrorMessage('No name given for new branch');
     }
   }
 }

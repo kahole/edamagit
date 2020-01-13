@@ -1,6 +1,5 @@
-import { TextView } from "../general/textView";
-import { MagitBranch } from "../../models/magitBranch";
-import { UpstreamRef } from "../../typings/git";
+import { TextView } from '../general/textView';
+import { UpstreamRef } from '../../typings/git';
 
 export class RemoteBranchHeaderView extends TextView {
 

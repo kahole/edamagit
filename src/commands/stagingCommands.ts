@@ -1,16 +1,16 @@
-import { window, commands, workspace, Uri, QuickPickItem } from "vscode";
-import { HunkView } from "../views/changes/HunkView";
-import { ChangeView } from "../views/changes/changeView";
-import MagitUtils from "../utils/magitUtils";
-import FilePathUtils from "../utils/filePathUtils";
-import { ChangeSectionView } from "../views/changes/changesSectionView";
-import { Section } from "../views/general/sectionHeader";
-import { TextEncoder } from "util";
-import { MagitRepository } from "../models/magitRepository";
-import { Status } from "../typings/git";
-import { DocumentView } from "../views/general/documentView";
-import { gitRun } from "../utils/gitRawRunner";
-import { QuickItem, QuickMenuUtil } from "../menu/quickMenu";
+import { window, commands, workspace, Uri, QuickPickItem } from 'vscode';
+import { HunkView } from '../views/changes/HunkView';
+import { ChangeView } from '../views/changes/changeView';
+import MagitUtils from '../utils/magitUtils';
+import FilePathUtils from '../utils/filePathUtils';
+import { ChangeSectionView } from '../views/changes/changesSectionView';
+import { Section } from '../views/general/sectionHeader';
+import { TextEncoder } from 'util';
+import { MagitRepository } from '../models/magitRepository';
+import { Status } from '../typings/git';
+import { DocumentView } from '../views/general/documentView';
+import { gitRun } from '../utils/gitRawRunner';
+import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
 
 export async function magitStage(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
@@ -19,9 +19,9 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
   if (selectedView instanceof HunkView) {
     const changeHunk = (selectedView as HunkView).changeHunk;
 
-    const patch = changeHunk.diffHeader + changeHunk.diff + "\n";
+    const patch = changeHunk.diffHeader + changeHunk.diff + '\n';
 
-    const args = ["apply", "--cached"];
+    const args = ['apply', '--cached'];
     return gitRun(repository, args, { input: patch });
 
   } else if (selectedView instanceof ChangeView) {
@@ -33,7 +33,7 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
       .add([magitChange.uri], { update: false });
 
   } else if (selectedView instanceof ChangeSectionView) {
-    let section = (selectedView as ChangeSectionView).section;
+    const section = (selectedView as ChangeSectionView).section;
 
     switch (section) {
       case Section.Untracked:
@@ -45,7 +45,7 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
     }
   } else {
 
-    let files: QuickItem<Uri>[] = [
+    const files: QuickItem<Uri>[] = [
       ...repository.magitState?.workingTreeChanges!,
       //...repository.magitState?.indexChanges!, // Should not show index changes here ? aka staged changes
       ...repository.magitState?.untrackedFiles!,
@@ -61,13 +61,13 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
 }
 
 export enum StageAllKind {
-  All = "stageAll",
-  AllTracked = "stageAllTracked",
-  AllUntracked = "stageAllUntracked"
+  All = 'stageAll',
+  AllTracked = 'stageAllTracked',
+  AllUntracked = 'stageAllUntracked'
 }
 
 export async function magitStageAll(repository: MagitRepository, currentView: DocumentView, kind: StageAllKind = StageAllKind.AllTracked): Promise<void> {
-  return commands.executeCommand("git." + kind.valueOf());
+  return commands.executeCommand('git.' + kind.valueOf());
 }
 
 export async function magitUnstage(repository: MagitRepository, currentView: DocumentView): Promise<any> {
@@ -77,7 +77,7 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
   if (selectedView instanceof HunkView) {
     const changeHunk = (selectedView as HunkView).changeHunk;
 
-    const patch = changeHunk.diffHeader + changeHunk.diff + "\n";
+    const patch = changeHunk.diffHeader + changeHunk.diff + '\n';
 
     const args = ['apply', '--cached', '--reverse'];
     return gitRun(repository, args, { input: patch });
@@ -95,7 +95,7 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
     }
   } else {
 
-    let files: QuickItem<Uri>[] = repository.magitState?.indexChanges!
+    const files: QuickItem<Uri>[] = repository.magitState?.indexChanges!
       .map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri), meta: c.uri }));
 
     const chosenFile = await QuickMenuUtil.showMenu<Uri>(files);

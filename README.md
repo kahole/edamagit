@@ -5,8 +5,6 @@
 
 ## USE CONST, not let
 
-## use ' and `, not "
-
 ## Auto refresh
   - FileChangeEvent
 

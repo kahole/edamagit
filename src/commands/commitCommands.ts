@@ -1,35 +1,35 @@
-import { exec, spawn, ExecException } from "child_process";
-import { window, workspace, ViewColumn, TextEditor, commands, Uri } from "vscode";
-import * as Constants from "../common/constants";
-import { execPath } from "process";
-import { MagitRepository } from "../models/magitRepository";
-import MagitStagedView from "../views/stagedView";
-import { DocumentView } from "../views/general/documentView";
-import { gitRun } from "../utils/gitRawRunner";
-import { views } from "../extension";
-import { MenuUtil, MenuState } from "../menu/menu";
+import { exec, spawn, ExecException } from 'child_process';
+import { window, workspace, ViewColumn, TextEditor, commands, Uri } from 'vscode';
+import * as Constants from '../common/constants';
+import { execPath } from 'process';
+import { MagitRepository } from '../models/magitRepository';
+import MagitStagedView from '../views/stagedView';
+import { DocumentView } from '../views/general/documentView';
+import { gitRun } from '../utils/gitRawRunner';
+import { views } from '../extension';
+import { MenuUtil, MenuState } from '../menu/menu';
 
 
 const commitMenu = {
-  title: "Committing",
+  title: 'Committing',
   commands: [
-    { label: "c", description: "Commit", action: (menuState: MenuState) => commit(menuState.repository, []) },
-    { label: "a", description: "Amend", action: (menuState: MenuState) => commit(menuState.repository, ['--amend']) },
-    { label: "e", description: "Extend", action: (menuState: MenuState) => commit(menuState.repository, ['--amend', '--no-edit']) },
-    { label: "w", description: "Reword", action: (menuState: MenuState) => commit(menuState.repository, ['--amend', '--only']) },
+    { label: 'c', description: 'Commit', action: (menuState: MenuState) => commit(menuState.repository, []) },
+    { label: 'a', description: 'Amend', action: (menuState: MenuState) => commit(menuState.repository, ['--amend']) },
+    { label: 'e', description: 'Extend', action: (menuState: MenuState) => commit(menuState.repository, ['--amend', '--no-edit']) },
+    { label: 'w', description: 'Reword', action: (menuState: MenuState) => commit(menuState.repository, ['--amend', '--only']) },
     // { label: "f", description: "Fixup", action: (menuState: MenuState) => commit(menuState.repository, ['--fixup']) },
   ]
 };
 
-  // inline menu here, only to set args: --amend, etc
-  // a - AMEND: commit --amend
-  // e - EXTEND: commit --amend --no-edit
-  // w - REWORD (git commit --amend --only)
-  // f - Fixup git commit --fixup  into commit from list
-  // s - Squash - Squash into commit from list of commits
-  // A - Augment - same as squash but with you can edit the squash message
-  // F - Instant fixup
-  // S - Instant squash
+// inline menu here, only to set args: --amend, etc
+// a - AMEND: commit --amend
+// e - EXTEND: commit --amend --no-edit
+// w - REWORD (git commit --amend --only)
+// f - Fixup git commit --fixup  into commit from list
+// s - Squash - Squash into commit from list of commits
+// A - Augment - same as squash but with you can edit the squash message
+// F - Instant fixup
+// S - Instant squash
 
 export async function magitCommit(repository: MagitRepository, currentView: DocumentView) {
   return MenuUtil.showMenu(commitMenu, { repository, currentView });
@@ -37,7 +37,7 @@ export async function magitCommit(repository: MagitRepository, currentView: Docu
 
 async function commit(repository: MagitRepository, commitArgs: string[]) {
 
-  let args = ["commit", ...commitArgs];
+  const args = ['commit', ...commitArgs];
 
   let stagedEditor: Thenable<TextEditor> | undefined;
   try {
@@ -55,10 +55,10 @@ async function commit(repository: MagitRepository, commitArgs: string[]) {
 
     // Only for mac
     if (process.platform === 'darwin') {
-      codePath = execPath.split(/(?<=\.app)/)[0] + "/Contents/Resources/app/bin/code";
+      codePath = execPath.split(/(?<=\.app)/)[0] + '/Contents/Resources/app/bin/code';
     }
 
-    const env = { "GIT_EDITOR": `"${codePath}" --wait` };
+    const env = { 'GIT_EDITOR': `"${codePath}" --wait` };
 
     const commitSuccessMessage = await gitRun(repository, args, { env });
 
@@ -74,8 +74,7 @@ async function commit(repository: MagitRepository, commitArgs: string[]) {
       window.showTextDocument(editor.document, ViewColumn.One)
         .then(() => commands.executeCommand('workbench.action.closeActiveEditor'));
       // }
-    }
-    );
+    });
   }
 }
 

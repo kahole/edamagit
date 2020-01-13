@@ -1,5 +1,5 @@
-import { TextView } from "../general/textView";
-import { MagitBranch } from "../../models/magitBranch";
+import { TextView } from '../general/textView';
+import { MagitBranch } from '../../models/magitBranch';
 
 // https://emacs.stackexchange.com/questions/26247/meaning-of-magit-status-buffer-head-merge-push
 

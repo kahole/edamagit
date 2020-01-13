@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import MagitUtils from '../utils/magitUtils';
 import { views } from '../extension';
 
 export default class HighlightProvider implements vscode.DocumentHighlightProvider {
@@ -8,11 +7,11 @@ export default class HighlightProvider implements vscode.DocumentHighlightProvid
 
   provideDocumentHighlights(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.DocumentHighlight[]> {
 
-    let highlights: vscode.DocumentHighlight[] = [];
+    const highlights: vscode.DocumentHighlight[] = [];
 
-    let currentView = views.get(document.uri.toString());
+    const currentView = views.get(document.uri.toString());
     if (currentView) {
-      let clickedView = currentView.click(position);
+      const clickedView = currentView.click(position);
       if (clickedView) {
         highlights.push(new vscode.DocumentHighlight(clickedView.range, vscode.DocumentHighlightKind.Text));
       }

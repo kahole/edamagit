@@ -1,5 +1,5 @@
-import { MagitRepository } from "../models/magitRepository";
-import { SpawnOptions } from "../common/gitApiExtensions";
+import { MagitRepository } from '../models/magitRepository';
+import { SpawnOptions } from '../common/gitApiExtensions';
 
 export async function gitRun(repository: MagitRepository, args: string[], spawnOptions?: SpawnOptions) {
 

@@ -14,16 +14,16 @@
 //    end
 //  end
 
-import * as Constants from "../common/constants";
+import * as Constants from '../common/constants';
 import { MagitState } from '../models/magitState';
 import { Section } from './general/sectionHeader';
 import { DocumentView } from './general/documentView';
-import { Uri, EventEmitter } from "vscode";
-import { ChangeSectionView } from "./changes/changesSectionView";
+import { Uri, EventEmitter } from 'vscode';
+import { ChangeSectionView } from './changes/changesSectionView';
 
 export default class MagitStagedView extends DocumentView {
 
-  static UriPath: string = "staged.magit";
+  static UriPath: string = 'staged.magit';
 
   constructor(uri: Uri, magitState: MagitState) {
     super(uri);

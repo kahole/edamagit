@@ -1,9 +1,9 @@
-import { MagitRepository } from "../models/magitRepository";
-import { magitRepositories, views } from "../extension";
-import { TextEditor, TextDocument, window } from "vscode";
-import { internalMagitStatus } from "../commands/statusCommands";
-import { DocumentView } from "../views/general/documentView";
-import MagitStatusView from "../views/magitStatusView";
+import { MagitRepository } from '../models/magitRepository';
+import { magitRepositories, views } from '../extension';
+import { TextEditor, TextDocument, window } from 'vscode';
+import { internalMagitStatus } from '../commands/statusCommands';
+import { DocumentView } from '../views/general/documentView';
+import MagitStatusView from '../views/magitStatusView';
 
 export default class MagitUtils {
   public static getCurrentMagitRepo(document: TextDocument): MagitRepository | undefined {
@@ -11,8 +11,8 @@ export default class MagitUtils {
   }
 
   public static getCurrentMagitRepoAndView(editor: TextEditor): [MagitRepository | undefined, DocumentView | undefined] {
-    let repository = magitRepositories.get(editor.document.uri.query);
-    let currentView = views.get(editor.document.uri.toString() ?? "") as DocumentView;
+    const repository = magitRepositories.get(editor.document.uri.query);
+    const currentView = views.get(editor.document.uri.toString() ?? '') as DocumentView;
     return [repository, currentView];
   }
 
@@ -52,11 +52,11 @@ export default class MagitUtils {
 
     // MINOR: maybe just have the vscode confirm Enter, cancel Escape prompt?
     const yesNo = hardConfirm ? 'yes or no' : 'y or n';
-    let confirmed = await window.showInputBox({ prompt: `${prompt} (${yesNo})` });
+    const confirmed = await window.showInputBox({ prompt: `${prompt} (${yesNo})` });
     if ((hardConfirm && confirmed?.toLowerCase() === 'yes') || (!hardConfirm && confirmed?.toLowerCase().charAt(0) === 'y')) {
       return true;
     } else {
-      throw new Error("Action not confirmed");
+      throw new Error('Action not confirmed');
     }
   }
 }
