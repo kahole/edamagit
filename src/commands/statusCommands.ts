@@ -157,10 +157,10 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     HEAD,
     stashes,
     log,
-    commitCache, // TODO: remove commit cache
+    commitCache,
     workingTreeChanges,
     indexChanges,
-    mergeChanges: undefined,
+    mergeChanges: [],
     untrackedFiles,
     latestGitError: repository.magitState?.latestGitError
   };

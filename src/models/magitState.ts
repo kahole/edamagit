@@ -8,7 +8,7 @@ export interface MagitState {
   readonly HEAD?: MagitBranch;
   readonly workingTreeChanges: MagitChange[];
   readonly indexChanges: MagitChange[];
-  readonly mergeChanges?: MagitChange[]; // Remove question mark?
+  readonly mergeChanges: MagitChange[];
   readonly untrackedFiles: MagitChange[];
   readonly stashes: Stash[];
   readonly log: Commit[];

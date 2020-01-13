@@ -1,4 +1,4 @@
-import * as Constants from "../common/constants";
+import * as Constants from '../common/constants';
 import { MagitState } from '../models/magitState';
 import { ChangeSectionView } from './changes/changesSectionView';
 import { Section } from './general/sectionHeader';
@@ -9,17 +9,16 @@ import { BranchHeaderView } from './branches/branchHeaderView';
 import { TextView } from './general/textView';
 import { LineBreakView } from './general/lineBreakView';
 import { Uri, EventEmitter } from 'vscode';
-import { RemoteBranchHeaderView } from "./branches/remoteBranchHeaderView";
+import { RemoteBranchHeaderView } from './branches/remoteBranchHeaderView';
 
 export default class MagitStatusView extends DocumentView {
 
-  static UriPath: string = "status.magit";
+  static UriPath: string = 'status.magit';
 
-  // TODO: rebasing
+  // TODO: rebasing and rebasing
   //      repository.state.rebaseCommit
 
-  // TODO: merging
-  //     use 
+  //     use
   //     repository.state.mergeChanges
   //     in the same way as the other changes i guess
 
@@ -31,18 +30,18 @@ export default class MagitStatusView extends DocumentView {
     }
 
     if (magitState.HEAD?.commit) {
-      this.addSubview(new BranchHeaderView("Head", magitState.HEAD));
+      this.addSubview(new BranchHeaderView('Head', magitState.HEAD));
 
       if (magitState.HEAD.upstream) {
-        this.addSubview(new RemoteBranchHeaderView("Upstream/Merge/rebase", magitState.HEAD.upstream));
+        this.addSubview(new RemoteBranchHeaderView('Upstream/Merge/rebase', magitState.HEAD.upstream));
       }
 
       if (magitState.HEAD.pushRemote) {
-        this.addSubview(new RemoteBranchHeaderView("Push", magitState.HEAD.pushRemote));
+        this.addSubview(new RemoteBranchHeaderView('Push', magitState.HEAD.pushRemote));
       }
 
     } else {
-      this.addSubview(new TextView("In the beginning there was darkness"));
+      this.addSubview(new TextView('In the beginning there was darkness'));
     }
 
     this.addSubview(new LineBreakView());
@@ -65,7 +64,8 @@ export default class MagitStatusView extends DocumentView {
 
     if (magitState.HEAD?.ahead || magitState.HEAD?.behind) {
 
-      // TODO: umerged into section
+      // TODO: these dont get data yet in statusCommands.ts
+      // umerged into section
       // and Unpulled from
       if (magitState.HEAD?.commitsAhead) {
         this.addSubview(new CommitSectionView(Section.UnmergedInto, magitState.HEAD.commitsAhead));
