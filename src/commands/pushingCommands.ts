@@ -75,9 +75,11 @@ async function pushSetPushRemote({ repository, ...rest }: MenuState) {
 
   const ref = repository.magitState?.HEAD?.name;
 
-  await repository.setConfig(`branch.${ref}.pushRemote`, chosenRemote);
-
-  return pushToPushRemote({ repository, ...rest });
+  if (chosenRemote && ref) {
+    await repository.setConfig(`branch.${ref}.pushRemote`, chosenRemote);
+    repository.magitState!.HEAD!.pushRemote = { name: ref, remote: chosenRemote };
+    return pushToPushRemote({ repository, ...rest });
+  }
 }
 
 async function pushUpstream() {
