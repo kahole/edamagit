@@ -15,7 +15,7 @@ export default class MagitStatusView extends DocumentView {
 
   static UriPath: string = 'status.magit';
 
-  // TODO: rebasing and rebasing
+  // TODO: rebasing and merging
   //      repository.state.rebaseCommit
 
   //     use

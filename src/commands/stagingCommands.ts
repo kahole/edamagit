@@ -55,7 +55,7 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
     const chosenFile = await QuickMenuUtil.showMenu(files);
 
     if (chosenFile) {
-      return repository._repository.add([chosenFile.meta], { update: false });
+      return repository._repository.add([chosenFile], { update: false });
     }
   }
 }
@@ -101,7 +101,7 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
     const chosenFile = await QuickMenuUtil.showMenu<Uri>(files);
 
     if (chosenFile) {
-      const args = ['reset', '--', chosenFile.meta.fsPath];
+      const args = ['reset', '--', chosenFile.fsPath];
       return gitRun(repository, args);
     }
   }

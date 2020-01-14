@@ -15,4 +15,8 @@ export default class GitTextUtils {
       .split(/\n(?=^@@.*@@.*$)/gm)
       .map(hunkText => ({ diff: hunkText, diffHeader, uri }));
   }
+
+  public static shortHash(hash?: string) {
+    return hash ? hash.slice(0, 7) : '';
+  }
 }

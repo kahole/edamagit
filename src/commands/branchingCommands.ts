@@ -1,10 +1,12 @@
-import { window } from 'vscode';
+import { window, commands } from 'vscode';
 import { Menu, MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
-import { Ref, GitErrorCodes } from '../typings/git';
+import { Ref, GitErrorCodes, RefType } from '../typings/git';
 import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
+import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
+import GitTextUtils from '../utils/gitTextUtils';
 
 const branchingMenu = {
   title: 'Branching',
@@ -26,7 +28,6 @@ const branchingMenu = {
 };
 
 export async function branching(repository: MagitRepository, currentView: DocumentView) {
-  // commands.executeCommand('setContext', 'magit.branching', true);
   return MenuUtil.showMenu(branchingMenu, { repository, currentView });
 }
 
@@ -35,7 +36,7 @@ async function checkout(menuState: MenuState) {
 }
 
 async function checkoutLocal(menuState: MenuState) {
-  return _checkout(menuState, menuState.repository.state.refs);
+  return _checkout(menuState, menuState.repository.state.refs.filter(r => r.type !== RefType.RemoteHead));
 }
 
 async function checkoutNewBranch(menuState: MenuState) {
@@ -128,7 +129,12 @@ async function resetBranch({ repository, currentView }: MenuState) {
 
 async function _checkout({ repository, currentView }: MenuState, refs: Ref[]) {
 
-  const ref = await window.showQuickPick(refs.map(r => r.name!), { placeHolder: 'Checkout' });
+  // const ref = await window.showQuickPick(refs.map(r => r.name!), { placeHolder: 'Checkout' });
+
+  const refsMenu: QuickItem<string>[] = refs
+    .map(r => ({ label: r.name!, description: GitTextUtils.shortHash(r.commit), meta: r.name! }));
+
+  const ref = await QuickMenuUtil.showMenu(refsMenu);
 
   if (ref) {
     return repository.checkout(ref);
@@ -137,17 +143,22 @@ async function _checkout({ repository, currentView }: MenuState, refs: Ref[]) {
 
 async function _createBranch({ repository, currentView }: MenuState, checkout: boolean) {
 
-  const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Create and checkout branch starting at' });
+  // MINOR: can use command
+  return commands.executeCommand('git.branchFrom');
 
-  if (ref) {
-    const newBranchName = await window.showInputBox({ prompt: 'Name for new branch' });
+  // or custom implementation:
 
-    if (newBranchName && newBranchName.length > 0) {
+  // const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Create and checkout branch starting at' });
 
-      return repository.createBranch(newBranchName, checkout, ref);
+  // if (ref) {
+  //   const newBranchName = await window.showInputBox({ prompt: 'Name for new branch' });
 
-    } else {
-      window.showErrorMessage('No name given for new branch');
-    }
-  }
+  //   if (newBranchName && newBranchName.length > 0) {
+
+  //     return repository.createBranch(newBranchName, checkout, ref);
+
+  //   } else {
+  //     window.showErrorMessage('No name given for new branch');
+  //   }
+  // }
 }

@@ -6,7 +6,7 @@ export interface QuickItem<T> extends QuickPickItem {
 
 export class QuickMenuUtil {
 
-  static showMenu<T>(quickItems: QuickItem<T>[]): Promise<QuickItem<T>> {
+  static showMenu<T>(quickItems: QuickItem<T>[]): Promise<T> {
 
     return new Promise((resolve, reject) => {
 
@@ -18,7 +18,7 @@ export class QuickMenuUtil {
 
         if (_quickPick.activeItems.length > 0) {
           const chosenItem = _quickPick.activeItems[0];
-          resolve(chosenItem);
+          resolve(chosenItem.meta);
           _quickPick.dispose();
           eventListenerDisposable.dispose();
         }

@@ -68,7 +68,7 @@ async function pushSetUpstream({ repository, currentView }: MenuState) {
   const refs: QuickItem<string>[] = repository.state.refs
     .map(r => ({ label: r.name!, meta: r.name! }));
 
-  let chosenRemote = (await QuickMenuUtil.showMenu(refs)).meta;
+  let chosenRemote = await QuickMenuUtil.showMenu(refs);
 
 
   // Freeform
