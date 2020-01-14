@@ -6,6 +6,7 @@ import { MenuItem } from '../menu/menuItem';
 import { MenuUtil, MenuState } from '../menu/menu';
 import { Remote } from '../typings/git';
 import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
+import GitTextUtils from '../utils/gitTextUtils';
 
 export async function pushing(repository: MagitRepository, currentView: DocumentView) {
 
@@ -50,26 +51,21 @@ export async function pushing(repository: MagitRepository, currentView: Document
 //        handleError somehow
 
 
-async function pushToPushRemote() {
+async function pushToPushRemote({ repository }: MenuState) {
 
+  const pushRemote = repository.magitState?.HEAD?.pushRemote;
+  const ref = repository.magitState?.HEAD?.name;
+
+  if (pushRemote) {
+    repository.push(pushRemote.remote, ref);
+  }
 }
 
-async function pushSetPushRemote() {
+async function pushSetPushRemote({ repository, ...rest }: MenuState) {
+  const refs: QuickItem<string>[] = repository.state.remotes
+    .map(r => ({ label: r.name, description: r.pushUrl, meta: r.name }));
 
-}
-
-async function pushUpstream() {
-  // This is probably correct
-  return commands.executeCommand('git.push');
-}
-
-async function pushSetUpstream({ repository, currentView }: MenuState) {
-
-  const refs: QuickItem<string>[] = repository.state.refs
-    .map(r => ({ label: r.name!, meta: r.name! }));
-
-  let chosenRemote = await QuickMenuUtil.showMenu(refs);
-
+  const chosenRemote = await QuickMenuUtil.showMenu(refs);
 
   // Freeform
   //  OR: if no match, use the freeform input as a new upstream
@@ -77,7 +73,35 @@ async function pushSetUpstream({ repository, currentView }: MenuState) {
   // chosenRemote = await window.showInputBox({ prompt: '' });
   // }
 
-  // TODO: fix and clean up
+  const ref = repository.magitState?.HEAD?.name;
+
+  await repository.setConfig(`branch.${ref}.pushRemote`, chosenRemote);
+
+  return pushToPushRemote({ repository, ...rest });
+}
+
+async function pushUpstream() {
+  // This is probably correct
+  return commands.executeCommand('git.push');
+}
+
+async function pushSetUpstream({ repository }: MenuState) {
+
+  const refs: QuickItem<string>[] = repository.state.refs
+    .map(r => ({ label: r.name!, description: GitTextUtils.shortHash(r.commit), meta: r.name! }));
+
+  let chosenRemote = await QuickMenuUtil.showMenu(refs);
+
+  // Freeform
+  //  OR: if no match, use the freeform input as a new upstream
+  // if (chosenRemote === undefined) {
+  // chosenRemote = await window.showInputBox({ prompt: '' });
+  // }
+
+  // TODO: push, setUpstream all in one call?
+  // repository.push(remote, branch, setUpstream=true)
+  // Does it set merge also?
+  // also: clean up..
 
   const ref = repository.magitState?.HEAD?.name;
 
