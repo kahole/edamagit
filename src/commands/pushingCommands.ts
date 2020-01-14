@@ -81,7 +81,6 @@ async function pushSetPushRemote({ repository, ...rest }: MenuState) {
 }
 
 async function pushUpstream() {
-  // This is probably correct
   return commands.executeCommand('git.push');
 }
 

@@ -28,21 +28,17 @@ export class CommandPrimer {
             MagitUtils.magitStatusAndUpdate(repository, currentView);
           }
         } catch (error) {
-
-          // TODO: dynamically decide between the two error displays
-          //  use type of error to decide?
-          // error instanceof GitError
-
-          // This needs to be cleared somehow as well?
-          // Maybe it gets removed once it is rendered. So next render will not have it?
-          // e.g top:  GitError! Your local changes to the following files would be overwritten by checkout
-          repository.magitState!.latestGitError = error.stderr ?? error.message;
-
-          // This error type, too heavy for most errors?
-          //   statusBar message might be better
-          //   but then custom, shorter messages are needed
-
-          window.showErrorMessage(error.stderr ?? error.message);
+          if (error.gitErrorCode) {
+            // This needs to be cleared somehow as well?
+            // Maybe it gets removed once it is rendered. So next render will not have it?
+            // e.g:  GitError! Your local changes to the following files would be overwritten by checkout
+            repository.magitState!.latestGitError = error.stderr ?? error.message;
+          } else {
+            // This error type, too heavy for most errors?
+            //   statusBar message might be better
+            //   but then custom, shorter messages are needed
+            window.showErrorMessage(error.stderr ?? error.message);
+          }
         }
       }
     };
