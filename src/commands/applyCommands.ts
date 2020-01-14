@@ -1,9 +1,21 @@
+import { window } from 'vscode';
+import { MagitRepository } from '../models/magitRepository';
+import { CommitItemView } from '../views/commits/commitSectionView';
+import { DocumentView } from '../views/general/documentView';
+import { gitRun } from '../utils/gitRawRunner';
+import { StashItemView } from '../views/stashes/stashSectionView';
 
+export async function magitApplyEntityAtPoint(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
-// a - Apply at point
+  const selectedView = currentView.click(window.activeTextEditor!.selection.active);
 
-// to quickly apply a stash or something else (commit?)
+  if (selectedView instanceof CommitItemView) {
 
+  } else if (selectedView instanceof StashItemView) {
 
-// Apply stash
-// git stash apply --index ${stash.index}
+    const stash = (selectedView as StashItemView).stash;
+
+    const args = ['stash', 'apply', '--index', stash.index.toString()];
+    return gitRun(repository, args);
+  }
+}

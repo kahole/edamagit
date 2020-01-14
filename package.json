@@ -25,6 +25,10 @@
         "title": "Magit Visit-at-point"
       },
       {
+        "command": "extension.magit-apply-at-point",
+        "title": "Magit Apply-at-point"
+      },
+      {
         "command": "extension.magit-commit",
         "title": "Magit Commit"
       },
@@ -69,6 +73,10 @@
         },
         {
           "command": "extension.magit-visit-at-point",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "extension.magit-apply-at-point",
           "when": "editorLangId == magit"
         },
         {
@@ -144,6 +152,11 @@
       {
         "command": "extension.magit-visit-at-point",
         "key": "enter",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "extension.magit-apply-at-point",
+        "key": "a",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
