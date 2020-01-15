@@ -16,7 +16,11 @@ export default class GitTextUtils {
       .map(hunkText => ({ diff: hunkText, diffHeader, uri }));
   }
 
-  public static shortHash(hash?: string) {
+  public static shortHash(hash?: string): string {
     return hash ? hash.slice(0, 7) : '';
+  }
+
+  public static shortCommitMessage(commitMessage?: string): string {
+    return commitMessage ? commitMessage.split('\n')[0] : '';
   }
 }

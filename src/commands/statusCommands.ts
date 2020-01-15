@@ -144,9 +144,11 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   if (HEAD?.commit) {
     HEAD.commitDetails = commitCache[HEAD.commit];
-
-    const remote = await repository.getConfig(`branch.${HEAD.name}.pushRemote`);
-    HEAD.pushRemote = { remote, name: HEAD!.name! };
+    // MINOR: clean up?
+    try {
+      const remote = await repository.getConfig(`branch.${HEAD.name}.pushRemote`);
+      HEAD.pushRemote = { remote, name: HEAD!.name! };
+    } catch { }
   }
 
   repository.magitState = {

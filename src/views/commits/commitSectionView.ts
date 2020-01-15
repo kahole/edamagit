@@ -22,6 +22,6 @@ export class CommitItemView extends TextView {
 
   constructor(public commit: Commit) {
     super();
-    this.textContent = `${GitTextUtils.shortHash(commit.hash)} ${commit.message.split('\n')[0]}`;
+    this.textContent = `${GitTextUtils.shortHash(commit.hash)} ${GitTextUtils.shortCommitMessage(commit.message)}`;
   }
 }

@@ -33,7 +33,7 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
             }
           });
           if (statusViewOpen) {
-            magitStatus(true);
+            // magitStatus(true);
           }
         }));
   }
