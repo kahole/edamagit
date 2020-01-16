@@ -109,8 +109,7 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
 
 export async function magitUnstageAll(repository: MagitRepository, currentView: DocumentView): Promise<void> {
 
-  try {
-    await MagitUtils.confirmAction('Unstage all changes?');
-    return commands.executeCommand('git.unstageAll');
-  } catch { }
+    if (await MagitUtils.confirmAction('Unstage all changes?')) {
+      return commands.executeCommand('git.unstageAll');
+    }
 }

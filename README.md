@@ -8,6 +8,11 @@
 ## Auto refresh
   - FileChangeEvent
 
+## Highlighter
+- hunk @@ blabla @@ line needs to be highlighted a bit
+    > can this be done with syntax?
+- branch names
+
 ## DIFF view
   - can use VSCODE diff command to show diff for a file? or something
 

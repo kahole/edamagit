@@ -55,8 +55,8 @@ export default class MagitUtils {
     const confirmed = await window.showInputBox({ prompt: `${prompt} (${yesNo})` });
     if ((hardConfirm && confirmed?.toLowerCase() === 'yes') || (!hardConfirm && confirmed?.toLowerCase().charAt(0) === 'y')) {
       return true;
-    } else {
-      throw new Error('Action not confirmed');
     }
+    window.setStatusBarMessage('Abort');
+    return false;
   }
 }

@@ -106,17 +106,19 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
   const workingTreeChanges_NoUntracked = repository.state.workingTreeChanges
     .filter(c => {
       if (c.status === Status.UNTRACKED) {
-        untrackedFiles.push(c);
+        const magitChange: MagitChange = c;
+        magitChange.relativePath = FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri);
+        untrackedFiles.push(magitChange);
         return false;
-      } else {
-        return true;
       }
+      return true;
     });
 
   const workingTreeChangesTasks = Promise.all(workingTreeChanges_NoUntracked
     .map(async change => {
       const diff = await repository.diffWithHEAD(change.uri.path);
       const magitChange: MagitChange = change;
+      magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
       magitChange.hunks = GitTextUtils.diffToHunks(diff, change.uri);
       return magitChange;
     }));
@@ -125,6 +127,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     .map(async change => {
       const diff = await repository.diffIndexWithHEAD(change.uri.path);
       const magitChange: MagitChange = change;
+      magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
       magitChange.hunks = GitTextUtils.diffToHunks(diff, change.uri);
       return magitChange;
     }));

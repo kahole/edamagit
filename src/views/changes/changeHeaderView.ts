@@ -7,7 +7,7 @@ export class ChangeHeaderView extends TextView {
   constructor(private change: MagitChange) {
     super();
     const statusLabel = mapFileStatusToLabel(this.change.status);
-    this.textContent = `${statusLabel ? statusLabel + ' ' : ''}${this.change.uri.path}`;
+    this.textContent = `${statusLabel ? statusLabel + '   ' : ''}${this.change.relativePath}`;
   }
 
   onClicked() { return undefined; }

@@ -19,6 +19,7 @@ import { pulling } from './commands/pullingCommands';
 import { stashing } from './commands/stashingCommands';
 import { DocumentView } from './views/general/documentView';
 import { magitApplyEntityAtPoint } from './commands/applyCommands';
+import { magitDiscardAtPoint } from './commands/discardCommands';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
@@ -58,6 +59,8 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-commit', CommandPrimer.primeRepoAndView(magitCommit)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-visit-at-point', CommandPrimer.primeRepoAndView(magitVisitAtPoint, false)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-apply-at-point', CommandPrimer.primeRepoAndView(magitApplyEntityAtPoint)));
+  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-discard-at-point', CommandPrimer.primeRepoAndView(magitDiscardAtPoint)));
+
   context.subscriptions.push(commands.registerCommand('extension.magit-help', magitHelp));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-pulling', CommandPrimer.primeRepoAndView(pulling)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-pushing', CommandPrimer.primeRepoAndView(pushing)));

@@ -94,10 +94,9 @@ async function deleteBranch({ repository, currentView }: MenuState) {
       await repository.deleteBranch(ref, false);
     } catch (error) {
       if (error.gitErrorCode === GitErrorCodes.BranchNotFullyMerged) {
-        try {
-          await MagitUtils.confirmAction(`Delete unmerged branch ${ref}?`);
+        if (await MagitUtils.confirmAction(`Delete unmerged branch ${ref}?`)) {
           return repository.deleteBranch(ref, true);
-        } catch { }
+        }
       }
     }
   }
@@ -115,10 +114,9 @@ async function resetBranch({ repository, currentView }: MenuState) {
 
       if (MagitUtils.magitAnythingModified(repository)) {
 
-        try {
-          await MagitUtils.confirmAction(`Uncommitted changes will be lost. Proceed?`);
+        if(await MagitUtils.confirmAction(`Uncommitted changes will be lost. Proceed?`)) {
           return repository._repository.reset(resetToRef, true);
-        } catch { }
+        }
       }
     } else {
       const args = ['update-ref', `refs/heads/${ref}`, `refs/heads/${resetToRef}`];

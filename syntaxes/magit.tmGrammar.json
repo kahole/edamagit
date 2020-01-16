@@ -13,6 +13,12 @@
       "patterns": [
         {
           "include": "#sectionHeader"
+        },
+        {
+          "include": "#modified"
+        },
+        {
+          "include": "#high"
         }
       ]
     },
@@ -20,7 +26,15 @@
       "match": "Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits|Unmerged into|Unpulled from|GitError!",
       "name": "markup.bold keyword.section.header.magit"
     },
-    "diff": {
+    "modified": {
+      "match": "^modified   .*$",
+      "name": "markup.bold string"
+    },
+    "high": {
+      "match": "^@@.*@@.*$",
+      "name": "markup.inline.raw"
+    },
+    "diff": { 
       "begin": "(?=^@@)",
       "end": "^$",
       "patterns": [
