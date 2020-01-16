@@ -17,8 +17,6 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
 
     this._subscriptions = vscode.Disposable.from(
       vscode.workspace.onDidCloseTextDocument(
-        // TODO: this is some fucking bullshit
-        //  how tf can i check if a view is open or not then?
         doc => {
           if (doc.uri.scheme === Constants.MagitUriScheme) {
             views.delete(doc.uri.toString());
@@ -26,22 +24,16 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
         }),
       vscode.workspace.onDidSaveTextDocument(
         doc => {
-          let statusViewOpen = false;
-          views.forEach((view) => {
-            if (view instanceof MagitStatusView) {
-              statusViewOpen = true;
+          for (let visibleEditor of vscode.window.visibleTextEditors) {
+            if (visibleEditor.document.uri.scheme == Constants.MagitUriScheme) {
+              return magitStatus(true);
             }
-          });
-          if (statusViewOpen) {
-            // magitStatus(true);
           }
         }));
   }
 
   dispose() {
     this._subscriptions.dispose();
-    // this._documents.clear();
-    // this._editorDecoration.dispose();
     this.viewUpdatedEmitter.dispose();
   }
 
