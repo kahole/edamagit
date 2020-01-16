@@ -16,9 +16,6 @@
         },
         {
           "include": "#modified"
-        },
-        {
-          "include": "#high"
         }
       ]
     },
@@ -29,10 +26,6 @@
     "modified": {
       "match": "^modified   .*$",
       "name": "markup.bold string"
-    },
-    "high": {
-      "match": "^@@.*@@.*$",
-      "name": "markup.inline.raw"
     },
     "diff": { 
       "begin": "(?=^@@)",

@@ -9,6 +9,7 @@ import { views } from '../extension';
 import { StashItemView } from '../views/stashes/stashSectionView';
 import { StashDetailView } from '../views/stashDetailView';
 import { ChangeView } from '../views/changes/changeView';
+import { MagitCommit } from '../models/magitCommit';
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 
@@ -22,14 +23,11 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
 
   } else if (selectedView instanceof CommitItemView) {
 
-    const commit = (selectedView as CommitItemView).commit;
+    const commit: MagitCommit = (selectedView as CommitItemView).commit;
 
     const result = await gitRun(repository, ['show', commit.hash]);
 
-    console.log(result.stdout);
-
-    // TODO: gitTextUtils.something
-    //  then pack into some model
+    commit.diff = result.stdout;
 
     const uri = CommitDetailView.encodeLocation(commit.hash);
 
@@ -40,7 +38,7 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
   } else if (selectedView instanceof StashItemView) {
 
     const stash = (selectedView as StashItemView).stash;
-    const uri = StashDetailView.encodeLocation(stash);
+    const uri = StashDetailView.encodeLocation(repository, stash);
 
     views.set(uri.toString(), new StashDetailView(uri, stash));
     workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.One));

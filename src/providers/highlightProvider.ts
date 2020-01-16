@@ -12,7 +12,7 @@ export default class HighlightProvider implements vscode.DocumentHighlightProvid
     const currentView = views.get(document.uri.toString());
     if (currentView) {
       const clickedView = currentView.click(position);
-      if (clickedView) {
+      if (clickedView?.isHighlightable) {
         highlights.push(new vscode.DocumentHighlight(clickedView.range, vscode.DocumentHighlightKind.Text));
       }
     }

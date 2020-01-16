@@ -3,6 +3,7 @@ import { Uri } from 'vscode';
 import * as Constants from '../common/constants';
 import { TextView } from './general/textView';
 import { Stash } from '../common/gitApiExtensions';
+import { MagitRepository } from '../models/magitRepository';
 
 export class StashDetailView extends DocumentView {
 
@@ -15,7 +16,7 @@ export class StashDetailView extends DocumentView {
     this.addSubview(new TextView(stash.description));
   }
 
-  static encodeLocation(stash: Stash): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${StashDetailView.UriPath}?${stash.index}`);
+  static encodeLocation(repository: MagitRepository, stash: Stash): Uri {
+    return Uri.parse(`${Constants.MagitUriScheme}:${StashDetailView.UriPath}?${repository.rootUri.path}#stash@{${stash.index}}`);
   }
 }

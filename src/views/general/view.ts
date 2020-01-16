@@ -5,6 +5,7 @@ export abstract class View {
   subViews: View[] = [];
   range: Range = new Range(0, 0, 0, 0);
   isFoldable: boolean = false;
+  isHighlightable: boolean = true;
 
   onClicked(): View | undefined { return this; }
 

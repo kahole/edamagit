@@ -1,3 +1,5 @@
-// TODO: magitCommit model
+import { Commit } from "../typings/git";
 
-// commit detail model
+export interface MagitCommit extends Commit {
+  diff?: string;
+}
