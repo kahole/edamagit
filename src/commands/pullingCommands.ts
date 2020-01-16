@@ -1,8 +1,9 @@
 import { MagitRepository } from '../models/magitRepository';
 import { DocumentView } from '../views/general/documentView';
 import { MenuItem } from '../menu/menuItem';
-import { MenuUtil } from '../menu/menu';
+import { MenuUtil, MenuState } from '../menu/menu';
 import { commands } from 'vscode';
+import { gitRun } from '../utils/gitRawRunner';
 
 export async function pulling(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
@@ -23,13 +24,20 @@ export async function pulling(repository: MagitRepository, currentView: Document
   return MenuUtil.showMenu({ title: 'Pulling', commands: pullingMenuItems }, { repository, currentView });
 }
 
-function pullFromPushRemote() {
-
+function pullFromPushRemote({ repository }: MenuState) {
+  const pushRemote = repository.magitState?.HEAD?.pushRemote;
+  if (pushRemote) {
+    const args = ['pull', pushRemote.remote, pushRemote.name];
+    return gitRun(repository, args);
+  }
 }
 
-function pullFromUpstream() {
-  // TODO: this pulls every branch by default!
-  return commands.executeCommand('git.pull');
+function pullFromUpstream({ repository }: MenuState) {
+  // MINOR: does this fetch every branch?
+  //   if not it can be used
+  //        return commands.executeCommand('git.pull');  
+  const args = ['pull'];
+  return gitRun(repository, args);
 }
 
 function pullFromElsewhere() {

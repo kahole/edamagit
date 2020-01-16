@@ -77,4 +77,5 @@ export function activate(context: ExtensionContext) {
 }
 
 export function deactivate() {
+  // clean up? views, repositories etc??
 }
