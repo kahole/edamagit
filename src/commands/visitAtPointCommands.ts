@@ -8,12 +8,19 @@ import { CommitDetailView } from '../views/commitDetailView';
 import { views } from '../extension';
 import { StashItemView } from '../views/stashes/stashSectionView';
 import { StashDetailView } from '../views/stashDetailView';
+import { ChangeView } from '../views/changes/changeView';
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 
   const selectedView = currentView.click(window.activeTextEditor!.selection.active);
 
-  if (selectedView instanceof CommitItemView) {
+
+  if (selectedView instanceof ChangeView) {
+
+    const change = (selectedView as ChangeView).change;
+    workspace.openTextDocument(change.uri).then(doc => window.showTextDocument(doc, ViewColumn.One));
+
+  } else if (selectedView instanceof CommitItemView) {
 
     const commit = (selectedView as CommitItemView).commit;
 
