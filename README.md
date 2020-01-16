@@ -5,6 +5,12 @@
 
 ## USE CONST, not let
 
+
+## wow, inject repo and stuff?
+@command('git.refresh', { repository: true })
+
+https://github.com/microsoft/vscode/blob/master/extensions/git/src/commands.ts
+
 ## Auto refresh
   - FileChangeEvent
 
