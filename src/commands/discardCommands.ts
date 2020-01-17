@@ -16,6 +16,12 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
 
   if (selectedView instanceof HunkView) {
 
+    // TODO: make this a general function in apply, and have a reverse flag arg!
+    // Apply reverse!
+
+    // const args = ['apply', '--reverse'];
+    // return gitRun(repository, args, { input: patch });
+
   } else if (selectedView instanceof ChangeView) {
 
   } else if (selectedView instanceof ChangeSectionView) {
@@ -28,7 +34,7 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
           return commands.executeCommand('git.cleanAllUntracked');
         }
 
-      break;
+        break;
       case Section.Unstaged:
         if (await MagitUtils.confirmAction('Discard all unstaged changes?')) {
           return commands.executeCommand('git.cleanAllTracked');
