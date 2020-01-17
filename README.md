@@ -5,6 +5,8 @@
 
 ## USE CONST, not let
 
+## TODO: fold management. What should be folded at the start? VSCODE remembers folds in the same doc at least..
+
 
 ## wow, inject repo and stuff?
 @command('git.refresh', { repository: true })

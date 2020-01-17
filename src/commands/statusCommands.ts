@@ -57,19 +57,21 @@ export async function magitStatus(preserveFocus = false) {
 
         internalMagitStatus(magitRepo)
           .then(() => {
-            // TODO: Pull out, make general
+            // MINOR: Pull out, make general? for every place this is done
             const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
             views.set(uri.toString(), new MagitStatusView(uri, magitRepo.magitState!));
             workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside, preserveFocus))
               // TODO: test only
               // THIS WORKS
               // Decorations should be added by the views in the view hierarchy?
+              // yes as we go down the hierarchy make these decorations at exactly the points wanted
+              // and should be pretty simple to collect them and set the editors decorations
+              // needs something super smart.. https://github.com/Microsoft/vscode/issues/585
               .then(e => e.setDecorations(
                 window.createTextEditorDecorationType({
                   color: 'rgba(100,200,100,0.5)',
                   border: '0.1px solid grey'
-                })
-                , [new Range(0, 7, 0, 13)]));
+                }), [new Range(0, 7, 0, 13)]));
           });
       } else {
         // Prompt to create repo
