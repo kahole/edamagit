@@ -11,6 +11,8 @@ import { Status } from '../typings/git';
 import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
 import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
+import { apply } from './applyCommands';
+import GitTextUtils from '../utils/gitTextUtils';
 
 export async function magitStage(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
@@ -19,10 +21,13 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
   if (selectedView instanceof HunkView) {
     const changeHunk = (selectedView as HunkView).changeHunk;
 
-    const patch = changeHunk.diffHeader + changeHunk.diff + '\n';
+    if (changeHunk.section !== Section.Staged) {
+      const patch = GitTextUtils.changeHunkToPatch(changeHunk);
+      return apply(repository, patch, true);
 
-    const args = ['apply', '--cached'];
-    return gitRun(repository, args, { input: patch });
+    } else {
+      window.setStatusBarMessage('Already staged');
+    }
 
   } else if (selectedView instanceof ChangeView) {
 
@@ -77,11 +82,12 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
   if (selectedView instanceof HunkView) {
     const changeHunk = (selectedView as HunkView).changeHunk;
 
-    const patch = changeHunk.diffHeader + changeHunk.diff + '\n';
-
-    const args = ['apply', '--cached', '--reverse'];
-    return gitRun(repository, args, { input: patch });
-
+    if (changeHunk.section === Section.Staged) {
+      const patch = GitTextUtils.changeHunkToPatch(changeHunk);
+      return apply(repository, patch, true, true);
+    } else {
+      window.setStatusBarMessage('Already unstaged');
+    }
   } else if (selectedView instanceof ChangeView) {
 
     const args = ['reset', '--', selectedView.change.uri.fsPath];
@@ -109,7 +115,7 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
 
 export async function magitUnstageAll(repository: MagitRepository, currentView: DocumentView): Promise<void> {
 
-    if (await MagitUtils.confirmAction('Unstage all changes?')) {
-      return commands.executeCommand('git.unstageAll');
-    }
+  if (await MagitUtils.confirmAction('Unstage all changes?')) {
+    return commands.executeCommand('git.unstageAll');
+  }
 }

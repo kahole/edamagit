@@ -9,6 +9,8 @@ import { HunkView } from '../views/changes/HunkView';
 import MagitUtils from '../utils/magitUtils';
 import { ChangeSectionView } from '../views/changes/changesSectionView';
 import { Section } from '../views/general/sectionHeader';
+import GitTextUtils from '../utils/gitTextUtils';
+import { apply } from './applyCommands';
 
 export async function magitDiscardAtPoint(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
@@ -16,13 +18,20 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
 
   if (selectedView instanceof HunkView) {
 
-    // TODO: make this a general function in apply, and have a reverse flag arg!
-    // Apply reverse!
+    const changeHunk = (selectedView as HunkView).changeHunk;
+    const patch = GitTextUtils.changeHunkToPatch(changeHunk);
 
-    // const args = ['apply', '--reverse'];
-    // return gitRun(repository, args, { input: patch });
+    if (changeHunk.section === Section.Unstaged) {
+      return apply(repository, patch, false, true);
+
+    } else if (changeHunk.section === Section.Staged) {
+      await apply(repository, patch, true, true);
+      return apply(repository, patch, false, true);
+    }
 
   } else if (selectedView instanceof ChangeView) {
+
+    // TODO: discard whole change
 
   } else if (selectedView instanceof ChangeSectionView) {
     const section = (selectedView as ChangeSectionView).section;

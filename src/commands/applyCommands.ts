@@ -19,3 +19,18 @@ export async function magitApplyEntityAtPoint(repository: MagitRepository, curre
     return gitRun(repository, args);
   }
 }
+
+export async function apply(repository: MagitRepository, patch: string, index = false, reverse = false) {
+
+  const args = ['apply'];
+
+  if (index) {
+    args.push('--cached');
+  }
+
+  if (reverse) {
+    args.push('--reverse');
+  }
+
+  return gitRun(repository, args, { input: patch });
+}

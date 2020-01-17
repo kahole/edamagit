@@ -8,6 +8,7 @@ import MagitUtils from '../utils/magitUtils';
 import MagitStatusView from '../views/magitStatusView';
 import { Status, Commit } from '../typings/git';
 import { MagitBranch } from '../models/magitBranch';
+import { Section } from '../views/general/sectionHeader';
 
 export async function magitRefresh() {
   return;
@@ -121,7 +122,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       const diff = await repository.diffWithHEAD(change.uri.path);
       const magitChange: MagitChange = change;
       magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
-      magitChange.hunks = GitTextUtils.diffToHunks(diff, change.uri);
+      magitChange.hunks = GitTextUtils.diffToHunks(diff, change.uri, Section.Unstaged);
       return magitChange;
     }));
 
@@ -130,7 +131,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       const diff = await repository.diffIndexWithHEAD(change.uri.path);
       const magitChange: MagitChange = change;
       magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
-      magitChange.hunks = GitTextUtils.diffToHunks(diff, change.uri);
+      magitChange.hunks = GitTextUtils.diffToHunks(diff, change.uri, Section.Staged);
       return magitChange;
     }));
 
