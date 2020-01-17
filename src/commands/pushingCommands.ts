@@ -57,7 +57,7 @@ async function pushToPushRemote({ repository }: MenuState) {
   const ref = repository.magitState?.HEAD?.name;
 
   if (pushRemote) {
-    repository.push(pushRemote.remote, ref);
+    return repository.push(pushRemote.remote, ref);
   }
 }
 
