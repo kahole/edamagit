@@ -15,7 +15,6 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
 
   const selectedView = currentView.click(window.activeTextEditor!.selection.active);
 
-
   if (selectedView instanceof ChangeView) {
 
     const change = (selectedView as ChangeView).change;

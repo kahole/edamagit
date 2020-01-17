@@ -41,7 +41,7 @@ export async function magitStatus(preserveFocus = false) {
             // Open and focus magit status view
             // Run update
             await MagitUtils.magitStatusAndUpdate(repository, view);
-            workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside, preserveFocus));
+            workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false }));
             console.log('Update existing view');
             return;
           }
@@ -60,7 +60,7 @@ export async function magitStatus(preserveFocus = false) {
             // MINOR: Pull out, make general? for every place this is done
             const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
             views.set(uri.toString(), new MagitStatusView(uri, magitRepo.magitState!));
-            workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.Beside, preserveFocus))
+            workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false }))
               // TODO: test only
               // THIS WORKS
               // Decorations should be added by the views in the view hierarchy?
