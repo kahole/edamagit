@@ -15,13 +15,6 @@ export default class MagitStatusView extends DocumentView {
 
   static UriPath: string = 'status.magit';
 
-  // TODO: rebasing and merging
-  //      repository.state.rebaseCommit
-
-  //     use
-  //     repository.state.mergeChanges
-  //     in the same way as the other changes i guess
-
   constructor(uri: Uri, magitState: MagitState) {
     super(uri);
 
@@ -40,6 +33,14 @@ export default class MagitStatusView extends DocumentView {
         this.addSubview(new RemoteBranchHeaderView('Push', magitState.HEAD.pushRemote));
       }
 
+      // TODO: Rebasing status
+      //      repository.state.rebaseCommit
+
+      // TODO: Merging status
+      if (magitState.mergeChanges.length > 0) {
+        // this.addSubview(new BranchHeaderView('Merging', { name: magitState.mergeBase }));
+      }
+
     } else {
       this.addSubview(new TextView('In the beginning there was darkness'));
     }
@@ -55,7 +56,7 @@ export default class MagitStatusView extends DocumentView {
     }
 
     if (magitState.indexChanges.length > 0) {
-      this.addSubview(new ChangeSectionView(Section.Staged, magitState.indexChanges));
+      this.addSubview(new ChangeSectionView(Section.Staged, [...magitState.mergeChanges, ...magitState.indexChanges]));
     }
 
     if (magitState.stashes?.length > 0) {

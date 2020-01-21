@@ -135,15 +135,27 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       return magitChange;
     }));
 
-  const [commits, workingTreeChanges, indexChanges, stashes, log] =
+  const mergeChangesTasks = Promise.all(repository.state.mergeChanges
+    .map(async change => {
+      // TODO: dont need full diff? only file names or what?
+      const diff = await repository.diffWithHEAD(change.uri.path);
+      const magitChange: MagitChange = change;
+      magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
+      magitChange.hunks = GitTextUtils.diffToHunks(diff, change.uri, Section.Staged);
+      return magitChange;
+    }));
+
+  const [commits, workingTreeChanges, indexChanges, mergeChanges, stashes, log] =
     await Promise.all([
       commitTasks,
       workingTreeChangesTasks,
       indexChangesTasks,
+      mergeChangesTasks,
       stashTask,
       logTask
     ]);
 
+  // MINOR: remove commitCache?
   const commitCache: { [id: string]: Commit; } = commits.reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});
 
   const HEAD = repository.state.HEAD as MagitBranch | undefined;
@@ -157,14 +169,18 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     } catch { }
   }
 
+  // TODO: state ONchange might be interesting
+  // repository.state.onDidChange
+  // Use instead of onDidSave document? might be better to let vscode handle it, instead of doubling up potentially
+  // just need to re-render without calling repository.status()
+
   repository.magitState = {
     HEAD,
     stashes,
     log,
-    commitCache,
     workingTreeChanges,
     indexChanges,
-    mergeChanges: [],
+    mergeChanges,
     untrackedFiles,
     latestGitError: repository.magitState?.latestGitError
   };

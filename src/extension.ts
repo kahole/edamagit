@@ -1,4 +1,4 @@
-import { workspace, extensions, commands, ExtensionContext, Disposable, languages, window, EventEmitter, Uri } from 'vscode';
+import { workspace, extensions, commands, ExtensionContext, Disposable, languages } from 'vscode';
 import ContentProvider from './providers/contentProvider';
 import { GitExtension, API } from './typings/git';
 import { pushing } from './commands/pushingCommands';

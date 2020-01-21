@@ -231,6 +231,11 @@
         "command": "workbench.action.closeActiveEditor",
         "key": "ctrl+c ctrl+k",
         "when": "editorTextFocus && editorLangId == git-commit"
+      },
+      {
+        "command": "workbench.action.closeActiveEditor",
+        "key": "q",
+        "when": "editorTextFocus && editorLangId == magit"
       }
     ]
   },
