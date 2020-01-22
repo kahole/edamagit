@@ -22,10 +22,11 @@ export async function fetching(repository: MagitRepository, currentView: Documen
 
   fetchingMenuItems.push({ label: 'a', description: 'all remotes', action: fetchAll });
 
-
-  // TODO: fill out rest of fetching menu
-
-  fetchingMenuItems.push({ label: 'o', description: 'another branch', action: () => { } });
+  // TODO: more fetching options exist in magit
+  // - another branch
+  // - explicit refspec
+  // - submodules
+  //fetchingMenuItems.push({ label: 'o', description: 'another branch', action: () => { } });
 
   return MenuUtil.showMenu({ title: 'Fetching', commands: fetchingMenuItems }, { repository, currentView });
 }
@@ -35,7 +36,7 @@ async function fetchFromPushRemote() {
 }
 
 async function fetchFromUpstream() {
-
+  return commands.executeCommand('git.fetch');
 }
 
 async function fetchFromElsewhere() {
