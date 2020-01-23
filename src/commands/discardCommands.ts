@@ -47,11 +47,13 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
     }
 
   } else if (selectedView instanceof ChangeSectionView) {
-    const section = (selectedView as ChangeSectionView).section;
+    const changeSectionView = (selectedView as ChangeSectionView);
+    const section = changeSectionView.section;
 
     switch (section) {
       case Section.Untracked:
         // MINOr: list which files will be trashed
+        // accessed by looping changeSectionView.changes
         if (await MagitUtils.confirmAction('Trash all untracked files?')) {
           return commands.executeCommand('git.cleanAllUntracked');
         }
