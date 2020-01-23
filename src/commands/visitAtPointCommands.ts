@@ -10,6 +10,7 @@ import { StashItemView } from '../views/stashes/stashSectionView';
 import { StashDetailView } from '../views/stashDetailView';
 import { ChangeView } from '../views/changes/changeView';
 import { MagitCommit } from '../models/magitCommit';
+import { HunkView } from '../views/changes/HunkView';
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 
@@ -19,6 +20,11 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
 
     const change = (selectedView as ChangeView).change;
     workspace.openTextDocument(change.uri).then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn()));
+  }
+  else if (selectedView instanceof HunkView) {
+
+    const changeHunk = (selectedView as HunkView).changeHunk;
+
 
   } else if (selectedView instanceof CommitItemView) {
 

@@ -33,8 +33,17 @@ export default class MagitStatusView extends DocumentView {
         this.addSubview(new RemoteBranchHeaderView('Push', magitState.HEAD.pushRemote));
       }
 
-      // TODO: Rebasing status
-      //      repository.state.rebaseCommit
+      // TODO: Rebasing status. Instead of upstream or how does that go? same for merge
+      if (magitState.rebaseCommit) {
+        // magitState.rebaseCommit.message
+
+        // example:
+        // Rebasing {branch} onto {branch}
+        // join somethind
+        // done something
+        // onto something
+
+      }
 
       // TODO: Merging status
       if (magitState.mergeChanges.length > 0) {

@@ -5,8 +5,27 @@
 
 ## USE CONST, not let
 
-## TODO: fold management. What should be folded at the start? VSCODE remembers folds in the same doc at least..
+## TODO: fold management. What should be folded at the start?
+https://github.com/microsoft/vscode/issues/37682
+editor.fold
+editor.foldRecursively
+```
+editor.fold with arguments (1, 'up', arrayOfLinesToFold). arrayOfLinesToFold consists of the first line of each range to fold.
+```
 
+- start by folding all? then unfold the relevant bits? or opposite
+
+FIRST TIME OPENING: default fold levels
+
+- All of head i guess
+- Changes should show first level: modified, new file, etc
+- Stash zero levels
+- Recent commits zero levels
+
+## TODO: Eie egen modell
+Burde ikke extende git modellen kanskje.
+Burde heller lene meg på helt egen model
+med mappere i mellom?
 
 ## wow, inject repo and stuff?
 @command('git.refresh', { repository: true })

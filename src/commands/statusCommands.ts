@@ -186,6 +186,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     indexChanges,
     mergeChanges,
     untrackedFiles,
+    rebaseCommit: repository.state.rebaseCommit,
     latestGitError: repository.magitState?.latestGitError
   };
 }

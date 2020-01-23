@@ -50,6 +50,9 @@ export default class MagitUtils {
 
   public static async confirmAction(prompt: string, hardConfirm: boolean = false) {
 
+    // TODO: show dialog box? sometimes?
+    // window.showInformationMessage("really?", { modal: true });
+
     // MINOR: maybe just have the vscode confirm Enter, cancel Escape prompt?
     const yesNo = hardConfirm ? 'yes or no' : 'y or n';
     const confirmed = await window.showInputBox({ prompt: `${prompt} (${yesNo})` });
