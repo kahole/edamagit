@@ -8,6 +8,7 @@ import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
 import { views } from '../extension';
 import { MenuUtil, MenuState } from '../menu/menu';
+import MagitUtils from '../utils/magitUtils';
 
 
 const commitMenu = {
@@ -47,7 +48,7 @@ async function commit(repository: MagitRepository, commitArgs: string[]) {
     const uri = MagitStagedView.encodeLocation(repository.rootUri.path);
     views.set(uri.toString(), new MagitStagedView(uri, repository.magitState!));
     stagedEditor = workspace.openTextDocument(uri)
-      .then(doc => window.showTextDocument(doc, ViewColumn.One, true));
+      .then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn(), true));
 
     // code is in path on Linux and Windows
     // can use just "code" if it is in path. Vscode command: "Shell Command: Install code in path"
@@ -68,10 +69,10 @@ async function commit(repository: MagitRepository, commitArgs: string[]) {
     window.setStatusBarMessage(`Commit canceled.`, Constants.StatusMessageDisplayTimeout);
   } finally {
 
-    // Sadly, the only way to close an editor nor currently in focus:
+    // Sadly, the only way to close an editor not currently in focus:
     stagedEditor?.then(editor => {
       // if (editor.document.) {
-      window.showTextDocument(editor.document, ViewColumn.One)
+      window.showTextDocument(editor.document, MagitUtils.oppositeActiveViewColumn())
         .then(() => commands.executeCommand('workbench.action.closeActiveEditor'));
       // }
     });

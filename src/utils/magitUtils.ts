@@ -1,6 +1,6 @@
 import { MagitRepository } from '../models/magitRepository';
 import { magitRepositories, views } from '../extension';
-import { TextEditor, TextDocument, window } from 'vscode';
+import { TextEditor, TextDocument, window, ViewColumn } from 'vscode';
 import { internalMagitStatus } from '../commands/statusCommands';
 import { DocumentView } from '../views/general/documentView';
 import MagitStatusView from '../views/magitStatusView';
@@ -58,5 +58,12 @@ export default class MagitUtils {
     }
     window.setStatusBarMessage('Abort');
     return false;
+  }
+
+  public static oppositeActiveViewColumn(): ViewColumn {
+    if (window.activeTextEditor?.viewColumn ?? 0 > ViewColumn.One) {
+      return ViewColumn.One;
+    }
+    return ViewColumn.Two;
   }
 }

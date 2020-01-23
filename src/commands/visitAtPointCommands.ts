@@ -18,7 +18,7 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
   if (selectedView instanceof ChangeView) {
 
     const change = (selectedView as ChangeView).change;
-    workspace.openTextDocument(change.uri).then(doc => window.showTextDocument(doc, ViewColumn.One));
+    workspace.openTextDocument(change.uri).then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn()));
 
   } else if (selectedView instanceof CommitItemView) {
 
@@ -32,7 +32,7 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
 
     views.set(uri.toString(), new CommitDetailView(uri, commit));
 
-    workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.One));
+    workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn()));
 
   } else if (selectedView instanceof StashItemView) {
 
@@ -40,6 +40,6 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
     const uri = StashDetailView.encodeLocation(repository, stash);
 
     views.set(uri.toString(), new StashDetailView(uri, stash));
-    workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, ViewColumn.One));
+    workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn()));
   }
 }
