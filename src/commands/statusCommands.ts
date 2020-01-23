@@ -110,6 +110,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     .filter(c => {
       if (c.status === Status.UNTRACKED) {
         const magitChange: MagitChange = c;
+        magitChange.section = Section.Untracked;
         magitChange.relativePath = FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri);
         untrackedFiles.push(magitChange);
         return false;
@@ -121,6 +122,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     .map(async change => {
       const diff = await repository.diffWithHEAD(change.uri.path);
       const magitChange: MagitChange = change;
+      magitChange.section = Section.Unstaged;
       magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
       magitChange.hunks = GitTextUtils.diffToHunks(diff, change.uri, Section.Unstaged);
       return magitChange;
@@ -130,6 +132,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     .map(async change => {
       const diff = await repository.diffIndexWithHEAD(change.uri.path);
       const magitChange: MagitChange = change;
+      magitChange.section = Section.Staged;
       magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
       magitChange.hunks = GitTextUtils.diffToHunks(diff, change.uri, Section.Staged);
       return magitChange;
@@ -140,6 +143,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       // TODO: dont need full diff? only file names or what?
       const diff = await repository.diffWithHEAD(change.uri.path);
       const magitChange: MagitChange = change;
+      magitChange.section = Section.Staged;
       magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
       magitChange.hunks = GitTextUtils.diffToHunks(diff, change.uri, Section.Staged);
       return magitChange;

@@ -1,4 +1,4 @@
-import { window, commands } from 'vscode';
+import { window, commands, workspace } from 'vscode';
 import { MagitRepository } from '../models/magitRepository';
 import { CommitItemView } from '../views/commits/commitSectionView';
 import { DocumentView } from '../views/general/documentView';
@@ -11,6 +11,8 @@ import { ChangeSectionView } from '../views/changes/changesSectionView';
 import { Section } from '../views/general/sectionHeader';
 import GitTextUtils from '../utils/gitTextUtils';
 import { apply } from './applyCommands';
+import { Status } from '../typings/git';
+import { MagitChangeHunk } from '../models/magitChangeHunk';
 
 export async function magitDiscardAtPoint(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
@@ -19,19 +21,30 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
   if (selectedView instanceof HunkView) {
 
     const changeHunk = (selectedView as HunkView).changeHunk;
-    const patch = GitTextUtils.changeHunkToPatch(changeHunk);
 
-    if (changeHunk.section === Section.Unstaged) {
-      return apply(repository, patch, false, true);
-
-    } else if (changeHunk.section === Section.Staged) {
-      await apply(repository, patch, true, true);
-      return apply(repository, patch, false, true);
-    }
+    return discardHunk(repository, changeHunk);
 
   } else if (selectedView instanceof ChangeView) {
 
-    // TODO: discard whole change
+    const change = (selectedView as ChangeView).change;
+
+    if (change.status === Status.UNTRACKED) {
+
+      if (await MagitUtils.confirmAction(`Trash ${change.relativePath}?`)) {
+        return workspace.fs.delete(change.uri, { recursive: true, useTrash: false });
+      }
+
+    } else {
+
+      const sectionLabel = change.section === Section.Staged ? 'staged' : 'unstaged';
+
+      if (await MagitUtils.confirmAction(`Discard ${sectionLabel} ${change.relativePath}?`)) {
+
+        const discardTasks = change.hunks?.map(hunk => discardHunk(repository, hunk));
+
+        return discardTasks ? Promise.all(discardTasks) : undefined;
+      }
+    }
 
   } else if (selectedView instanceof ChangeSectionView) {
     const section = (selectedView as ChangeSectionView).section;
@@ -73,4 +86,19 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
       return gitRun(repository, args);
     }
   }
+}
+
+async function discardHunk(repository: MagitRepository, changeHunk: MagitChangeHunk): Promise<any> {
+
+  const patch = GitTextUtils.changeHunkToPatch(changeHunk);
+
+  if (changeHunk.section === Section.Unstaged) {
+    return apply(repository, patch, false, true);
+
+  } else if (changeHunk.section === Section.Staged) {
+    await apply(repository, patch, true, true);
+    return apply(repository, patch, false, true);
+  }
+
+  return Promise.reject();
 }
