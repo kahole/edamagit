@@ -52,7 +52,7 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
 
     switch (section) {
       case Section.Untracked:
-        // MINOr: list which files will be trashed
+        // MINOR: list which files will be trashed
         // accessed by looping changeSectionView.changes
         if (await MagitUtils.confirmAction('Trash all untracked files?')) {
           return commands.executeCommand('git.cleanAllUntracked');
@@ -66,7 +66,7 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
         break;
       case Section.Staged:
         if (await MagitUtils.confirmAction('Discard all staged changes?')) {
-          // TODO: implement discarding of staged changes
+          return repository._repository.reset('HEAD', false);
         }
         break;
       default:
