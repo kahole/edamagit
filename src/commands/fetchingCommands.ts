@@ -45,7 +45,7 @@ async function fetchFromUpstream() {
 async function fetchFromElsewhere({ repository }: MenuState) {
 
   const refs: QuickItem<string>[] = repository.state.refs
-    .map(r => ({ label: r.name!, meta: 'blabla'));
+    .map(r => ({ label: r.name!, meta: 'blabla' }));
 
   const chosenRemote = await QuickMenuUtil.showMenu(refs);
 
