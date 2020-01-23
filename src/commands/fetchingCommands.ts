@@ -1,8 +1,10 @@
-import { commands } from 'vscode';
+import { commands, window } from 'vscode';
 import { MenuItem } from '../menu/menuItem';
 import { MagitRepository } from '../models/magitRepository';
 import { DocumentView } from '../views/general/documentView';
-import { MenuUtil } from '../menu/menu';
+import { MenuUtil, MenuState } from '../menu/menu';
+import { gitRun } from '../utils/gitRawRunner';
+import { QuickMenuUtil, QuickItem } from '../menu/quickMenu';
 
 export async function fetching(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
@@ -22,8 +24,9 @@ export async function fetching(repository: MagitRepository, currentView: Documen
 
   fetchingMenuItems.push({ label: 'a', description: 'all remotes', action: fetchAll });
 
-  // TODO: more fetching options exist in magit
-  // - another branch
+  fetchingMenuItems.push({ label: 'o', description: 'another branch', action: fetchAnotherBranch });
+
+  // MINOR: more fetching options exist in magit
   // - explicit refspec
   // - submodules
   //fetchingMenuItems.push({ label: 'o', description: 'another branch', action: () => { } });
@@ -39,10 +42,31 @@ async function fetchFromUpstream() {
   return commands.executeCommand('git.fetch');
 }
 
-async function fetchFromElsewhere() {
+async function fetchFromElsewhere({ repository }: MenuState) {
 
+  const refs: QuickItem<string>[] = repository.state.refs
+    .map(r => ({ label: r.name!, meta: 'blabla'));
+
+  const chosenRemote = await QuickMenuUtil.showMenu(refs);
+
+  if (chosenRemote) {
+    const args = ['fetch', chosenRemote];
+    return gitRun(repository, args);
+  }
 }
 
 async function fetchAll() {
   return commands.executeCommand('git.fetchAll');
+}
+
+async function fetchAnotherBranch({ repository }: MenuState) {
+  const remote = await window.showInputBox({ prompt: 'Fetch from remote or url' });
+  if (remote) {
+    const branch = await window.showInputBox({ prompt: 'Fetch branch' });
+    if (branch) {
+      const args = ['fetch', remote, `refs/heads/${branch}`];
+      return gitRun(repository, args);
+
+    }
+  }
 }
