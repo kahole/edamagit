@@ -24,9 +24,6 @@ export class CommandPrimer {
 
         try {
           await command(repository, currentView);
-          if (needsUpdate) {
-            MagitUtils.magitStatusAndUpdate(repository, currentView);
-          }
         } catch (error) {
           if (error.gitErrorCode) {
             // This needs to be cleared somehow as well?
@@ -38,6 +35,10 @@ export class CommandPrimer {
             //   statusBar message might be better
             //   but then custom, shorter messages are needed
             window.showErrorMessage(error.stderr ?? error.message);
+          }
+        } finally {
+          if (needsUpdate) {
+            MagitUtils.magitStatusAndUpdate(repository, currentView);
           }
         }
       }

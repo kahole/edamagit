@@ -19,14 +19,14 @@ export default class MagitStatusView extends DocumentView {
     super(uri);
 
     if (magitState.latestGitError) {
-      this.addSubview(new TextView(magitState.latestGitError));
+      this.addSubview(new TextView(`GitError! ${magitState.latestGitError}`));
     }
 
     if (magitState.HEAD?.commit) {
       this.addSubview(new BranchHeaderView('Head', magitState.HEAD));
 
       if (magitState.HEAD.upstream) {
-        this.addSubview(new RemoteBranchHeaderView('Upstream/Merge/rebase', magitState.HEAD.upstream));
+        this.addSubview(new RemoteBranchHeaderView('Upstream', magitState.HEAD.upstream));
       }
 
       if (magitState.HEAD.pushRemote) {
@@ -42,7 +42,6 @@ export default class MagitStatusView extends DocumentView {
         // join somethind
         // done something
         // onto something
-
       }
 
       // TODO: Merging status

@@ -1,4 +1,13 @@
 
+## TODO: Bug tracker
+
+Bug#2
+After commiting, sometimes another magit status window is next to the existing one.
+Related: focus should be returned to magit status window after committing
+
+
+## TODO: push and merge etc should fold under Head at the top
+
 ## General
   - Go for MVP consisting of 90% of common use
   - plus all convenient features that come along with it
