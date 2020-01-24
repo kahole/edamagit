@@ -22,7 +22,7 @@ export async function magitApplyEntityAtPoint(repository: MagitRepository, curre
 
 export async function apply(repository: MagitRepository, patch: string, index = false, reverse = false) {
 
-  const args = ['apply'];
+  const args = ['apply', '--ignore-space-change'];
 
   if (index) {
     args.push('--cached');

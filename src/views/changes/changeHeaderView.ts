@@ -29,6 +29,14 @@ function mapFileStatusToLabel(status: Status): string {
       return 'copied';
     case Status.UNTRACKED:
       return '';
+    case Status.ADDED_BY_US:
+    case Status.ADDED_BY_THEM:
+    case Status.DELETED_BY_US:
+    case Status.DELETED_BY_THEM:
+    case Status.BOTH_ADDED:
+    case Status.BOTH_DELETED:
+    case Status.BOTH_MODIFIED:
+      return 'unmerged';
     default:
       return '';
   }

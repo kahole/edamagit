@@ -5,9 +5,7 @@ import MagitUtils from '../utils/magitUtils';
 import FilePathUtils from '../utils/filePathUtils';
 import { ChangeSectionView } from '../views/changes/changesSectionView';
 import { Section } from '../views/general/sectionHeader';
-import { TextEncoder } from 'util';
 import { MagitRepository } from '../models/magitRepository';
-import { Status } from '../typings/git';
 import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
 import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
@@ -35,7 +33,7 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
 
     return repository
       ._repository
-      .add([magitChange.uri], { update: false });
+      .add([magitChange.uri], { update: magitChange.section === Section.Unstaged });
 
   } else if (selectedView instanceof ChangeSectionView) {
     const section = (selectedView as ChangeSectionView).section;

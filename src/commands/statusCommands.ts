@@ -1,5 +1,5 @@
 import { MagitChange } from '../models/magitChange';
-import { workspace, window, ViewColumn, Range, commands } from 'vscode';
+import { workspace, window, ViewColumn, Range, commands, Uri } from 'vscode';
 import { gitApi, magitRepositories, views } from '../extension';
 import FilePathUtils from '../utils/filePathUtils';
 import GitTextUtils from '../utils/gitTextUtils';
@@ -9,6 +9,7 @@ import MagitStatusView from '../views/magitStatusView';
 import { Status, Commit } from '../typings/git';
 import { MagitBranch } from '../models/magitBranch';
 import { Section } from '../views/general/sectionHeader';
+import { gitRun } from '../utils/gitRawRunner';
 
 export async function magitRefresh() {
   return;
@@ -62,7 +63,7 @@ export async function magitStatus(preserveFocus = false) {
             const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
             views.set(uri.toString(), new MagitStatusView(uri, magitRepo.magitState!));
             workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false }))
-              // TODO: test only
+              // TODO: branch highlighting...
               // THIS WORKS
               // Decorations should be added by the views in the view hierarchy?
               // yes as we go down the hierarchy make these decorations at exactly the points wanted
@@ -100,10 +101,6 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     interestingCommits.push(repository.state.HEAD?.commit);
   }
 
-  const commitTasks = Promise.all(
-    interestingCommits
-      .map(c => repository.getCommit(c)));
-
   const untrackedFiles: MagitChange[] = [];
 
   const workingTreeChanges_NoUntracked = repository.state.workingTreeChanges
@@ -140,7 +137,6 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   const mergeChangesTasks = Promise.all(repository.state.mergeChanges
     .map(async change => {
-      // TODO: dont need full diff? only file names or what?
       const diff = await repository.diffWithHEAD(change.uri.path);
       const magitChange: MagitChange = change;
       magitChange.section = Section.Staged;
@@ -148,6 +144,15 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       magitChange.hunks = GitTextUtils.diffToHunks(diff, change.uri, Section.Staged);
       return magitChange;
     }));
+
+  const mergeHeadPath = Uri.parse(repository.rootUri + '/.git/' + 'MERGE_HEAD');
+  const mergeMsgPath = Uri.parse(repository.rootUri + '/.git/' + 'MERGE_MSG');
+  const mergeHeadTask = workspace.fs.readFile(mergeHeadPath);
+  const mergeMsgTask = workspace.fs.readFile(mergeMsgPath);
+
+  const commitTasks = Promise.all(
+    interestingCommits
+      .map(c => repository.getCommit(c)));
 
   const [commits, workingTreeChanges, indexChanges, mergeChanges, stashes, log] =
     await Promise.all([
@@ -159,13 +164,24 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       logTask
     ]);
 
-  // MINOR: remove commitCache?
-  const commitCache: { [id: string]: Commit; } = commits.reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});
+  let mergingState;
+  try {
+    mergingState =
+      await Promise.all([
+        mergeHeadTask,
+        mergeMsgTask
+      ])
+        .then(([mergeHeadFile, mergeMsgFile]) => (GitTextUtils.mergeMessageToMergeStatus(mergeHeadFile.toString(), mergeMsgFile.toString())));
+  } catch (error) {
+
+  }
+
+  const commitMap: { [id: string]: Commit; } = commits.reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});
 
   const HEAD = repository.state.HEAD as MagitBranch | undefined;
 
   if (HEAD?.commit) {
-    HEAD.commitDetails = commitCache[HEAD.commit];
+    HEAD.commitDetails = commitMap[HEAD.commit];
     // MINOR: clean up?
     try {
       const remote = await repository.getConfig(`branch.${HEAD.name}.pushRemote`);
@@ -173,7 +189,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     } catch { }
   }
 
-  // TODO: state ONchange might be interesting
+  // MINOR: state ONchange might be interesting
   // repository.state.onDidChange
   // Use instead of onDidSave document? might be better to let vscode handle it, instead of doubling up potentially
   // just need to re-render without calling repository.status()

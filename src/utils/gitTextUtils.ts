@@ -2,6 +2,7 @@ import { MagitChangeHunk } from '../models/magitChangeHunk';
 import { FinalLineBreakRegex } from '../common/constants';
 import { Uri } from 'vscode';
 import { Section } from '../views/general/sectionHeader';
+import { MagitMergingState } from '../models/magitMergingState';
 
 export default class GitTextUtils {
 
@@ -15,6 +16,17 @@ export default class GitTextUtils {
       .slice(hunksStart)
       .split(/\n(?=^@@.*@@.*$)/gm)
       .map(hunkText => ({ diff: hunkText, diffHeader, uri, section }));
+  }
+
+  public static mergeMessageToMergeStatus(mergeHashes: string, mergeMessage: string): MagitMergingState {
+
+    // Merge branches 'en' and 'to'
+    // Merge branch 'blanch' into fix / someBug
+
+    const branches = mergeMessage.match(/'(.*)'/g);
+    // const branches = mergeMessage.match(/^Merge branch(es)? (?:.*'(.*)'.*)$/m);
+
+    return { commits: [], mergingBranches: [] };
   }
 
   public static shortHash(hash?: string): string {

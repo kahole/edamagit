@@ -68,14 +68,14 @@ async function commit(repository: MagitRepository, commitArgs: string[]) {
   } catch (e) {
     window.setStatusBarMessage(`Commit canceled.`, Constants.StatusMessageDisplayTimeout);
   } finally {
-
-    // Sadly, the only way to close an editor not currently in focus:
-    stagedEditor?.then(editor => {
-      // if (editor.document.) {
-      window.showTextDocument(editor.document, MagitUtils.oppositeActiveViewColumn())
-        .then(() => commands.executeCommand('workbench.action.closeActiveEditor'));
-      // }
-    });
+    // MINOR: seriously hacky. Too bad about editor.hide() and editor.show()
+    const editor = await stagedEditor;
+    if (editor) {
+      const stagedEditorViewColumn = MagitUtils.oppositeActiveViewColumn();
+      await window.showTextDocument(editor.document, stagedEditorViewColumn);
+      await commands.executeCommand('workbench.action.closeActiveEditor');
+      return commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === ViewColumn.One ? 'Right' : 'Left'}`);
+    }
   }
 }
 

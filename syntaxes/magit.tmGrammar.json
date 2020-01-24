@@ -24,12 +24,12 @@
       "name": "markup.bold keyword.section.header.magit"
     },
     "modified": {
-      "match": "^(modified|new file|deleted|renamed|copied)   .*$",
+      "match": "^(modified|new file|deleted|renamed|copied|unmerged)   .*$",
       "name": "markup.bold source.magit"
     },
     "diff": { 
       "begin": "(?=^@@)",
-      "end": "(?=^(modified|new file|deleted|renamed|copied))|(?=$^)",
+      "end": "(?=^(modified|new file|deleted|renamed|copied|unmerged))|(?=$^)",
       "patterns": [
         {
           "include": "source.diff"

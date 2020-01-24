@@ -3,8 +3,6 @@ import { SpawnOptions } from '../common/gitApiExtensions';
 
 export async function gitRun(repository: MagitRepository, args: string[], spawnOptions?: SpawnOptions) {
 
-  // wrap the functions more?, and return something useful
-
   // Protects against projected change in internal api in vscode git extension
   if (repository._repository.repository.run) {
     return repository._repository.repository.run(args, spawnOptions);

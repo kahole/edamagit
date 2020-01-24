@@ -9,7 +9,7 @@ import { BranchHeaderView } from './branches/branchHeaderView';
 import { TextView } from './general/textView';
 import { LineBreakView } from './general/lineBreakView';
 import { Uri, EventEmitter } from 'vscode';
-import { RemoteBranchHeaderView } from './branches/remoteBranchHeaderView';
+import { BranchSectionView } from './branches/branchSectionView';
 
 export default class MagitStatusView extends DocumentView {
 
@@ -22,52 +22,39 @@ export default class MagitStatusView extends DocumentView {
       this.addSubview(new TextView(`GitError! ${magitState.latestGitError}`));
     }
 
-    if (magitState.HEAD?.commit) {
-      this.addSubview(new BranchHeaderView('Head', magitState.HEAD));
-
-      if (magitState.HEAD.upstream) {
-        this.addSubview(new RemoteBranchHeaderView('Upstream', magitState.HEAD.upstream));
-      }
-
-      if (magitState.HEAD.pushRemote) {
-        this.addSubview(new RemoteBranchHeaderView('Push', magitState.HEAD.pushRemote));
-      }
-
-      // TODO: Rebasing status. Instead of upstream or how does that go? same for merge
-      if (magitState.rebaseCommit) {
-        // magitState.rebaseCommit.message
-
-        // example:
-        // Rebasing {branch} onto {branch}
-        // join somethind
-        // done something
-        // onto something
-      }
-
-      // TODO: Merging status
-      if (magitState.mergeChanges.length > 0) {
-        // this.addSubview(new BranchHeaderView('Merging', { name: magitState.mergeBase }));
-      }
-
-    } else {
-      this.addSubview(new TextView('In the beginning there was darkness'));
-    }
+    this.addSubview(new BranchSectionView(magitState.HEAD));
 
     this.addSubview(new LineBreakView());
 
-    if (magitState.untrackedFiles.length > 0) {
+    // TODO: Rebasing status. Instead of upstream or how does that go? same for merge
+    if (magitState.rebaseCommit) {
+      // magitState.rebaseCommit.message
+
+      // example:
+      // Rebasing {branch} onto {branch}
+      // join somethind
+      // done something
+      // onto something
+    }
+
+    // TODO: Merging status
+    if (magitState.mergeChanges.length > 0) {
+      // this.addSubview(new BranchHeaderView('Merging', { name: magitState.mergeBase }));
+    }
+
+    if (magitState.untrackedFiles.length) {
       this.addSubview(new ChangeSectionView(Section.Untracked, magitState.untrackedFiles));
     }
 
-    if (magitState.workingTreeChanges.length > 0) {
-      this.addSubview(new ChangeSectionView(Section.Unstaged, magitState.workingTreeChanges));
+    if (magitState.workingTreeChanges.length || magitState.mergeChanges.length) {
+      this.addSubview(new ChangeSectionView(Section.Unstaged, [...magitState.mergeChanges, ...magitState.workingTreeChanges]));
     }
 
-    if (magitState.indexChanges.length > 0) {
-      this.addSubview(new ChangeSectionView(Section.Staged, [...magitState.mergeChanges, ...magitState.indexChanges]));
+    if (magitState.indexChanges.length) {
+      this.addSubview(new ChangeSectionView(Section.Staged, magitState.indexChanges));
     }
 
-    if (magitState.stashes?.length > 0) {
+    if (magitState.stashes?.length) {
       this.addSubview(new StashSectionView(magitState.stashes));
     }
 
