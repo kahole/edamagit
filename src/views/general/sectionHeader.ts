@@ -7,7 +7,8 @@ export enum Section {
   Stashes = 'Stashes',
   RecentCommits = 'Recent commits',
   UnmergedInto = 'Unmerged into',
-  UnpulledFrom = 'Unpulled from'
+  UnpulledFrom = 'Unpulled from',
+  Merging = 'Merging'
 }
 
 export class SectionHeaderView extends TextView {

@@ -3,6 +3,7 @@ import { FinalLineBreakRegex } from '../common/constants';
 import { Uri } from 'vscode';
 import { Section } from '../views/general/sectionHeader';
 import { MagitMergingState } from '../models/magitMergingState';
+import * as Constants from '../common/constants';
 
 export default class GitTextUtils {
 
@@ -18,15 +19,19 @@ export default class GitTextUtils {
       .map(hunkText => ({ diff: hunkText, diffHeader, uri, section }));
   }
 
-  public static mergeMessageToMergeStatus(mergeHashes: string, mergeMessage: string): MagitMergingState {
+  public static mergeMessageToMergeStatus(mergeHashes: string, mergeMessage: string): MagitMergingState | undefined {
 
-    // Merge branches 'en' and 'to'
-    // Merge branch 'blanch' into fix / someBug
+    const mergingBranches = mergeMessage.match(/'(.*?)'/g)
+      ?.map(b => b.slice(1, b.length - 1));
 
-    const branches = mergeMessage.match(/'(.*)'/g);
-    // const branches = mergeMessage.match(/^Merge branch(es)? (?:.*'(.*)'.*)$/m);
+    const commits = mergeHashes
+      .replace(FinalLineBreakRegex, '')
+      .split(Constants.LineSplitterRegex)
+      .map(c => ({ hash: c, message: '', parents: [] }));
 
-    return { commits: [], mergingBranches: [] };
+    if (mergingBranches) {
+      return { commits, mergingBranches };
+    }
   }
 
   public static shortHash(hash?: string): string {

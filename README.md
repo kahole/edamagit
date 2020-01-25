@@ -5,6 +5,10 @@ Bug#2
 After commiting, sometimes another magit status window is next to the existing one.
 - How to reproduce?
 
+Bug#3
+Section model is responsible for too much
+Must fix. Fine for deciding what section something is. But changes and hunks should use another enum, because it isnt one-to-one between them
+
 ## General
   - Go for MVP consisting of 90% of common use
   - plus all convenient features that come along with it

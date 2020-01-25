@@ -10,6 +10,7 @@ import { TextView } from './general/textView';
 import { LineBreakView } from './general/lineBreakView';
 import { Uri, EventEmitter } from 'vscode';
 import { BranchSectionView } from './branches/branchSectionView';
+import { MergingSectionView } from './merging/mergingSectionView';
 
 export default class MagitStatusView extends DocumentView {
 
@@ -38,8 +39,8 @@ export default class MagitStatusView extends DocumentView {
     }
 
     // TODO: Merging status
-    if (magitState.mergeChanges.length > 0) {
-      // this.addSubview(new BranchHeaderView('Merging', { name: magitState.mergeBase }));
+    if (magitState.mergingState) {
+      this.addSubview(new MergingSectionView(magitState.mergingState));
     }
 
     if (magitState.untrackedFiles.length) {

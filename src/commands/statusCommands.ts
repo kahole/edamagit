@@ -164,6 +164,8 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       logTask
     ]);
 
+  // TODO: load details about the merging commits, ONLY if there is a mergingState !
+  // make a nice chain of commands that can be awaited for, like the ones above.
   let mergingState;
   try {
     mergingState =
@@ -172,9 +174,8 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
         mergeMsgTask
       ])
         .then(([mergeHeadFile, mergeMsgFile]) => (GitTextUtils.mergeMessageToMergeStatus(mergeHeadFile.toString(), mergeMsgFile.toString())));
-  } catch (error) {
+  } catch (error) { }
 
-  }
 
   const commitMap: { [id: string]: Commit; } = commits.reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});
 
@@ -203,6 +204,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     mergeChanges,
     untrackedFiles,
     rebaseCommit: repository.state.rebaseCommit,
+    mergingState,
     latestGitError: repository.magitState?.latestGitError
   };
 }
