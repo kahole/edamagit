@@ -64,11 +64,11 @@ export default class MagitStatusView extends DocumentView {
       // Unmerged into MISSING NAME
       // Unpulled from MISSING NAME
 
-      if (magitState.HEAD?.commitsAhead) {
+      if (magitState.HEAD?.commitsAhead?.length) {
         this.addSubview(new CommitSectionView(Section.UnmergedInto, magitState.HEAD.commitsAhead));
       }
 
-      if (magitState.HEAD?.commitsBehind) {
+      if (magitState.HEAD?.commitsBehind?.length) {
         this.addSubview(new CommitSectionView(Section.UnpulledFrom, magitState.HEAD.commitsBehind));
       }
 
