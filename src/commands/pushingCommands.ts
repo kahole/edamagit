@@ -91,28 +91,35 @@ async function pushSetUpstream({ repository }: MenuState) {
   const refs: QuickItem<string>[] = repository.state.refs
     .map(r => ({ label: r.name!, description: GitTextUtils.shortHash(r.commit), meta: r.name! }));
 
-  let chosenRemote = await QuickMenuUtil.showMenu(refs);
+  let chosenRemote;
+  try {
+    chosenRemote = await QuickMenuUtil.showMenu(refs);
+  } catch { }
+
+  const ref = repository.magitState?.HEAD?.name;
 
   // Freeform
   //  OR: if no match, use the freeform input as a new upstream
-  // if (chosenRemote === undefined) {
-  // chosenRemote = await window.showInputBox({ prompt: '' });
-  // }
+  if (!chosenRemote) {
+    chosenRemote = await window.showInputBox({ prompt: `Set of ${ref} upstream to` });
+  }
 
   // TODO: push, setUpstream all in one call?
   // repository.push(remote, branch, setUpstream=true)
   // Does it set merge also?
   // also: clean up..
 
-  const ref = repository.magitState?.HEAD?.name;
+  // return repository.push(chosenRemote, ref, true);
+  if (chosenRemote) {
 
-  await Promise.all([
-    // CLEAN UP THIS SPLIT MESS
-    repository.setConfig(`branch.${ref}.merge`, `refs/heads/${chosenRemote.split('/')[1]}`),
-    repository.setConfig(`branch.${ref}.remote`, chosenRemote.split('/')[0])
-  ]);
+    await Promise.all([
+      // CLEAN UP THIS SPLIT MESS
+      repository.setConfig(`branch.${ref}.merge`, `refs/heads/${chosenRemote.split('/')[1]}`),
+      repository.setConfig(`branch.${ref}.remote`, chosenRemote.split('/')[0])
+    ]);
 
-  return pushUpstream();
+    return pushUpstream();
+  }
 }
 
 async function pushElsewhere() {

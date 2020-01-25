@@ -9,11 +9,10 @@ Bug#3
 Section model is responsible for too much
 Must fix. Fine for deciding what section something is. But changes and hunks should use another enum, because it isnt one-to-one between them
 
+
 ## General
   - Go for MVP consisting of 90% of common use
   - plus all convenient features that come along with it
-
-## USE CONST, not let
 
 ## TODO: fold management. What should be folded at the start?
 https://github.com/microsoft/vscode/issues/37682
@@ -41,14 +40,6 @@ med mappere i mellom?
 @command('git.refresh', { repository: true })
 
 https://github.com/microsoft/vscode/blob/master/extensions/git/src/commands.ts
-
-## Auto refresh
-  - FileChangeEvent
-
-## Highlighter
-- hunk @@ blabla @@ line needs to be highlighted a bit
-    > can this be done with syntax?
-- branch names
 
 ## DIFF view
   - can use VSCODE diff command to show diff for a file? or something

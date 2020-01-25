@@ -174,7 +174,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
         mergeMsgTask
       ])
         .then(([mergeHeadFile, mergeMsgFile]) => (GitTextUtils.mergeMessageToMergeStatus(mergeHeadFile.toString(), mergeMsgFile.toString())));
-  } catch (error) { }
+  } catch { }
 
 
   const commitMap: { [id: string]: Commit; } = commits.reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});

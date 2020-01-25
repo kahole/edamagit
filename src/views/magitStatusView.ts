@@ -38,7 +38,6 @@ export default class MagitStatusView extends DocumentView {
       // onto something
     }
 
-    // TODO: Merging status
     if (magitState.mergingState) {
       this.addSubview(new MergingSectionView(magitState.mergingState));
     }
