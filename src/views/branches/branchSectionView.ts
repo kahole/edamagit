@@ -8,18 +8,25 @@ import { MagitBranch } from '../../models/magitBranch';
 export class BranchSectionView extends View {
   isFoldable = true;
 
+  // TODO: pad title so the branch names line up
+
   constructor(HEAD?: MagitBranch) {
     super();
     if (HEAD?.commit) {
       this.addSubview(new BranchHeaderView('Head', HEAD));
 
       if (HEAD.upstream) {
-        this.addSubview(new RemoteBranchHeaderView('Upstream', HEAD.upstream));
+        this.addSubview(new RemoteBranchHeaderView('Merge', HEAD.upstream));
       }
 
       if (HEAD.pushRemote) {
         this.addSubview(new RemoteBranchHeaderView('Push', HEAD.pushRemote));
       }
+
+      // TODO: tag
+      // if (HEAD.tag) {
+      //   this.addSubview(new RemoteBranchHeaderView('Tag', HEAD.tag));
+      // }
     } else {
       this.addSubview(new TextView('In the beginning there was darkness'));
     }

@@ -9,6 +9,7 @@ export class RemoteBranchHeaderView extends TextView {
     // repository.state.refs INNEHOLDER commit hashen for f.eks refs: [{ name: 'origin/master', commit: 'blabla'}]
     // LOSNING: MagitBranch blir egen model. Ikke noe arv fra noe den git modellen.
     // GitTextUtils.shortCommitMessage(
-    this.textContent = `${name}: ${upstreamRef.remote}/${upstreamRef.name}`;
+    const nameLabel = `${name}:`.padEnd(10);
+    this.textContent = `${nameLabel}${upstreamRef.remote}/${upstreamRef.name}`;
   }
 }

@@ -98,22 +98,17 @@ async function pushSetUpstream({ repository }: MenuState) {
 
   const ref = repository.magitState?.HEAD?.name;
 
+  // TODO: need origin/name_of_this_branch
   // Freeform
   //  OR: if no match, use the freeform input as a new upstream
   if (!chosenRemote) {
     chosenRemote = await window.showInputBox({ prompt: `Set of ${ref} upstream to` });
   }
 
-  // TODO: push, setUpstream all in one call?
-  // repository.push(remote, branch, setUpstream=true)
-  // Does it set merge also?
-  // also: clean up..
-
-  // return repository.push(chosenRemote, ref, true);
   if (chosenRemote) {
 
     await Promise.all([
-      // CLEAN UP THIS SPLIT MESS
+      // MINOR: CLEAN UP THIS SPLIT MESS
       repository.setConfig(`branch.${ref}.merge`, `refs/heads/${chosenRemote.split('/')[1]}`),
       repository.setConfig(`branch.${ref}.remote`, chosenRemote.split('/')[0])
     ]);

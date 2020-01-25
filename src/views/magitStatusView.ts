@@ -27,7 +27,11 @@ export default class MagitStatusView extends DocumentView {
 
     this.addSubview(new LineBreakView());
 
-    // TODO: Rebasing status. Instead of upstream or how does that go? same for merge
+    if (magitState.mergingState) {
+      this.addSubview(new MergingSectionView(magitState.mergingState));
+    }
+
+    // TODO: Rebasing status
     if (magitState.rebaseCommit) {
       // magitState.rebaseCommit.message
 
@@ -36,10 +40,6 @@ export default class MagitStatusView extends DocumentView {
       // join somethind
       // done something
       // onto something
-    }
-
-    if (magitState.mergingState) {
-      this.addSubview(new MergingSectionView(magitState.mergingState));
     }
 
     if (magitState.untrackedFiles.length) {
