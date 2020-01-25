@@ -1,6 +1,4 @@
------------TODO MINOR FUTURE
-
-## TODO: Bug tracker
+## BUGS TODO MINOR FUTURE
 
   Bug#2
   After commiting, sometimes another magit status window is next to the existing one.

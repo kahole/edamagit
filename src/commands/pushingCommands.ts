@@ -67,6 +67,8 @@ async function pushSetPushRemote({ repository, ...rest }: MenuState) {
 
   const chosenRemote = await QuickMenuUtil.showMenu(refs);
 
+  // TODO: possible to have freeform in same quick menu?
+
   // Freeform
   //  OR: if no match, use the freeform input as a new upstream
   // if (chosenRemote === undefined) {
