@@ -1,7 +1,7 @@
 import * as Constants from '../common/constants';
 import { MagitState } from '../models/magitState';
 import { ChangeSectionView } from './changes/changesSectionView';
-import { Section } from './general/sectionHeader';
+import { Section, SectionHeaderView } from './general/sectionHeader';
 import { DocumentView } from './general/documentView';
 import { StashSectionView } from './stashes/stashSectionView';
 import { CommitSectionView } from './commits/commitSectionView';
@@ -60,20 +60,20 @@ export default class MagitStatusView extends DocumentView {
 
     if (magitState.HEAD?.ahead || magitState.HEAD?.behind) {
 
-      // MINOR: missing labels
-      // Unmerged into MISSING NAME
-      // Unpulled from MISSING NAME
-
       if (magitState.HEAD?.commitsAhead?.length) {
-        this.addSubview(new CommitSectionView(Section.UnmergedInto, magitState.HEAD.commitsAhead));
+        this.addSubview(
+          new CommitSectionView(new TextView(`${Section.UnmergedInto} ${magitState.HEAD.upstream?.remote}/${magitState.HEAD.upstream?.name} (${magitState.HEAD?.commitsAhead?.length})`),
+            magitState.HEAD.commitsAhead));
       }
 
       if (magitState.HEAD?.commitsBehind?.length) {
-        this.addSubview(new CommitSectionView(Section.UnpulledFrom, magitState.HEAD.commitsBehind));
+        this.addSubview(
+          new CommitSectionView(new TextView(`${Section.UnpulledFrom} ${magitState.HEAD.upstream?.remote}/${magitState.HEAD.upstream?.name} (${magitState.HEAD?.commitsBehind?.length})`),
+            magitState.HEAD.commitsBehind));
       }
 
     } else if (magitState.log.length > 0) {
-      this.addSubview(new CommitSectionView(Section.RecentCommits, magitState.log));
+      this.addSubview(new CommitSectionView(new SectionHeaderView(Section.RecentCommits), magitState.log));
     }
   }
 

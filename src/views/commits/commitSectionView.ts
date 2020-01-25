@@ -8,10 +8,10 @@ import GitTextUtils from '../../utils/gitTextUtils';
 export class CommitSectionView extends View {
   isFoldable = true;
 
-  constructor(section: Section, commits: Commit[]) {
+  constructor(headerView: View, commits: Commit[]) {
     super();
     this.subViews = [
-      new SectionHeaderView(section),
+      headerView,
       ...commits.map(commit => new CommitItemView(commit)),
       new LineBreakView()
     ];
