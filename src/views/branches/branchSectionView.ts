@@ -8,8 +8,6 @@ import { MagitBranch } from '../../models/magitBranch';
 export class BranchSectionView extends View {
   isFoldable = true;
 
-  // TODO: pad title so the branch names line up
-
   constructor(HEAD?: MagitBranch) {
     super();
     if (HEAD?.commit) {
