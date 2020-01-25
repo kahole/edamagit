@@ -65,7 +65,7 @@ export async function magitStatus(preserveFocus = false) {
             workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false }))
               // TODO: branch highlighting...
               // THIS WORKS
-              // Decorations should be added by the views in the view hierarchy?
+              // Decorations could be added by the views in the view hierarchy?
               // yes as we go down the hierarchy make these decorations at exactly the points wanted
               // and should be pretty simple to collect them and set the editors decorations
               // needs something super smart.. https://github.com/Microsoft/vscode/issues/585
@@ -73,7 +73,7 @@ export async function magitStatus(preserveFocus = false) {
                 window.createTextEditorDecorationType({
                   color: 'rgba(100,200,100,0.5)',
                   border: '0.1px solid grey'
-                }), [new Range(0, 7, 0, 13)]));
+                }), [new Range(0, 11, 0, 17)]));
           });
       } else {
         // Prompt to create repo
@@ -183,6 +183,8 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   if (HEAD?.commit) {
     HEAD.commitDetails = commitMap[HEAD.commit];
+    // Resolve tag at HEAD
+    HEAD.tag = repository.state.refs.find(r => HEAD?.commit === r.commit);
     // MINOR: clean up?
     try {
       const remote = await repository.getConfig(`branch.${HEAD.name}.pushRemote`);

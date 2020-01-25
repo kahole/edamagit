@@ -20,7 +20,7 @@ export default class MagitUtils {
 
     await internalMagitStatus(repository);
 
-    // TODO: Update other kinds of views as well?
+    // TODO: BIG! Update other kinds of views as well?
 
     // Update all open views for a given repository?
 
@@ -50,7 +50,7 @@ export default class MagitUtils {
 
   public static async confirmAction(prompt: string, hardConfirm: boolean = false) {
 
-    // TODO: show dialog box? sometimes?
+    // MINOR: show dialog box? sometimes?
     // window.showInformationMessage("really?", { modal: true });
 
     // MINOR: maybe just have the vscode confirm Enter, cancel Escape prompt?

@@ -88,6 +88,7 @@ async function pushUpstream() {
 
 async function pushSetUpstream({ repository }: MenuState) {
 
+  // TODO: add origin/name_of_this_branch to list of choices?
   const refs: QuickItem<string>[] = repository.state.refs
     .map(r => ({ label: r.name!, description: GitTextUtils.shortHash(r.commit), meta: r.name! }));
 
@@ -98,7 +99,6 @@ async function pushSetUpstream({ repository }: MenuState) {
 
   const ref = repository.magitState?.HEAD?.name;
 
-  // TODO: need origin/name_of_this_branch
   // Freeform
   //  OR: if no match, use the freeform input as a new upstream
   if (!chosenRemote) {

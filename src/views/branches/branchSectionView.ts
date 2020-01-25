@@ -21,10 +21,9 @@ export class BranchSectionView extends View {
         this.addSubview(new RemoteBranchHeaderView('Push', HEAD.pushRemote));
       }
 
-      // TODO: tag
-      // if (HEAD.tag) {
-      //   this.addSubview(new RemoteBranchHeaderView('Tag', HEAD.tag));
-      // }
+      if (HEAD.tag) {
+        this.addSubview(new TextView('Tag: '.padEnd(10) + HEAD.tag.name));
+      }
     } else {
       this.addSubview(new TextView('In the beginning there was darkness'));
     }

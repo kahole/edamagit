@@ -61,6 +61,10 @@ export default class MagitStatusView extends DocumentView {
     if (magitState.HEAD?.ahead || magitState.HEAD?.behind) {
 
       // TODO: these dont get data yet in statusCommands.ts
+
+      //   git rev-list --left-right ${ref}...${upstream}
+      //   git rev-list --left-right ${ref}...${ref}@{u}
+
       // umerged into section
       // and Unpulled from
       if (magitState.HEAD?.commitsAhead) {

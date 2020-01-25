@@ -1,14 +1,16 @@
+-----------TODO MINOR FUTURE
 
 ## TODO: Bug tracker
 
-Bug#2
-After commiting, sometimes another magit status window is next to the existing one.
-- How to reproduce?
+  Bug#2
+  After commiting, sometimes another magit status window is next to the existing one.
+  - How to reproduce?
 
-Bug#3
-Section model is responsible for too much
-Must fix. Fine for deciding what section something is. But changes and hunks should use another enum, because it isnt one-to-one between them
+  Bug#3
+  Section model is responsible for too much
+  Must fix. Fine for deciding what section something is. But changes and hunks should use another enum, because it isnt one-to-one between them
 
+# USE magit $ to track what commands magit use for different operations
 
 ## General
   - Go for MVP consisting of 90% of common use
@@ -31,7 +33,7 @@ FIRST TIME OPENING: default fold levels
 - Stash zero levels
 - Recent commits zero levels
 
-## TODO: Eie egen modell
+## FUTURE: Eie egen modell
 Burde ikke extende git modellen kanskje.
 Burde heller lene meg på helt egen model
 med mappere i mellom?
@@ -49,8 +51,6 @@ https://github.com/microsoft/vscode/blob/master/extensions/git/src/commands.ts
   - Find out how to deal with status views and other views
   - Dispose of stuff when quit workspace etc..
 
-## File menu. Magit activate menu for a file in the repo
-
 ## Main menu
   Alle views i magit støtter hovedmenyen
    Burde være DocumentView som sendes rundt!
@@ -62,48 +62,6 @@ https://github.com/microsoft/vscode/blob/master/extensions/git/src/commands.ts
   - icons
         https://code.visualstudio.com/api/references/icons-in-labels
         e.g $(git-branch)
-
-  - Transient interface:
-     CONFIGURE should be just one action in the list.
-       too much noise otherwise
-       When selected bring up some configure interface i guess.
-
-#### SOLUTION 1:
-```
-    this._quickPick.onDidChangeValue( (e) => {
-      console.log(e);
-      console.log(this._quickPick.value);
-      this._quickPick.value = "";
-      magitCommand();
-    });
-```
-#### SOLUTION 2:
-       her: https://stackoverflow.com/questions/58483907/how-to-add-the-custom-when-clause-in-vs-code
-```
-  commands.executeCommand('setContext', 'magit.branching', true);
-
-{
-  "command": "extension.magit.branching.checkout",
-  "key": "c",
-  "when": "inQuickOpen && magit.branching"
-}
-QuickPick blir da bare en visuell hjelpe-popup!
-      da blir den context-aware begrensinger av kommandoer visuell (til å begynne med i hvertfall)
-   også for å velge branches og switches etc!
-```
-
-  - Helm like branch selector: QuickPick https://code.visualstudio.com/api/references/vscode-api#QuickInput
-
-  - Name stuff: InputBox
-      e.g `window.showInputBox({prompt: "Name of your branch or whatever"});`
-
-## Languages
-  - Custom keybindings for buffer: define a language mode
-  - Syntax
-    - Embedded Diff language mode syntax!
-      language mode "diff"
-    - Highlight branch names dynamically
-       https://code.visualstudio.com/api/references/vscode-api#languages.registerDocumentHighlightProvider
 
 ## Dispose
 
@@ -124,12 +82,13 @@ QuickPick blir da bare en visuell hjelpe-popup!
   - VsVim?
     Maybe.. Is it possible to disable VSVim for certain languages / file extensions / etc?
 
-
 -----
 
 # magit README
 
-Inspired/port by/of Magit https://magit.vc/
+Inspired by (Magit)[https://magit.vc/] for Emacs
+
+------
 
 ## Features
 
@@ -175,18 +134,3 @@ Fixed issue #.
 Added features X, Y, and Z.
 
 -----------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
