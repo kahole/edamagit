@@ -1,5 +1,4 @@
 import { MagitChangeHunk } from '../models/magitChangeHunk';
-import { FinalLineBreakRegex } from '../common/constants';
 import { Uri } from 'vscode';
 import { Section } from '../views/general/sectionHeader';
 import { MagitMergingState } from '../models/magitMergingState';
@@ -13,25 +12,47 @@ export default class GitTextUtils {
     const diffHeader = diff.slice(0, hunksStart);
 
     return diff
-      .replace(FinalLineBreakRegex, '') // removes extra line break at the end
+      .replace(Constants.FinalLineBreakRegex, '') // removes extra line break at the end
       .slice(hunksStart)
       .split(/\n(?=^@@.*@@.*$)/gm)
       .map(hunkText => ({ diff: hunkText, diffHeader, uri, section }));
   }
 
-  public static mergeMessageToMergeStatus(mergeHashes: string, mergeMessage: string): MagitMergingState | undefined {
+  public static parseMergeStatus(mergeHashes: string, mergeMessage: string): MagitMergingState | undefined {
 
     const mergingBranches = mergeMessage.match(/'(.*?)'/g)
       ?.map(b => b.slice(1, b.length - 1));
 
     const commits = mergeHashes
-      .replace(FinalLineBreakRegex, '')
+      .replace(Constants.FinalLineBreakRegex, '')
       .split(Constants.LineSplitterRegex)
       .map(c => ({ hash: c, message: '', parents: [] }));
 
     if (mergingBranches) {
       return { commits, mergingBranches };
     }
+  }
+
+  public static parseRevListLeftRight(revList: string): [string[], string[]] {
+
+    const left: string[] = [], right: string[] = [];
+
+    revList
+      .replace(Constants.FinalLineBreakRegex, '')
+      .split(Constants.LineSplitterRegex)
+      .forEach(line => {
+        switch (line.charAt(0)) {
+          case '<':
+            left.push(line.slice(1));
+            break;
+          case '>':
+            right.push(line.slice(1));
+            break;
+          default:
+            break;
+        }
+      });
+    return [left, right];
   }
 
   public static shortHash(hash?: string): string {

@@ -60,13 +60,10 @@ export default class MagitStatusView extends DocumentView {
 
     if (magitState.HEAD?.ahead || magitState.HEAD?.behind) {
 
-      // TODO: these dont get data yet in statusCommands.ts
+      // MINOR: missing labels
+      // Unmerged into MISSING NAME
+      // Unpulled from MISSING NAME
 
-      //   git rev-list --left-right ${ref}...${upstream}
-      //   git rev-list --left-right ${ref}...${ref}@{u}
-
-      // umerged into section
-      // and Unpulled from
       if (magitState.HEAD?.commitsAhead) {
         this.addSubview(new CommitSectionView(Section.UnmergedInto, magitState.HEAD.commitsAhead));
       }

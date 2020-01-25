@@ -91,14 +91,23 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   await repository.status();
 
+  const interestingCommits: string[] = [];
+
   const stashTask = repository._repository.getStashes();
 
   const logTask = repository.state.HEAD?.commit ? repository.log({ maxEntries: 10 }) : [];
 
-  const interestingCommits: string[] = [];
-
   if (repository.state.HEAD?.commit) {
     interestingCommits.push(repository.state.HEAD?.commit);
+  }
+
+  let commitsAhead: string[] = [], commitsBehind: string[] = [];
+  if (repository.state.HEAD?.ahead || repository.state.HEAD?.behind) {
+    const ref = repository.state.HEAD.name;
+    const args = ['rev-list', '--left-right', `${ref}...${ref}@{u}`];
+    const res = (await gitRun(repository, args)).stdout;
+    [commitsAhead, commitsBehind] = GitTextUtils.parseRevListLeftRight(res);
+    interestingCommits.push(...[...commitsAhead, ...commitsBehind]);
   }
 
   const untrackedFiles: MagitChange[] = [];
@@ -173,9 +182,8 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
         mergeHeadTask,
         mergeMsgTask
       ])
-        .then(([mergeHeadFile, mergeMsgFile]) => (GitTextUtils.mergeMessageToMergeStatus(mergeHeadFile.toString(), mergeMsgFile.toString())));
+        .then(([mergeHeadFile, mergeMsgFile]) => (GitTextUtils.parseMergeStatus(mergeHeadFile.toString(), mergeMsgFile.toString())));
   } catch { }
-
 
   const commitMap: { [id: string]: Commit; } = commits.reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});
 
@@ -185,6 +193,10 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     HEAD.commitDetails = commitMap[HEAD.commit];
     // Resolve tag at HEAD
     HEAD.tag = repository.state.refs.find(r => HEAD?.commit === r.commit);
+
+    HEAD.commitsAhead = commitsAhead.map(hash => commitMap[hash]);
+    HEAD.commitsBehind = commitsBehind.map(hash => commitMap[hash]);
+
     // MINOR: clean up?
     try {
       const remote = await repository.getConfig(`branch.${HEAD.name}.pushRemote`);
