@@ -1,5 +1,11 @@
 
 ## TODO NEXT UP: fold management. What should be folded at the start?
+
+editor.foldLevel2 fixes a lot!
+should be called first time
+
+Otherwise the folds should be remembered i think
+
 https://github.com/microsoft/vscode/issues/37682
 editor.fold
 editor.foldRecursively

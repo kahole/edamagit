@@ -73,7 +73,11 @@ export async function magitStatus(preserveFocus = false) {
                 window.createTextEditorDecorationType({
                   color: 'rgba(100,200,100,0.5)',
                   border: '0.1px solid grey'
-                }), [new Range(0, 11, 0, 17)]));
+                }), [new Range(0, 11, 0, 17)]))
+              // MINOR: clean up all of this
+              .then(() => {
+                return commands.executeCommand('editor.foldLevel2');
+              });
           });
       } else {
         // Prompt to create repo
