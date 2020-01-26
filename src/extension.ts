@@ -20,6 +20,7 @@ import { stashing } from './commands/stashingCommands';
 import { DocumentView } from './views/general/documentView';
 import { magitApplyEntityAtPoint } from './commands/applyCommands';
 import { magitDiscardAtPoint } from './commands/discardCommands';
+import { merging } from './commands/mergingCommands';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
@@ -68,6 +69,7 @@ export function activate(context: ExtensionContext) {
 
   context.subscriptions.push(commands.registerCommand('extension.magit-fetching', fetching));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-branching', CommandPrimer.primeRepoAndView(branching)));
+  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-merging', CommandPrimer.primeRepoAndView(merging)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-stage', CommandPrimer.primeRepoAndView(magitStage)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-stage-all', CommandPrimer.primeRepoAndView(magitStageAll)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-unstage', CommandPrimer.primeRepoAndView(magitUnstage)));

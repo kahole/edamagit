@@ -61,6 +61,7 @@ async function createNewBranch(menuState: MenuState) {
 
 async function configureBranch(menuState: MenuState) {
 
+  // MINOR
   // 1. Select branch? or take current?
   // 2. Read all configs: menuState.repository.getConfigs
   //    maybe they are already read in the repo state?
@@ -114,7 +115,7 @@ async function resetBranch({ repository, currentView }: MenuState) {
 
       if (MagitUtils.magitAnythingModified(repository)) {
 
-        if(await MagitUtils.confirmAction(`Uncommitted changes will be lost. Proceed?`)) {
+        if (await MagitUtils.confirmAction(`Uncommitted changes will be lost. Proceed?`)) {
           return repository._repository.reset(resetToRef, true);
         }
       }

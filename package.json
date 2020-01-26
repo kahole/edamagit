@@ -41,6 +41,10 @@
         "title": "Magit Branching"
       },
       {
+        "command": "extension.magit-merging",
+        "title": "Magit Merging"
+      },
+      {
         "command": "extension.magit-pushing",
         "title": "Magit Pushing"
       },
@@ -73,6 +77,10 @@
       "commandPalette": [
         {
           "command": "extension.magit-branching",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "extension.magit-merging",
           "when": "editorLangId == magit"
         },
         {
@@ -180,6 +188,11 @@
       {
         "command": "extension.magit-branching",
         "key": "b",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "extension.magit-merging",
+        "key": "m",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
