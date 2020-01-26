@@ -36,7 +36,7 @@ export async function magitCommit(repository: MagitRepository, currentView: Docu
   return MenuUtil.showMenu(commitMenu, { repository, currentView });
 }
 
-async function commit(repository: MagitRepository, commitArgs: string[]) {
+export async function commit(repository: MagitRepository, commitArgs: string[] = []) {
 
   const args = ['commit', ...commitArgs];
 

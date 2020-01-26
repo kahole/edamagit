@@ -3,6 +3,7 @@ import { Menu, MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
 import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
+import * as CommitCommands from '../commands/commitCommands';
 
 const mergingMenu = {
   title: 'Merging',
@@ -52,7 +53,9 @@ async function absorb({ repository }: MenuState) {
 }
 
 async function mergePreview() {
-  // Maybe so different from the rest?
+  // Commands to preview a merge between ref1 and ref2:
+  // git merge-base HEAD {ref2}
+  // git merge-tree {MERGE-BASE} HEAD {ref2}
 }
 
 async function _merge(repository: MagitRepository, ref: string, noCommit = false, squashMerge = false, editMessage = false) {
@@ -78,7 +81,7 @@ async function _merge(repository: MagitRepository, ref: string, noCommit = false
 }
 
 async function commitMerge({ repository }: MenuState) {
-
+  return CommitCommands.commit(repository);
 }
 
 async function abortMerge({ repository }: MenuState) {

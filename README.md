@@ -86,6 +86,8 @@ https://github.com/microsoft/vscode/blob/master/extensions/git/src/commands.ts
 
 Inspired by (Magit)[https://magit.vc/] for Emacs
 
+## Github sponsor skru på donasjoner på github?
+
 ------
 
 ## Features

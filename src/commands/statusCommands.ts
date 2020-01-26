@@ -63,7 +63,7 @@ export async function magitStatus(preserveFocus = false) {
             const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
             views.set(uri.toString(), new MagitStatusView(uri, magitRepo.magitState!));
             workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false }))
-              // TODO: branch highlighting...
+              // TODO ?FUTURE?: branch highlighting...
               // THIS WORKS
               // Decorations could be added by the views in the view hierarchy?
               // yes as we go down the hierarchy make these decorations at exactly the points wanted
