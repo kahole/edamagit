@@ -6,7 +6,7 @@ import GitTextUtils from '../utils/gitTextUtils';
 import { MagitRepository } from '../models/magitRepository';
 import MagitUtils from '../utils/magitUtils';
 import MagitStatusView from '../views/magitStatusView';
-import { Status, Commit } from '../typings/git';
+import { Status, Commit, RefType } from '../typings/git';
 import { MagitBranch } from '../models/magitBranch';
 import { Section } from '../views/general/sectionHeader';
 import { gitRun } from '../utils/gitRawRunner';
@@ -192,7 +192,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
   if (HEAD?.commit) {
     HEAD.commitDetails = commitMap[HEAD.commit];
     // Resolve tag at HEAD
-    HEAD.tag = repository.state.refs.find(r => HEAD?.commit === r.commit);
+    HEAD.tag = repository.state.refs.find(r => HEAD?.commit === r.commit && r.type === RefType.Tag);
 
     HEAD.commitsAhead = commitsAhead.map(hash => commitMap[hash]);
     HEAD.commitsBehind = commitsBehind.map(hash => commitMap[hash]);
