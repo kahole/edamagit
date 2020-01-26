@@ -56,6 +56,7 @@ async function mergePreview() {
   // Commands to preview a merge between ref1 and ref2:
   // git merge-base HEAD {ref2}
   // git merge-tree {MERGE-BASE} HEAD {ref2}
+  // https://stackoverflow.com/questions/501407/is-there-a-git-merge-dry-run-option/6283843#6283843
 }
 
 async function _merge(repository: MagitRepository, ref: string, noCommit = false, squashMerge = false, editMessage = false) {

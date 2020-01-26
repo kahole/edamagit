@@ -1,20 +1,5 @@
-## BUGS TODO MINOR FUTURE
 
-  Bug#2
-  After commiting, sometimes another magit status window is next to the existing one.
-  - How to reproduce?
-
-  Bug#3
-  Section model is responsible for too much
-  Must fix. Fine for deciding what section something is. But changes and hunks should use another enum, because it isnt one-to-one between them
-
-# USE magit $ to track what commands magit use for different operations
-
-## General
-  - Go for MVP consisting of 90% of common use
-  - plus all convenient features that come along with it
-
-## TODO: fold management. What should be folded at the start?
+## TODO NEXT UP: fold management. What should be folded at the start?
 https://github.com/microsoft/vscode/issues/37682
 editor.fold
 editor.foldRecursively
@@ -31,18 +16,28 @@ FIRST TIME OPENING: default fold levels
 - Stash zero levels
 - Recent commits zero levels
 
+
+## BUGS TODO MINOR FUTURE
+
+  Bug#2
+  After commiting, sometimes another magit status window is next to the existing one.
+  - How to reproduce?
+
+  Bug#3
+  Section model is responsible for too much
+  Must fix. Fine for deciding what section something is. But changes and hunks should use another enum, because it isnt one-to-one between them
+
+# USE magit $ to track what commands magit use for different operations
+
 ## FUTURE: Eie egen modell
 Burde ikke extende git modellen kanskje.
 Burde heller lene meg på helt egen model
 med mappere i mellom?
 
-## wow, inject repo and stuff?
+## injection for repo etc?
 @command('git.refresh', { repository: true })
 
 https://github.com/microsoft/vscode/blob/master/extensions/git/src/commands.ts
-
-## DIFF view
-  - can use VSCODE diff command to show diff for a file? or something
 
 ## Workspaces
   - Needs to support multiple workspaces (Already do this somewhat)
@@ -62,10 +57,8 @@ https://github.com/microsoft/vscode/blob/master/extensions/git/src/commands.ts
         e.g $(git-branch)
 
 ## Dispose
-
   - Proper use of dispose()
     https://vscode-docs.readthedocs.io/en/stable/extensions/patterns-and-principles/#disposables
-
     "This applies to event listening, commands, interacting with the UI, and various language contributions."
 
 ## Notes
@@ -82,11 +75,19 @@ https://github.com/microsoft/vscode/blob/master/extensions/git/src/commands.ts
 
 -----
 
-# magit README
-
-Inspired by (Magit)[https://magit.vc/] for Emacs
+## TODO: Release ALPHA, MVP
 
 ## Github sponsor skru på donasjoner på github?
+https://github.com/sponsors
+
+# Magit for VSCode
+
+Inspired by the original (Magit)[https://magit.vc/] for Emacs
+
+# Roadmap
+
+- [ ] Stable v1.0
+- [ ] Feature parity with Magit
 
 ------
 
