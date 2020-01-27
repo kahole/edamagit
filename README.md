@@ -1,6 +1,17 @@
 
 ## TODO NEXT UP: fold management. What should be folded at the start?
 
+### MIGHT NEED TO MOVE TO MANUAL FOLDING MODEL
+#### might actually be simpler
+
+#### TAB on view toggles fold v unfold propert
+     -> Trigger rerender
+Also much simpler to save and reload the folding state.
+
+## TODO: this will also trigger IMPORTANT work on the update model for views
+
+----------
+### VSCode folding
 editor.foldLevel2 fixes a lot!
 should be called first time
 
@@ -22,12 +33,15 @@ FIRST TIME OPENING: default fold levels
 - Stash zero levels
 - Recent commits zero levels
 
+## TODO tests
+Write tests similar to Magits tests. Doing commands and checking state of repo and files etc.
+
 
 ## BUGS TODO MINOR FUTURE
 
   Bug#2
   After commiting, sometimes another magit status window is next to the existing one.
-  - How to reproduce?
+  - How to reproduce? Never happens in debug, or?
 
   Bug#3
   Section model is responsible for too much
@@ -41,7 +55,7 @@ Burde heller lene meg på helt egen model
 med mappere i mellom?
 
 ## injection for repo etc?
-@command('git.refresh', { repository: true })
+@command('magit.branching', { repository: true })
 
 https://github.com/microsoft/vscode/blob/master/extensions/git/src/commands.ts
 

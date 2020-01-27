@@ -11,9 +11,7 @@ import { MagitBranch } from '../models/magitBranch';
 import { Section } from '../views/general/sectionHeader';
 import { gitRun } from '../utils/gitRawRunner';
 
-export async function magitRefresh() {
-  return;
-}
+export async function magitRefresh() { }
 
 export async function magitStatus(preserveFocus = false) {
 
@@ -63,17 +61,17 @@ export async function magitStatus(preserveFocus = false) {
             const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
             views.set(uri.toString(), new MagitStatusView(uri, magitRepo.magitState!));
             workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false }))
-              // TODO ?FUTURE?: branch highlighting...
+              // TODO LATE PRI: branch highlighting...
               // THIS WORKS
               // Decorations could be added by the views in the view hierarchy?
               // yes as we go down the hierarchy make these decorations at exactly the points wanted
               // and should be pretty simple to collect them and set the editors decorations
               // needs something super smart.. https://github.com/Microsoft/vscode/issues/585
-              .then(e => e.setDecorations(
-                window.createTextEditorDecorationType({
-                  color: 'rgba(100,200,100,0.5)',
-                  border: '0.1px solid grey'
-                }), [new Range(0, 11, 0, 17)]))
+              // .then(e => e.setDecorations(
+              //   window.createTextEditorDecorationType({
+              //     color: 'rgba(100,200,100,0.5)',
+              //     border: '0.1px solid grey'
+              //   }), [new Range(0, 11, 0, 17)]))
               // MINOR: clean up all of this
               .then(() => {
                 return commands.executeCommand('editor.foldLevel2');
