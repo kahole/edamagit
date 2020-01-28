@@ -20,6 +20,7 @@ import { Section } from './general/sectionHeader';
 import { DocumentView } from './general/documentView';
 import { Uri, EventEmitter } from 'vscode';
 import { ChangeSectionView } from './changes/changesSectionView';
+import { MagitRepository } from '../models/magitRepository';
 
 export default class MagitStagedView extends DocumentView {
 
@@ -27,6 +28,12 @@ export default class MagitStagedView extends DocumentView {
 
   constructor(uri: Uri, magitState: MagitState) {
     super(uri);
+    this.provideContent(magitState);
+  }
+
+  provideContent(magitState: MagitState) {
+
+    this.subViews = [];
 
     if (magitState.indexChanges && magitState.indexChanges.length > 0) {
 
@@ -37,6 +44,13 @@ export default class MagitStagedView extends DocumentView {
         // ...magitState.indexChanges.map(change => new ChangeView(change))
       ];
     }
+  }
+
+  public update(repository: MagitRepository): void {
+    if (repository.magitState) {
+      this.provideContent(repository.magitState);
+    }
+    this.triggerUpdate();
   }
 
   static encodeLocation(workspacePath: string): Uri {

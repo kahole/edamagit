@@ -1,14 +1,10 @@
 
 ## TODO NEXT UP: fold management. What should be folded at the start?
 
-### MIGHT NEED TO MOVE TO MANUAL FOLDING MODEL
-#### might actually be simpler
-
-#### TAB on view toggles fold v unfold propert
+#### Manual folding:
+  TAB on view toggles fold v unfold propert
      -> Trigger rerender
-Also much simpler to save and reload the folding state.
-
-## TODO: this will also trigger IMPORTANT work on the update model for views
+ Also much simpler to save and reload the folding state.
 
 ----------
 ### VSCode folding
@@ -32,6 +28,17 @@ FIRST TIME OPENING: default fold levels
 - Changes should show first level: modified, new file, etc
 - Stash zero levels
 - Recent commits zero levels
+
+
+## DocumentView creation and update:
+
+all views get updated with:
+  update(repository, id)
+
+  and they figure out themselves how to re-render
+
+  none of this replace entire view object.
+
 
 ## TODO tests
 Write tests similar to Magits tests. Doing commands and checking state of repo and files etc.

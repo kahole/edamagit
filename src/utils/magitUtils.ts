@@ -17,28 +17,8 @@ export default class MagitUtils {
   }
 
   public static async magitStatusAndUpdate(repository: MagitRepository, view: DocumentView) {
-
     await internalMagitStatus(repository);
-
-    // TODO: BIG! Update other kinds of views as well?
-
-    // Update all open views for a given repository?
-
-    views.set(view.uri.toString(), new MagitStatusView(view.uri, repository.magitState!));
-    view.triggerUpdate();
-
-    // let statusView: MagitStatusView | undefined;
-
-    // views.forEach((v) => {
-    //   if (v instanceof MagitStatusView) {
-    //     statusView = v;
-    //   }
-    // });
-
-    // if (statusView) {
-    //   views.set(statusView.uri.toString(), new MagitStatusView(statusView.uri, repository.magitState!));
-    //   statusView.triggerUpdate();
-    // }
+    view.update(repository);
   }
 
   public static magitAnythingModified(repository: MagitRepository): boolean {

@@ -12,6 +12,7 @@ import { Uri, EventEmitter } from 'vscode';
 import { BranchSectionView } from './branches/branchSectionView';
 import { MergingSectionView } from './merging/mergingSectionView';
 import { UnsourcedCommitSectionView } from './commits/unsourcedCommitsSectionView';
+import { MagitRepository } from '../models/magitRepository';
 
 export default class MagitStatusView extends DocumentView {
 
@@ -19,6 +20,12 @@ export default class MagitStatusView extends DocumentView {
 
   constructor(uri: Uri, magitState: MagitState) {
     super(uri);
+    this.provideContent(magitState);
+  }
+
+  provideContent(magitState: MagitState) {
+
+    this.subViews = [];
 
     if (magitState.latestGitError) {
       this.addSubview(new TextView(`GitError! ${magitState.latestGitError}`));
@@ -72,6 +79,13 @@ export default class MagitStatusView extends DocumentView {
     } else if (magitState.log.length > 0) {
       this.addSubview(new CommitSectionView(Section.RecentCommits, magitState.log));
     }
+  }
+
+  public update(repository: MagitRepository): void {
+    if (repository.magitState) {
+      this.provideContent(repository.magitState);
+    }
+    this.triggerUpdate();
   }
 
   static encodeLocation(workspacePath: string): Uri {
