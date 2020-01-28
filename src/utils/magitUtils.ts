@@ -18,7 +18,8 @@ export default class MagitUtils {
 
   public static async magitStatusAndUpdate(repository: MagitRepository, view: DocumentView) {
     await internalMagitStatus(repository);
-    view.update(repository);
+
+    views.forEach(view => view.update(repository));
   }
 
   public static magitAnythingModified(repository: MagitRepository): boolean {

@@ -16,10 +16,6 @@ export class StashDetailView extends DocumentView {
     this.addSubview(new TextView(stash.description));
   }
 
-  createView() {
-    this.subViews = [];
-  }
-
   public update(repository: MagitRepository): void { }
 
   static encodeLocation(repository: MagitRepository, stash: Stash): Uri {

@@ -29,22 +29,7 @@ FIRST TIME OPENING: default fold levels
 - Stash zero levels
 - Recent commits zero levels
 
-
-## DocumentView creation and update:
-
-all views get updated with:
-  update(repository, id)
-
-  and they figure out themselves how to re-render
-
-  none of this replace entire view object.
-
-
-## TODO tests
-Write tests similar to Magits tests. Doing commands and checking state of repo and files etc.
-
-
-## BUGS TODO MINOR FUTURE
+## BUGS (also remember MINOR FUTURE)
 
   Bug#2
   After commiting, sometimes another magit status window is next to the existing one.
@@ -54,14 +39,12 @@ Write tests similar to Magits tests. Doing commands and checking state of repo a
   Section model is responsible for too much
   Must fix. Fine for deciding what section something is. But changes and hunks should use another enum, because it isnt one-to-one between them
 
-# USE magit $ to track what commands magit use for different operations
-
 ## FUTURE: Eie egen modell
 Burde ikke extende git modellen kanskje.
 Burde heller lene meg på helt egen model
 med mappere i mellom?
 
-## injection for repo etc?
+## FUTURE: injection for repo etc?
 @command('magit.branching', { repository: true })
 
 https://github.com/microsoft/vscode/blob/master/extensions/git/src/commands.ts
@@ -70,13 +53,6 @@ https://github.com/microsoft/vscode/blob/master/extensions/git/src/commands.ts
   - Needs to support multiple workspaces (Already do this somewhat)
   - Find out how to deal with status views and other views
   - Dispose of stuff when quit workspace etc..
-
-## Main menu
-  Alle views i magit støtter hovedmenyen
-   Burde være DocumentView som sendes rundt!
-   Alle disse trenger update når det skjer noe uansett.
-   Dog forskjellig update, e.g magit Log state
-   Finn ut av multiplexingen her
 
 ## UI
   - icons
@@ -89,7 +65,7 @@ https://github.com/microsoft/vscode/blob/master/extensions/git/src/commands.ts
     "This applies to event listening, commands, interacting with the UI, and various language contributions."
 
 ## Notes
-  - Test on every platform
+  - Test on all platforms
 
   - Licensing
       o Magit name trademark? vscodemagit / Magit for VSCode / VSCodeMagit
@@ -116,7 +92,11 @@ Inspired by the original (Magit)[https://magit.vc/] for Emacs
 - [ ] Stable v1.0
 - [ ] Feature parity with Magit
 
-------
+
+
+
+
+--------
 
 ## Features
 

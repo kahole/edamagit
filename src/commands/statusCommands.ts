@@ -84,7 +84,7 @@ export async function magitStatus(preserveFocus = false) {
       }
     }
     else {
-      throw new Error('No workspace open');
+      throw new Error('Current file not part of a workspace');
     }
   }
 }
