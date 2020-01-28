@@ -11,6 +11,7 @@ import { LineBreakView } from './general/lineBreakView';
 import { Uri, EventEmitter } from 'vscode';
 import { BranchSectionView } from './branches/branchSectionView';
 import { MergingSectionView } from './merging/mergingSectionView';
+import { UnsourcedCommitSectionView } from './commits/unsourcedCommitsSectionView';
 
 export default class MagitStatusView extends DocumentView {
 
@@ -61,19 +62,15 @@ export default class MagitStatusView extends DocumentView {
     if (magitState.HEAD?.ahead || magitState.HEAD?.behind) {
 
       if (magitState.HEAD?.commitsAhead?.length) {
-        this.addSubview(
-          new CommitSectionView(new TextView(`${Section.UnmergedInto} ${magitState.HEAD.upstream?.remote}/${magitState.HEAD.upstream?.name} (${magitState.HEAD?.commitsAhead?.length})`),
-            magitState.HEAD.commitsAhead));
+        this.addSubview(new UnsourcedCommitSectionView(Section.UnmergedInto, magitState.HEAD.upstream!, magitState.HEAD.commitsAhead));
       }
 
       if (magitState.HEAD?.commitsBehind?.length) {
-        this.addSubview(
-          new CommitSectionView(new TextView(`${Section.UnpulledFrom} ${magitState.HEAD.upstream?.remote}/${magitState.HEAD.upstream?.name} (${magitState.HEAD?.commitsBehind?.length})`),
-            magitState.HEAD.commitsBehind));
+        this.addSubview(new UnsourcedCommitSectionView(Section.UnpulledFrom, magitState.HEAD.upstream!, magitState.HEAD.commitsBehind));
       }
 
     } else if (magitState.log.length > 0) {
-      this.addSubview(new CommitSectionView(new SectionHeaderView(Section.RecentCommits), magitState.log));
+      this.addSubview(new CommitSectionView(Section.RecentCommits, magitState.log));
     }
   }
 

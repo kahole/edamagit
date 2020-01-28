@@ -13,9 +13,9 @@ export enum Section {
 
 export class SectionHeaderView extends TextView {
 
-  constructor(private _section: Section, count?: number) {
+  constructor(private _section: Section, count?: number, branchName?: string) {
     super();
-    this.textContent = `${_section.valueOf()}${count ? ' (' + count + ')' : ''}`;
+    this.textContent = `${_section.valueOf()}${branchName ? ' ' + branchName + '' : ''}${count ? ' (' + count + ')' : ''}`;
   }
 
   onClicked() { return undefined; }
