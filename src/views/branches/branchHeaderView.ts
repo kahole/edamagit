@@ -7,6 +7,6 @@ export class BranchHeaderView extends TextView {
   constructor(name: string, branch: MagitBranch) {
     super();
     const nameLabel = `${name}:`.padEnd(10);
-    this.textContent = `${nameLabel}${branch.name} ${GitTextUtils.shortCommitMessage(branch.commitDetails.message)}`;
+    this.textContent = `${nameLabel}${branch.name ?? GitTextUtils.shortHash(branch.commit)} ${GitTextUtils.shortCommitMessage(branch.commitDetails.message)}`;
   }
 }

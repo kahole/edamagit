@@ -15,7 +15,7 @@ export class CommandPrimer {
   //   };
   // }
 
-  static primeRepoAndView(command: (repository: MagitRepository, view: DocumentView) => Promise<void>, needsUpdate: boolean = true): (editor: TextEditor) => Promise<void> {
+  static primeRepoAndView(command: (repository: MagitRepository, view: DocumentView) => Promise<void>, triggersUpdate: boolean = true): (editor: TextEditor) => Promise<void> {
 
     return async (editor: TextEditor) => {
       const [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(editor);
@@ -37,7 +37,7 @@ export class CommandPrimer {
             window.showErrorMessage(error.stderr ?? error.message);
           }
         } finally {
-          if (needsUpdate) {
+          if (triggersUpdate) {
             MagitUtils.magitStatusAndUpdate(repository, currentView);
           }
         }

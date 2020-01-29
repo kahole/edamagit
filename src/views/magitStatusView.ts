@@ -13,6 +13,7 @@ import { BranchSectionView } from './branches/branchSectionView';
 import { MergingSectionView } from './merging/mergingSectionView';
 import { UnsourcedCommitSectionView } from './commits/unsourcedCommitsSectionView';
 import { MagitRepository } from '../models/magitRepository';
+import GitTextUtils from '../utils/gitTextUtils';
 
 export default class MagitStatusView extends DocumentView {
 
@@ -29,6 +30,7 @@ export default class MagitStatusView extends DocumentView {
 
     if (magitState.latestGitError) {
       this.addSubview(new TextView(`GitError! ${magitState.latestGitError}`));
+      magitState.latestGitError = undefined;
     }
 
     this.addSubview(new BranchSectionView(magitState.HEAD));
@@ -40,14 +42,23 @@ export default class MagitStatusView extends DocumentView {
     }
 
     // TODO: Rebasing status
-    if (magitState.rebaseCommit) {
-      // magitState.rebaseCommit.message
+    // Data location:
+    // 
+    // index of next commit in rebase:
+    //   .git/rebase-apply/next
+    // 
 
-      // example:
-      // Rebasing {branch} onto {branch}
-      // join somethind
-      // done something
-      // onto something
+    if (magitState.rebasingState) {
+      // TODO: refactor into own view
+      this.addSubview(
+        new TextView(`Rebasing ${magitState.rebasingState.origBranchName} onto ${magitState.rebasingState.ontoBranch.name}`),
+        // TODO: pick
+        new TextView(`join ${GitTextUtils.shortHash(magitState.rebasingState.currentCommit.hash)} ${GitTextUtils.shortCommitMessage(magitState.rebasingState.currentCommit.message)}`),
+        // TODO: done
+        new TextView(`done ${GitTextUtils.shortHash(magitState.HEAD?.commitDetails.hash)} ${GitTextUtils.shortCommitMessage(magitState.HEAD?.commitDetails.message)}`),
+        new TextView(`onto ${GitTextUtils.shortHash(magitState.rebasingState.ontoBranch.commit)} ${GitTextUtils.shortCommitMessage(magitState.rebasingState.ontoBranch.commitDetails?.message)}`),
+        new LineBreakView()
+      );
     }
 
     if (magitState.untrackedFiles.length) {

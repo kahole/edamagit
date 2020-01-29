@@ -9,6 +9,7 @@ export class CommitDetailView extends DocumentView {
 
   static UriPath: string = 'commit.diff';
   isHighlightable = false;
+  needsUpdate = false;
 
   constructor(uri: Uri, private commit: MagitCommit) {
     super(uri);

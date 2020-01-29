@@ -61,7 +61,7 @@ async function createNewBranch(menuState: MenuState) {
 
 async function configureBranch(menuState: MenuState) {
 
-  // MINOR
+  // MINOR Configure branch, implement
   // 1. Select branch? or take current?
   // 2. Read all configs: menuState.repository.getConfigs
   //    maybe they are already read in the repo state?

@@ -8,6 +8,7 @@ import { MagitRepository } from '../models/magitRepository';
 export class StashDetailView extends DocumentView {
 
   static UriPath: string = 'stash.magit';
+  needsUpdate = false;
 
   constructor(public uri: Uri, stash: Stash) {
     super(uri);
@@ -18,7 +19,8 @@ export class StashDetailView extends DocumentView {
 
   public update(repository: MagitRepository): void { }
 
+  static index = 0;
   static encodeLocation(repository: MagitRepository, stash: Stash): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${StashDetailView.UriPath}?${repository.rootUri.path}#stash@{${stash.index}}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${StashDetailView.UriPath}?${repository.rootUri.path}&index=${StashDetailView.index++}#stash@{${stash.index}}`);
   }
 }

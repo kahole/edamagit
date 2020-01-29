@@ -6,6 +6,7 @@ export abstract class View {
   range: Range = new Range(0, 0, 0, 0);
   isFoldable: boolean = false;
   isHighlightable: boolean = true;
+  needsUpdate: boolean = true;
 
   onClicked(): View | undefined { return this; }
 

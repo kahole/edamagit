@@ -20,7 +20,7 @@
       ]
     },
     "sectionHeader": {
-      "match": "Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits|Unmerged into|Unpulled from|GitError!|(Merging .*(?= \\())",
+      "match": "Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits|Unmerged into|Unpulled from|GitError!|(Merging .*(?= \\())|(Rebasing .* onto .*$)",
       "name": "markup.bold keyword.section.header.magit"
     },
     "modified": {

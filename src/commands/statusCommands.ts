@@ -10,6 +10,7 @@ import { Status, Commit, RefType } from '../typings/git';
 import { MagitBranch } from '../models/magitBranch';
 import { Section } from '../views/general/sectionHeader';
 import { gitRun } from '../utils/gitRawRunner';
+import * as Constants from '../common/constants';
 
 export async function magitRefresh() { }
 
@@ -57,10 +58,10 @@ export async function magitStatus(preserveFocus = false) {
 
         internalMagitStatus(magitRepo)
           .then(() => {
-            // MINOR: Pull out, make general? for every place this is done
             const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
             views.set(uri.toString(), new MagitStatusView(uri, magitRepo.magitState!));
             workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false }))
+
               // TODO LATE PRI: branch highlighting...
               // THIS WORKS
               // Decorations could be added by the views in the view hierarchy?
@@ -93,7 +94,9 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   await repository.status();
 
+  const dotGitPath = repository.rootUri + '/.git/';
   const interestingCommits: string[] = [];
+
 
   const stashTask = repository._repository.getStashes();
 
@@ -156,10 +159,18 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       return magitChange;
     }));
 
-  const mergeHeadPath = Uri.parse(repository.rootUri + '/.git/' + 'MERGE_HEAD');
-  const mergeMsgPath = Uri.parse(repository.rootUri + '/.git/' + 'MERGE_MSG');
-  const mergeHeadTask = workspace.fs.readFile(mergeHeadPath);
-  const mergeMsgTask = workspace.fs.readFile(mergeMsgPath);
+  const mergeHeadPath = Uri.parse(dotGitPath + 'MERGE_HEAD');
+  const mergeMsgPath = Uri.parse(dotGitPath + 'MERGE_MSG');
+  const mergeHeadFileTask = workspace.fs.readFile(mergeHeadPath).then(f => f.toString());
+  const mergeMsgFileTask = workspace.fs.readFile(mergeMsgPath).then(f => f.toString());
+
+
+  // TODO only do these if there is a rebaseCommit and same for merge !!
+
+  const rebaseHeadNamePath = Uri.parse(dotGitPath + 'rebase-apply/head-name');
+  const rebaseOntoPath = Uri.parse(dotGitPath + 'rebase-apply/onto');
+  const rebaseHeadNameFiletask = workspace.fs.readFile(rebaseHeadNamePath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''));
+  const rebaseOntoPathFiletask = workspace.fs.readFile(rebaseOntoPath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''));
 
   const commitTasks = Promise.all(
     interestingCommits
@@ -181,11 +192,26 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
   try {
     mergingState =
       await Promise.all([
-        mergeHeadTask,
-        mergeMsgTask
+        mergeHeadFileTask,
+        mergeMsgFileTask
       ])
-        .then(([mergeHeadFile, mergeMsgFile]) => (GitTextUtils.parseMergeStatus(mergeHeadFile.toString(), mergeMsgFile.toString())));
+        .then(([mergeHeadFile, mergeMsgFile]) => (GitTextUtils.parseMergeStatus(mergeHeadFile, mergeMsgFile)));
   } catch { }
+
+  let rebasingState;
+  if (repository.state.rebaseCommit) {
+    const ontoCommit = await rebaseOntoPathFiletask;
+
+    const ontoBranch = repository.state.refs.find(ref => ref.commit === ontoCommit && ref.type !== RefType.RemoteHead) as MagitBranch;
+
+    rebasingState = {
+      currentCommit: repository.state.rebaseCommit,
+      origBranchName: await rebaseHeadNameFiletask,
+      ontoBranch,
+      doneCommits: [],
+      upcomingCommits: []
+    };
+  }
 
   const commitMap: { [id: string]: Commit; } = commits.reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});
 
@@ -219,7 +245,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     indexChanges,
     mergeChanges,
     untrackedFiles,
-    rebaseCommit: repository.state.rebaseCommit,
+    rebasingState,
     mergingState,
     latestGitError: repository.magitState?.latestGitError
   };

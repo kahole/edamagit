@@ -24,7 +24,7 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
         }),
       vscode.workspace.onDidSaveTextDocument(
         doc => {
-          for (let visibleEditor of vscode.window.visibleTextEditors) {
+          for (const visibleEditor of vscode.window.visibleTextEditors) {
             if (visibleEditor.document.uri.scheme === Constants.MagitUriScheme) {
               return magitStatus(true);
             }
