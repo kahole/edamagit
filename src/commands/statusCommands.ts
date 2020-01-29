@@ -164,13 +164,10 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
   const mergeHeadFileTask = workspace.fs.readFile(mergeHeadPath).then(f => f.toString());
   const mergeMsgFileTask = workspace.fs.readFile(mergeMsgPath).then(f => f.toString());
 
-
-  // TODO only do these if there is a rebaseCommit and same for merge !!
-
   const rebaseHeadNamePath = Uri.parse(dotGitPath + 'rebase-apply/head-name');
   const rebaseOntoPath = Uri.parse(dotGitPath + 'rebase-apply/onto');
-  const rebaseHeadNameFiletask = workspace.fs.readFile(rebaseHeadNamePath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''));
-  const rebaseOntoPathFiletask = workspace.fs.readFile(rebaseOntoPath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''));
+  const rebaseHeadNameFiletask = repository.state.rebaseCommit ? workspace.fs.readFile(rebaseHeadNamePath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, '')) : undefined;
+  const rebaseOntoPathFiletask = repository.state.rebaseCommit ? workspace.fs.readFile(rebaseOntoPath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, '')) : undefined;
 
   const commitTasks = Promise.all(
     interestingCommits
@@ -200,13 +197,13 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   let rebasingState;
   if (repository.state.rebaseCommit) {
-    const ontoCommit = await rebaseOntoPathFiletask;
+    const ontoCommit = await rebaseOntoPathFiletask!;
 
     const ontoBranch = repository.state.refs.find(ref => ref.commit === ontoCommit && ref.type !== RefType.RemoteHead) as MagitBranch;
 
     rebasingState = {
       currentCommit: repository.state.rebaseCommit,
-      origBranchName: await rebaseHeadNameFiletask,
+      origBranchName: await rebaseHeadNameFiletask!,
       ontoBranch,
       doneCommits: [],
       upcomingCommits: []
