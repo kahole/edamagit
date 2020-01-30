@@ -4,7 +4,7 @@ import { ChangeSectionView } from './changes/changesSectionView';
 import { Section, SectionHeaderView } from './general/sectionHeader';
 import { DocumentView } from './general/documentView';
 import { StashSectionView } from './stashes/stashSectionView';
-import { CommitSectionView } from './commits/commitSectionView';
+import { CommitSectionView, CommitItemView } from './commits/commitSectionView';
 import { BranchHeaderView } from './branches/branchHeaderView';
 import { TextView } from './general/textView';
 import { LineBreakView } from './general/lineBreakView';
@@ -53,8 +53,10 @@ export default class MagitStatusView extends DocumentView {
       this.addSubview(
         new TextView(`Rebasing ${magitState.rebasingState.origBranchName} onto ${magitState.rebasingState.ontoBranch.name}`),
         // TODO: pick
+        ...magitState.rebasingState.upcomingCommits.map(c => new CommitItemView(c)),
         new TextView(`join ${GitTextUtils.shortHash(magitState.rebasingState.currentCommit.hash)} ${GitTextUtils.shortCommitMessage(magitState.rebasingState.currentCommit.message)}`),
         // TODO: done
+        ...magitState.rebasingState.doneCommits.map(c => new CommitItemView(c)),
         new TextView(`done ${GitTextUtils.shortHash(magitState.HEAD?.commitDetails.hash)} ${GitTextUtils.shortCommitMessage(magitState.HEAD?.commitDetails.message)}`),
         new TextView(`onto ${GitTextUtils.shortHash(magitState.rebasingState.ontoBranch.commit)} ${GitTextUtils.shortCommitMessage(magitState.rebasingState.ontoBranch.commitDetails?.message)}`),
         new LineBreakView()

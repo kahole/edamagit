@@ -166,12 +166,23 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   const rebaseHeadNamePath = Uri.parse(dotGitPath + 'rebase-apply/head-name');
   const rebaseOntoPath = Uri.parse(dotGitPath + 'rebase-apply/onto');
-  const rebaseHeadNameFiletask = repository.state.rebaseCommit ? workspace.fs.readFile(rebaseHeadNamePath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, '')) : undefined;
-  const rebaseOntoPathFiletask = repository.state.rebaseCommit ? workspace.fs.readFile(rebaseOntoPath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, '')) : undefined;
+  const rebaseHeadNameFileTask = repository.state.rebaseCommit ? workspace.fs.readFile(rebaseHeadNamePath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, '')) : undefined;
+  const rebaseOntoPathFileTask = repository.state.rebaseCommit ? workspace.fs.readFile(rebaseOntoPath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, '')) : undefined;
 
+  const rebaseCommitListTask = repository.state.rebaseCommit ? workspace.fs.readFile(Uri.parse(dotGitPath + 'rebase-apply/last')).then(f => f.toString().replace(Constants.FinalLineBreakRegex, '')).then(Number.parseInt)
+    .then(last => Promise.all(Array.from(Array(last).keys()).map(
+      index => workspace.fs.readFile(Uri.parse(dotGitPath + 'rebase-apply/' + (index + 1).toString().padStart(4, '0'))).then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''))
+        .then(GitTextUtils.commitDetailTextToCommit)
+    ))) : undefined;
+
+
+  // TODO: drop the interesting commit thing?
   const commitTasks = Promise.all(
     interestingCommits
       .map(c => repository.getCommit(c)));
+
+
+  //TODO: await stuff only where its needed?
 
   const [commits, workingTreeChanges, indexChanges, mergeChanges, stashes, log] =
     await Promise.all([
@@ -197,16 +208,32 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   let rebasingState;
   if (repository.state.rebaseCommit) {
-    const ontoCommit = await rebaseOntoPathFiletask!;
+    const ontoCommit = await rebaseOntoPathFileTask!;
 
     const ontoBranch = repository.state.refs.find(ref => ref.commit === ontoCommit && ref.type !== RefType.RemoteHead) as MagitBranch;
 
+    const rebaseCommits = await rebaseCommitListTask;
+
+    const doneCommits: Commit[] = [];
+    const upcomingCommits: Commit[] = [];
+
+    let pastCurrent = false;
+    for (const c of rebaseCommits ?? []) {
+      if (c.hash === repository.state.rebaseCommit.hash) {
+        pastCurrent = true;
+      } else if (pastCurrent) {
+        upcomingCommits.push(c);
+      } else {
+        doneCommits.push(c);
+      }
+    }
+
     rebasingState = {
       currentCommit: repository.state.rebaseCommit,
-      origBranchName: await rebaseHeadNameFiletask!,
+      origBranchName: await rebaseHeadNameFileTask!,
       ontoBranch,
-      doneCommits: [],
-      upcomingCommits: []
+      doneCommits,
+      upcomingCommits
     };
   }
 

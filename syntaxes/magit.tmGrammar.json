@@ -16,12 +16,19 @@
         },
         {
           "include": "#modified"
+        },
+        {
+          "include": "#highlights"
         }
       ]
     },
     "sectionHeader": {
       "match": "Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits|Unmerged into|Unpulled from|GitError!|(Merging .*(?= \\())|(Rebasing .* onto .*$)",
       "name": "markup.bold keyword.section.header.magit"
+    },
+    "highlights": {
+      "match": "^(join)",
+      "name": "string.highlight"
     },
     "modified": {
       "match": "^(modified|new file|deleted|renamed|copied|unmerged)   .*$",

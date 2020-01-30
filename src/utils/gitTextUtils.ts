@@ -3,6 +3,7 @@ import { Uri } from 'vscode';
 import { Section } from '../views/general/sectionHeader';
 import { MagitMergingState } from '../models/magitMergingState';
 import * as Constants from '../common/constants';
+import { Commit } from '../typings/git';
 
 export default class GitTextUtils {
 
@@ -53,6 +54,20 @@ export default class GitTextUtils {
         }
       });
     return [left, right];
+  }
+
+  public static commitDetailTextToCommit(commitText: string): Commit {
+
+    const hashMatch = /(?:^From )(.*?) /gm.exec(commitText);
+    const messageMatch = /(?:^Subject: )(.*?)$/gm.exec(commitText);
+    const authorMatch = /(?:^From: )(.*?) </gm.exec(commitText);
+
+    return {
+      hash: hashMatch?.length && hashMatch?.length > 1 ? hashMatch[1] : '',
+      message: messageMatch?.length && messageMatch?.length > 1 ? messageMatch[1] : '',
+      parents: [],
+      authorEmail: authorMatch?.length && authorMatch?.length > 1 ? authorMatch[1] : '',
+    };
   }
 
   public static shortHash(hash?: string): string {

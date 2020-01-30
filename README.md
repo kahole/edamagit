@@ -1,4 +1,3 @@
-
 ## TODO NEXT UP: fold management. What should be folded at the start?
 
 #### Manual folding:
@@ -38,6 +37,13 @@ FIRST TIME OPENING: default fold levels
   Bug#3
   Section model is responsible for too much
   Must fix. Fine for deciding what section something is. But changes and hunks should use another enum, because it isnt one-to-one between them
+
+## Feature requests
+  Feature#1
+    magit-file-popup
+      - Staging
+      - Log
+      - Blaming
 
 ## FUTURE: Eie egen modell
 Burde ikke extende git modellen kanskje.
