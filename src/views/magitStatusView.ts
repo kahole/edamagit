@@ -52,10 +52,9 @@ export default class MagitStatusView extends DocumentView {
       // TODO: refactor into own view
       this.addSubview(
         new TextView(`Rebasing ${magitState.rebasingState.origBranchName} onto ${magitState.rebasingState.ontoBranch.name}`),
-        // TODO: pick
         ...magitState.rebasingState.upcomingCommits.map(c => new CommitItemView(c)),
         new TextView(`join ${GitTextUtils.shortHash(magitState.rebasingState.currentCommit.hash)} ${GitTextUtils.shortCommitMessage(magitState.rebasingState.currentCommit.message)}`),
-        // TODO: done
+        // TODO: Wrong order, wrong hashes! fix in data steps
         ...magitState.rebasingState.doneCommits.map(c => new CommitItemView(c)),
         new TextView(`done ${GitTextUtils.shortHash(magitState.HEAD?.commitDetails.hash)} ${GitTextUtils.shortCommitMessage(magitState.HEAD?.commitDetails.message)}`),
         new TextView(`onto ${GitTextUtils.shortHash(magitState.rebasingState.ontoBranch.commit)} ${GitTextUtils.shortCommitMessage(magitState.rebasingState.ontoBranch.commitDetails?.message)}`),
