@@ -1,5 +1,10 @@
 ## TODO NEXT UP: fold management. What should be folded at the start?
 
+#### Crazy idea on foldHack branch
+
+use dynamic foldingProvider based on folded boolean on views
+and call fold all, all the time
+
 #### Manual folding:
   TAB on view toggles fold v unfold propert
      -> Trigger rerender
