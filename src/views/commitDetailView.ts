@@ -14,8 +14,6 @@ export class CommitDetailView extends DocumentView {
   constructor(uri: Uri, private commit: MagitCommit) {
     super(uri);
 
-    // this.addSubview(new TextView(commit.hash));
-    // this.addSubview(new TextView(commit.authorEmail));
     const commitTextView = new TextView(commit.diff);
     commitTextView.isHighlightable = false;
     this.addSubview(commitTextView);

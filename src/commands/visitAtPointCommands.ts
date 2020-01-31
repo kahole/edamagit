@@ -24,7 +24,7 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
   else if (selectedView instanceof HunkView) {
 
     const changeHunk = (selectedView as HunkView).changeHunk;
-
+    workspace.openTextDocument(changeHunk.uri).then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn()));
 
   } else if (selectedView instanceof CommitItemView) {
 
@@ -45,7 +45,10 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
     const stash = (selectedView as StashItemView).stash;
     const uri = StashDetailView.encodeLocation(repository, stash);
 
-    views.set(uri.toString(), new StashDetailView(uri, stash));
+    const result = await gitRun(repository, ['show', `stash@{${stash.index}}`]);
+    const stashDiff = result.stdout;
+
+    views.set(uri.toString(), new StashDetailView(uri, stash, stashDiff));
     workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn()));
   }
 }

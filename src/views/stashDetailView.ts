@@ -10,11 +10,11 @@ export class StashDetailView extends DocumentView {
   static UriPath: string = 'stash.magit';
   needsUpdate = false;
 
-  constructor(public uri: Uri, stash: Stash) {
+  constructor(public uri: Uri, stash: Stash, diff: string) {
     super(uri);
 
-    this.addSubview(new TextView(stash.index + ''));
-    this.addSubview(new TextView(stash.description));
+    this.addSubview(new TextView(`Stash@{${stash.index}} ${stash.description}`));
+    this.addSubview(new TextView(diff));
   }
 
   public update(repository: MagitRepository): void { }
