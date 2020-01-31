@@ -3,7 +3,7 @@ import { MagitRepository } from '../models/magitRepository';
 import { TextEditor, window } from 'vscode';
 import { DocumentView } from '../views/general/documentView';
 
-export class CommandPrimer {
+export class Command {
 
   // static primeRepo(command: (repository: MagitRepository) => Promise<void>) {
   //   return (editor: TextEditor) => {
@@ -26,9 +26,6 @@ export class CommandPrimer {
           await command(repository, currentView);
         } catch (error) {
           if (error.gitErrorCode) {
-            // This needs to be cleared somehow as well?
-            // Maybe it gets removed once it is rendered. So next render will not have it?
-            // e.g:  GitError! Your local changes to the following files would be overwritten by checkout
             repository.magitState!.latestGitError = error.stderr ?? error.message;
           } else {
             // This error type, too heavy for most errors?

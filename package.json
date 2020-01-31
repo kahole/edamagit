@@ -11,7 +11,9 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:extension.magit"
+    "onCommand:extension.magit",
+    "onCommand:extension.magit-dispatch",
+    "onCommand:extension.magit-file-popup"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -19,6 +21,14 @@
       {
         "command": "extension.magit",
         "title": "Magit Status"
+      },
+      {
+        "command": "extension.magit-dispatch",
+        "title": "Magit Dispatch"
+      },
+      {
+        "command": "extension.magit-file-popup",
+        "title": "Magit File Popup"
       },
       {
         "command": "extension.magit-visit-at-point",
@@ -45,8 +55,16 @@
         "title": "Magit Merging"
       },
       {
+        "command": "extension.magit-rebasing",
+        "title": "Magit Rebasing"
+      },
+      {
         "command": "extension.magit-pushing",
         "title": "Magit Pushing"
+      },
+      {
+        "command": "extension.magit-pulling",
+        "title": "Magit Pulling"
       },
       {
         "command": "extension.magit-stage",
@@ -76,11 +94,19 @@
     "menus": {
       "commandPalette": [
         {
+          "command": "extension.magit-help",
+          "when": "editorLangId == magit"
+        },
+        {
           "command": "extension.magit-branching",
           "when": "editorLangId == magit"
         },
         {
           "command": "extension.magit-merging",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "extension.magit-rebasing",
           "when": "editorLangId == magit"
         },
         {
@@ -120,6 +146,10 @@
           "when": "editorLangId == magit"
         },
         {
+          "command": "extension.magit-pulling",
+          "when": "editorLangId == magit"
+        },
+        {
           "command": "extension.magit-stashing",
           "when": "editorLangId == magit"
         }
@@ -150,6 +180,11 @@
       }
     ],
     "keybindings": [
+      {
+        "command": "extension.magit",
+        "key": "ctrl+x g",
+        "when": "editorTextFocus"
+      },
       {
         "command": "editor.toggleFold",
         "key": "tab",
@@ -193,6 +228,11 @@
       {
         "command": "extension.magit-merging",
         "key": "m",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "extension.magit-rebasing",
+        "key": "r",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {

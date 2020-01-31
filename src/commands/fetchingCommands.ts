@@ -26,13 +26,10 @@ export async function fetching(repository: MagitRepository, currentView: Documen
 
   fetchingMenuItems.push({ label: 'o', description: 'another branch', action: fetchAnotherBranch });
 
-  // MINOR: more fetching options exist in magit
-  // - explicit refspec
-  // - submodules
-  //fetchingMenuItems.push({ label: 'o', description: 'another branch', action: () => { } });
-
   return MenuUtil.showMenu({ title: 'Fetching', commands: fetchingMenuItems }, { repository, currentView });
 }
+
+// TODO: fetching: some work remains for MVP
 
 async function fetchFromPushRemote() {
 

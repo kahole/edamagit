@@ -33,7 +33,15 @@ export class MenuUtil {
 
       _quickPick.items = menu.commands;
 
+      // Select with single key stroke
+
       const eventListenerDisposable = _quickPick.onDidChangeValue(async (e) => {
+        if (_quickPick.value === 'q') {
+          _quickPick.dispose();
+          eventListenerDisposable.dispose();
+          acceptListenerDisposable.dispose();
+          resolve();
+        }
         const chosenItems = _quickPick.activeItems.filter(i => i.label === _quickPick.value);
         _quickPick.value = '';
         _quickPick.dispose();
@@ -47,7 +55,7 @@ export class MenuUtil {
         }
       });
 
-      // Keep both of these (Select with key or with arrows + enter)
+      // Select with key or with arrows + enter
 
       const acceptListenerDisposable = _quickPick.onDidAccept(async () => {
 

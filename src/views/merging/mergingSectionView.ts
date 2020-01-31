@@ -1,6 +1,4 @@
 import { View } from '../general/view';
-import { Section, SectionHeaderView } from '../general/sectionHeader';
-import { Stash } from '../../common/gitApiExtensions';
 import { TextView } from '../general/textView';
 import { LineBreakView } from '../general/lineBreakView';
 import { MagitMergingState } from '../../models/magitMergingState';

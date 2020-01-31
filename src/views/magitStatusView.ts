@@ -14,6 +14,7 @@ import { MergingSectionView } from './merging/mergingSectionView';
 import { UnsourcedCommitSectionView } from './commits/unsourcedCommitsSectionView';
 import { MagitRepository } from '../models/magitRepository';
 import GitTextUtils from '../utils/gitTextUtils';
+import { RebasingSectionView } from './rebasing/rebasingSectionView';
 
 export default class MagitStatusView extends DocumentView {
 
@@ -41,25 +42,8 @@ export default class MagitStatusView extends DocumentView {
       this.addSubview(new MergingSectionView(magitState.mergingState));
     }
 
-    // TODO: Rebasing status
-    // Data location:
-    // 
-    // index of next commit in rebase:
-    //   .git/rebase-apply/next
-    // 
-
     if (magitState.rebasingState) {
-      // TODO: refactor into own view
-      this.addSubview(
-        new TextView(`Rebasing ${magitState.rebasingState.origBranchName} onto ${magitState.rebasingState.ontoBranch.name}`),
-        ...magitState.rebasingState.upcomingCommits.map(c => new CommitItemView(c)),
-        new TextView(`join ${GitTextUtils.shortHash(magitState.rebasingState.currentCommit.hash)} ${GitTextUtils.shortCommitMessage(magitState.rebasingState.currentCommit.message)}`),
-        // TODO: Wrong order, wrong hashes! fix in data steps
-        ...magitState.rebasingState.doneCommits.map(c => new CommitItemView(c)),
-        new TextView(`done ${GitTextUtils.shortHash(magitState.HEAD?.commitDetails.hash)} ${GitTextUtils.shortCommitMessage(magitState.HEAD?.commitDetails.message)}`),
-        new TextView(`onto ${GitTextUtils.shortHash(magitState.rebasingState.ontoBranch.commit)} ${GitTextUtils.shortCommitMessage(magitState.rebasingState.ontoBranch.commitDetails?.message)}`),
-        new LineBreakView()
-      );
+      this.addSubview(new RebasingSectionView(magitState.rebasingState));
     }
 
     if (magitState.untrackedFiles.length) {

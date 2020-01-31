@@ -11,10 +11,11 @@ import { MagitBranch } from '../models/magitBranch';
 import { Section } from '../views/general/sectionHeader';
 import { gitRun } from '../utils/gitRawRunner';
 import * as Constants from '../common/constants';
+import { getCommit } from '../utils/commitCache';
 
 export async function magitRefresh() { }
 
-export async function magitStatus(preserveFocus = false) {
+export async function magitStatus(preserveFocus = false): Promise<any> {
 
   if (window.activeTextEditor) {
 
@@ -42,9 +43,8 @@ export async function magitStatus(preserveFocus = false) {
             // Open and focus magit status view
             // Run update
             await MagitUtils.magitStatusAndUpdate(repository, view);
-            workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false }));
             console.log('Update existing view');
-            return;
+            return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false }));
           }
         }
       } else {
@@ -56,35 +56,39 @@ export async function magitStatus(preserveFocus = false) {
         const magitRepo: MagitRepository = repository;
         magitRepositories.set(repository.rootUri.path, repository);
 
-        internalMagitStatus(magitRepo)
-          .then(() => {
-            const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
-            views.set(uri.toString(), new MagitStatusView(uri, magitRepo.magitState!));
-            workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false }))
+        await internalMagitStatus(magitRepo);
 
-              // TODO LATE PRI: branch highlighting...
-              // THIS WORKS
-              // Decorations could be added by the views in the view hierarchy?
-              // yes as we go down the hierarchy make these decorations at exactly the points wanted
-              // and should be pretty simple to collect them and set the editors decorations
-              // needs something super smart.. https://github.com/Microsoft/vscode/issues/585
-              // .then(e => e.setDecorations(
-              //   window.createTextEditorDecorationType({
-              //     color: 'rgba(100,200,100,0.5)',
-              //     border: '0.1px solid grey'
-              //   }), [new Range(0, 11, 0, 17)]))
-              // MINOR: clean up all of this
-              .then(() => {
-                return commands.executeCommand('editor.foldLevel2');
-              });
+        const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
+        views.set(uri.toString(), new MagitStatusView(uri, magitRepo.magitState!));
+
+        return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false }))
+
+          // TODO LATE PRI: branch highlighting...
+          // THIS WORKS
+          // Decorations could be added by the views in the view hierarchy?
+          // yes as we go down the hierarchy make these decorations at exactly the points wanted
+          // and should be pretty simple to collect them and set the editors decorations
+          // needs something super smart.. https://github.com/Microsoft/vscode/issues/585
+          // .then(e => e.setDecorations(
+          //   window.createTextEditorDecorationType({
+          //     color: 'rgba(100,200,100,0.5)',
+          //     border: '0.1px solid grey'
+          //   }), [new Range(0, 11, 0, 17)]))
+          // MINOR: clean up all of this
+          .then(() => {
+            return commands.executeCommand('editor.foldLevel2');
           });
+
       } else {
         // Prompt to create repo
-        await commands.executeCommand('git.init');
-        magitStatus();
+        const newRepo = await commands.executeCommand('git.init');
+        if (newRepo) {
+          return magitStatus();
+        }
       }
     }
     else {
+      // MINOR: could be nice to rather show the list of repos to choose from?
       throw new Error('Current file not part of a workspace');
     }
   }
@@ -166,78 +170,73 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   const rebaseHeadNamePath = Uri.parse(dotGitPath + 'rebase-apply/head-name');
   const rebaseOntoPath = Uri.parse(dotGitPath + 'rebase-apply/onto');
-  const rebaseHeadNameFileTask = repository.state.rebaseCommit ? workspace.fs.readFile(rebaseHeadNamePath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, '')) : undefined;
-  const rebaseOntoPathFileTask = repository.state.rebaseCommit ? workspace.fs.readFile(rebaseOntoPath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, '')) : undefined;
 
-  const rebaseCommitListTask = repository.state.rebaseCommit ? workspace.fs.readFile(Uri.parse(dotGitPath + 'rebase-apply/last')).then(f => f.toString().replace(Constants.FinalLineBreakRegex, '')).then(Number.parseInt)
-    .then(last => Promise.all(Array.from(Array(last).keys()).map(
-      index => workspace.fs.readFile(Uri.parse(dotGitPath + 'rebase-apply/' + (index + 1).toString().padStart(4, '0'))).then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''))
-        .then(GitTextUtils.commitDetailTextToCommit)
-    ))) : undefined;
+  let rebaseHeadNameFileTask: Thenable<string>;
+  let rebaseOntoPathFileTask: Thenable<string>;
+  let rebaseCommitListTask: Thenable<Commit[]> | undefined = undefined;
+  let rebaseNextIndex: number = 0;
 
+  if (repository.state.rebaseCommit) {
+    rebaseHeadNameFileTask = workspace.fs.readFile(rebaseHeadNamePath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''));
+    rebaseOntoPathFileTask = workspace.fs.readFile(rebaseOntoPath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''));
 
-  // TODO: drop the interesting commit thing?
+    const rebaseLastIndexTask = workspace.fs.readFile(Uri.parse(dotGitPath + 'rebase-apply/last')).then(f => f.toString().replace(Constants.FinalLineBreakRegex, '')).then(Number.parseInt);
+    rebaseNextIndex = await workspace.fs.readFile(Uri.parse(dotGitPath + 'rebase-apply/next')).then(f => f.toString().replace(Constants.FinalLineBreakRegex, '')).then(Number.parseInt);
+
+    const indices: number[] = [];
+
+    for (let i = await rebaseLastIndexTask; i > rebaseNextIndex; i--) {
+      indices.push(i);
+    }
+
+    rebaseCommitListTask =
+      Promise.all(
+        indices.map(
+          index => workspace.fs.readFile(Uri.parse(dotGitPath + 'rebase-apply/' + index.toString().padStart(4, '0'))).then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''))
+            .then(GitTextUtils.commitDetailTextToCommit)
+        ));
+  }
+
   const commitTasks = Promise.all(
     interestingCommits
-      .map(c => repository.getCommit(c)));
+      .map(c => getCommit(repository, c)));
 
-
-  //TODO: await stuff only where its needed?
-
-  const [commits, workingTreeChanges, indexChanges, mergeChanges, stashes, log] =
-    await Promise.all([
-      commitTasks,
-      workingTreeChangesTasks,
-      indexChangesTasks,
-      mergeChangesTasks,
-      stashTask,
-      logTask
-    ]);
-
-  // TODO: load details about the merging commits, ONLY if there is a mergingState !
-  // make a nice chain of commands that can be awaited for, like the ones above.
   let mergingState;
   try {
-    mergingState =
-      await Promise.all([
-        mergeHeadFileTask,
-        mergeMsgFileTask
-      ])
-        .then(([mergeHeadFile, mergeMsgFile]) => (GitTextUtils.parseMergeStatus(mergeHeadFile, mergeMsgFile)));
+    const parsedMergeState = GitTextUtils.parseMergeStatus(await mergeHeadFileTask, await mergeMsgFileTask);
+
+    if (parsedMergeState) {
+      const [mergeCommits, mergingBranches] = parsedMergeState;
+      mergingState = {
+        mergingBranches,
+        commits: await Promise.all(mergeCommits.map(c => getCommit(repository, c)))
+      };
+    }
   } catch { }
+
+  const log = await logTask;
 
   let rebasingState;
   if (repository.state.rebaseCommit) {
-    const ontoCommit = await rebaseOntoPathFileTask!;
 
-    const ontoBranch = repository.state.refs.find(ref => ref.commit === ontoCommit && ref.type !== RefType.RemoteHead) as MagitBranch;
+    const ontoCommit = await getCommit(repository, await rebaseOntoPathFileTask!);
 
-    const rebaseCommits = await rebaseCommitListTask;
+    const ontoBranch = repository.state.refs.find(ref => ref.commit === ontoCommit.hash && ref.type !== RefType.RemoteHead) as MagitBranch;
+    ontoBranch.commitDetails = ontoCommit;
 
-    const doneCommits: Commit[] = [];
-    const upcomingCommits: Commit[] = [];
-
-    let pastCurrent = false;
-    for (const c of rebaseCommits ?? []) {
-      if (c.hash === repository.state.rebaseCommit.hash) {
-        pastCurrent = true;
-      } else if (pastCurrent) {
-        upcomingCommits.push(c);
-      } else {
-        doneCommits.push(c);
-      }
-    }
+    const doneCommits: Commit[] = log.slice(0, rebaseNextIndex - 1);
+    const upcomingCommits: Commit[] = (await rebaseCommitListTask) ?? [];
 
     rebasingState = {
       currentCommit: repository.state.rebaseCommit,
-      origBranchName: await rebaseHeadNameFileTask!,
+      origBranchName: (await rebaseHeadNameFileTask!).split('/')[2],
       ontoBranch,
       doneCommits,
       upcomingCommits
     };
   }
 
-  const commitMap: { [id: string]: Commit; } = commits.reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});
+  const commitMap: { [id: string]: Commit; } = (await commitTasks).reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});
 
   const HEAD = repository.state.HEAD as MagitBranch | undefined;
 
@@ -251,8 +250,23 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
     // MINOR: clean up?
     try {
-      const remote = await repository.getConfig(`branch.${HEAD.name}.pushRemote`);
-      HEAD.pushRemote = { remote, name: HEAD!.name! };
+      const pushRemote = await repository.getConfig(`branch.${HEAD.name}.pushRemote`);
+
+      const upstreamRemote = HEAD.upstream?.remote;
+
+      const upstreamRemoteCommit = repository.state.refs.find(ref => ref.remote === upstreamRemote && ref.name === `${upstreamRemote}/${HEAD.upstream?.name}`)?.commit;
+      const upstreamRemoteCommitDetails = upstreamRemoteCommit ? getCommit(repository, upstreamRemoteCommit) : undefined;
+
+      const pushRemoteCommit = repository.state.refs.find(ref => ref.remote === pushRemote && ref.name === `${pushRemote}/${HEAD.name}`)?.commit;
+      const pushRemoteCommitDetails = pushRemoteCommit ? getCommit(repository, pushRemoteCommit) : undefined;
+
+      HEAD.pushRemote = { remote: pushRemote, name: HEAD.name!, commit: await pushRemoteCommitDetails };
+
+      if (HEAD.upstream) {
+        HEAD.upstreamRemote = HEAD.upstream;
+        HEAD.upstreamRemote.commit = await upstreamRemoteCommitDetails;
+
+      }
     } catch { }
   }
 
@@ -263,11 +277,11 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   repository.magitState = {
     HEAD,
-    stashes,
+    stashes: await stashTask,
     log,
-    workingTreeChanges,
-    indexChanges,
-    mergeChanges,
+    workingTreeChanges: await workingTreeChangesTasks,
+    indexChanges: await indexChangesTasks,
+    mergeChanges: await mergeChangesTasks,
     untrackedFiles,
     rebasingState,
     mergingState,
