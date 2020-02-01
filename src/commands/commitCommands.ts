@@ -71,10 +71,11 @@ export async function commit(repository: MagitRepository, commitArgs: string[] =
     // MINOR: seriously hacky. Too bad about editor.hide() and editor.show()
     const editor = await stagedEditor;
     if (editor) {
-      const stagedEditorViewColumn = MagitUtils.oppositeActiveViewColumn();
-      await window.showTextDocument(editor.document, stagedEditorViewColumn);
-      await commands.executeCommand('workbench.action.closeActiveEditor');
-      return commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === ViewColumn.One ? 'Right' : 'Left'}`);
+      // editor.hide();
+      // const stagedEditorViewColumn = MagitUtils.oppositeActiveViewColumn();
+      // await window.showTextDocument(editor.document, stagedEditorViewColumn);
+      // await commands.executeCommand('workbench.action.closeActiveEditor');
+      // return commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === ViewColumn.One ? 'Right' : 'Left'}`);
     }
   }
 }
