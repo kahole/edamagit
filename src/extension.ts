@@ -10,7 +10,6 @@ import { MagitRepository } from './models/magitRepository';
 import { magitCommit } from './commands/commitCommands';
 import { magitStage, magitStageAll, magitUnstageAll, magitUnstage } from './commands/stagingCommands';
 import { saveClose } from './commands/macros';
-import FoldingRangeProvider from './providers/foldingRangeProvider';
 import HighlightProvider from './providers/highlightProvider';
 import { Command } from './commands/commandPrimer';
 import * as Constants from './common/constants';
@@ -44,12 +43,10 @@ export function activate(context: ExtensionContext) {
   gitApi = gitExtension.getAPI(1);
 
   const contentProvider = new ContentProvider();
-  // const foldingRangeProvider = new FoldingRangeProvider();
   const highlightProvider = new HighlightProvider();
 
   const providerRegistrations = Disposable.from(
     workspace.registerTextDocumentContentProvider(Constants.MagitUriScheme, contentProvider),
-    // languages.registerFoldingRangeProvider(Constants.MagitDocumentSelector, foldingRangeProvider),
     languages.registerDocumentHighlightProvider(Constants.MagitDocumentSelector, highlightProvider)
   );
   context.subscriptions.push(
@@ -85,13 +82,12 @@ export function activate(context: ExtensionContext) {
       selectedView.folded = !selectedView.folded;
       view.triggerUpdate();
     }
-
   }, false)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-file-popup', (textEditor) => {
     const file = textEditor.document.uri.fsPath;
 
-    // TODO: refactor and show menu
+    // TODO: refactor and show file action menu
     window.showInformationMessage(file);
 
   }));

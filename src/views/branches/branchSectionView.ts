@@ -1,5 +1,4 @@
 import { View } from '../general/view';
-import { MagitState } from '../../models/magitState';
 import { BranchHeaderView } from './branchHeaderView';
 import { RemoteBranchHeaderView } from './remoteBranchHeaderView';
 import { TextView } from '../general/textView';
