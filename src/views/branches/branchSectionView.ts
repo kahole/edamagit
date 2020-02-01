@@ -6,7 +6,8 @@ import { TextView } from '../general/textView';
 import { MagitBranch } from '../../models/magitBranch';
 
 export class BranchSectionView extends View {
-  isFoldable = true;
+  // MINOR: foldable branch headers
+  // isFoldable = true;
 
   constructor(HEAD?: MagitBranch) {
     super();

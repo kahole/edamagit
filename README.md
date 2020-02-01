@@ -1,5 +1,9 @@
 ## TODO NEXT UP: fold management. What should be folded at the start?
 
+#### Even crazier idea:
+
+  hash views to save folded state between lifecycles
+
 #### Crazy idea on foldHack branch
 
 use dynamic foldingProvider based on folded boolean on views
@@ -51,6 +55,8 @@ FIRST TIME OPENING: default fold levels
      This means commands need to be able to handle no VIEW.
      This should really be no extra effort
      Might just need to prime a bit smarter?
+
+## TODO: Thenables dont work with regular try/catch !
 
 ## FUTURE: Eie egen modell
 Burde ikke extende git modellen kanskje.

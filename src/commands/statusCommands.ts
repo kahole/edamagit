@@ -61,23 +61,23 @@ export async function magitStatus(preserveFocus = false): Promise<any> {
         const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
         views.set(uri.toString(), new MagitStatusView(uri, magitRepo.magitState!));
 
-        return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false }))
+        return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false }));
 
-          // TODO LATE PRI: branch highlighting...
-          // THIS WORKS
-          // Decorations could be added by the views in the view hierarchy?
-          // yes as we go down the hierarchy make these decorations at exactly the points wanted
-          // and should be pretty simple to collect them and set the editors decorations
-          // needs something super smart.. https://github.com/Microsoft/vscode/issues/585
-          // .then(e => e.setDecorations(
-          //   window.createTextEditorDecorationType({
-          //     color: 'rgba(100,200,100,0.5)',
-          //     border: '0.1px solid grey'
-          //   }), [new Range(0, 11, 0, 17)]))
-          // MINOR: clean up all of this
-          .then(() => {
-            return commands.executeCommand('editor.foldLevel2');
-          });
+        // TODO LATE PRI: branch highlighting...
+        // THIS WORKS
+        // Decorations could be added by the views in the view hierarchy?
+        // yes as we go down the hierarchy make these decorations at exactly the points wanted
+        // and should be pretty simple to collect them and set the editors decorations
+        // needs something super smart.. https://github.com/Microsoft/vscode/issues/585
+        // .then(e => e.setDecorations(
+        //   window.createTextEditorDecorationType({
+        //     color: 'rgba(100,200,100,0.5)',
+        //     border: '0.1px solid grey'
+        //   }), [new Range(0, 11, 0, 17)]))
+        // MINOR: clean up all of this
+        // .then(() => {
+        //   return commands.executeCommand('editor.foldLevel2');
+        // });
 
       } else {
         // Prompt to create repo
@@ -165,8 +165,9 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   const mergeHeadPath = Uri.parse(dotGitPath + 'MERGE_HEAD');
   const mergeMsgPath = Uri.parse(dotGitPath + 'MERGE_MSG');
-  const mergeHeadFileTask = workspace.fs.readFile(mergeHeadPath).then(f => f.toString());
-  const mergeMsgFileTask = workspace.fs.readFile(mergeMsgPath).then(f => f.toString());
+  // MINOR: only do these if there are merge commits in repo state or something?
+  const mergeHeadFileTask = workspace.fs.readFile(mergeHeadPath).then(f => f.toString(), err => undefined);
+  const mergeMsgFileTask = workspace.fs.readFile(mergeMsgPath).then(f => f.toString(), err => undefined);
 
   const rebaseHeadNamePath = Uri.parse(dotGitPath + 'rebase-apply/head-name');
   const rebaseOntoPath = Uri.parse(dotGitPath + 'rebase-apply/onto');
@@ -203,14 +204,18 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   let mergingState;
   try {
-    const parsedMergeState = GitTextUtils.parseMergeStatus(await mergeHeadFileTask, await mergeMsgFileTask);
+    const mergeHeadText = await mergeHeadFileTask;
+    const mergeMsgText = await mergeMsgFileTask;
+    if (mergeHeadText && mergeMsgText) {
+      const parsedMergeState = GitTextUtils.parseMergeStatus(mergeHeadText, mergeMsgText);
 
-    if (parsedMergeState) {
-      const [mergeCommits, mergingBranches] = parsedMergeState;
-      mergingState = {
-        mergingBranches,
-        commits: await Promise.all(mergeCommits.map(c => getCommit(repository, c)))
-      };
+      if (parsedMergeState) {
+        const [mergeCommits, mergingBranches] = parsedMergeState;
+        mergingState = {
+          mergingBranches,
+          commits: await Promise.all(mergeCommits.map(c => getCommit(repository, c)))
+        };
+      }
     }
   } catch { }
 

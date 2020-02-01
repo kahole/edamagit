@@ -23,6 +23,10 @@
         "title": "Magit Status"
       },
       {
+        "command": "extension.magit-toggle-fold",
+        "title": "Magit Toggle Fold"
+      },
+      {
         "command": "extension.magit-dispatch",
         "title": "Magit Dispatch"
       },
@@ -186,7 +190,7 @@
         "when": "editorTextFocus"
       },
       {
-        "command": "editor.toggleFold",
+        "command": "extension.magit-toggle-fold",
         "key": "tab",
         "when": "editorTextFocus && editorLangId == magit"
       },

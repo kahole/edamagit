@@ -3,7 +3,6 @@ import { magitRepositories, views } from '../extension';
 import { TextEditor, TextDocument, window, ViewColumn } from 'vscode';
 import { internalMagitStatus } from '../commands/statusCommands';
 import { DocumentView } from '../views/general/documentView';
-import MagitStatusView from '../views/magitStatusView';
 
 export default class MagitUtils {
   public static getCurrentMagitRepo(document: TextDocument): MagitRepository | undefined {

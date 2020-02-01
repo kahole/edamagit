@@ -25,6 +25,7 @@ import { rebasing } from './commands/rebasingCommands';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
+
 export let gitApi: API;
 
 export function activate(context: ExtensionContext) {
@@ -43,12 +44,12 @@ export function activate(context: ExtensionContext) {
   gitApi = gitExtension.getAPI(1);
 
   const contentProvider = new ContentProvider();
-  const foldingRangeProvider = new FoldingRangeProvider();
+  // const foldingRangeProvider = new FoldingRangeProvider();
   const highlightProvider = new HighlightProvider();
 
   const providerRegistrations = Disposable.from(
     workspace.registerTextDocumentContentProvider(Constants.MagitUriScheme, contentProvider),
-    languages.registerFoldingRangeProvider(Constants.MagitDocumentSelector, foldingRangeProvider),
+    // languages.registerFoldingRangeProvider(Constants.MagitDocumentSelector, foldingRangeProvider),
     languages.registerDocumentHighlightProvider(Constants.MagitDocumentSelector, highlightProvider)
   );
   context.subscriptions.push(
@@ -76,6 +77,16 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-stage-all', Command.primeRepoAndView(magitStageAll)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-unstage', Command.primeRepoAndView(magitUnstage)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-unstage-all', Command.primeRepoAndView(magitUnstageAll)));
+
+  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-toggle-fold', Command.primeRepoAndView(async (repo: MagitRepository, view: DocumentView) => {
+    const selectedView = view.click(window.activeTextEditor!.selection.active);
+
+    if (selectedView?.isFoldable) {
+      selectedView.folded = !selectedView.folded;
+      view.triggerUpdate();
+    }
+
+  }, false)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-file-popup', (textEditor) => {
     const file = textEditor.document.uri.fsPath;

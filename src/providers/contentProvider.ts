@@ -6,7 +6,7 @@ import { magitStatus } from '../commands/statusCommands';
 
 export default class ContentProvider implements vscode.TextDocumentContentProvider {
 
-  private viewUpdatedEmitter = new vscode.EventEmitter<vscode.Uri>();
+  public viewUpdatedEmitter = new vscode.EventEmitter<vscode.Uri>();
   onDidChange: vscode.Event<vscode.Uri>;
 
   private _subscriptions: vscode.Disposable;

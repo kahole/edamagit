@@ -5,6 +5,7 @@ import { MagitRepository } from '../../models/magitRepository';
 export abstract class DocumentView extends View {
 
   public emitter?: EventEmitter<Uri>;
+  needsUpdate: boolean = true;
 
   constructor(public uri: Uri) {
     super();
@@ -12,7 +13,7 @@ export abstract class DocumentView extends View {
 
   public abstract update(repository: MagitRepository): void;
 
-  protected triggerUpdate() {
+  public triggerUpdate() {
     if (this.emitter) {
       this.emitter.fire(this.uri);
     }
