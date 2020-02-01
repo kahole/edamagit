@@ -173,7 +173,8 @@
     ],
     "configurationDefaults": {
       "[magit]": {
-        "editor.lineNumbers": "off"
+        "editor.lineNumbers": "off",
+        "editor.lineHeight": 15
       }
     },
     "grammars": [

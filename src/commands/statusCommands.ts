@@ -1,5 +1,5 @@
 import { MagitChange } from '../models/magitChange';
-import { workspace, window, ViewColumn, Range, commands, Uri } from 'vscode';
+import { workspace, window, ViewColumn, Range, commands, Uri, TextDocument, Position } from 'vscode';
 import { gitApi, magitRepositories, views } from '../extension';
 import FilePathUtils from '../utils/filePathUtils';
 import GitTextUtils from '../utils/gitTextUtils';
@@ -61,23 +61,24 @@ export async function magitStatus(preserveFocus = false): Promise<any> {
         const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
         views.set(uri.toString(), new MagitStatusView(uri, magitRepo.magitState!));
 
-        return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false }));
+        return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false })
 
-        // TODO LATE PRI: branch highlighting...
-        // THIS WORKS
-        // Decorations could be added by the views in the view hierarchy?
-        // yes as we go down the hierarchy make these decorations at exactly the points wanted
-        // and should be pretty simple to collect them and set the editors decorations
-        // needs something super smart.. https://github.com/Microsoft/vscode/issues/585
-        // .then(e => e.setDecorations(
-        //   window.createTextEditorDecorationType({
-        //     color: 'rgba(100,200,100,0.5)',
-        //     border: '0.1px solid grey'
-        //   }), [new Range(0, 11, 0, 17)]))
-        // MINOR: clean up all of this
-        // .then(() => {
-        //   return commands.executeCommand('editor.foldLevel2');
-        // });
+          // TODO LATE PRI: branch highlighting...
+          // THIS WORKS
+          // Decorations could be added by the views in the view hierarchy?
+          // yes as we go down the hierarchy make these decorations at exactly the points wanted
+          // and should be pretty simple to collect them and set the editors decorations
+          // needs something super smart.. https://github.com/Microsoft/vscode/issues/585
+          .then(e => {
+            e.setDecorations(Constants.BranchDecoration, rangesOfWord(doc, repository?.magitState?.HEAD?.name));
+            e.setDecorations(Constants.RemoteBranchDecoration, rangesOfWord(doc, `${repository?.magitState?.HEAD?.upstreamRemote.remote}/${repository?.magitState?.HEAD?.name}`));
+            // Border possible as well
+            // e.setDecorations(
+            //   window.createTextEditorDecorationType({
+            //     color: 'rgba(100,240,100,0.5)',
+            //     border: '0.1px solid green'
+            //   }), rangesOfWord(doc, `${repository?.magitState?.HEAD?.upstreamRemote.remote}/${repository?.magitState?.HEAD?.name}`));
+          }));
 
       } else {
         // Prompt to create repo
@@ -92,6 +93,22 @@ export async function magitStatus(preserveFocus = false): Promise<any> {
       throw new Error('Current file not part of a workspace');
     }
   }
+}
+
+// MINOR: refactor, or remove
+function rangesOfWord(textDocument: TextDocument, word?: string): Range[] {
+  if (!word) {
+    return [];
+  }
+  const re = new RegExp(' ' + word, 'gi');
+
+  const results = [];
+  while (re.exec(textDocument.getText())) {
+    const endPos = textDocument.positionAt(re.lastIndex);
+    results.push(new Range(new Position(endPos.line, endPos.character - word.length), endPos));
+  }
+
+  return results;
 }
 
 export async function internalMagitStatus(repository: MagitRepository): Promise<void> {
