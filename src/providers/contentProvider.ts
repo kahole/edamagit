@@ -25,11 +25,15 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
         }),
       vscode.workspace.onDidSaveTextDocument(
         doc => {
+          if (doc.uri.fsPath.includes('.git')) {
+            return;
+          }
           for (const visibleEditor of vscode.window.visibleTextEditors) {
             if (visibleEditor.document.uri.scheme === Constants.MagitUriScheme) {
-              if (FilePathUtils.isDescendant(visibleEditor.document.uri.query, doc.uri.fsPath)) {
-                return magitStatus(true);
-              }
+              // MINOR: unecessary i think
+              // if (FilePathUtils.isDescendant(visibleEditor.document.uri.query, doc.uri.fsPath)) {
+              return magitStatus(true);
+              // }
             }
           }
         }));
