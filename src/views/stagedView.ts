@@ -36,6 +36,8 @@ export default class MagitStagedView extends DocumentView {
 
   static index = 0;
   static encodeLocation(workspacePath: string): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${MagitStagedView.UriPath}?path=${workspacePath}&index=${MagitStagedView.index++}`);
+    // TODO: need index to avoid duplication bug, so have to make a smarter decoder. Should be same format for every view
+    // return Uri.parse(`${Constants.MagitUriScheme}:${MagitStagedView.UriPath}?path=${workspacePath}&index=${MagitStagedView.index++}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${MagitStagedView.UriPath}?${workspacePath}`);
   }
 }
