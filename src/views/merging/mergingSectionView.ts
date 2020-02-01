@@ -7,6 +7,8 @@ import { CommitItemView } from '../commits/commitSectionView';
 export class MergingSectionView extends View {
   isFoldable = true;
 
+  get id() { return 'Merging'; }
+
   constructor(mergingState: MagitMergingState) {
     super();
     this.subViews = [

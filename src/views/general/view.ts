@@ -8,6 +8,7 @@ export abstract class View {
   private _folded: boolean = false;
   subViews: View[] = [];
   isFoldable: boolean = false;
+  foldedByDefault: boolean = false;
   isHighlightable: boolean = true;
 
   get folded(): boolean {
@@ -34,7 +35,7 @@ export abstract class View {
 
   protected retrieveFold() {
     if (this.isFoldable && this.id) {
-      this._folded = viewFoldStatusMemory.get(this.id) ?? false;
+      this._folded = viewFoldStatusMemory.get(this.id) ?? this.foldedByDefault;
     }
   }
 

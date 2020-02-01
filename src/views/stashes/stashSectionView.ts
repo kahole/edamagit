@@ -7,6 +7,8 @@ import { LineBreakView } from '../general/lineBreakView';
 export class StashSectionView extends View {
   isFoldable = true;
 
+  get id() { return Section.Stashes.toString(); }
+
   constructor(stashes: Stash[]) {
     super();
     this.subViews = [

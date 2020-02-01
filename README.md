@@ -1,47 +1,10 @@
-## TODO NEXT UP: fold management. What should be folded at the start?
-
-#### Even crazier idea:
-
-  hash views to save folded state between lifecycles
-
-#### Crazy idea on foldHack branch
-
-use dynamic foldingProvider based on folded boolean on views
-and call fold all, all the time
-
-#### Manual folding:
-  TAB on view toggles fold v unfold propert
-     -> Trigger rerender
- Also much simpler to save and reload the folding state.
-Makes everything else hard af
-----------
-### VSCode folding
-editor.foldLevel2 fixes a lot!
-should be called first time
-
-Otherwise the folds should be remembered i think
-
-https://github.com/microsoft/vscode/issues/37682
-editor.fold
-editor.foldRecursively
-```
-editor.fold with arguments (1, 'up', arrayOfLinesToFold). arrayOfLinesToFold consists of the first line of each range to fold.
-```
-
-- start by folding all? then unfold the relevant bits? or opposite
-
-FIRST TIME OPENING: default fold levels
-
-- All of head i guess
-- Changes should show first level: modified, new file, etc
-- Stash zero levels
-- Recent commits zero levels
-
 ## TODO: BUGS (also remember MINOR FUTURE)
 
   Bug#2
   After commiting, sometimes another magit status window is next to the existing one.
   - How to reproduce? Never happens in debug, or?
+
+## MINOR: Thenables dont work with regular try/catch !
 
 ## Feature requests
   Feature#1
@@ -55,8 +18,6 @@ FIRST TIME OPENING: default fold levels
      This means commands need to be able to handle no VIEW.
      This should really be no extra effort
      Might just need to prime a bit smarter?
-
-## TODO: Thenables dont work with regular try/catch !
 
 ## FUTURE: Eie egen modell
 Burde ikke extende git modellen kanskje.
@@ -103,8 +64,6 @@ Inspired by the original (Magit)[https://magit.vc/] for Emacs
 
 - [ ] Stable v1.0
 - [ ] Feature parity with Magit
-
-
 
 
 

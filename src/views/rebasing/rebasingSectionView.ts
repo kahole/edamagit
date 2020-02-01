@@ -9,6 +9,8 @@ import GitTextUtils from '../../utils/gitTextUtils';
 export class RebasingSectionView extends View {
   isFoldable = true;
 
+  get id() { return 'Rebasing'; }
+
   constructor(rebasingState: MagitRebasingState) {
     super();
     this.subViews = [

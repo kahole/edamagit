@@ -3,6 +3,7 @@ import { TextView } from '../general/textView';
 
 export class HunkView extends TextView {
   isFoldable = true;
+  foldedByDefault = true;
 
   get id() { return this.changeHunk.diff; }
 

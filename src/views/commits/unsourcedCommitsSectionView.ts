@@ -7,7 +7,9 @@ import { CommitItemView } from './commitSectionView';
 export class UnsourcedCommitSectionView extends View {
   isFoldable = true;
 
-  constructor(section: Section, upstream: UpstreamRef, commits: Commit[]) {
+  get id() { return this.section.toString(); }
+
+  constructor(private section: Section, upstream: UpstreamRef, commits: Commit[]) {
     super();
     this.subViews = [
       new SectionHeaderView(section, commits.length, `${upstream.remote}/${upstream.name}`),

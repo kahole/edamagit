@@ -5,6 +5,7 @@ import { ChangeHeaderView } from './changeHeaderView';
 
 export class ChangeView extends View {
   isFoldable = true;
+  foldedByDefault = true;
 
   get id() { return this.change.uri.toString() + this.change.section?.toString(); }
 
