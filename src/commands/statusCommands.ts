@@ -66,6 +66,7 @@ export async function magitStatus(preserveFocus = false): Promise<any> {
         return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false })
 
           // TODO: PROTOTYPE works. branch highlighting...
+          // Extract to a feature branch
           // THIS WORKS
           // Decorations could be added by the views in the view hierarchy?
           // yes as we go down the hierarchy make these decorations at exactly the points wanted
