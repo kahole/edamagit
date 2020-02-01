@@ -50,6 +50,7 @@ export async function commit(repository: MagitRepository, commitArgs: string[] =
     stagedEditor = workspace.openTextDocument(uri)
       .then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn(), true));
 
+    // MINOR: this needs testing on linux and windows
     // code is in path on Linux and Windows
     // can use just "code" if it is in path. Vscode command: "Shell Command: Install code in path"
     let codePath = 'code';
@@ -68,14 +69,19 @@ export async function commit(repository: MagitRepository, commitArgs: string[] =
   } catch (e) {
     window.setStatusBarMessage(`Commit canceled.`, Constants.StatusMessageDisplayTimeout);
   } finally {
-    // MINOR: seriously hacky. Too bad about editor.hide() and editor.show()
+
     const editor = await stagedEditor;
     if (editor) {
-      // editor.hide();
-      // const stagedEditorViewColumn = MagitUtils.oppositeActiveViewColumn();
-      // await window.showTextDocument(editor.document, stagedEditorViewColumn);
-      // await commands.executeCommand('workbench.action.closeActiveEditor');
-      // return commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === ViewColumn.One ? 'Right' : 'Left'}`);
+      for (const visibleEditor of window.visibleTextEditors) {
+        if (visibleEditor.document.uri === editor.document.uri) {
+          // MINOR: seriously hacky. Too bad about editor.hide() and editor.show()
+          // editor.hide();
+          const stagedEditorViewColumn = MagitUtils.oppositeActiveViewColumn();
+          await window.showTextDocument(editor.document, stagedEditorViewColumn);
+          await commands.executeCommand('workbench.action.closeActiveEditor');
+          return commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === ViewColumn.One ? 'Right' : 'Left'}`);
+        }
+      }
     }
   }
 }

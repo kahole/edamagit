@@ -44,7 +44,9 @@ export default class MagitUtils {
   }
 
   public static oppositeActiveViewColumn(): ViewColumn {
-    if (window.activeTextEditor?.viewColumn ?? 0 > ViewColumn.One) {
+    const activeColumn = window.activeTextEditor?.viewColumn ?? 0;
+
+    if (activeColumn > ViewColumn.One) {
       return ViewColumn.One;
     }
     return ViewColumn.Two;

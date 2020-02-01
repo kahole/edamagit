@@ -1,8 +1,4 @@
-## TODO: BUGS (also remember MINOR FUTURE)
-
-  Bug#2
-  After commiting, sometimes another magit status window is next to the existing one.
-  - How to reproduce? Never happens in debug, or?
+## BUGS (also remember MINOR FUTURE)
 
 ## MINOR: Thenables dont work with regular try/catch !
 

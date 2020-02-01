@@ -39,12 +39,14 @@ export async function magitStatus(preserveFocus = false): Promise<any> {
       if (repository) {
         for (const [uri, view] of views ?? []) {
           if (view instanceof MagitStatusView) {
+            // MINOR: only reuses editor if the viewColumn hits correctly
             // Resuses doc, if still exists. Which it should if the view still exists
-            // Open and focus magit status view
+            // Opens and focus magit status view
             // Run update
             await MagitUtils.magitStatusAndUpdate(repository, view);
             console.log('Update existing view');
-            return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false }));
+
+            return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false }));
           }
         }
       } else {
@@ -61,7 +63,7 @@ export async function magitStatus(preserveFocus = false): Promise<any> {
         const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
         views.set(uri.toString(), new MagitStatusView(uri, magitRepo.magitState!));
 
-        return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false })
+        return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false })
 
           // TODO: PROTOTYPE works. branch highlighting...
           // THIS WORKS

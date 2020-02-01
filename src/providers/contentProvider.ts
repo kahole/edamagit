@@ -3,6 +3,7 @@ import { views } from '../extension';
 import * as Constants from '../common/constants';
 import MagitStatusView from '../views/magitStatusView';
 import { magitStatus } from '../commands/statusCommands';
+import FilePathUtils from '../utils/filePathUtils';
 
 export default class ContentProvider implements vscode.TextDocumentContentProvider {
 
@@ -26,7 +27,9 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
         doc => {
           for (const visibleEditor of vscode.window.visibleTextEditors) {
             if (visibleEditor.document.uri.scheme === Constants.MagitUriScheme) {
-              return magitStatus(true);
+              if (FilePathUtils.isDescendant(visibleEditor.document.uri.query, doc.uri.fsPath)) {
+                return magitStatus(true);
+              }
             }
           }
         }));
