@@ -31,26 +31,6 @@ export async function pushing(repository: MagitRepository, currentView: Document
   return MenuUtil.showMenu({ title: 'Pushing', commands: pushingMenuItems }, { repository, currentView });
 }
 
-// Dont use this.. use Vscode commands as much as possible
-
-// Hvordan git push kommandoen bygges opp:
-// https://github.com/microsoft/vscode/blob/master/extensions/git/src/git.ts#L1491
-
-// kun "git push" slik den står nå
-// currentRepository._repository.pushTo()
-//   .then(() => console.log("klarte å pushe ?"))
-//   .catch(console.log);
-
-// _repository pushTo(remote?: string, name?: string, setUpstream?: boolean, forcePushMode?: ForcePushMode): Promise<void>
-
-// currentRepository.push()
-//  .then(
-//     display success message in status area, or info box
-//  )
-//  .catch(
-//        handleError somehow
-
-
 async function pushToPushRemote({ repository }: MenuState) {
 
   const pushRemote = repository.magitState?.HEAD?.pushRemote;
@@ -65,15 +45,7 @@ async function pushSetPushRemote({ repository, ...rest }: MenuState) {
   const refs: QuickItem<string>[] = repository.state.remotes
     .map(r => ({ label: r.name, description: r.pushUrl, meta: r.name }));
 
-  const chosenRemote = await QuickMenuUtil.showMenu(refs);
-
-  // TODO: possible to have freeform in same quick menu?
-
-  // Freeform
-  //  OR: if no match, use the freeform input as a new upstream
-  // if (chosenRemote === undefined) {
-  // chosenRemote = await window.showInputBox({ prompt: '' });
-  // }
+  const chosenRemote = await QuickMenuUtil.showMenuWithFreeform(refs);
 
   const ref = repository.magitState?.HEAD?.name;
 
@@ -100,12 +72,6 @@ async function pushSetUpstream({ repository }: MenuState) {
   } catch { }
 
   const ref = repository.magitState?.HEAD?.name;
-
-  // Freeform
-  //  OR: if no match, use the freeform input as a new upstream
-  if (!chosenRemote) {
-    chosenRemote = await window.showInputBox({ prompt: `Set of ${ref} upstream to` });
-  }
 
   if (chosenRemote) {
 

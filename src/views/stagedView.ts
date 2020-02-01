@@ -2,14 +2,14 @@ import * as Constants from '../common/constants';
 import { MagitState } from '../models/magitState';
 import { Section } from './general/sectionHeader';
 import { DocumentView } from './general/documentView';
-import { Uri, EventEmitter } from 'vscode';
+import { Uri } from 'vscode';
 import { ChangeSectionView } from './changes/changesSectionView';
 import { MagitRepository } from '../models/magitRepository';
+import { TextView } from './general/textView';
 
 export default class MagitStagedView extends DocumentView {
 
   static UriPath: string = 'staged.magit';
-  needsUpdate = false;
 
   constructor(uri: Uri, magitState: MagitState) {
     super(uri);
@@ -19,7 +19,7 @@ export default class MagitStagedView extends DocumentView {
   provideContent(magitState: MagitState) {
 
     this.subViews = [];
-    if (magitState.indexChanges && magitState.indexChanges.length > 0) {
+    if (magitState.indexChanges) {
 
       this.subViews = [
         new ChangeSectionView(Section.Staged, magitState.indexChanges)
@@ -36,8 +36,6 @@ export default class MagitStagedView extends DocumentView {
 
   static index = 0;
   static encodeLocation(workspacePath: string): Uri {
-    // TODO: need index to avoid duplication bug, so have to make a smarter decoder. Should be same format for every view
-    // return Uri.parse(`${Constants.MagitUriScheme}:${MagitStagedView.UriPath}?path=${workspacePath}&index=${MagitStagedView.index++}`);
-    return Uri.parse(`${Constants.MagitUriScheme}:${MagitStagedView.UriPath}?${workspacePath}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${MagitStagedView.UriPath}?${workspacePath}#${MagitStagedView.index++}`);
   }
 }

@@ -63,15 +63,19 @@ export async function magitStatus(preserveFocus = false): Promise<any> {
 
         return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewColumn.Beside, preserveFocus, preview: false })
 
-          // TODO LATE PRI: branch highlighting...
+          // TODO: PROTOTYPE works. branch highlighting...
           // THIS WORKS
           // Decorations could be added by the views in the view hierarchy?
           // yes as we go down the hierarchy make these decorations at exactly the points wanted
           // and should be pretty simple to collect them and set the editors decorations
           // needs something super smart.. https://github.com/Microsoft/vscode/issues/585
           .then(e => {
-            e.setDecorations(Constants.BranchDecoration, rangesOfWord(doc, repository?.magitState?.HEAD?.name));
-            e.setDecorations(Constants.RemoteBranchDecoration, rangesOfWord(doc, `${repository?.magitState?.HEAD?.upstreamRemote.remote}/${repository?.magitState?.HEAD?.name}`));
+            if (repository?.magitState?.HEAD) {
+              e.setDecorations(Constants.BranchDecoration, rangesOfWord(doc, repository.magitState.HEAD.name));
+              if (repository.magitState.HEAD.upstreamRemote) {
+                e.setDecorations(Constants.RemoteBranchDecoration, rangesOfWord(doc, `${repository.magitState.HEAD.upstreamRemote.remote}/${repository.magitState.HEAD.name}`));
+              }
+            }
             // Border possible as well
             // e.setDecorations(
             //   window.createTextEditorDecorationType({

@@ -38,47 +38,16 @@ export async function rebasing(repository: MagitRepository, currentView: Documen
 }
 
 async function rebase({ repository }: MenuState) {
-  const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Merge' });
+  const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Rebase' });
 
   if (ref) {
-    return _merge(repository, ref);
+    return _rebase(repository, ref);
   }
 }
 
-async function absorb({ repository }: MenuState) {
-  const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Merge' });
+async function _rebase(repository: MagitRepository, ref: string, noCommit = false, squashMerge = false) {
 
-  if (ref) {
-    await _merge(repository, ref);
-    return await repository.deleteBranch(ref, false);
-  }
-}
-
-async function mergePreview() {
-  // Commands to preview a merge between ref1 and ref2:
-  // git merge-base HEAD {ref2}
-  // git merge-tree {MERGE-BASE} HEAD {ref2}
-  // https://stackoverflow.com/questions/501407/is-there-a-git-merge-dry-run-option/6283843#6283843
-}
-
-async function _merge(repository: MagitRepository, ref: string, noCommit = false, squashMerge = false, editMessage = false) {
-
-  const args = ['merge', ref];
-
-  if (noCommit) {
-    args.push(...['--no-commit', '--no-ff']);
-  }
-
-  if (squashMerge) {
-    args.push('--squash');
-  }
-
-  if (editMessage) {
-    // TODO: This might need a separate handler, because of message editing??
-    args.push(...['--edit', '--no-ff']);
-  } else {
-    args.push('--no-edit');
-  }
+  const args = ['rebase', ref];
 
   return gitRun(repository, args);
 }
