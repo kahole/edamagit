@@ -31,9 +31,7 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
 
     const magitChange = (selectedView as ChangeView).change;
 
-    return repository
-      ._repository
-      .add([magitChange.uri], { update: magitChange.section === Section.Unstaged });
+    return stageFile(repository, magitChange.uri, magitChange.section === Section.Unstaged);
 
   } else if (selectedView instanceof ChangeSectionView) {
     const section = (selectedView as ChangeSectionView).section;
@@ -59,7 +57,7 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
       const chosenFile = await QuickMenuUtil.showMenu(files);
 
       if (chosenFile) {
-        return repository._repository.add([chosenFile], { update: false });
+        return stageFile(repository, chosenFile);
       }
 
     }
@@ -119,4 +117,10 @@ export async function magitUnstageAll(repository: MagitRepository, currentView: 
   if (await MagitUtils.confirmAction('Unstage all changes?')) {
     return commands.executeCommand('git.unstageAll');
   }
+}
+
+export async function stageFile(repository: MagitRepository, fileUri: Uri, update = false) {
+  return repository
+    ._repository
+    .add([fileUri], { update });
 }

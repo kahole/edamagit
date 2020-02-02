@@ -13,23 +13,16 @@ export default class MagitUtils {
 
     if (!repository) {
 
-      const activeWorkspaceFolder = workspace.getWorkspaceFolder(document.uri);
-
-      if (activeWorkspaceFolder) {
-        const workspaceRootPath = activeWorkspaceFolder.uri.path;
-
-        // MINOR: Any point in reusing repo from this map?
-        for (const [key, repo] of magitRepositories.entries()) {
-          if (FilePathUtils.isDescendant(key, workspaceRootPath)) {
-            return repo;
-          }
+      // MINOR: Any point in reusing repo from this map?
+      for (const [key, repo] of magitRepositories.entries()) {
+        if (FilePathUtils.isDescendant(key, document.uri.path)) {
+          return repo;
         }
-
-        repository = gitApi.repositories.filter(r => FilePathUtils.isDescendant(r.rootUri.path, workspaceRootPath))[0];
-      } else {
-        // MINOR: could be nice to rather show the list of repos to choose from?
-        throw new Error('Current file not part of a workspace');
       }
+
+      // First time encountering this repo
+      repository = gitApi.repositories.filter(r => FilePathUtils.isDescendant(r.rootUri.path, document.uri.path))[0];
+      magitRepositories.set(repository.rootUri.path, repository);
     }
 
     return repository;

@@ -34,13 +34,11 @@ export async function magitStatus(editor: TextEditor, preserveFocus = false): Pr
         return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false }));
       }
     }
-    const magitRepo: MagitRepository = repository;
-    magitRepositories.set(repository.rootUri.path, repository);
 
-    await internalMagitStatus(magitRepo);
+    await internalMagitStatus(repository);
 
-    const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
-    views.set(uri.toString(), new MagitStatusView(uri, magitRepo.magitState!));
+    const uri = MagitStatusView.encodeLocation(repository.rootUri.path);
+    views.set(uri.toString(), new MagitStatusView(uri, repository.magitState!));
 
     return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false })
 

@@ -191,6 +191,16 @@
         "when": "editorTextFocus"
       },
       {
+        "command": "extension.magit-dispatch",
+        "key": "ctrl+x alt+g",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "extension.magit-file-popup",
+        "key": "ctrl+c alt+g",
+        "when": "editorTextFocus"
+      },
+      {
         "command": "extension.magit-toggle-fold",
         "key": "tab",
         "when": "editorTextFocus && editorLangId == magit"

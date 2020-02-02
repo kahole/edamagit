@@ -22,6 +22,8 @@ import { magitDiscardAtPoint } from './commands/discardCommands';
 import { merging } from './commands/mergingCommands';
 import { rebasing } from './commands/rebasingCommands';
 import { filePopup } from './commands/filePopupCommands';
+import { DispatchView } from './views/dispatchView';
+import MagitUtils from './utils/magitUtils';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
@@ -78,15 +80,11 @@ export function activate(context: ExtensionContext) {
 
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-file-popup', Command.primeFileCommand(filePopup)));
 
-  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-dispatch', async () => {
-
-    // TODO: IDEA dispatch
-    //  dispatch should open and FOCUS a dispatch DocumentView 
-    //   that does almost nothing! just contain the popup command text, and be a magit type view
-
-    // Present giant menu of POPUP dwim commands
-    // possible?
-  }));
+  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-dispatch', Command.primeRepo(async (repository: MagitRepository) => {
+    const uri = DispatchView.encodeLocation(repository);
+    views.set(uri.toString(), new DispatchView(uri));
+    return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preview: false }));
+  }, false)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-toggle-fold', Command.primeRepoAndView(async (repo: MagitRepository, view: DocumentView) => {
     const selectedView = view.click(window.activeTextEditor!.selection.active);

@@ -1,7 +1,10 @@
 
 ## MINOR: NB! Thenables dont work with regular try/catch !
 
+## MINOR: break out / refactor commands vs internal commands a bit?
+
 ## TODO: try making switches for a command
+## TODO: try making options for a command (e.g logging)
 
 ## Feature requests
   Feature#1

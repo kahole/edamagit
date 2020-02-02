@@ -8,7 +8,7 @@ export class Command {
 
   // MINOR: this class could maybe use some refactoring?
 
-  static primeRepo(command: (repository: MagitRepository) => Promise<void>, triggersUpdate: boolean = true): (editor: TextEditor) => Promise<void> {
+  static primeRepo(command: (repository: MagitRepository) => Promise<any>, triggersUpdate: boolean = true): (editor: TextEditor) => Promise<any> {
 
     return async (editor: TextEditor) => {
       const repository = MagitUtils.getCurrentMagitRepo(editor.document);
@@ -28,7 +28,7 @@ export class Command {
     };
   }
 
-  static primeRepoAndView(command: (repository: MagitRepository, view: DocumentView) => Promise<void>, triggersUpdate: boolean = true): (editor: TextEditor) => Promise<void> {
+  static primeRepoAndView(command: (repository: MagitRepository, view: DocumentView) => Promise<any>, triggersUpdate: boolean = true): (editor: TextEditor) => Promise<any> {
 
     return async (editor: TextEditor) => {
       const [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(editor);
@@ -48,8 +48,7 @@ export class Command {
     };
   }
 
-  // TODO: prime file command with repo and file
-  static primeFileCommand(command: (repository: MagitRepository, fileUri: Uri) => Promise<void>, triggersUpdate: boolean = true): (editor: TextEditor) => Promise<void> {
+  static primeFileCommand(command: (repository: MagitRepository, fileUri: Uri) => Promise<any>, triggersUpdate: boolean = true): (editor: TextEditor) => Promise<any> {
     return async (editor: TextEditor) => {
 
       const fileUri = editor.document.uri;

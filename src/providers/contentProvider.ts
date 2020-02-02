@@ -30,10 +30,9 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
           }
           for (const visibleEditor of vscode.window.visibleTextEditors) {
             if (visibleEditor.document.uri.scheme === Constants.MagitUriScheme) {
-              // MINOR: unecessary i think
-              // if (FilePathUtils.isDescendant(visibleEditor.document.uri.query, doc.uri.fsPath)) {
-              return magitStatus(visibleEditor, true);
-              // }
+              if (FilePathUtils.isDescendant(visibleEditor.document.uri.query, doc.uri.fsPath)) {
+                return magitStatus(visibleEditor, true);
+              }
             }
           }
         }));

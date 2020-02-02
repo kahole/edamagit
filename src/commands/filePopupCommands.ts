@@ -2,11 +2,12 @@ import { Uri } from 'vscode';
 import { MenuUtil, MenuState } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
 import { magitCommit } from './commitCommands';
+import { stageFile } from './stagingCommands';
 
 const branchingMenu = {
   title: 'File Actions',
   commands: [
-    { label: 's', description: 'Stage', action: () => { } },
+    { label: 's', description: 'Stage', action: ({ repository, data }: MenuState) => stageFile(repository, data as Uri) },
     { label: 'u', description: 'Unstage', action: () => { } },
     { label: 'c', description: 'Commit', action: ({ repository }: MenuState) => magitCommit(repository) },
     // { label: 'D', description: 'Diff...', action: () => { } },
