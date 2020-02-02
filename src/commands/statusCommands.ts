@@ -96,7 +96,6 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
   const dotGitPath = repository.rootUri + '/.git/';
   const interestingCommits: string[] = [];
 
-
   const stashTask = repository._repository.getStashes();
 
   const logTask = repository.state.HEAD?.commit ? repository.log({ maxEntries: 10 }) : [];
@@ -271,9 +270,8 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
   }
 
   // MINOR: state ONchange might be interesting
-  // repository.state.onDidChange
-  // Use instead of onDidSave document? might be better to let vscode handle it, instead of doubling up potentially
-  // just need to re-render without calling repository.status()
+  // repository.state.onDidChange(() => { });
+  // It is called 4-5 times when a file is saved..
 
   repository.magitState = {
     HEAD,

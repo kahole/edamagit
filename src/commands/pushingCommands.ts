@@ -3,7 +3,7 @@ import { MagitRepository } from '../models/magitRepository';
 import { commands, window } from 'vscode';
 import { MenuItem } from '../menu/menuItem';
 import { MenuUtil, MenuState } from '../menu/menu';
-import { Remote } from '../typings/git';
+import { Remote, RefType } from '../typings/git';
 import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
 import GitTextUtils from '../utils/gitTextUtils';
 
@@ -61,8 +61,18 @@ async function pushUpstream() {
 
 async function pushSetUpstream({ repository }: MenuState) {
 
-  // TODO: add origin/name_of_this_branch to list of choices?
-  const refs: QuickItem<string>[] = repository.state.refs
+  let choices = [...repository.state.refs];
+
+  if (repository.state.remotes.length > 0 &&
+    !choices.find(ref => ref.name === repository.magitState?.HEAD?.name && ref.remote === repository.state.remotes[0].name)) {
+    choices = [{
+      name: `${repository.state.remotes[0].name}/${repository.magitState?.HEAD?.name}`,
+      remote: repository.state.remotes[0].name,
+      type: RefType.RemoteHead
+    }, ...choices];
+  }
+
+  const refs: QuickItem<string>[] = choices
     .map(r => ({ label: r.name!, description: GitTextUtils.shortHash(r.commit), meta: r.name! }));
 
   let chosenRemote;

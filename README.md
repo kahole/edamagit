@@ -19,6 +19,9 @@
      This should really be no extra effort
      Might just need to prime a bit smarter?
 
+  Feature#2
+    MINOR: Should have more logical ordering of refs and such in menus. Remote branches should be grouped below everything else e.g.
+
 ## FUTURE: Eie egen modell
 Burde ikke extende git modellen kanskje.
 Burde heller lene meg på helt egen model
