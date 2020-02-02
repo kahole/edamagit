@@ -1,61 +1,27 @@
 
-## MINOR: NB! Thenables dont work with regular try/catch !
-
-## MINOR: break out / refactor commands vs internal commands a bit?
-
 ## TODO: try making switches for a command
 ## TODO: try making options for a command (e.g logging)
 
-## Feature requests
-  Feature#1
-    magit-dispatch-popup - from any file
-    magit-file-popup
-      - Staging
-      - Log
-      - Blaming
-    
-    Also, make all commands available so long as there is an active editor.
-     This means commands need to be able to handle no VIEW.
-     This should really be no extra effort
-     Might just need to prime a bit smarter?
+## MINOR: break out / refactor commands vs internal commands a bit?
+## MINOR: NB! Thenables dont work with regular try/catch !
 
+## Feature requests
   Feature#2
     MINOR: Should have more logical ordering of refs and such in menus. Remote branches should be grouped below everything else e.g.
-
-## FUTURE: Eie egen modell
-Burde ikke extende git modellen kanskje.
-Burde heller lene meg på helt egen model
-med mappere i mellom?
-
-## FUTURE: injection for repo etc?
-@command('magit.branching', { repository: true })
-https://github.com/microsoft/vscode/blob/master/extensions/git/src/commands.ts
-
-## Workspaces
-  - Needs to support multiple workspaces (Already do this somewhat)
-  - Find out how to deal with status views and other views
-  - Dispose of stuff when quit workspace etc..
 
 ## Dispose
   - Proper use of dispose()
     https://vscode-docs.readthedocs.io/en/stable/extensions/patterns-and-principles/#disposables
     "This applies to event listening, commands, interacting with the UI, and various language contributions."
 
-## Notes
-  - Test on all platforms
+## BEFORE
+  - Test on windows, linux
 
-  - Licensing
-      o Magit name trademark? vscodemagit / Magit for VSCode / VSCodeMagit
-      o 100% gi credit Magit ofc
-      o GPL2/3, MIT, etc
-      o git.d.ts microsoft licence, effects?
+  - Licensing, crediting?
+      o magit
+      o git.d.ts microsoft licenced, effects?
 
 -----
-
-# RELEASE ALPHA MVP
-
-## Github sponsor skru på donasjoner på github?
-https://github.com/sponsors
 
 # Magit for VSCode (alpha)
 
@@ -67,8 +33,6 @@ Inspired by the original (Magit)[https://magit.vc/] for Emacs
 
 - [ ] Stable v1.0
 - [ ] Feature parity with Magit
-
-
 
 --------
 

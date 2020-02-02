@@ -9,7 +9,6 @@ import { views } from '../extension';
 import { MenuUtil, MenuState } from '../menu/menu';
 import MagitUtils from '../utils/magitUtils';
 
-
 const commitMenu = {
   title: 'Committing',
   commands: [
@@ -20,16 +19,6 @@ const commitMenu = {
     // { label: "f", description: "Fixup", action: (menuState: MenuState) => commit(menuState.repository, ['--fixup']) },
   ]
 };
-
-// inline menu here, only to set args: --amend, etc
-// a - AMEND: commit --amend
-// e - EXTEND: commit --amend --no-edit
-// w - REWORD (git commit --amend --only)
-// f - Fixup git commit --fixup  into commit from list
-// s - Squash - Squash into commit from list of commits
-// A - Augment - same as squash but with you can edit the squash message
-// F - Instant fixup
-// S - Instant squash
 
 export async function magitCommit(repository: MagitRepository) {
   return MenuUtil.showMenu(commitMenu, { repository });
@@ -84,41 +73,3 @@ export async function commit(repository: MagitRepository, commitArgs: string[] =
     }
   }
 }
-
-// let gitExecutablePath = gitApi.git.path;
-// let cwd = repository.rootUri.fsPath;
-
-// function execPromise(command: string, cwd: string): Promise<string> {
-//   return new Promise( (resolve, reject) => {
-
-//     exec(command, { cwd }, (error, stdout, stderr) => {
-//       if (error) {
-//         reject(stderr);
-//       }
-//       else {
-//         resolve(stdout);
-//       }
-//     });
-//   });
-// }
-
-// function spawnPromise(command: string, args: string[], cwd: string): Promise<string> {
-//   return new Promise( async (resolve, reject) => {
-
-//     let process = spawn(command, args, { cwd });
-
-//     for await (const data of process.stdout) {
-//       console.log(`stdout from the child: ${data}`);
-//     }
-
-
-//     exec(command, { cwd }, (error, stdout, stderr) => {
-//       if (error) {
-//         reject(stderr);
-//       }
-//       else {
-//         resolve(stdout);
-//       }
-//     });
-//   });
-// }

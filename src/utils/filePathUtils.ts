@@ -1,15 +1,14 @@
-import { dirname, sep } from 'path';
+import { sep } from 'path';
 import { Uri } from 'vscode';
 
 export default class FilePathUtils {
 
-  // https://github.com/microsoft/vscode/blob/f667462a2a8a12c92dbcdd8acf92df7354063691/extensions/git/src/util.ts#L309
   private static isWindowsPath(path: string): boolean {
     return /^[a-zA-Z]:\\/.test(path);
   }
 
-  // https://github.com/microsoft/vscode/blob/f667462a2a8a12c92dbcdd8acf92df7354063691/extensions/git/src/util.ts#L309
   public static isDescendant(parent: string, descendant: string): boolean {
+
     if (parent === descendant) {
       return true;
     }

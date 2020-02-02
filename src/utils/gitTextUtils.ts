@@ -1,7 +1,6 @@
 import { MagitChangeHunk } from '../models/magitChangeHunk';
 import { Uri } from 'vscode';
 import { Section } from '../views/general/sectionHeader';
-import { MagitMergingState } from '../models/magitMergingState';
 import * as Constants from '../common/constants';
 import { Commit } from '../typings/git';
 
