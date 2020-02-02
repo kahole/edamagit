@@ -2,6 +2,8 @@
 ## TODO: try making switches for a command
 ## TODO: try making options for a command (e.g logging)
 
+## TODO: BUG the C-c C-k is not strong enough. It commits if there is something in the fil. Should not!
+
 ## MINOR: break out / refactor commands vs internal commands a bit?
 ## MINOR: NB! Thenables dont work with regular try/catch !
 

@@ -4,6 +4,7 @@ import { MagitRepository } from '../models/magitRepository';
 import { MenuUtil, MenuState } from '../menu/menu';
 import { gitRun } from '../utils/gitRawRunner';
 import { QuickMenuUtil, QuickItem } from '../menu/quickMenu';
+import MagitUtils from '../utils/magitUtils';
 
 export async function fetching(repository: MagitRepository): Promise<any> {
 
@@ -40,10 +41,7 @@ async function fetchFromUpstream() {
 
 async function fetchFromElsewhere({ repository }: MenuState) {
 
-  const refs: QuickItem<string>[] = repository.state.refs
-    .map(r => ({ label: r.name!, meta: 'blabla' }));
-
-  const chosenRemote = await QuickMenuUtil.showMenu(refs);
+  const chosenRemote = await MagitUtils.chooseRef(repository, 'Fetch from');
 
   if (chosenRemote) {
     const args = ['fetch', chosenRemote];
@@ -62,7 +60,6 @@ async function fetchAnotherBranch({ repository }: MenuState) {
     if (branch) {
       const args = ['fetch', remote, `refs/heads/${branch}`];
       return gitRun(repository, args);
-
     }
   }
 }

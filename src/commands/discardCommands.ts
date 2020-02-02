@@ -13,6 +13,7 @@ import GitTextUtils from '../utils/gitTextUtils';
 import { apply } from './applyCommands';
 import { Status } from '../typings/git';
 import { MagitChangeHunk } from '../models/magitChangeHunk';
+import { magitUnstageAll } from './stagingCommands';
 
 export async function magitDiscardAtPoint(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
@@ -66,7 +67,8 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
         break;
       case Section.Staged:
         if (await MagitUtils.confirmAction('Discard all staged changes?')) {
-          return repository._repository.reset('HEAD', false);
+          await commands.executeCommand('git.unstageAll');
+          return commands.executeCommand('git.cleanAllTracked');
         }
         break;
       default:

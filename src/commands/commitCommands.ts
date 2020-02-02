@@ -12,7 +12,7 @@ import MagitUtils from '../utils/magitUtils';
 const commitMenu = {
   title: 'Committing',
   commands: [
-    { label: 'c', description: 'Commit', action: (menuState: MenuState) => commit(menuState.repository, []) },
+    { label: 'c', description: 'Commit', action: (menuState: MenuState) => commit(menuState.repository) },
     { label: 'a', description: 'Amend', action: (menuState: MenuState) => commit(menuState.repository, ['--amend']) },
     { label: 'e', description: 'Extend', action: (menuState: MenuState) => commit(menuState.repository, ['--amend', '--no-edit']) },
     { label: 'w', description: 'Reword', action: (menuState: MenuState) => commit(menuState.repository, ['--amend', '--only']) },
@@ -27,6 +27,11 @@ export async function magitCommit(repository: MagitRepository) {
 export async function commit(repository: MagitRepository, commitArgs: string[] = []) {
 
   const args = ['commit', ...commitArgs];
+
+  return runCommitLikeCommand(repository, args);
+}
+
+export async function runCommitLikeCommand(repository: MagitRepository, args: string[]) {
 
   let stagedEditor: Thenable<TextEditor> | undefined;
   try {

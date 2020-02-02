@@ -69,7 +69,7 @@ async function configureBranch(menuState: MenuState) {
 
 async function renameBranch({ repository }: MenuState) {
 
-  const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Rename branch' });
+  const ref = await MagitUtils.chooseRef(repository, 'Rename branch');
 
   if (ref) {
     const newName = await window.showInputBox({ prompt: `Rename branch '${ref}' to:` });
@@ -87,7 +87,7 @@ async function renameBranch({ repository }: MenuState) {
 
 async function deleteBranch({ repository }: MenuState) {
 
-  const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Delete' });
+  const ref = await MagitUtils.chooseRef(repository, 'Delete');
 
   if (ref) {
     try {
@@ -104,9 +104,9 @@ async function deleteBranch({ repository }: MenuState) {
 
 async function resetBranch({ repository }: MenuState) {
 
-  const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Reset branch' });
+  const ref = await MagitUtils.chooseRef(repository, 'Reset branch');
 
-  const resetToRef = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: `Reset ${ref} to` });
+  const resetToRef = await MagitUtils.chooseRef(repository, `Reset ${ref} to`);
 
   if (ref && resetToRef) {
 
@@ -127,9 +127,9 @@ async function resetBranch({ repository }: MenuState) {
 
 async function _checkout({ repository }: MenuState, refs: Ref[]) {
 
-  // const ref = await window.showQuickPick(refs.map(r => r.name!), { placeHolder: 'Checkout' });
-
   const refsMenu: QuickItem<string>[] = refs
+    .filter(ref => ref.name !== repository.magitState?.HEAD?.name)
+    .sort((refA, refB) => refA.type - refB.type)
     .map(r => ({ label: r.name!, description: GitTextUtils.shortHash(r.commit), meta: r.name! }));
 
   const ref = await QuickMenuUtil.showMenu(refsMenu);
@@ -146,7 +146,7 @@ async function _createBranch({ repository }: MenuState, checkout: boolean) {
 
   // or custom implementation:
 
-  // const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Create and checkout branch starting at' });
+  // const ref = await MagitUtils.chooseRef(repository.state.refs, 'Create and checkout branch starting at');
 
   // if (ref) {
   //   const newBranchName = await window.showInputBox({ prompt: 'Name for new branch' });

@@ -41,10 +41,13 @@ async function pushToPushRemote({ repository }: MenuState) {
 }
 
 async function pushSetPushRemote({ repository, ...rest }: MenuState) {
-  const refs: QuickItem<string>[] = repository.state.remotes
+  const remotes: QuickItem<string>[] = repository.state.remotes
     .map(r => ({ label: r.name, description: r.pushUrl, meta: r.name }));
 
-  const chosenRemote = await QuickMenuUtil.showMenuWithFreeform(refs);
+  const chosenRemote = await QuickMenuUtil.showMenu(remotes);
+
+  // TODO: handle new remote .. http ?
+  // const chosenRemote = await QuickMenuUtil.showMenuWithFreeform(remotes);
 
   const ref = repository.magitState?.HEAD?.name;
 
@@ -73,6 +76,8 @@ async function pushSetUpstream({ repository }: MenuState) {
   }
 
   const refs: QuickItem<string>[] = choices
+    .filter(ref => ref.type !== RefType.Tag && ref.name !== repository.magitState?.HEAD?.name)
+    .sort((refA, refB) => refB.type - refA.type)
     .map(r => ({ label: r.name!, description: GitTextUtils.shortHash(r.commit), meta: r.name! }));
 
   let chosenRemote;

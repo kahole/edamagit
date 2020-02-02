@@ -4,6 +4,7 @@ import { TextEditor, TextDocument, window, ViewColumn, workspace } from 'vscode'
 import { internalMagitStatus } from '../commands/statusCommands';
 import { DocumentView } from '../views/general/documentView';
 import FilePathUtils from './filePathUtils';
+import { Ref } from '../typings/git';
 
 export default class MagitUtils {
 
@@ -44,6 +45,14 @@ export default class MagitUtils {
       repository.magitState.indexChanges.length > 0 ||
       repository.magitState.workingTreeChanges.length > 0 ||
       (repository.magitState.mergeChanges?.length ?? 0) > 0);
+  }
+
+  public static async chooseRef(repository: MagitRepository, prompt: string) {
+    return window.showQuickPick(
+      repository.state.refs
+        .filter(ref => ref.name !== repository.magitState?.HEAD?.name)
+        .sort((refA, refB) => refA.type - refB.type).map(r => r.name!)
+      , { placeHolder: prompt });
   }
 
   public static async confirmAction(prompt: string, hardConfirm: boolean = false) {

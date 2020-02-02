@@ -1,21 +1,19 @@
-import { window, commands } from 'vscode';
 import { MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
 import * as CommitCommands from '../commands/commitCommands';
-
-// TODO: merging: almost MVP
+import MagitUtils from '../utils/magitUtils';
 
 const mergingMenu = {
   title: 'Merging',
   commands: [
     { label: 'm', description: 'Merge', action: merge },
-    { label: 'e', description: 'Merge and edit message', action: merge },
-    { label: 'n', description: 'Merge, don\'t commit', action: merge },
+    { label: 'e', description: 'Merge and edit message', action: (state: MenuState) => merge(state, false, false, true) },
+    { label: 'n', description: 'Merge, don\'t commit', action: (state: MenuState) => merge(state, true, false, false) },
     { label: 'a', description: 'Absorb', action: absorb },
     // { label: 'p', description: 'Preview Merge', action: mergePreview },
-    { label: 's', description: 'Squash Merge', action: merge },
-    { label: 's', description: 'Merge into', action: merge },
+    { label: 's', description: 'Squash Merge', action: (state: MenuState) => merge(state, false, true, false) },
+    // { label: 'i', description: 'Merge into', action: mergeInto },
   ]
 };
 
@@ -36,16 +34,20 @@ export async function merging(repository: MagitRepository) {
   }
 }
 
-async function merge({ repository }: MenuState) {
-  const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Merge' });
+async function merge({ repository }: MenuState, noCommit = false, squashMerge = false, editMessage = false) {
+  const ref = await MagitUtils.chooseRef(repository, 'Merge');
 
   if (ref) {
-    return _merge(repository, ref);
+    return _merge(repository, ref, noCommit, squashMerge, editMessage);
   }
 }
 
+// async function mergeInto({ repository }: MenuState) {
+
+// }
+
 async function absorb({ repository }: MenuState) {
-  const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Merge' });
+  const ref = await MagitUtils.chooseRef(repository, 'Merge');
 
   if (ref) {
     await _merge(repository, ref);
@@ -73,8 +75,11 @@ async function _merge(repository: MagitRepository, ref: string, noCommit = false
   }
 
   if (editMessage) {
-    // TODO: This might need a separate handler, because of message editing??
     args.push(...['--edit', '--no-ff']);
+
+    // TODO: BUG, staged view does not contain any of the staged changed because it is not updated after the merge is started
+    return CommitCommands.runCommitLikeCommand(repository, args);
+
   } else {
     args.push('--no-edit');
   }

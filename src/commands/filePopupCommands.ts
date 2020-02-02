@@ -17,8 +17,8 @@ const branchingMenu = {
     { label: 't', description: 'trace', action: () => { } },
     // { label: 'B', description: 'Blame...', action: () => { } },
     { label: 'b', description: 'blame', action: () => { } },
-    { label: 'n', description: 'prev blob', action: () => { } },
-    { label: 'n', description: 'next blob', action: () => { } },
+    // { label: 'n', description: 'prev blob', action: () => { } },
+    // { label: 'n', description: 'next blob', action: () => { } }
   ]
 };
 

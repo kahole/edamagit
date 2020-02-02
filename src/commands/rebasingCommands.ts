@@ -1,17 +1,15 @@
-import { window, commands } from 'vscode';
-import { Menu, MenuState, MenuUtil } from '../menu/menu';
+import { window } from 'vscode';
+import { MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
-import * as CommitCommands from '../commands/commitCommands';
-
-// TODO: rebasing: almost MVP
+import MagitUtils from '../utils/magitUtils';
 
 const whileRebasingMenu = {
   title: 'Rebasing',
   commands: [
     { label: 'r', description: 'Continue', action: (state: MenuState) => rebaseControlCommand(state, '--continue') },
     { label: 's', description: 'Skip', action: (state: MenuState) => rebaseControlCommand(state, '--skip') },
-    { label: 'e', description: 'Edit', action: (state: MenuState) => rebaseControlCommand(state, '--edit-todo') },
+    // { label: 'e', description: 'Edit', action: (state: MenuState) => rebaseControlCommand(state, '--edit-todo') },
     { label: 'a', description: 'Abort', action: (state: MenuState) => rebaseControlCommand(state, '--abort') }
   ]
 };
@@ -19,14 +17,25 @@ const whileRebasingMenu = {
 export async function rebasing(repository: MagitRepository) {
 
   const HEAD = repository.magitState?.HEAD;
+
+  const commands = [];
+
+  if (HEAD?.pushRemote) {
+    commands.push({ label: 'p', description: `onto ${HEAD.pushRemote.remote}/${HEAD.pushRemote.name}`, action: rebase });
+  }
+
+  if (HEAD?.upstreamRemote) {
+    commands.push({ label: 'u', description: `onto ${HEAD.upstreamRemote.remote}/${HEAD.upstreamRemote.name}`, action: rebase });
+  }
+
+  commands.push(...[
+    { label: 'e', description: `onto elsewhere`, action: rebase },
+    // { label: 'i', description: `interactively`, action: rebase },
+  ]);
+
   const rebasingMenu = {
     title: `Rebasing ${HEAD?.name}`,
-    commands: [
-      { label: 'p', description: `onto ${HEAD?.pushRemote?.remote}/${HEAD?.pushRemote?.name}`, action: rebase },
-      { label: 'u', description: `onto ${HEAD?.upstreamRemote?.remote}/${HEAD?.upstreamRemote?.name}`, action: rebase },
-      { label: 'e', description: `onto elsewhere`, action: rebase },
-      { label: 'i', description: `interactively`, action: rebase },
-    ]
+    commands
   };
 
   if (repository.magitState?.rebasingState) {
@@ -37,7 +46,7 @@ export async function rebasing(repository: MagitRepository) {
 }
 
 async function rebase({ repository }: MenuState) {
-  const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Rebase' });
+  const ref = await MagitUtils.chooseRef(repository, 'Rebase');
 
   if (ref) {
     return _rebase(repository, ref);
