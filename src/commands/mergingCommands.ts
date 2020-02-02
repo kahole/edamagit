@@ -1,7 +1,6 @@
 import { window, commands } from 'vscode';
-import { Menu, MenuState, MenuUtil } from '../menu/menu';
+import { MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
-import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
 import * as CommitCommands from '../commands/commitCommands';
 
@@ -28,12 +27,12 @@ const whileMergingMenu = {
   ]
 };
 
-export async function merging(repository: MagitRepository, currentView: DocumentView) {
+export async function merging(repository: MagitRepository) {
 
   if (repository.magitState?.mergingState) {
-    return MenuUtil.showMenu(whileMergingMenu, { repository, currentView });
+    return MenuUtil.showMenu(whileMergingMenu, { repository });
   } else {
-    return MenuUtil.showMenu(mergingMenu, { repository, currentView });
+    return MenuUtil.showMenu(mergingMenu, { repository });
   }
 }
 

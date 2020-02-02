@@ -1,12 +1,11 @@
 import { commands, window } from 'vscode';
 import { MenuItem } from '../menu/menuItem';
 import { MagitRepository } from '../models/magitRepository';
-import { DocumentView } from '../views/general/documentView';
 import { MenuUtil, MenuState } from '../menu/menu';
 import { gitRun } from '../utils/gitRawRunner';
 import { QuickMenuUtil, QuickItem } from '../menu/quickMenu';
 
-export async function fetching(repository: MagitRepository, currentView: DocumentView): Promise<any> {
+export async function fetching(repository: MagitRepository): Promise<any> {
 
   const fetchingMenuItems: MenuItem[] = [];
 
@@ -26,7 +25,7 @@ export async function fetching(repository: MagitRepository, currentView: Documen
 
   fetchingMenuItems.push({ label: 'o', description: 'another branch', action: fetchAnotherBranch });
 
-  return MenuUtil.showMenu({ title: 'Fetching', commands: fetchingMenuItems }, { repository, currentView });
+  return MenuUtil.showMenu({ title: 'Fetching', commands: fetchingMenuItems }, { repository });
 }
 
 // TODO: fetching: some work remains for MVP

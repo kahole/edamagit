@@ -7,12 +7,14 @@ export interface Menu {
   title: string;
   commands: MenuItem[];
   isSwitchesMenu?: boolean;
+  isOptionsMenu?: boolean;
 }
 
 export interface MenuState {
   repository: MagitRepository;
-  currentView: DocumentView;
   switches?: any;
+  options?: any;
+  data?: any;
 }
 
 export class MenuUtil {

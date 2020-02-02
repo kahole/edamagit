@@ -1,6 +1,7 @@
-## BUGS (also remember MINOR FUTURE)
 
-## MINOR: Thenables dont work with regular try/catch !
+## MINOR: NB! Thenables dont work with regular try/catch !
+
+## TODO: try making switches for a command
 
 ## Feature requests
   Feature#1

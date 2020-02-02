@@ -1,7 +1,6 @@
 import { window, commands } from 'vscode';
 import { Menu, MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
-import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
 import * as CommitCommands from '../commands/commitCommands';
 
@@ -17,7 +16,7 @@ const whileRebasingMenu = {
   ]
 };
 
-export async function rebasing(repository: MagitRepository, currentView: DocumentView) {
+export async function rebasing(repository: MagitRepository) {
 
   const HEAD = repository.magitState?.HEAD;
   const rebasingMenu = {
@@ -31,9 +30,9 @@ export async function rebasing(repository: MagitRepository, currentView: Documen
   };
 
   if (repository.magitState?.rebasingState) {
-    return MenuUtil.showMenu(whileRebasingMenu, { repository, currentView });
+    return MenuUtil.showMenu(whileRebasingMenu, { repository });
   } else {
-    return MenuUtil.showMenu(rebasingMenu, { repository, currentView });
+    return MenuUtil.showMenu(rebasingMenu, { repository });
   }
 }
 

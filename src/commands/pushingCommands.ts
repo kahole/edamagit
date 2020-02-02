@@ -1,14 +1,13 @@
 import MagitUtils from '../utils/magitUtils';
 import { MagitRepository } from '../models/magitRepository';
 import { commands, window } from 'vscode';
-import { DocumentView } from '../views/general/documentView';
 import { MenuItem } from '../menu/menuItem';
 import { MenuUtil, MenuState } from '../menu/menu';
 import { Remote } from '../typings/git';
 import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
 import GitTextUtils from '../utils/gitTextUtils';
 
-export async function pushing(repository: MagitRepository, currentView: DocumentView) {
+export async function pushing(repository: MagitRepository) {
 
   const pushingMenuItems: MenuItem[] = [];
 
@@ -28,7 +27,7 @@ export async function pushing(repository: MagitRepository, currentView: Document
 
   pushingMenuItems.push({ label: 'e', description: 'elsewhere', action: pushElsewhere });
 
-  return MenuUtil.showMenu({ title: 'Pushing', commands: pushingMenuItems }, { repository, currentView });
+  return MenuUtil.showMenu({ title: 'Pushing', commands: pushingMenuItems }, { repository });
 }
 
 async function pushToPushRemote({ repository }: MenuState) {

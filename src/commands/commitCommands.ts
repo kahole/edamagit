@@ -4,7 +4,6 @@ import * as Constants from '../common/constants';
 import { execPath } from 'process';
 import { MagitRepository } from '../models/magitRepository';
 import MagitStagedView from '../views/stagedView';
-import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
 import { views } from '../extension';
 import { MenuUtil, MenuState } from '../menu/menu';
@@ -32,8 +31,8 @@ const commitMenu = {
 // F - Instant fixup
 // S - Instant squash
 
-export async function magitCommit(repository: MagitRepository, currentView: DocumentView) {
-  return MenuUtil.showMenu(commitMenu, { repository, currentView });
+export async function magitCommit(repository: MagitRepository) {
+  return MenuUtil.showMenu(commitMenu, { repository });
 }
 
 export async function commit(repository: MagitRepository, commitArgs: string[] = []) {

@@ -2,7 +2,6 @@ import { window, commands } from 'vscode';
 import { Menu, MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
 import { Ref, GitErrorCodes, RefType } from '../typings/git';
-import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
@@ -27,8 +26,8 @@ const branchingMenu = {
   ]
 };
 
-export async function branching(repository: MagitRepository, currentView: DocumentView) {
-  return MenuUtil.showMenu(branchingMenu, { repository, currentView });
+export async function branching(repository: MagitRepository) {
+  return MenuUtil.showMenu(branchingMenu, { repository });
 }
 
 async function checkout(menuState: MenuState) {
@@ -68,7 +67,7 @@ async function configureBranch(menuState: MenuState) {
   // 3. repository.setConfig("branch.${ref}.theCoolProperty")
 }
 
-async function renameBranch({ repository, currentView }: MenuState) {
+async function renameBranch({ repository }: MenuState) {
 
   const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Rename branch' });
 
@@ -86,7 +85,7 @@ async function renameBranch({ repository, currentView }: MenuState) {
   }
 }
 
-async function deleteBranch({ repository, currentView }: MenuState) {
+async function deleteBranch({ repository }: MenuState) {
 
   const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Delete' });
 
@@ -103,7 +102,7 @@ async function deleteBranch({ repository, currentView }: MenuState) {
   }
 }
 
-async function resetBranch({ repository, currentView }: MenuState) {
+async function resetBranch({ repository }: MenuState) {
 
   const ref = await window.showQuickPick(repository.state.refs.map(r => r.name!), { placeHolder: 'Reset branch' });
 
@@ -126,7 +125,7 @@ async function resetBranch({ repository, currentView }: MenuState) {
   }
 }
 
-async function _checkout({ repository, currentView }: MenuState, refs: Ref[]) {
+async function _checkout({ repository }: MenuState, refs: Ref[]) {
 
   // const ref = await window.showQuickPick(refs.map(r => r.name!), { placeHolder: 'Checkout' });
 
@@ -140,7 +139,7 @@ async function _checkout({ repository, currentView }: MenuState, refs: Ref[]) {
   }
 }
 
-async function _createBranch({ repository, currentView }: MenuState, checkout: boolean) {
+async function _createBranch({ repository }: MenuState, checkout: boolean) {
 
   // MINOR: can use command
   return commands.executeCommand('git.branchFrom');

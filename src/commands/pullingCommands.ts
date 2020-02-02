@@ -1,11 +1,10 @@
 import { MagitRepository } from '../models/magitRepository';
-import { DocumentView } from '../views/general/documentView';
 import { MenuItem } from '../menu/menuItem';
 import { MenuUtil, MenuState } from '../menu/menu';
 import { commands } from 'vscode';
 import { gitRun } from '../utils/gitRawRunner';
 
-export async function pulling(repository: MagitRepository, currentView: DocumentView): Promise<any> {
+export async function pulling(repository: MagitRepository): Promise<any> {
 
   const pullingMenuItems: MenuItem[] = [];
 
@@ -21,7 +20,7 @@ export async function pulling(repository: MagitRepository, currentView: Document
 
   pullingMenuItems.push({ label: 'e', description: 'elsewhere', action: pullFromElsewhere });
 
-  return MenuUtil.showMenu({ title: 'Pulling', commands: pullingMenuItems }, { repository, currentView });
+  return MenuUtil.showMenu({ title: 'Pulling', commands: pullingMenuItems }, { repository });
 }
 
 function pullFromPushRemote({ repository }: MenuState) {

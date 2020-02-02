@@ -1,5 +1,4 @@
 import { MagitRepository } from '../models/magitRepository';
-import { DocumentView } from '../views/general/documentView';
 import { MenuUtil } from '../menu/menu';
 import { commands } from 'vscode';
 
@@ -14,9 +13,9 @@ const stashingMenu = {
   ]
 };
 
-export async function stashing(repository: MagitRepository, currentView: DocumentView): Promise<any> {
+export async function stashing(repository: MagitRepository): Promise<any> {
 
-  return MenuUtil.showMenu(stashingMenu, { repository, currentView });
+  return MenuUtil.showMenu(stashingMenu, { repository });
 }
 
 function stash() {

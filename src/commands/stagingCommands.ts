@@ -48,17 +48,20 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
     }
   } else {
 
-    const files: QuickItem<Uri>[] = [
-      ...repository.magitState?.workingTreeChanges!,
-      //...repository.magitState?.indexChanges!, // Should not show index changes here ? aka staged changes
-      ...repository.magitState?.untrackedFiles!,
-      // ...currentRepository.magitState?.mergeChanges
-    ].map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri), meta: c.uri }));
+    if (repository.magitState?.workingTreeChanges.length || repository.magitState?.untrackedFiles.length) {
 
-    const chosenFile = await QuickMenuUtil.showMenu(files);
+      const files: QuickItem<Uri>[] = [
+        ...repository.magitState?.workingTreeChanges,
+        ...repository.magitState?.untrackedFiles,
+        // ...currentRepository.magitState?.mergeChanges
+      ].map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri), meta: c.uri }));
 
-    if (chosenFile) {
-      return repository._repository.add([chosenFile], { update: false });
+      const chosenFile = await QuickMenuUtil.showMenu(files);
+
+      if (chosenFile) {
+        return repository._repository.add([chosenFile], { update: false });
+      }
+
     }
   }
 }

@@ -80,4 +80,9 @@ export default class GitTextUtils {
   public static changeHunkToPatch(changeHunk: MagitChangeHunk): string {
     return changeHunk.diffHeader + changeHunk.diff + '\n';
   }
+
+  public static formatError(error: any): string {
+    const errorMsg: string = error.stderr ?? error.message;
+    return errorMsg.replace('error: ', '');
+  }
 }

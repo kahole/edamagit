@@ -1,12 +1,38 @@
 import { MagitRepository } from '../models/magitRepository';
-import { magitRepositories, views } from '../extension';
-import { TextEditor, TextDocument, window, ViewColumn } from 'vscode';
+import { magitRepositories, views, gitApi } from '../extension';
+import { TextEditor, TextDocument, window, ViewColumn, workspace } from 'vscode';
 import { internalMagitStatus } from '../commands/statusCommands';
 import { DocumentView } from '../views/general/documentView';
+import FilePathUtils from './filePathUtils';
 
 export default class MagitUtils {
+
   public static getCurrentMagitRepo(document: TextDocument): MagitRepository | undefined {
-    return magitRepositories.get(document.uri.query);
+
+    let repository = magitRepositories.get(document.uri.query);
+
+    if (!repository) {
+
+      const activeWorkspaceFolder = workspace.getWorkspaceFolder(document.uri);
+
+      if (activeWorkspaceFolder) {
+        const workspaceRootPath = activeWorkspaceFolder.uri.path;
+
+        // MINOR: Any point in reusing repo from this map?
+        for (const [key, repo] of magitRepositories.entries()) {
+          if (FilePathUtils.isDescendant(key, workspaceRootPath)) {
+            return repo;
+          }
+        }
+
+        repository = gitApi.repositories.filter(r => FilePathUtils.isDescendant(r.rootUri.path, workspaceRootPath))[0];
+      } else {
+        // MINOR: could be nice to rather show the list of repos to choose from?
+        throw new Error('Current file not part of a workspace');
+      }
+    }
+
+    return repository;
   }
 
   public static getCurrentMagitRepoAndView(editor: TextEditor): [MagitRepository | undefined, DocumentView | undefined] {
@@ -15,9 +41,8 @@ export default class MagitUtils {
     return [repository, currentView];
   }
 
-  public static async magitStatusAndUpdate(repository: MagitRepository, view: DocumentView) {
+  public static async magitStatusAndUpdate(repository: MagitRepository) {
     await internalMagitStatus(repository);
-
     views.forEach(view => view.needsUpdate ? view.update(repository) : undefined);
   }
 

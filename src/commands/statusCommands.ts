@@ -1,6 +1,6 @@
 import { MagitChange } from '../models/magitChange';
-import { workspace, window, ViewColumn, Range, commands, Uri, TextDocument, Position } from 'vscode';
-import { gitApi, magitRepositories, views } from '../extension';
+import { workspace, window, Range, commands, Uri, TextDocument, Position, TextEditor } from 'vscode';
+import { magitRepositories, views } from '../extension';
 import FilePathUtils from '../utils/filePathUtils';
 import GitTextUtils from '../utils/gitTextUtils';
 import { MagitRepository } from '../models/magitRepository';
@@ -15,89 +15,62 @@ import { getCommit } from '../utils/commitCache';
 
 export async function magitRefresh() { }
 
-export async function magitStatus(preserveFocus = false): Promise<any> {
+export async function magitStatus(editor: TextEditor, preserveFocus = false): Promise<any> {
 
-  if (window.activeTextEditor) {
+  const repository = MagitUtils.getCurrentMagitRepo(editor.document);
 
-    const activeWorkspaceFolder = workspace.getWorkspaceFolder(window.activeTextEditor.document.uri);
+  if (repository) {
 
-    if (activeWorkspaceFolder) {
+    // Check for existing Magit status view
+    for (const [uri, view] of views ?? []) {
+      if (view instanceof MagitStatusView) {
+        // MINOR: only reuses editor if the viewColumn hits correctly
+        // Resuses doc, if still exists. Which it should if the view still exists
+        // Opens and focus magit status view
+        // Run update
+        await MagitUtils.magitStatusAndUpdate(repository);
+        console.log('Update existing views');
 
-      const workspaceRootPath = activeWorkspaceFolder.uri.path;
-
-      let repository: MagitRepository | undefined;
-
-      // MINOR: Any point in reusing repo?
-      // This might make magit LESS resilient to changes in workspace etc.
-      for (const [key, repo] of magitRepositories.entries()) {
-        if (FilePathUtils.isDescendant(key, workspaceRootPath)) {
-          repository = repo;
-          break;
-        }
-      }
-
-      if (repository) {
-        for (const [uri, view] of views ?? []) {
-          if (view instanceof MagitStatusView) {
-            // MINOR: only reuses editor if the viewColumn hits correctly
-            // Resuses doc, if still exists. Which it should if the view still exists
-            // Opens and focus magit status view
-            // Run update
-            await MagitUtils.magitStatusAndUpdate(repository, view);
-            console.log('Update existing view');
-
-            return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false }));
-          }
-        }
-      } else {
-        console.log('load repo from git api (not map)');
-        repository = gitApi.repositories.filter(r => FilePathUtils.isDescendant(r.rootUri.path, workspaceRootPath))[0];
-      }
-
-      if (repository) {
-        const magitRepo: MagitRepository = repository;
-        magitRepositories.set(repository.rootUri.path, repository);
-
-        await internalMagitStatus(magitRepo);
-
-        const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
-        views.set(uri.toString(), new MagitStatusView(uri, magitRepo.magitState!));
-
-        return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false })
-
-          // TODO: PROTOTYPE works. branch highlighting...
-          // Extract to a feature branch
-          // THIS WORKS
-          // Decorations could be added by the views in the view hierarchy?
-          // yes as we go down the hierarchy make these decorations at exactly the points wanted
-          // and should be pretty simple to collect them and set the editors decorations
-          // needs something super smart.. https://github.com/Microsoft/vscode/issues/585
-          .then(e => {
-            if (repository?.magitState?.HEAD) {
-              e.setDecorations(Constants.BranchDecoration, rangesOfWord(doc, repository.magitState.HEAD.name));
-              if (repository.magitState.HEAD.upstreamRemote) {
-                e.setDecorations(Constants.RemoteBranchDecoration, rangesOfWord(doc, `${repository.magitState.HEAD.upstreamRemote.remote}/${repository.magitState.HEAD.name}`));
-              }
-            }
-            // Border possible as well
-            // e.setDecorations(
-            //   window.createTextEditorDecorationType({
-            //     color: 'rgba(100,240,100,0.5)',
-            //     border: '0.1px solid green'
-            //   }), rangesOfWord(doc, `${repository?.magitState?.HEAD?.upstreamRemote.remote}/${repository?.magitState?.HEAD?.name}`));
-          }));
-
-      } else {
-        // Prompt to create repo
-        const newRepo = await commands.executeCommand('git.init');
-        if (newRepo) {
-          return magitStatus();
-        }
+        return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false }));
       }
     }
-    else {
-      // MINOR: could be nice to rather show the list of repos to choose from?
-      throw new Error('Current file not part of a workspace');
+    const magitRepo: MagitRepository = repository;
+    magitRepositories.set(repository.rootUri.path, repository);
+
+    await internalMagitStatus(magitRepo);
+
+    const uri = MagitStatusView.encodeLocation(magitRepo.rootUri.path);
+    views.set(uri.toString(), new MagitStatusView(uri, magitRepo.magitState!));
+
+    return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false })
+
+      // TODO: PROTOTYPE works. branch highlighting...
+      // Extract to a feature branch
+      // THIS WORKS
+      // Decorations could be added by the views in the view hierarchy?
+      // yes as we go down the hierarchy make these decorations at exactly the points wanted
+      // and should be pretty simple to collect them and set the editors decorations
+      // needs something super smart.. https://github.com/Microsoft/vscode/issues/585
+      .then(e => {
+        if (repository?.magitState?.HEAD) {
+          e.setDecorations(Constants.BranchDecoration, rangesOfWord(doc, repository.magitState.HEAD.name));
+          if (repository.magitState.HEAD.upstreamRemote) {
+            e.setDecorations(Constants.RemoteBranchDecoration, rangesOfWord(doc, `${repository.magitState.HEAD.upstreamRemote.remote}/${repository.magitState.HEAD.name}`));
+          }
+        }
+        // Border possible as well
+        // e.setDecorations(
+        //   window.createTextEditorDecorationType({
+        //     color: 'rgba(100,240,100,0.5)',
+        //     border: '0.1px solid green'
+        //   }), rangesOfWord(doc, `${repository?.magitState?.HEAD?.upstreamRemote.remote}/${repository?.magitState?.HEAD?.name}`));
+      }));
+
+  } else {
+    // Prompt to create repo
+    const newRepo = await commands.executeCommand('git.init');
+    if (newRepo) {
+      return magitStatus(editor);
     }
   }
 }
