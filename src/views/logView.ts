@@ -1,3 +1,3 @@
 
 
-// TODO: log view
+// TODO: log view and log commands

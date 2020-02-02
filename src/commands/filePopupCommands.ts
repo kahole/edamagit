@@ -23,6 +23,6 @@ const branchingMenu = {
 };
 
 export async function filePopup(repository: MagitRepository, fileUri: Uri) {
-  // TODO: file popup
+  // TODO: file popup MVP remains
   return MenuUtil.showMenu(branchingMenu, { repository, data: fileUri });
 }

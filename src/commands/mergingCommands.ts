@@ -4,7 +4,7 @@ import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
 import * as CommitCommands from '../commands/commitCommands';
 
-// TODO: merging: some work remains for MVP
+// TODO: merging: almost MVP
 
 const mergingMenu = {
   title: 'Merging',

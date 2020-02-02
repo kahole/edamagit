@@ -4,7 +4,7 @@ import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
 import * as CommitCommands from '../commands/commitCommands';
 
-// TODO: rebasing: some work remains for MVP
+// TODO: rebasing: almost MVP
 
 const whileRebasingMenu = {
   title: 'Rebasing',
