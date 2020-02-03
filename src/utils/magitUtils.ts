@@ -16,7 +16,7 @@ export default class MagitUtils {
 
       // MINOR: Any point in reusing repo from this map?
       for (const [key, repo] of magitRepositories.entries()) {
-        if (FilePathUtils.isDescendant(key, document.uri.path)) {
+        if (FilePathUtils.isDescendant(key, document.uri.fsPath)) {
           return repo;
         }
       }
