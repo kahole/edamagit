@@ -21,6 +21,6 @@ export class StashDetailView extends DocumentView {
 
   static index = 0;
   static encodeLocation(repository: MagitRepository, stash: Stash): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${StashDetailView.UriPath}?${repository.rootUri.path}#stash@{${stash.index}}#${StashDetailView.index++}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${StashDetailView.UriPath}?${repository.rootUri.fsPath}#stash@{${stash.index}}#${StashDetailView.index++}`);
   }
 }

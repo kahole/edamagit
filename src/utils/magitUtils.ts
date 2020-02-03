@@ -25,7 +25,7 @@ export default class MagitUtils {
       repository = gitApi.repositories.find(r => FilePathUtils.isDescendant(r.rootUri.fsPath, document.uri.fsPath));
 
       if (repository) {
-        magitRepositories.set(repository.rootUri.path, repository);
+        magitRepositories.set(repository.rootUri.fsPath, repository);
       }
     }
 
