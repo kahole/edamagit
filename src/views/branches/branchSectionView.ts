@@ -14,7 +14,7 @@ export class BranchSectionView extends View {
     if (HEAD?.commit) {
       this.addSubview(new BranchHeaderView('Head', HEAD));
 
-      if (HEAD.upstream) {
+      if (HEAD.upstreamRemote) {
         this.addSubview(new RemoteBranchHeaderView('Merge', HEAD.upstreamRemote));
       }
 

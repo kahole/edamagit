@@ -22,8 +22,11 @@ export default class MagitUtils {
       }
 
       // First time encountering this repo
-      repository = gitApi.repositories.filter(r => FilePathUtils.isDescendant(r.rootUri.path, document.uri.path))[0];
-      magitRepositories.set(repository.rootUri.path, repository);
+      repository = gitApi.repositories.find(r => FilePathUtils.isDescendant(r.rootUri.path, document.uri.path));
+
+      if (repository) {
+        magitRepositories.set(repository.rootUri.path, repository);
+      }
     }
 
     return repository;
