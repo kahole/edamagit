@@ -129,7 +129,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   const workingTreeChangesTasks = Promise.all(workingTreeChanges_NoUntracked
     .map(async change => {
-      const diff = await repository.diffWithHEAD(change.uri.path);
+      const diff = await repository.diffWithHEAD(change.uri.fsPath);
       const magitChange: MagitChange = change;
       magitChange.section = Section.Unstaged;
       magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
@@ -139,7 +139,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   const indexChangesTasks = Promise.all(repository.state.indexChanges
     .map(async change => {
-      const diff = await repository.diffIndexWithHEAD(change.uri.path);
+      const diff = await repository.diffIndexWithHEAD(change.uri.fsPath);
       const magitChange: MagitChange = change;
       magitChange.section = Section.Staged;
       magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
@@ -149,7 +149,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   const mergeChangesTasks = Promise.all(repository.state.mergeChanges
     .map(async change => {
-      const diff = await repository.diffWithHEAD(change.uri.path);
+      const diff = await repository.diffWithHEAD(change.uri.fsPath);
       const magitChange: MagitChange = change;
       magitChange.section = Section.Staged;
       magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
