@@ -57,7 +57,7 @@ export class MenuUtil {
         }
       });
 
-      // Select with key or with arrows + enter
+      // Select with arrows + enter
 
       const acceptListenerDisposable = _quickPick.onDidAccept(async () => {
 

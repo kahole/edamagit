@@ -46,9 +46,6 @@ async function pushSetPushRemote({ repository, ...rest }: MenuState) {
 
   const chosenRemote = await QuickMenuUtil.showMenu(remotes);
 
-  // TODO: handle new remote .. http ?
-  // const chosenRemote = await QuickMenuUtil.showMenuWithFreeform(remotes);
-
   const ref = repository.magitState?.HEAD?.name;
 
   if (chosenRemote && ref) {

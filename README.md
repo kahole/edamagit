@@ -1,15 +1,25 @@
 
 ## TODO: try making switches for a command
 ## TODO: try making options for a command (e.g logging)
+## TODO BUGS
+Bug#5
+    C-c C-k doesnt abort MERGE_MSG commit
 
-## TODO: BUG the C-c C-k is not strong enough. It commits if there is something in the fil. Should not!
+Bug#6
+    q quits any window ?
 
 ## MINOR: break out / refactor commands vs internal commands a bit?
 ## MINOR: NB! Thenables dont work with regular try/catch !
 
 ## Feature requests
-  Feature#2
-    MINOR: Should have more logical ordering of refs and such in menus. Remote branches should be grouped below everything else e.g.
+- Diffing
+- Logging
+- Reverting
+- Resetting
+- Tagging
+- Bisecting
+- Worktree
+- etc
 
 ## Dispose
   - Proper use of dispose()

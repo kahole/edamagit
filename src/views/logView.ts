@@ -1,3 +1,3 @@
 
 
-// TODO: log view and log commands
+// TODO: MVP log view and log commands

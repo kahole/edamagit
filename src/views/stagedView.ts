@@ -7,7 +7,7 @@ import { ChangeSectionView } from './changes/changesSectionView';
 import { MagitRepository } from '../models/magitRepository';
 import { TextView } from './general/textView';
 
-export default class MagitStagedView extends DocumentView {
+export default class StagedView extends DocumentView {
 
   static UriPath: string = 'staged.magit';
 
@@ -36,6 +36,6 @@ export default class MagitStagedView extends DocumentView {
 
   static index = 0;
   static encodeLocation(workspacePath: string): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${MagitStagedView.UriPath}?${workspacePath}#${MagitStagedView.index++}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${StagedView.UriPath}?${workspacePath}#${StagedView.index++}`);
   }
 }

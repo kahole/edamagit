@@ -89,8 +89,7 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
     }
   } else if (selectedView instanceof ChangeView) {
 
-    const args = ['reset', '--', selectedView.change.uri.fsPath];
-    return gitRun(repository, args);
+    unstageFile(repository, selectedView.change.uri);
 
   } else if (selectedView instanceof ChangeSectionView) {
     if (selectedView.section === Section.Staged) {
@@ -106,8 +105,7 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
     const chosenFile = await QuickMenuUtil.showMenu<Uri>(files);
 
     if (chosenFile) {
-      const args = ['reset', '--', chosenFile.fsPath];
-      return gitRun(repository, args);
+      return unstageFile(repository, chosenFile);
     }
   }
 }
@@ -123,4 +121,9 @@ export async function stageFile(repository: MagitRepository, fileUri: Uri, updat
   return repository
     ._repository
     .add([fileUri], { update });
+}
+
+export async function unstageFile(repository: MagitRepository, fileUri: Uri) {
+  const args = ['reset', '--', fileUri.fsPath];
+  return gitRun(repository, args);
 }

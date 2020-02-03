@@ -3,7 +3,6 @@ import { MenuItem } from '../menu/menuItem';
 import { MagitRepository } from '../models/magitRepository';
 import { MenuUtil, MenuState } from '../menu/menu';
 import { gitRun } from '../utils/gitRawRunner';
-import { QuickMenuUtil, QuickItem } from '../menu/quickMenu';
 import MagitUtils from '../utils/magitUtils';
 
 export async function fetching(repository: MagitRepository): Promise<any> {
@@ -29,10 +28,11 @@ export async function fetching(repository: MagitRepository): Promise<any> {
   return MenuUtil.showMenu({ title: 'Fetching', commands: fetchingMenuItems }, { repository });
 }
 
-// TODO: fetching: some work remains for MVP
-
-async function fetchFromPushRemote() {
-
+async function fetchFromPushRemote({ repository }: MenuState) {
+  if (repository.magitState?.HEAD?.pushRemote) {
+    const args = ['fetch', repository.magitState.HEAD.pushRemote.remote];
+    return gitRun(repository, args);
+  }
 }
 
 async function fetchFromUpstream() {
