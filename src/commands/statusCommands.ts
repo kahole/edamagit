@@ -40,29 +40,7 @@ export async function magitStatus(editor: TextEditor, preserveFocus = false): Pr
     const uri = MagitStatusView.encodeLocation(repository);
     views.set(uri.toString(), new MagitStatusView(uri, repository.magitState!));
 
-    return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false })
-
-      // TODO: PROTOTYPE works. branch highlighting...
-      // Extract to a feature branch
-      // THIS WORKS
-      // Decorations could be added by the views in the view hierarchy?
-      // yes as we go down the hierarchy make these decorations at exactly the points wanted
-      // and should be pretty simple to collect them and set the editors decorations
-      // needs something super smart.. https://github.com/Microsoft/vscode/issues/585
-      .then(e => {
-        if (repository?.magitState?.HEAD) {
-          e.setDecorations(Constants.BranchDecoration, rangesOfWord(doc, repository.magitState.HEAD.name));
-          if (repository.magitState.HEAD.upstreamRemote) {
-            e.setDecorations(Constants.RemoteBranchDecoration, rangesOfWord(doc, `${repository.magitState.HEAD.upstreamRemote.remote}/${repository.magitState.HEAD.name}`));
-          }
-        }
-        // Border possible as well
-        // e.setDecorations(
-        //   window.createTextEditorDecorationType({
-        //     color: 'rgba(100,240,100,0.5)',
-        //     border: '0.1px solid green'
-        //   }), rangesOfWord(doc, `${repository?.magitState?.HEAD?.upstreamRemote.remote}/${repository?.magitState?.HEAD?.name}`));
-      }));
+    return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false }));
 
   } else {
     // Prompt to create repo
