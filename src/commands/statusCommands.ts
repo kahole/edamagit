@@ -51,22 +51,6 @@ export async function magitStatus(editor: TextEditor, preserveFocus = false): Pr
   }
 }
 
-// MINOR: refactor, or remove
-function rangesOfWord(textDocument: TextDocument, word?: string): Range[] {
-  if (!word) {
-    return [];
-  }
-  const re = new RegExp(' ' + word, 'gi');
-
-  const results = [];
-  while (re.exec(textDocument.getText())) {
-    const endPos = textDocument.positionAt(re.lastIndex);
-    results.push(new Range(new Position(endPos.line, endPos.character - word.length), endPos));
-  }
-
-  return results;
-}
-
 export async function internalMagitStatus(repository: MagitRepository): Promise<void> {
 
   await repository.status();
