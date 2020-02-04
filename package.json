@@ -197,7 +197,7 @@
       },
       {
         "command": "extension.magit-file-popup",
-        "key": "ctrl+c alt+g",
+        "key": "ctrl-x ctrl+g",
         "when": "editorTextFocus"
       },
       {
