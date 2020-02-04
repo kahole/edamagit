@@ -20,8 +20,13 @@ export default class StagedView extends DocumentView {
     this.subViews = [];
     if (magitState.indexChanges) {
 
+      const stagedSection = new ChangeSectionView(Section.Staged, magitState.indexChanges);
+
+      // Unfold to show diff
+      stagedSection.subViews.forEach(changeView => changeView.folded = false);
+
       this.subViews = [
-        new ChangeSectionView(Section.Staged, magitState.indexChanges)
+        stagedSection
       ];
     }
   }

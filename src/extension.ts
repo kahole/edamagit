@@ -47,6 +47,10 @@ export function activate(context: ExtensionContext) {
 
   gitApi = gitExtension.getAPI(1);
 
+  context.subscriptions.push(gitApi.onDidCloseRepository( repository => {
+    magitRepositories.delete(repository.rootUri.path);
+  }));
+
   const contentProvider = new ContentProvider();
   const highlightProvider = new HighlightProvider();
 
