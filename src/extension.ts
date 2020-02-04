@@ -24,6 +24,7 @@ import { rebasing } from './commands/rebasingCommands';
 import { filePopup } from './commands/filePopupCommands';
 import { DispatchView } from './views/dispatchView';
 import MagitUtils from './utils/magitUtils';
+import { remoting } from './commands/remotingCommands';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
@@ -69,6 +70,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-branching', Command.primeRepo(branching)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-merging', Command.primeRepo(merging)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-rebasing', Command.primeRepo(rebasing)));
+  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-remoting', Command.primeRepo(remoting)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-visit-at-point', Command.primeRepoAndView(magitVisitAtPoint, false)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-apply-at-point', Command.primeRepoAndView(magitApplyEntityAtPoint)));
