@@ -38,7 +38,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 
     window.setStatusBarMessage(`Type C-c C-c to finish, or C-c C-k to cancel`);
 
-    const uri = StagedView.encodeLocation(repository.rootUri.path);
+    const uri = StagedView.encodeLocation(repository);
     views.set(uri.toString(), new StagedView(uri, repository.magitState!));
     stagedEditor = workspace.openTextDocument(uri)
       .then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn(), true));

@@ -8,12 +8,15 @@ Bug#5
 Bug#6
     q quits any window ?
 
+Bug#7
+    Staged view doesnt unfold to show diffs, when committing
+
 ## MINOR: break out / refactor commands vs internal commands a bit?
 ## MINOR: NB! Thenables dont work with regular try/catch !
 
 ## Feature requests
-- Diffing
 - Logging
+- Diffing
 - Reverting
 - Resetting
 - Tagging

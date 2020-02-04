@@ -5,7 +5,6 @@ import { DocumentView } from './general/documentView';
 import { Uri } from 'vscode';
 import { ChangeSectionView } from './changes/changesSectionView';
 import { MagitRepository } from '../models/magitRepository';
-import { TextView } from './general/textView';
 
 export default class StagedView extends DocumentView {
 
@@ -35,7 +34,7 @@ export default class StagedView extends DocumentView {
   }
 
   static index = 0;
-  static encodeLocation(workspacePath: string): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${StagedView.UriPath}?${workspacePath}#${StagedView.index++}`);
+  static encodeLocation(repository: MagitRepository): Uri {
+    return Uri.parse(`${Constants.MagitUriScheme}:${StagedView.UriPath}?${repository.rootUri.path}#${StagedView.index++}`);
   }
 }

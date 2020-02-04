@@ -8,7 +8,7 @@ export async function blameFile(repository: MagitRepository, fileUri: Uri) {
 
   const blameResult = await gitRun(repository, ['blame', fileUri.fsPath]);
 
-  const uri = BlameView.encodeLocation(fileUri);
+  const uri = BlameView.encodeLocation(repository, fileUri);
   views.set(uri.toString(), new BlameView(uri, blameResult.stdout));
   workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc));
 }

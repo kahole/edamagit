@@ -75,6 +75,10 @@
         "title": "Magit Remoting"
       },
       {
+        "command": "extension.magit-logging",
+        "title": "Magit Logging"
+      },
+      {
         "command": "extension.magit-stage",
         "title": "Magit Stage"
       },
@@ -119,6 +123,10 @@
         },
         {
           "command": "extension.magit-remoting",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "extension.magit-logging",
           "when": "editorLangId == magit"
         },
         {
@@ -261,6 +269,11 @@
       {
         "command": "extension.magit-remoting",
         "key": "shift+m",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "extension.magit-logging",
+        "key": "l",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {

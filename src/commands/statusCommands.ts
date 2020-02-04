@@ -37,7 +37,7 @@ export async function magitStatus(editor: TextEditor, preserveFocus = false): Pr
 
     await internalMagitStatus(repository);
 
-    const uri = MagitStatusView.encodeLocation(repository.rootUri.path);
+    const uri = MagitStatusView.encodeLocation(repository);
     views.set(uri.toString(), new MagitStatusView(uri, repository.magitState!));
 
     return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false })
