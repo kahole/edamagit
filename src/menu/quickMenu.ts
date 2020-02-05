@@ -28,4 +28,29 @@ export class QuickMenuUtil {
       _quickPick.show();
     });
   }
+
+  static showMenuWithFreeform<T>(quickItems: QuickItem<string>[], title?: string): Promise<string> {
+
+    return new Promise((resolve, reject) => {
+
+      const _quickPick = window.createQuickPick<QuickItem<string>>();
+
+      _quickPick.items = quickItems;
+      _quickPick.title = title;
+
+      const eventListenerDisposable = _quickPick.onDidAccept(async () => {
+
+        if (_quickPick.activeItems.length > 0) {
+          const chosenItem = _quickPick.activeItems[0];
+          resolve(chosenItem.meta);
+        } else {
+          resolve(_quickPick.value);
+        }
+        _quickPick.dispose();
+        eventListenerDisposable.dispose();
+      });
+
+      _quickPick.show();
+    });
+  }
 }

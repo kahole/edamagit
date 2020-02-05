@@ -132,7 +132,7 @@ async function _checkout({ repository }: MenuState, refs: Ref[]) {
     .sort((refA, refB) => refA.type - refB.type)
     .map(r => ({ label: r.name!, description: GitTextUtils.shortHash(r.commit), meta: r.name! }));
 
-  const ref = await QuickMenuUtil.showMenu(refsMenu);
+  const ref = await QuickMenuUtil.showMenuWithFreeform(refsMenu);
 
   if (ref) {
     return repository.checkout(ref);
