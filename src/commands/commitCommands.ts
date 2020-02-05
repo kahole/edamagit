@@ -34,9 +34,10 @@ export async function commit(repository: MagitRepository, commitArgs: string[] =
 export async function runCommitLikeCommand(repository: MagitRepository, args: string[]) {
 
   let stagedEditor: Thenable<TextEditor> | undefined;
+  let instructionStatus;
   try {
 
-    window.setStatusBarMessage(`Type C-c C-c to finish, or C-c C-k to cancel`);
+    instructionStatus = window.setStatusBarMessage(`Type C-c C-c to finish, or C-c C-k to cancel`);
 
     const uri = StagedView.encodeLocation(repository);
     views.set(uri.toString(), new StagedView(uri, repository.magitState!));
@@ -57,9 +58,13 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 
     const commitSuccessMessage = await gitRun(repository, args, { env });
 
+    instructionStatus.dispose();
     window.setStatusBarMessage(`Git finished: ${commitSuccessMessage.stdout.replace(Constants.LineSplitterRegex, ' ')}`, Constants.StatusMessageDisplayTimeout);
 
   } catch (e) {
+    if (instructionStatus) {
+      instructionStatus.dispose();
+    }
     window.setStatusBarMessage(`Commit canceled.`, Constants.StatusMessageDisplayTimeout);
   } finally {
 
