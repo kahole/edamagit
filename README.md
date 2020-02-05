@@ -1,5 +1,4 @@
 
-## TODO: try making switches for a command
 ## TODO: try making options for a command (e.g pushing)
 ## TODO BUGS
 Bug#5

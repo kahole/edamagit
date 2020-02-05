@@ -1,4 +1,4 @@
-import { window } from 'vscode';
+import { window, QuickPickItem } from 'vscode';
 import { MenuItem } from './menuItem';
 import { MagitRepository } from '../models/magitRepository';
 import { DocumentView } from '../views/general/documentView';
@@ -6,15 +6,20 @@ import { DocumentView } from '../views/general/documentView';
 export interface Menu {
   title: string;
   commands: MenuItem[];
-  isSwitchesMenu?: boolean;
-  isOptionsMenu?: boolean;
 }
 
 export interface MenuState {
   repository: MagitRepository;
-  switches?: any;
+  switches?: Switch[];
   options?: any;
   data?: any;
+}
+
+export interface Switch {
+  shortName: string;
+  longName: string;
+  description: string;
+  activated?: boolean;
 }
 
 export class MenuUtil {
@@ -27,12 +32,6 @@ export class MenuUtil {
 
       _quickPick.title = menu.title;
       _quickPick.ignoreFocusOut = true;
-
-      if (menu.isSwitchesMenu) {
-        _quickPick.canSelectMany = true;
-        _quickPick.title = 'Switches (select with <space>)';
-      }
-
       _quickPick.items = menu.commands;
 
       // Select with single key stroke
@@ -72,6 +71,41 @@ export class MenuUtil {
           } catch (error) {
             reject(error);
           }
+        }
+      });
+
+      _quickPick.show();
+    });
+  }
+
+  static showSwitchesMenu(menuState: MenuState): Promise<Switch[]> {
+
+    return new Promise((resolve, reject) => {
+
+      const _quickPick = window.createQuickPick<QuickPickItem>();
+
+      _quickPick.ignoreFocusOut = true;
+      if (menuState.switches) {
+        _quickPick.items = menuState.switches.map(s => ({ label: s.shortName, detail: s.longName, description: s.description }));
+
+        _quickPick.canSelectMany = true;
+        _quickPick.title = 'Switches (select with <space>)';
+      }
+
+      const acceptListenerDisposable = _quickPick.onDidAccept(async () => {
+
+        const updatedSwitches: Switch[] = [];
+
+        menuState.switches!.forEach( s => {
+          updatedSwitches.push({...s, activated: _quickPick.selectedItems.find( item => item.label === s.shortName) !== undefined});
+        });
+
+        _quickPick.dispose();
+        acceptListenerDisposable.dispose();
+        try {
+          resolve(updatedSwitches);
+        } catch (error) {
+          reject(error);
         }
       });
 

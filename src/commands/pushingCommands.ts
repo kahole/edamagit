@@ -1,14 +1,12 @@
-import MagitUtils from '../utils/magitUtils';
 import { MagitRepository } from '../models/magitRepository';
-import { commands, window } from 'vscode';
+import { commands } from 'vscode';
 import { MenuItem } from '../menu/menuItem';
 import { MenuUtil, MenuState } from '../menu/menu';
-import { Remote, RefType } from '../typings/git';
+import { RefType } from '../typings/git';
 import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
 import GitTextUtils from '../utils/gitTextUtils';
 
-export async function pushing(repository: MagitRepository) {
-
+function generatePushingMenu(repository: MagitRepository) {
   const pushingMenuItems: MenuItem[] = [];
 
   if (repository.magitState?.HEAD?.pushRemote) {
@@ -27,7 +25,29 @@ export async function pushing(repository: MagitRepository) {
 
   pushingMenuItems.push({ label: 'e', description: 'elsewhere', action: pushElsewhere });
 
-  return MenuUtil.showMenu({ title: 'Pushing', commands: pushingMenuItems }, { repository });
+  pushingMenuItems.push({ label: '-', description: 'Switches', action: async (menuState: MenuState) => {
+
+    // TODO: use the switches. and improve this setup
+
+    // MINOR: refactor this into menu better somehow?
+    const updatedSwitches = await MenuUtil.showSwitchesMenu(menuState);
+
+    return MenuUtil.showMenu(generatePushingMenu(menuState.repository), { repository: menuState.repository, switches: updatedSwitches })
+  }});
+
+  return { title: 'Pushing', commands: pushingMenuItems };
+}
+
+export async function pushing(repository: MagitRepository) {
+
+  const switches = [
+    { shortName: '-f', longName: '--force-with-lease', description: 'Force with lease'},
+    { shortName: '-F', longName: '--force', description: 'Force'},
+    { shortName: '-h', longName: '--no-verify', description: 'Disable hooks'},
+    { shortName: '-d', longName: '--dry-run', description: 'Dry run'}
+  ];
+
+  return MenuUtil.showMenu(generatePushingMenu(repository), { repository, switches });
 }
 
 async function pushToPushRemote({ repository }: MenuState) {

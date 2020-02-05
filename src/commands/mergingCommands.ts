@@ -75,10 +75,17 @@ async function _merge(repository: MagitRepository, ref: string, noCommit = false
   }
 
   if (editMessage) {
-    args.push(...['--edit', '--no-ff']);
+    // args.push(...['--edit', '--no-ff']);
+    // return CommitCommands.runCommitLikeCommand(repository, args);
 
-    // TODO: BUG, staged view does not contain any of the staged changed because it is not updated after the merge is started
-    return CommitCommands.runCommitLikeCommand(repository, args);
+    // TODO: hack to be able to update staged status mid-merge.
+
+    args.push(...['--no-commit', '--no-ff']);
+    await gitRun(repository, args);
+    
+    MagitUtils.magitStatusAndUpdate(repository);
+
+    return CommitCommands.runCommitLikeCommand(repository, ['commit']);
 
   } else {
     args.push('--no-edit');
