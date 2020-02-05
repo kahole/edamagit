@@ -101,6 +101,10 @@
       {
         "command": "extension.magit-stashing",
         "title": "Magit Stashing"
+      },
+      {
+        "command": "extension.magit-fetching",
+        "title": "Magit Fetching"
       }
     ],
     "menus": {
@@ -171,6 +175,10 @@
         },
         {
           "command": "extension.magit-stashing",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "extension.magit-fetching",
           "when": "editorLangId == magit"
         }
       ]
