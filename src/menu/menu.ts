@@ -22,6 +22,10 @@ export interface Switch {
   activated?: boolean;
 }
 
+export function activeSwitchesArgsForm(switches?: Switch[]) {
+  return switches?.filter(s => s.activated).map(s => s.longName) ?? [];
+}
+
 export class MenuUtil {
 
   static showMenu(menu: Menu, menuState: MenuState): Promise<void> {
@@ -44,15 +48,18 @@ export class MenuUtil {
           resolve();
         }
         const chosenItems = _quickPick.activeItems.filter(i => i.label === _quickPick.value);
-        _quickPick.value = '';
-        _quickPick.dispose();
-        eventListenerDisposable.dispose();
-        acceptListenerDisposable.dispose();
-        try {
-          await chosenItems[0].action(menuState);
-          resolve();
-        } catch (error) {
-          reject(error);
+        if (chosenItems.length > 0) {
+          _quickPick.value = '';
+          _quickPick.dispose();
+          eventListenerDisposable.dispose();
+          acceptListenerDisposable.dispose();
+          try {
+
+            await chosenItems[0].action(menuState);
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
         }
       });
 
@@ -86,8 +93,8 @@ export class MenuUtil {
 
       _quickPick.ignoreFocusOut = true;
       if (menuState.switches) {
-        _quickPick.items = menuState.switches.map(s => ({ label: s.shortName, detail: s.longName, description: s.description }));
-
+        _quickPick.items = menuState.switches.map(s => ({ label: s.shortName, detail: s.longName, description: s.description, activated: s.activated }));
+        _quickPick.selectedItems = _quickPick.items.filter(s => (s as any).activated);
         _quickPick.canSelectMany = true;
         _quickPick.title = 'Switches (select with <space>)';
       }
@@ -96,8 +103,8 @@ export class MenuUtil {
 
         const updatedSwitches: Switch[] = [];
 
-        menuState.switches!.forEach( s => {
-          updatedSwitches.push({...s, activated: _quickPick.selectedItems.find( item => item.label === s.shortName) !== undefined});
+        menuState.switches!.forEach(s => {
+          updatedSwitches.push({ ...s, activated: _quickPick.selectedItems.find(item => item.label === s.shortName) !== undefined });
         });
 
         _quickPick.dispose();

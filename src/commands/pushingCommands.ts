@@ -1,10 +1,11 @@
 import { MagitRepository } from '../models/magitRepository';
 import { commands } from 'vscode';
 import { MenuItem } from '../menu/menuItem';
-import { MenuUtil, MenuState } from '../menu/menu';
+import { MenuUtil, MenuState, activeSwitchesArgsForm } from '../menu/menu';
 import { RefType } from '../typings/git';
 import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
 import GitTextUtils from '../utils/gitTextUtils';
+import { gitRun } from '../utils/gitRawRunner';
 
 function generatePushingMenu(repository: MagitRepository) {
   const pushingMenuItems: MenuItem[] = [];
@@ -27,8 +28,6 @@ function generatePushingMenu(repository: MagitRepository) {
 
   pushingMenuItems.push({ label: '-', description: 'Switches', action: async (menuState: MenuState) => {
 
-    // TODO: use the switches. and improve this setup
-
     // MINOR: refactor this into menu better somehow?
     const updatedSwitches = await MenuUtil.showSwitchesMenu(menuState);
 
@@ -50,13 +49,15 @@ export async function pushing(repository: MagitRepository) {
   return MenuUtil.showMenu(generatePushingMenu(repository), { repository, switches });
 }
 
-async function pushToPushRemote({ repository }: MenuState) {
+async function pushToPushRemote({ repository, switches }: MenuState) {
 
   const pushRemote = repository.magitState?.HEAD?.pushRemote;
   const ref = repository.magitState?.HEAD?.name;
 
-  if (pushRemote) {
-    return repository.push(pushRemote.remote, ref);
+  if (pushRemote?.remote && ref) {
+
+    const args = ['push', ...activeSwitchesArgsForm(switches), pushRemote.remote, ref];
+    return gitRun(repository, args);
   }
 }
 
@@ -75,11 +76,19 @@ async function pushSetPushRemote({ repository, ...rest }: MenuState) {
   }
 }
 
-async function pushUpstream() {
-  return commands.executeCommand('git.push');
+async function pushUpstream({ repository, switches }: MenuState) {
+
+  const upstreamRemote = repository.magitState?.HEAD?.upstreamRemote;
+  const ref = repository.magitState?.HEAD?.name;
+
+  if (upstreamRemote?.remote && ref) {
+
+    const args = ['push', ...activeSwitchesArgsForm(switches), upstreamRemote.remote, ref];
+    return gitRun(repository, args);
+  }
 }
 
-async function pushSetUpstream({ repository }: MenuState) {
+async function pushSetUpstream({ repository, ...rest }: MenuState) {
 
   let choices = [...repository.state.refs];
 
@@ -104,7 +113,7 @@ async function pushSetUpstream({ repository }: MenuState) {
 
   const ref = repository.magitState?.HEAD?.name;
 
-  if (chosenRemote) {
+  if (chosenRemote && ref) {
 
     await Promise.all([
       // MINOR: CLEAN UP THIS SPLIT MESS
@@ -112,7 +121,9 @@ async function pushSetUpstream({ repository }: MenuState) {
       repository.setConfig(`branch.${ref}.remote`, chosenRemote.split('/')[0])
     ]);
 
-    return pushUpstream();
+    repository.magitState!.HEAD!.upstreamRemote = { name: ref, remote: chosenRemote.split('/')[0] };
+
+    return pushUpstream({ repository, ...rest });
   }
 }
 

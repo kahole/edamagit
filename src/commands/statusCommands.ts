@@ -211,23 +211,26 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
     // MINOR: clean up?
     try {
-      const pushRemote = await repository.getConfig(`branch.${HEAD.name}.pushRemote`);
-
       const upstreamRemote = HEAD.upstream?.remote;
 
       const upstreamRemoteCommit = repository.state.refs.find(ref => ref.remote === upstreamRemote && ref.name === `${upstreamRemote}/${HEAD.upstream?.name}`)?.commit;
       const upstreamRemoteCommitDetails = upstreamRemoteCommit ? getCommit(repository, upstreamRemoteCommit) : undefined;
-
-      const pushRemoteCommit = repository.state.refs.find(ref => ref.remote === pushRemote && ref.name === `${pushRemote}/${HEAD.name}`)?.commit;
-      const pushRemoteCommitDetails = pushRemoteCommit ? getCommit(repository, pushRemoteCommit) : undefined;
-
-      HEAD.pushRemote = { remote: pushRemote, name: HEAD.name!, commit: await pushRemoteCommitDetails };
 
       if (HEAD.upstream) {
         HEAD.upstreamRemote = HEAD.upstream;
         HEAD.upstreamRemote.commit = await upstreamRemoteCommitDetails;
 
       }
+    } catch { }
+
+    try {
+      const pushRemote = await repository.getConfig(`branch.${HEAD.name}.pushRemote`);
+
+      const pushRemoteCommit = repository.state.refs.find(ref => ref.remote === pushRemote && ref.name === `${pushRemote}/${HEAD.name}`)?.commit;
+      const pushRemoteCommitDetails = pushRemoteCommit ? getCommit(repository, pushRemoteCommit) : undefined;
+
+      HEAD.pushRemote = { remote: pushRemote, name: HEAD.name!, commit: await pushRemoteCommitDetails };
+
     } catch { }
   }
 

@@ -11,6 +11,8 @@ Bug#6
 ## MINOR: NB! Thenables dont work with regular try/catch !
 
 ## Feature requests
+- log all gitRun commands, $ view
+
 - Diffing
 - Reverting
 - Resetting
