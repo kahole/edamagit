@@ -175,7 +175,10 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     }
   } catch { }
 
-  const log = await logTask;
+  let log: Commit[] = [];
+  try {
+    log = await logTask;
+  } catch { }
 
   let rebasingState;
   if (repository.state.rebaseCommit) {

@@ -26,13 +26,15 @@ function generatePushingMenu(repository: MagitRepository) {
 
   pushingMenuItems.push({ label: 'e', description: 'elsewhere', action: pushElsewhere });
 
-  pushingMenuItems.push({ label: '-', description: 'Switches', action: async (menuState: MenuState) => {
+  pushingMenuItems.push({
+    label: '-', description: 'Switches', action: async (menuState: MenuState) => {
 
-    // MINOR: refactor this into menu better somehow?
-    const updatedSwitches = await MenuUtil.showSwitchesMenu(menuState);
+      // MINOR: refactor this into menu better somehow?
+      const updatedSwitches = await MenuUtil.showSwitchesMenu(menuState);
 
-    return MenuUtil.showMenu(generatePushingMenu(menuState.repository), { repository: menuState.repository, switches: updatedSwitches })
-  }});
+      return MenuUtil.showMenu(generatePushingMenu(menuState.repository), { repository: menuState.repository, switches: updatedSwitches });
+    }
+  });
 
   return { title: 'Pushing', commands: pushingMenuItems };
 }
@@ -40,10 +42,10 @@ function generatePushingMenu(repository: MagitRepository) {
 export async function pushing(repository: MagitRepository) {
 
   const switches = [
-    { shortName: '-f', longName: '--force-with-lease', description: 'Force with lease'},
-    { shortName: '-F', longName: '--force', description: 'Force'},
-    { shortName: '-h', longName: '--no-verify', description: 'Disable hooks'},
-    { shortName: '-d', longName: '--dry-run', description: 'Dry run'}
+    { shortName: '-f', longName: '--force-with-lease', description: 'Force with lease' },
+    { shortName: '-F', longName: '--force', description: 'Force' },
+    { shortName: '-h', longName: '--no-verify', description: 'Disable hooks' },
+    { shortName: '-d', longName: '--dry-run', description: 'Dry run' }
   ];
 
   return MenuUtil.showMenu(generatePushingMenu(repository), { repository, switches });
