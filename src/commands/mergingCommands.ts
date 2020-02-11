@@ -82,7 +82,7 @@ async function _merge(repository: MagitRepository, ref: string, noCommit = false
 
     args.push(...['--no-commit', '--no-ff']);
     await gitRun(repository, args);
-    
+
     MagitUtils.magitStatusAndUpdate(repository);
 
     return CommitCommands.runCommitLikeCommand(repository, ['commit']);

@@ -26,16 +26,6 @@ function generatePushingMenu(repository: MagitRepository) {
 
   pushingMenuItems.push({ label: 'e', description: 'elsewhere', action: pushElsewhere });
 
-  pushingMenuItems.push({
-    label: '-', description: 'Switches', action: async (menuState: MenuState) => {
-
-      // MINOR: refactor this into menu better somehow?
-      const updatedSwitches = await MenuUtil.showSwitchesMenu(menuState);
-
-      return MenuUtil.showMenu(generatePushingMenu(menuState.repository), { repository: menuState.repository, switches: updatedSwitches });
-    }
-  });
-
   return { title: 'Pushing', commands: pushingMenuItems };
 }
 

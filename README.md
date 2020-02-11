@@ -1,11 +1,10 @@
 
-## TODO: try making options for a command (e.g pushing)
+## TODO: SIMPLE add more switches
+## TODO: make options MENU also. and do for a command
+
 ## TODO BUGS
 Bug#5
     C-c C-k doesnt abort MERGE_MSG commit
-
-Bug#6
-    q quits any window ??
 
 ## MINOR: break out / refactor commands vs internal commands a bit?
 ## MINOR: NB! Thenables dont work with regular try/catch !

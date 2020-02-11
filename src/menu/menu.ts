@@ -32,6 +32,18 @@ export class MenuUtil {
 
     return new Promise((resolve, reject) => {
 
+      if (menuState.switches) {
+        menu.commands.push({
+          label: '-', description: 'Switches', action: async (menuState: MenuState) => {
+
+            const updatedSwitches = await MenuUtil.showSwitchesMenu(menuState);
+
+            return MenuUtil.showMenu(menu, { repository: menuState.repository, switches: updatedSwitches });
+          }
+        });
+      }
+
+
       const _quickPick = window.createQuickPick<MenuItem>();
 
       _quickPick.title = menu.title;
