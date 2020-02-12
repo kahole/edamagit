@@ -75,10 +75,9 @@ async function _merge(repository: MagitRepository, ref: string, noCommit = false
   }
 
   if (editMessage) {
+    // Should really be "merge --edit" like this, but then there's no chance to update the "staged" view
     // args.push(...['--edit', '--no-ff']);
     // return CommitCommands.runCommitLikeCommand(repository, args);
-
-    // TODO: hack to be able to update staged status mid-merge.
 
     args.push(...['--no-commit', '--no-ff']);
     await gitRun(repository, args);
