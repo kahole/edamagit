@@ -1,6 +1,12 @@
 
 ## TODO: make options MENU also. and do for a command
 
+## TODO: Config interface, or:
+```
+  return workspace.openTextDocument(repository.rootUri.fsPath + '/.git/config').then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus: true, preview: true }));
+```
+
+
 ## MINOR: NB! Thenables dont work with regular try/catch !
 
 ## Dispose
