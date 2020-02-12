@@ -2,23 +2,8 @@
 ## TODO: SIMPLE add more switches
 ## TODO: make options MENU also. and do for a command
 
-## TODO BUGS
-Bug#5
-    C-c C-k doesnt abort MERGE_MSG commit
-
 ## MINOR: break out / refactor commands vs internal commands a bit?
 ## MINOR: NB! Thenables dont work with regular try/catch !
-
-## Feature requests
-- log all gitRun commands, $ view
-
-- Diffing
-- Reverting
-- Resetting
-- Tagging
-- Bisecting
-- Worktree
-- etc
 
 ## Dispose
   - Proper use of dispose()
@@ -30,13 +15,13 @@ Bug#5
 
   - Licensing, crediting?
       o magit
-      o git.d.ts microsoft licenced, effects?
+      o git.d.ts microsoft licenced, ?
 
 -----
 
 # Magit for VSCode (alpha)
 
-!alpha: use at own your own risk ??
+!alpha: use at own your own risk
 
 Inspired by the original (Magit)[https://magit.vc/] for Emacs
 
@@ -44,6 +29,14 @@ Inspired by the original (Magit)[https://magit.vc/] for Emacs
 
 - [ ] Stable v1.0
 - [ ] Feature parity with Magit
+      - log all commands, $ view
+      - Diffing
+      - Reverting
+      - Resetting
+      - Tagging
+      - Bisecting
+      - Worktree
+      - etc
 
 --------
 
@@ -69,25 +62,5 @@ This extension contributes the following settings:
 
 * `myExtension.enable`: enable/disable this extension
 * `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
 
 -----------------------------------------------------------------------------------------------------------

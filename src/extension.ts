@@ -9,7 +9,7 @@ import { magitVisitAtPoint } from './commands/visitAtPointCommands';
 import { MagitRepository } from './models/magitRepository';
 import { magitCommit } from './commands/commitCommands';
 import { magitStage, magitStageAll, magitUnstageAll, magitUnstage } from './commands/stagingCommands';
-import { saveClose } from './commands/macros';
+import { saveClose, clearSaveClose } from './commands/macros';
 import HighlightProvider from './providers/highlightProvider';
 import { Command } from './commands/commandPrimer';
 import * as Constants from './common/constants';
@@ -47,7 +47,7 @@ export function activate(context: ExtensionContext) {
 
   gitApi = gitExtension.getAPI(1);
 
-  context.subscriptions.push(gitApi.onDidCloseRepository( repository => {
+  context.subscriptions.push(gitApi.onDidCloseRepository(repository => {
     magitRepositories.delete(repository.rootUri.path);
   }));
 
@@ -104,6 +104,8 @@ export function activate(context: ExtensionContext) {
   }, false)));
 
   context.subscriptions.push(commands.registerCommand('extension.magit-save-and-close-commit-msg', saveClose));
+  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-abort-commit-msg', clearSaveClose));
+
 }
 
 export function deactivate() {

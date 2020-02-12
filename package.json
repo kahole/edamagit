@@ -330,7 +330,7 @@
         "when": "editorTextFocus && editorLangId == git-commit"
       },
       {
-        "command": "workbench.action.closeActiveEditor",
+        "command": "extension.magit-abort-commit-msg",
         "key": "ctrl+c ctrl+k",
         "when": "editorTextFocus && editorLangId == git-commit"
       },
