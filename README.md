@@ -6,8 +6,7 @@
   return workspace.openTextDocument(repository.rootUri.fsPath + '/.git/config').then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus: true, preview: true }));
 ```
 
-
-## MINOR: NB! Thenables dont work with regular try/catch !
+## MINOR: NB! Thenables dont work with regular try/catch ?!
 
 ## Dispose
   - Proper use of dispose()
@@ -41,7 +40,7 @@ Inspired by the original (Magit)[https://magit.vc/] for Emacs
       - Bisecting
       - Worktree
       - Cherry picking
-      - etc
+      - Config
 
 --------
 
