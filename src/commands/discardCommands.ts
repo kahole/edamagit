@@ -41,9 +41,8 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
 
       if (await MagitUtils.confirmAction(`Discard ${sectionLabel} ${change.relativePath}?`)) {
 
-        const discardTasks = change.hunks?.map(hunk => discardHunk(repository, hunk));
-
-        return discardTasks ? Promise.all(discardTasks) : undefined;
+        const args = ['checkout', 'HEAD', '--', change.uri.fsPath];
+        return gitRun(repository, args);
       }
     }
 
@@ -67,8 +66,8 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
         break;
       case Section.Staged:
         if (await MagitUtils.confirmAction('Discard all staged changes?')) {
-          await commands.executeCommand('git.unstageAll');
-          return commands.executeCommand('git.cleanAllTracked');
+          const args = ['checkout', 'HEAD', '--', ...changeSectionView.changes.map(change => change.uri.fsPath)];
+          return gitRun(repository, args);
         }
         break;
       default:
