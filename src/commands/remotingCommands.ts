@@ -1,7 +1,7 @@
-import { MagitRepository } from "../models/magitRepository";
-import { MenuUtil, MenuState } from "../menu/menu";
-import { commands, window } from "vscode";
-import { gitRun } from "../utils/gitRawRunner";
+import { MagitRepository } from '../models/magitRepository';
+import { MenuUtil, MenuState } from '../menu/menu';
+import { commands, window } from 'vscode';
+import { gitRun } from '../utils/gitRawRunner';
 
 const remotingMenu = {
   title: 'Remoting',

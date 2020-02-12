@@ -1,10 +1,9 @@
 import { MagitRepository } from '../models/magitRepository';
 import { magitRepositories, views, gitApi } from '../extension';
-import { TextEditor, TextDocument, window, ViewColumn, workspace } from 'vscode';
+import { TextEditor, TextDocument, window, ViewColumn } from 'vscode';
 import { internalMagitStatus } from '../commands/statusCommands';
 import { DocumentView } from '../views/general/documentView';
 import FilePathUtils from './filePathUtils';
-import { Ref } from '../typings/git';
 
 export default class MagitUtils {
 

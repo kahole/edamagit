@@ -1,19 +1,17 @@
 import * as Constants from '../common/constants';
 import { MagitState } from '../models/magitState';
 import { ChangeSectionView } from './changes/changesSectionView';
-import { Section, SectionHeaderView } from './general/sectionHeader';
+import { Section } from './general/sectionHeader';
 import { DocumentView } from './general/documentView';
 import { StashSectionView } from './stashes/stashSectionView';
-import { CommitSectionView, CommitItemView } from './commits/commitSectionView';
-import { BranchHeaderView } from './branches/branchHeaderView';
+import { CommitSectionView } from './commits/commitSectionView';
 import { TextView } from './general/textView';
 import { LineBreakView } from './general/lineBreakView';
-import { Uri, EventEmitter } from 'vscode';
+import { Uri } from 'vscode';
 import { BranchSectionView } from './branches/branchSectionView';
 import { MergingSectionView } from './merging/mergingSectionView';
 import { UnsourcedCommitSectionView } from './commits/unsourcedCommitsSectionView';
 import { MagitRepository } from '../models/magitRepository';
-import GitTextUtils from '../utils/gitTextUtils';
 import { RebasingSectionView } from './rebasing/rebasingSectionView';
 
 export default class MagitStatusView extends DocumentView {

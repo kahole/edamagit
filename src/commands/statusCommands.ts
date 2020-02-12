@@ -1,5 +1,5 @@
 import { MagitChange } from '../models/magitChange';
-import { workspace, window, Range, commands, Uri, TextDocument, Position, TextEditor } from 'vscode';
+import { workspace, window, commands, Uri, TextEditor } from 'vscode';
 import { views } from '../extension';
 import FilePathUtils from '../utils/filePathUtils';
 import GitTextUtils from '../utils/gitTextUtils';

@@ -1,5 +1,5 @@
 import { window, commands } from 'vscode';
-import { Menu, MenuState, MenuUtil } from '../menu/menu';
+import { MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
 import { Ref, GitErrorCodes, RefType } from '../typings/git';
 import { gitRun } from '../utils/gitRawRunner';

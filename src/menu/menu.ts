@@ -1,7 +1,6 @@
 import { window, QuickPickItem } from 'vscode';
 import { MenuItem } from './menuItem';
 import { MagitRepository } from '../models/magitRepository';
-import { DocumentView } from '../views/general/documentView';
 
 export interface Menu {
   title: string;

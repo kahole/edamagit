@@ -1,5 +1,4 @@
-import { exec, spawn, ExecException } from 'child_process';
-import { window, workspace, ViewColumn, TextEditor, commands, Uri } from 'vscode';
+import { window, workspace, ViewColumn, TextEditor, commands } from 'vscode';
 import * as Constants from '../common/constants';
 import { execPath } from 'process';
 import { MagitRepository } from '../models/magitRepository';

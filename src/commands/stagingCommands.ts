@@ -1,4 +1,4 @@
-import { window, commands, workspace, Uri, QuickPickItem } from 'vscode';
+import { window, commands, Uri } from 'vscode';
 import { HunkView } from '../views/changes/HunkView';
 import { ChangeView } from '../views/changes/changeView';
 import MagitUtils from '../utils/magitUtils';

@@ -1,4 +1,4 @@
-import { window, workspace, commands } from 'vscode';
+import { window, workspace } from 'vscode';
 import MagitUtils from '../utils/magitUtils';
 
 export function magitHelp() {

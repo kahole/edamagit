@@ -1,4 +1,4 @@
-import { window, TextEditor, Range, workspace, ViewColumn, Uri } from 'vscode';
+import { window, workspace } from 'vscode';
 import MagitUtils from '../utils/magitUtils';
 import { MagitRepository } from '../models/magitRepository';
 import { CommitItemView } from '../views/commits/commitSectionView';

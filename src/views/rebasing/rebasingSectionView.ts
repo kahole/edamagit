@@ -1,10 +1,8 @@
 import { View } from '../general/view';
-import { Section, SectionHeaderView } from '../general/sectionHeader';
 import { TextView } from '../general/textView';
 import { LineBreakView } from '../general/lineBreakView';
 import { CommitItemView } from '../commits/commitSectionView';
 import { MagitRebasingState } from '../../models/magitRebasingState';
-import GitTextUtils from '../../utils/gitTextUtils';
 
 export class RebasingSectionView extends View {
   isFoldable = true;

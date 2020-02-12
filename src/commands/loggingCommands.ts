@@ -1,10 +1,9 @@
-import { MagitRepository } from "../models/magitRepository";
-import { MenuUtil, MenuState } from "../menu/menu";
-import { commands, window, workspace, Uri } from "vscode";
-import LogView from "../views/logView";
-import { views } from "../extension";
-import MagitUtils from "../utils/magitUtils";
-import FilePathUtils from "../utils/filePathUtils";
+import { MagitRepository } from '../models/magitRepository';
+import { MenuUtil, MenuState } from '../menu/menu';
+import { window, workspace } from 'vscode';
+import LogView from '../views/logView';
+import { views } from '../extension';
+import MagitUtils from '../utils/magitUtils';
 
 const loggingMenu = {
   title: 'Logging',

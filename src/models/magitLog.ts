@@ -1,4 +1,4 @@
-import { Commit, Ref } from "../typings/git";
+import { Commit } from '../typings/git';
 
 export interface MagitLog {
   commits: Commit[];

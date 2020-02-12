@@ -1,6 +1,5 @@
 import { window, commands, workspace } from 'vscode';
 import { MagitRepository } from '../models/magitRepository';
-import { CommitItemView } from '../views/commits/commitSectionView';
 import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
 import { StashItemView, StashSectionView } from '../views/stashes/stashSectionView';
@@ -13,7 +12,6 @@ import GitTextUtils from '../utils/gitTextUtils';
 import { apply } from './applyCommands';
 import { Status } from '../typings/git';
 import { MagitChangeHunk } from '../models/magitChangeHunk';
-import { magitUnstageAll } from './stagingCommands';
 
 export async function magitDiscardAtPoint(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 

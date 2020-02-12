@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { views } from '../extension';
 import * as Constants from '../common/constants';
-import MagitStatusView from '../views/magitStatusView';
 import { magitStatus } from '../commands/statusCommands';
 import FilePathUtils from '../utils/filePathUtils';
 
