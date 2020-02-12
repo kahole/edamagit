@@ -22,10 +22,6 @@ export interface Switch {
   activated?: boolean;
 }
 
-export function activeSwitchesArgsForm(switches?: Switch[]) {
-  return switches?.filter(s => s.activated).map(s => s.longName) ?? [];
-}
-
 export class MenuUtil {
 
   static showMenu(menu: Menu, menuState: MenuState): Promise<void> {
@@ -130,5 +126,9 @@ export class MenuUtil {
 
       _quickPick.show();
     });
+  }
+
+  static switchesToArgs(switches?: Switch[]): string[] {
+    return switches?.filter(s => s.activated).map(s => s.longName) ?? [];
   }
 }

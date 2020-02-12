@@ -1,7 +1,7 @@
 import { MagitRepository } from '../models/magitRepository';
 import { commands } from 'vscode';
 import { MenuItem } from '../menu/menuItem';
-import { MenuUtil, MenuState, activeSwitchesArgsForm } from '../menu/menu';
+import { MenuUtil, MenuState } from '../menu/menu';
 import { RefType } from '../typings/git';
 import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
 import GitTextUtils from '../utils/gitTextUtils';
@@ -48,7 +48,7 @@ async function pushToPushRemote({ repository, switches }: MenuState) {
 
   if (pushRemote?.remote && ref) {
 
-    const args = ['push', ...activeSwitchesArgsForm(switches), pushRemote.remote, ref];
+    const args = ['push', ...MenuUtil.switchesToArgs(switches), pushRemote.remote, ref];
     return gitRun(repository, args);
   }
 }
@@ -75,7 +75,7 @@ async function pushUpstream({ repository, switches }: MenuState) {
 
   if (upstreamRemote?.remote && ref) {
 
-    const args = ['push', ...activeSwitchesArgsForm(switches), upstreamRemote.remote, ref];
+    const args = ['push', ...MenuUtil.switchesToArgs(switches), upstreamRemote.remote, ref];
     return gitRun(repository, args);
   }
 }

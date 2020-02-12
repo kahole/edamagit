@@ -1,8 +1,6 @@
 
-## TODO: SIMPLE add more switches
 ## TODO: make options MENU also. and do for a command
 
-## MINOR: break out / refactor commands vs internal commands a bit?
 ## MINOR: NB! Thenables dont work with regular try/catch !
 
 ## Dispose
@@ -36,6 +34,7 @@ Inspired by the original (Magit)[https://magit.vc/] for Emacs
       - Tagging
       - Bisecting
       - Worktree
+      - Cherry picking
       - etc
 
 --------
