@@ -22,7 +22,6 @@ export class StashSectionView extends View {
 export class StashItemView extends TextView {
 
   constructor(public stash: Stash) {
-    super();
-    this.textContent = `stash@{${stash.index}} ${stash.description}`;
+    super(`stash@{${stash.index}} ${stash.description}`);
   }
 }

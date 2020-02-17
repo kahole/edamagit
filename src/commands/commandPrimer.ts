@@ -12,7 +12,7 @@ export class Command {
   static primeRepo(command: (repository: MagitRepository) => Promise<any>, triggersUpdate: boolean = true): (editor: TextEditor) => Promise<any> {
 
     return async (editor: TextEditor) => {
-      const repository = MagitUtils.getCurrentMagitRepo(editor.document);
+      const repository = MagitUtils.getCurrentMagitRepo(editor.document.uri);
 
       if (repository) {
 
@@ -32,7 +32,7 @@ export class Command {
   static primeRepoAndView(command: (repository: MagitRepository, view: DocumentView) => Promise<any>, triggersUpdate: boolean = true): (editor: TextEditor) => Promise<any> {
 
     return async (editor: TextEditor) => {
-      const [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(editor);
+      const [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(editor.document.uri);
 
       if (repository && currentView) {
 
@@ -53,7 +53,7 @@ export class Command {
     return async (editor: TextEditor) => {
 
       const fileUri = editor.document.uri;
-      const repository = MagitUtils.getCurrentMagitRepo(editor.document);
+      const repository = MagitUtils.getCurrentMagitRepo(fileUri);
 
       if (repository) {
 

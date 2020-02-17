@@ -7,7 +7,7 @@ export class ChangeView extends View {
   isFoldable = true;
   foldedByDefault = true;
 
-  get id() { return this.change.uri.toString() + this.change.section?.toString() + this.change.hunks?.reduce((diffs, hunk) => (diffs + hunk.diffHeader ? hunk.diffHeader : ''), ''); }
+  get id() { return this.change.uri.toString() + this.change.section?.toString(); }
 
   constructor(public change: MagitChange) {
     super();

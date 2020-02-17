@@ -1,27 +1,27 @@
 import { MagitRepository } from '../models/magitRepository';
 import { magitRepositories, views, gitApi } from '../extension';
-import { TextEditor, TextDocument, window, ViewColumn } from 'vscode';
+import { window, ViewColumn, Uri } from 'vscode';
 import { internalMagitStatus } from '../commands/statusCommands';
 import { DocumentView } from '../views/general/documentView';
 import FilePathUtils from './filePathUtils';
 
 export default class MagitUtils {
 
-  public static getCurrentMagitRepo(document: TextDocument): MagitRepository | undefined {
+  public static getCurrentMagitRepo(uri: Uri): MagitRepository | undefined {
 
-    let repository = magitRepositories.get(document.uri.query);
+    let repository = magitRepositories.get(uri.query);
 
     if (!repository) {
 
       // MINOR: Any point in reusing repo from this map?
       for (const [key, repo] of magitRepositories.entries()) {
-        if (FilePathUtils.isDescendant(key, document.uri.fsPath)) {
+        if (FilePathUtils.isDescendant(key, uri.fsPath)) {
           return repo;
         }
       }
 
       // First time encountering this repo
-      repository = gitApi.repositories.find(r => FilePathUtils.isDescendant(r.rootUri.fsPath, document.uri.fsPath));
+      repository = gitApi.repositories.find(r => FilePathUtils.isDescendant(r.rootUri.fsPath, uri.fsPath));
 
       if (repository) {
         magitRepositories.set(repository.rootUri.fsPath, repository);
@@ -31,9 +31,9 @@ export default class MagitUtils {
     return repository;
   }
 
-  public static getCurrentMagitRepoAndView(editor: TextEditor): [MagitRepository | undefined, DocumentView | undefined] {
-    const repository = magitRepositories.get(editor.document.uri.query);
-    const currentView = views.get(editor.document.uri.toString() ?? '') as DocumentView;
+  public static getCurrentMagitRepoAndView(uri: Uri): [MagitRepository | undefined, DocumentView | undefined] {
+    const repository = magitRepositories.get(uri.query);
+    const currentView = views.get(uri.toString() ?? '') as DocumentView;
     return [repository, currentView];
   }
 

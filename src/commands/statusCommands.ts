@@ -17,7 +17,7 @@ export async function magitRefresh() { }
 
 export async function magitStatus(editor: TextEditor, preserveFocus = false): Promise<any> {
 
-  const repository = MagitUtils.getCurrentMagitRepo(editor.document);
+  const repository = MagitUtils.getCurrentMagitRepo(editor.document.uri);
 
   if (repository) {
 

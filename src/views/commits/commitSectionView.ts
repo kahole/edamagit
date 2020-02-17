@@ -23,7 +23,6 @@ export class CommitSectionView extends View {
 export class CommitItemView extends TextView {
 
   constructor(public commit: Commit, qualifier?: string) {
-    super();
-    this.textContent = `${qualifier ? qualifier + ' ' : ''}${GitTextUtils.shortHash(commit.hash)} ${GitTextUtils.shortCommitMessage(commit.message)}`;
+    super(`${qualifier ? qualifier + ' ' : ''}${GitTextUtils.shortHash(commit.hash)} ${GitTextUtils.shortCommitMessage(commit.message)}`);
   }
 }
