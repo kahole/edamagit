@@ -105,6 +105,10 @@
       {
         "command": "extension.magit-fetching",
         "title": "Magit Fetching"
+      },
+      {
+        "command": "extension.magit-process-log",
+        "title": "Magit Process Log"
       }
     ],
     "menus": {
@@ -179,6 +183,10 @@
         },
         {
           "command": "extension.magit-fetching",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "extension.magit-process-log",
           "when": "editorLangId == magit"
         }
       ]
@@ -322,6 +330,11 @@
       {
         "command": "extension.magit-unstage-all",
         "key": "shift+u",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "extension.magit-process-log",
+        "key": "shift+4",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {

@@ -26,9 +26,12 @@ import { DispatchView } from './views/dispatchView';
 import MagitUtils from './utils/magitUtils';
 import { remoting } from './commands/remotingCommands';
 import { logging } from './commands/loggingCommands';
+import { MagitProcessLogEntry } from './models/magitProcessLogEntry';
+import { processView } from './commands/processCommands';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
+export const processLog: MagitProcessLogEntry[] = [];
 
 export let gitApi: API;
 
@@ -64,7 +67,7 @@ export function activate(context: ExtensionContext) {
   );
 
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit', (editor: TextEditor) => magitStatus(editor)));
-  context.subscriptions.push(commands.registerCommand('extension.magit-help', magitHelp));
+  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-help', Command.primeRepo(magitHelp, false)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-commit', Command.primeRepo(magitCommit)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-refresh', Command.primeRepo(magitRefresh)));
@@ -87,6 +90,8 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-unstage-all', Command.primeRepoAndView(magitUnstageAll)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-file-popup', Command.primeFileCommand(filePopup)));
+
+  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-process-log', Command.primeRepo(processView, false)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-dispatch', Command.primeRepo(async (repository: MagitRepository) => {
     const uri = DispatchView.encodeLocation(repository);

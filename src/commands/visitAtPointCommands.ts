@@ -31,13 +31,10 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
     const commit: MagitCommit = (selectedView as CommitItemView).commit;
 
     const result = await gitRun(repository, ['show', commit.hash]);
-
     commit.diff = result.stdout;
 
     const uri = CommitDetailView.encodeLocation(commit.hash);
-
     views.set(uri.toString(), new CommitDetailView(uri, commit));
-
     workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn()));
 
   } else if (selectedView instanceof StashItemView) {

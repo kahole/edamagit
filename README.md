@@ -1,11 +1,6 @@
 
 ## TODO: make options MENU also. and do for a command
 
-## TODO: context.logPath and winston.js !  - log all commands, $ view
-     log all commands, and all git errors
-     and $ just opens the correct logfile, simple
-     https://www.npmjs.com/package/winston-daily-rotate-file
-
 ## MINOR: NB! Thenables dont work with regular try/catch ?!
 
 ## 
