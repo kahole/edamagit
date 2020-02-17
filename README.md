@@ -1,19 +1,21 @@
-## 
-  - support windows, linux
-
-  - Licensing, crediting?
-      o magit
-      o git.d.ts microsoft licenced, ?
-
------
-
 # Magit for VSCode (alpha)
 
 *alpha*: use at own your own risk
 
 Inspired by the awesome original (Magit)[https://magit.vc/] for Emacs
 
-# Roadmap
+## Features
+
+For example if there is an image subfolder under your extension project workspace:
+
+\!\[feature X\]\(images/feature-x.png\)
+
+> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+
+## Usage
+---
+
+## Roadmap
 
 - Config menus
 - Variable menus
@@ -29,20 +31,12 @@ Inspired by the awesome original (Magit)[https://magit.vc/] for Emacs
   - Worktree
   - Cherry picking
 
-### Long term
+### Goals
 - Own model and parser (not relying on git extension API)
   - More efficient, flexible, and stable
 - Stable v1.0
 
 --------
-
-## Features
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
 ## Requirements
 
