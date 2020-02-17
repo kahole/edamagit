@@ -83,6 +83,6 @@ export default class MagitStatusView extends DocumentView {
   }
 
   static encodeLocation(repository: MagitRepository, ): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${MagitStatusView.UriPath}?${repository.rootUri.path}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${MagitStatusView.UriPath}?${repository.rootUri.fsPath}`);
   }
 }

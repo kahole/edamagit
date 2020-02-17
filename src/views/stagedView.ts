@@ -40,6 +40,6 @@ export default class StagedView extends DocumentView {
 
   static index = 0;
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${StagedView.UriPath}?${repository.rootUri.path}#${StagedView.index++}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${StagedView.UriPath}?${repository.rootUri.fsPath}#${StagedView.index++}`);
   }
 }

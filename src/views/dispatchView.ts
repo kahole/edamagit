@@ -26,6 +26,6 @@ export class DispatchView extends DocumentView {
   public update(repository: MagitRepository): void { }
 
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${DispatchView.UriPath}?${repository.rootUri.path}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${DispatchView.UriPath}?${repository.rootUri.fsPath}`);
   }
 }

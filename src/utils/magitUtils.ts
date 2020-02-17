@@ -15,16 +15,16 @@ export default class MagitUtils {
 
       // MINOR: Any point in reusing repo from this map?
       for (const [key, repo] of magitRepositories.entries()) {
-        if (FilePathUtils.isDescendant(key, document.uri.path)) {
+        if (FilePathUtils.isDescendant(key, document.uri.fsPath)) {
           return repo;
         }
       }
 
       // First time encountering this repo
-      repository = gitApi.repositories.find(r => FilePathUtils.isDescendant(r.rootUri.path, document.uri.path));
+      repository = gitApi.repositories.find(r => FilePathUtils.isDescendant(r.rootUri.fsPath, document.uri.fsPath));
 
       if (repository) {
-        magitRepositories.set(repository.rootUri.path, repository);
+        magitRepositories.set(repository.rootUri.fsPath, repository);
       }
     }
 
