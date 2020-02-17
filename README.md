@@ -1,8 +1,3 @@
-
-## TODO: make options MENU also. and do for a command
-
-## MINOR: NB! Thenables dont work with regular try/catch ?!
-
 ## 
   - support windows, linux
 
@@ -14,23 +9,30 @@
 
 # Magit for VSCode (alpha)
 
-!alpha: use at own your own risk
+*alpha*: use at own your own risk
 
 Inspired by the awesome original (Magit)[https://magit.vc/] for Emacs
 
 # Roadmap
 
-- [ ] Branch name highlighting https://github.com/microsoft/vscode/wiki/Semantic-Highlighting-Overview
-- [ ] Stable v1.0
-- [ ] More Magit features
-      - Diffing
-      - Reverting
-      - Resetting
-      - Tagging
-      - Bisecting
-      - Worktree
-      - Cherry picking
-      - Config
+- Config menus
+- Variable menus
+- Branch name highlighting     
+     (https://github.com/microsoft/vscode/wiki/Semantic-Highlighting-Overview)
+
+### Magit feature parity
+  - Diffing
+  - Reverting
+  - Resetting
+  - Tagging
+  - Bisecting
+  - Worktree
+  - Cherry picking
+
+### Long term
+- Own model and parser (not relying on git extension API)
+  - More efficient, flexible, and stable
+- Stable v1.0
 
 --------
 

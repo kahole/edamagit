@@ -46,22 +46,10 @@ async function createNewBranch(menuState: MenuState) {
   return _createBranch(menuState, false);
 }
 
-// async function createNewSpinoff(menuState: MenuState) {
-
-//   // Spinoff command
-//   //  C-h F magit-branch-spinoff
-
-//   // e.g:
-//   //  on branch master:
-//   //  1. Remove all unpublished commits
-//   //  2. checkout new branch with input name
-//   //  3. Add all the unpublished/now removed commits from master to $NEW_BRANCH
-// }
-
 async function configureBranch(menuState: MenuState) {
 
   // MINOR Configure branch, implement
-  // 1. Select branch? or take current?
+  // 1. Select branch? or grab current?
   // 2. Read all configs: menuState.repository.getConfigs
   //    maybe they are already read in the repo state?
   // 3. repository.setConfig("branch.${ref}.theCoolProperty")
@@ -141,22 +129,17 @@ async function _checkout({ repository }: MenuState, refs: Ref[]) {
 
 async function _createBranch({ repository }: MenuState, checkout: boolean) {
 
-  // MINOR: can use command
-  return commands.executeCommand('git.branchFrom');
+  const ref = await MagitUtils.chooseRef(repository, 'Create and checkout branch starting at', true, true);
 
-  // or custom implementation:
+  if (ref) {
+    const newBranchName = await window.showInputBox({ prompt: 'Name for new branch' });
 
-  // const ref = await MagitUtils.chooseRef(repository.state.refs, 'Create and checkout branch starting at');
+    if (newBranchName && newBranchName.length > 0) {
 
-  // if (ref) {
-  //   const newBranchName = await window.showInputBox({ prompt: 'Name for new branch' });
+      return repository.createBranch(newBranchName, checkout, ref);
 
-  //   if (newBranchName && newBranchName.length > 0) {
-
-  //     return repository.createBranch(newBranchName, checkout, ref);
-
-  //   } else {
-  //     window.showErrorMessage('No name given for new branch');
-  //   }
-  // }
+    } else {
+      throw new Error('No name given for new branch');
+    }
+  }
 }

@@ -49,12 +49,23 @@ export default class MagitUtils {
       (repository.magitState.mergeChanges?.length ?? 0) > 0);
   }
 
-  public static async chooseRef(repository: MagitRepository, prompt: string) {
-    return window.showQuickPick(
-      repository.state.refs
-        .filter(ref => ref.name !== repository.magitState?.HEAD?.name)
-        .sort((refA, refB) => refA.type - refB.type).map(r => r.name!)
-      , { placeHolder: prompt });
+  public static async chooseRef(repository: MagitRepository, prompt: string, showCurrent = false, showHEAD = false) {
+
+    const refs: string[] = [];
+
+    if (showCurrent && repository.magitState?.HEAD?.name) {
+      refs.push(repository.magitState.HEAD.name);
+    }
+
+    if (showHEAD) {
+      refs.push('HEAD');
+    }
+
+    refs.push(...repository.state.refs
+      .filter(ref => ref.name !== repository.magitState?.HEAD?.name)
+      .sort((refA, refB) => refA.type - refB.type).map(r => r.name!));
+
+    return window.showQuickPick(refs, { placeHolder: prompt });
   }
 
   public static async confirmAction(prompt: string, hardConfirm: boolean = false) {
