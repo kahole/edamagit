@@ -2,6 +2,7 @@ import { MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
+import { MagitError } from '../models/magitError';
 
 const whileRebasingMenu = {
   title: 'Rebasing',
@@ -56,7 +57,12 @@ async function _rebase(repository: MagitRepository, ref: string, noCommit = fals
 
   const args = ['rebase', ref];
 
-  return gitRun(repository, args);
+  try {
+    return await gitRun(repository, args);
+  }
+  catch (e) {
+    throw new MagitError('Failed to merge in the changes.', e);
+  }
 }
 
 async function rebaseControlCommand({ repository }: MenuState, command: string) {

@@ -89,7 +89,7 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
     }
   } else if (selectedView instanceof ChangeView) {
 
-    unstageFile(repository, selectedView.change.uri);
+    return unstageFile(repository, selectedView.change.uri);
 
   } else if (selectedView instanceof ChangeSectionView) {
     if (selectedView.section === Section.Staged) {

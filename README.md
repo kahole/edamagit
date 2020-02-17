@@ -1,20 +1,15 @@
 
 ## TODO: make options MENU also. and do for a command
 
-## TODO: Config interface, or:
-```
-  return workspace.openTextDocument(repository.rootUri.fsPath + '/.git/config').then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus: true, preview: true }));
-```
+## TODO: context.logPath and winston.js !  - log all commands, $ view
+     log all commands, and all git errors
+     and $ just opens the correct logfile, simple
+     https://www.npmjs.com/package/winston-daily-rotate-file
 
 ## MINOR: NB! Thenables dont work with regular try/catch ?!
 
-## Dispose
-  - Proper use of dispose()
-    https://vscode-docs.readthedocs.io/en/stable/extensions/patterns-and-principles/#disposables
-    "This applies to event listening, commands, interacting with the UI, and various language contributions."
-
-## BEFORE
-  - Test on windows, linux
+## 
+  - support windows, linux
 
   - Licensing, crediting?
       o magit
@@ -26,13 +21,13 @@
 
 !alpha: use at own your own risk
 
-Inspired by the original (Magit)[https://magit.vc/] for Emacs
+Inspired by the awesome original (Magit)[https://magit.vc/] for Emacs
 
 # Roadmap
 
+- [ ] Branch name highlighting https://github.com/microsoft/vscode/wiki/Semantic-Highlighting-Overview
 - [ ] Stable v1.0
-- [ ] Feature parity with Magit
-      - log all commands, $ view
+- [ ] More Magit features
       - Diffing
       - Reverting
       - Resetting

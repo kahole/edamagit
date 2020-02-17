@@ -3,6 +3,7 @@ import { MagitRepository } from '../models/magitRepository';
 import { TextEditor, window, Uri } from 'vscode';
 import { DocumentView } from '../views/general/documentView';
 import GitTextUtils from '../utils/gitTextUtils';
+import { MagitError } from '../models/magitError';
 
 export class Command {
 
@@ -70,7 +71,7 @@ export class Command {
   }
 
   static handleError(repository: MagitRepository, error: any) {
-    if (error.gitErrorCode) {
+    if (error.gitErrorCode || error instanceof MagitError) {
       repository.magitState!.latestGitError = GitTextUtils.formatError(error);
     } else {
       // MINOR: This error type, too heavy for most errors?

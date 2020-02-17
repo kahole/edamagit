@@ -33,11 +33,6 @@ export interface Stash {
   description: string;
 }
 
-export enum ForcePushMode {
-  Force,
-  ForceWithLease
-}
-
 export interface SpawnOptions extends cp.SpawnOptions {
   input?: string;
   encoding?: string;
