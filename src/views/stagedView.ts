@@ -12,10 +12,10 @@ export default class StagedView extends DocumentView {
 
   constructor(uri: Uri, magitState: MagitState) {
     super(uri);
-    this.provideContent(magitState);
+    this.provideContent(magitState, true);
   }
 
-  provideContent(magitState: MagitState) {
+  provideContent(magitState: MagitState, unfoldAll = false) {
 
     this.subViews = [];
     if (magitState.indexChanges) {
@@ -23,7 +23,9 @@ export default class StagedView extends DocumentView {
       const stagedSection = new ChangeSectionView(Section.Staged, magitState.indexChanges);
 
       // Unfold to show diff
-      stagedSection.subViews.forEach(changeView => changeView.folded = false);
+      if (unfoldAll) {
+        stagedSection.subViews.forEach(changeView => changeView.folded = false);
+      }
 
       this.subViews = [
         stagedSection
