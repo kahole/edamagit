@@ -8,18 +8,18 @@ import { views } from '../extension';
 import { MenuUtil, MenuState } from '../menu/menu';
 import MagitUtils from '../utils/magitUtils';
 
-const commitMenu = {
-  title: 'Committing',
-  commands: [
-    { label: 'c', description: 'Commit', action: (menuState: MenuState) => commit(menuState.repository, MenuUtil.switchesToArgs(menuState.switches)) },
-    { label: 'a', description: 'Amend', action: (menuState: MenuState) => commit(menuState.repository, ['--amend', ...MenuUtil.switchesToArgs(menuState.switches)]) },
-    { label: 'e', description: 'Extend', action: (menuState: MenuState) => commit(menuState.repository, ['--amend', '--no-edit', ...MenuUtil.switchesToArgs(menuState.switches)]) },
-    { label: 'w', description: 'Reword', action: (menuState: MenuState) => commit(menuState.repository, ['--amend', '--only', ...MenuUtil.switchesToArgs(menuState.switches)]) },
-    // { label: "f", description: "Fixup", action: (menuState: MenuState) => commit(menuState.repository, ['--fixup']) },
-  ]
-};
-
 export async function magitCommit(repository: MagitRepository) {
+
+  const commitMenu = {
+    title: 'Committing',
+    commands: [
+      { label: 'c', description: 'Commit', action: (menuState: MenuState) => commit(menuState.repository, MenuUtil.switchesToArgs(menuState.switches)) },
+      { label: 'a', description: 'Amend', action: (menuState: MenuState) => commit(menuState.repository, ['--amend', ...MenuUtil.switchesToArgs(menuState.switches)]) },
+      { label: 'e', description: 'Extend', action: (menuState: MenuState) => commit(menuState.repository, ['--amend', '--no-edit', ...MenuUtil.switchesToArgs(menuState.switches)]) },
+      { label: 'w', description: 'Reword', action: (menuState: MenuState) => commit(menuState.repository, ['--amend', '--only', ...MenuUtil.switchesToArgs(menuState.switches)]) },
+      // { label: "f", description: "Fixup", action: (menuState: MenuState) => commit(menuState.repository, ['--fixup']) },
+    ]
+  };
 
   const switches = [
     { shortName: '-a', longName: '--all', description: 'Stage all modified and deleted files' },
