@@ -7,8 +7,6 @@ import { MagitError } from '../models/magitError';
 
 export class Command {
 
-  // MINOR: this class could maybe use some refactoring?
-
   static primeRepo(command: (repository: MagitRepository) => Promise<any>, triggersUpdate: boolean = true): (editor: TextEditor) => Promise<any> {
 
     return async (editor: TextEditor) => {
@@ -74,8 +72,7 @@ export class Command {
     if (error.gitErrorCode || error instanceof MagitError) {
       repository.magitState!.latestGitError = GitTextUtils.formatError(error);
     } else {
-      // MINOR: This error type, too heavy for most errors?
-      //   statusBar message might be better
+      //   using statusBar message might be better
       //   but then custom, shorter messages are needed
       window.showErrorMessage(GitTextUtils.formatError(error));
     }

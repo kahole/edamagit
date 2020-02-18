@@ -12,6 +12,7 @@ import GitTextUtils from '../utils/gitTextUtils';
 import { apply } from './applyCommands';
 import { Status } from '../typings/git';
 import { MagitChangeHunk } from '../models/magitChangeHunk';
+import FilePathUtils from '../utils/filePathUtils';
 
 export async function magitDiscardAtPoint(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
@@ -50,9 +51,8 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
 
     switch (section) {
       case Section.Untracked:
-        // MINOR: list which files will be trashed
-        // accessed by looping changeSectionView.changes
-        if (await MagitUtils.confirmAction('Trash all untracked files?')) {
+        const fileNameList = changeSectionView.changes.reduce((list, change) => list + FilePathUtils.fileName(change.uri) + ', ', '');
+        if (await MagitUtils.confirmAction(`Trash ${fileNameList.slice(0, fileNameList.length - 2)}?`)) {
           return commands.executeCommand('git.cleanAllUntracked');
         }
 

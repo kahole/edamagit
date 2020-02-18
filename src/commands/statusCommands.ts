@@ -21,16 +21,11 @@ export async function magitStatus(editor: TextEditor, preserveFocus = false): Pr
 
   if (repository) {
 
-    // Check for existing Magit status view
+    // Checks for existing Magit status view
     for (const [uri, view] of views ?? []) {
       if (view instanceof MagitStatusView) {
-        // MINOR: only reuses editor if the viewColumn hits correctly
-        // Resuses doc, if still exists. Which it should if the view still exists
-        // Opens and focus magit status view
-        // Run update
-        await MagitUtils.magitStatusAndUpdate(repository);
-        console.log('Update existing views');
 
+        await MagitUtils.magitStatusAndUpdate(repository);
         return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false }));
       }
     }
@@ -121,7 +116,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   const mergeHeadPath = Uri.parse(dotGitPath + 'MERGE_HEAD');
   const mergeMsgPath = Uri.parse(dotGitPath + 'MERGE_MSG');
-  // MINOR: only do these if there are merge commits in repo state or something?
+
   const mergeHeadFileTask = workspace.fs.readFile(mergeHeadPath).then(f => f.toString(), err => undefined);
   const mergeMsgFileTask = workspace.fs.readFile(mergeMsgPath).then(f => f.toString(), err => undefined);
 
@@ -212,7 +207,6 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     HEAD.commitsAhead = commitsAhead.map(hash => commitMap[hash]);
     HEAD.commitsBehind = commitsBehind.map(hash => commitMap[hash]);
 
-    // MINOR: clean up?
     try {
       const upstreamRemote = HEAD.upstream?.remote;
 
@@ -222,7 +216,6 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       if (HEAD.upstream) {
         HEAD.upstreamRemote = HEAD.upstream;
         HEAD.upstreamRemote.commit = await upstreamRemoteCommitDetails;
-
       }
     } catch { }
 
@@ -236,10 +229,6 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
     } catch { }
   }
-
-  // MINOR: state ONchange might be interesting
-  // repository.state.onDidChange(() => { });
-  // It is called 4-5 times when a file is saved..
 
   repository.magitState = {
     HEAD,

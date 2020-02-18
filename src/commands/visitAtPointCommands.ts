@@ -42,8 +42,7 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
     const stash = (selectedView as StashItemView).stash;
     const uri = StashDetailView.encodeLocation(repository, stash);
 
-    // MINOR: not showing stashed staged changes?
-    const result = await gitRun(repository, ['show', `stash@{${stash.index}}`]);
+    const result = await gitRun(repository, ['stash', 'show', '-p', `stash@{${stash.index}}`]);
     const stashDiff = result.stdout;
 
     views.set(uri.toString(), new StashDetailView(uri, stash, stashDiff));

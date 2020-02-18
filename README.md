@@ -1,6 +1,6 @@
 # Magit for VSCode (alpha)
 
-*alpha*: use at own your own risk
+**alpha**: use at own your own risk
 
 Inspired by the awesome original (Magit)[https://magit.vc/] for Emacs
 

@@ -13,7 +13,6 @@ export default class MagitUtils {
 
     if (!repository) {
 
-      // MINOR: Any point in reusing repo from this map?
       for (const [key, repo] of magitRepositories.entries()) {
         if (FilePathUtils.isDescendant(key, uri.fsPath)) {
           return repo;
@@ -70,10 +69,6 @@ export default class MagitUtils {
 
   public static async confirmAction(prompt: string, hardConfirm: boolean = false) {
 
-    // MINOR: show dialog box? sometimes?
-    // window.showInformationMessage("really?", { modal: true });
-
-    // MINOR: maybe just have the vscode confirm Enter, cancel Escape prompt?
     const yesNo = hardConfirm ? 'yes or no' : 'y or n';
     const confirmed = await window.showInputBox({ prompt: `${prompt} (${yesNo})` });
     if ((hardConfirm && confirmed?.toLowerCase() === 'yes') || (!hardConfirm && confirmed?.toLowerCase().charAt(0) === 'y')) {

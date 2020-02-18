@@ -118,5 +118,4 @@ export function activate(context: ExtensionContext) {
 }
 
 export function deactivate() {
-  // MINOR: clean up? views, repositories etc??
 }

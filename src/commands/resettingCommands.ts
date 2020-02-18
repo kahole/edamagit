@@ -21,10 +21,9 @@ export async function resetting(repository: MagitRepository) {
 
 async function resetWorktree({ repository }: MenuState) {
 
-  const args = ['checkout-index', '--all', '--force', 'HEAD'];
+  const args = ['checkout-index', '--all', '--force'];
   return await gitRun(repository, args);
 }
-
 
 async function _reset(repository: MagitRepository, switches: string[]) {
 
@@ -33,7 +32,6 @@ async function _reset(repository: MagitRepository, switches: string[]) {
   if (ref) {
 
     const args = ['reset', ...switches, ref];
-
     return await gitRun(repository, args);
   }
 }

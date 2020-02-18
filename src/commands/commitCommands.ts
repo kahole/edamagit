@@ -77,8 +77,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
     if (editor) {
       for (const visibleEditor of window.visibleTextEditors) {
         if (visibleEditor.document.uri === editor.document.uri) {
-          // MINOR: seriously hacky. Too bad about editor.hide() and editor.show()
-          // editor.hide();
+          // This is a bit of a hack. Too bad about editor.hide() and editor.show()
           const stagedEditorViewColumn = MagitUtils.oppositeActiveViewColumn();
           await window.showTextDocument(editor.document, stagedEditorViewColumn);
           await commands.executeCommand('workbench.action.closeActiveEditor');

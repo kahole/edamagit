@@ -12,13 +12,11 @@ export async function tagging(repository: MagitRepository) {
     commands: [
       { label: 't', description: 'Create', action: createTag },
       { label: 'k', description: 'Delete', action: deleteTag },
-      // MINOR: prune tag feature
       // { label: 'p', description: 'Prune', action: pruneTags }
     ]
   };
 
   const switches = [
-    // MINOR: tagging switches
     // { shortName: '-a', longName: '--annotate', description: 'Annotate' },
     { shortName: '-f', longName: '--force', description: 'Force' },
     // { shortName: '-s', longName: '--sign', description: 'Sign' }

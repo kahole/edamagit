@@ -32,9 +32,6 @@ function pullFromPushRemote({ repository }: MenuState) {
 }
 
 function pullFromUpstream({ repository }: MenuState) {
-  // MINOR: does this fetch every branch?
-  //   if not it can be used
-  //        return commands.executeCommand('git.pull');  
   const args = ['pull'];
   return gitRun(repository, args);
 }

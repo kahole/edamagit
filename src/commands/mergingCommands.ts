@@ -98,6 +98,8 @@ async function commitMerge({ repository }: MenuState) {
 }
 
 async function abortMerge({ repository }: MenuState) {
-  const args = ['merge', '--abort'];
-  return gitRun(repository, args);
+  if (await MagitUtils.confirmAction(`Abort merge?`)) {
+    const args = ['merge', '--abort'];
+    return gitRun(repository, args);
+  }
 }

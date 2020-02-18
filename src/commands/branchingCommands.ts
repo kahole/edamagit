@@ -1,4 +1,4 @@
-import { window, commands } from 'vscode';
+import { window } from 'vscode';
 import { MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
 import { Ref, GitErrorCodes, RefType } from '../typings/git';
@@ -19,7 +19,7 @@ const branchingMenu = {
     { label: 'n', description: 'Create new branch', action: createNewBranch },
     // { label: "W", description: "Create new worktree", action: checkout },
     // { label: "Y", description: "Create from pull-request", action: checkout },
-    { label: 'C', description: 'Configure', action: configureBranch },
+    // { label: 'C', description: 'Configure', action: configureBranch },
     { label: 'm', description: 'Rename', action: renameBranch },
     { label: 'x', description: 'Reset', action: resetBranch },
     { label: 'k', description: 'Delete', action: deleteBranch },
@@ -46,14 +46,13 @@ async function createNewBranch(menuState: MenuState) {
   return _createBranch(menuState, false);
 }
 
-async function configureBranch(menuState: MenuState) {
+// async function configureBranch(menuState: MenuState) {
 
-  // MINOR Configure branch, implement
-  // 1. Select branch? or grab current?
-  // 2. Read all configs: menuState.repository.getConfigs
-  //    maybe they are already read in the repo state?
-  // 3. repository.setConfig("branch.${ref}.theCoolProperty")
-}
+//   // 1. Select branch? or grab current?
+//   // 2. Read all configs: menuState.repository.getConfigs
+//   //    already exist in repo state?
+//   // 3. repository.setConfig("branch.${ref}.someProperty")
+// }
 
 async function renameBranch({ repository }: MenuState) {
 

@@ -107,15 +107,19 @@ async function pushSetUpstream({ repository, ...rest }: MenuState) {
 
   if (chosenRemote && ref) {
 
-    await Promise.all([
-      // MINOR: CLEAN UP THIS SPLIT MESS
-      repository.setConfig(`branch.${ref}.merge`, `refs/heads/${chosenRemote.split('/')[1]}`),
-      repository.setConfig(`branch.${ref}.remote`, chosenRemote.split('/')[0])
-    ]);
+    const [remote, name] = chosenRemote.split('/');
 
-    repository.magitState!.HEAD!.upstreamRemote = { name: ref, remote: chosenRemote.split('/')[0] };
+    if (remote && name) {
 
-    return pushUpstream({ repository, ...rest });
+      await Promise.all([
+        repository.setConfig(`branch.${ref}.merge`, `refs/heads/${name}`),
+        repository.setConfig(`branch.${ref}.remote`, remote)
+      ]);
+
+      repository.magitState!.HEAD!.upstreamRemote = { name, remote };
+
+      return pushUpstream({ repository, ...rest });
+    }
   }
 }
 

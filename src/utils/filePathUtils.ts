@@ -29,4 +29,12 @@ export default class FilePathUtils {
   public static uriPathRelativeTo(uri: Uri, root: Uri) {
     return uri.path.slice(root.path.length + 1);
   }
+
+  public static fileName(uri: Uri) {
+    const pieces = uri.fsPath.split(sep);
+    if (pieces.length > 0) {
+      return pieces[pieces.length - 1];
+    }
+    return '';
+  }
 }
