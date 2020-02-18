@@ -33,8 +33,8 @@ export class HelpView extends DocumentView {
   static HelpText: string = `Popup and dwim commands
   b Branching         F Pulling           c Committing
   f Fetching          M Remoting          l Logging 
-  m Merging           r Rebasing          X Resetting
-  P Pushing           z Stashing          
+  m Merging           r Rebasing          t Tagging
+  P Pushing           z Stashing          X Resetting
  
  Applying changes
   a Apply          s Stage          u Unstage
