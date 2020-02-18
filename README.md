@@ -12,13 +12,30 @@ For example if there is an image subfolder under your extension project workspac
 
 > Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
-### Available features
+### Supported features
 
-Magit commands:
+Magit commands (**C-x g**)
+- Branching
+- Staging
+- Applying
+- Pulling
+- Committing
+- Fetching
+- Remoting
+- Logging 
+- Merging
+- Rebasing
+- Tagging
+- Pushing
+- Stashing
+- Resetting
+- Discarding
 
-File popup commands:
-- Blame
+File popup commands (**C-x C-g**)
+- Staging
+- Commit
 - Diff
+- Blame
 
 ## Usage
 ---
