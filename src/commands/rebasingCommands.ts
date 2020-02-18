@@ -53,7 +53,7 @@ async function rebase({ repository }: MenuState) {
   }
 }
 
-async function _rebase(repository: MagitRepository, ref: string, noCommit = false, squashMerge = false) {
+async function _rebase(repository: MagitRepository, ref: string) {
 
   const args = ['rebase', ref];
 

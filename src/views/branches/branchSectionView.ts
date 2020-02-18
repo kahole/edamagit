@@ -11,7 +11,7 @@ export class BranchSectionView extends View {
 
   constructor(HEAD?: MagitBranch) {
     super();
-    if (HEAD?.commit) {
+    if (HEAD?.commitDetails) {
       this.addSubview(new BranchHeaderView('Head', HEAD));
 
       if (HEAD.upstreamRemote) {

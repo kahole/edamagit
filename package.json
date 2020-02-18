@@ -63,6 +63,10 @@
         "title": "Magit Rebasing"
       },
       {
+        "command": "extension.magit-resetting",
+        "title": "Magit Resetting"
+      },
+      {
         "command": "extension.magit-pushing",
         "title": "Magit Pushing"
       },
@@ -77,6 +81,10 @@
       {
         "command": "extension.magit-logging",
         "title": "Magit Logging"
+      },
+      {
+        "command": "extension.magit-tagging",
+        "title": "Magit Tagging"
       },
       {
         "command": "extension.magit-stage",
@@ -130,11 +138,19 @@
           "when": "editorLangId == magit"
         },
         {
+          "command": "extension.magit-resetting",
+          "when": "editorLangId == magit"
+        },
+        {
           "command": "extension.magit-remoting",
           "when": "editorLangId == magit"
         },
         {
           "command": "extension.magit-logging",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "extension.magit-tagging",
           "when": "editorLangId == magit"
         },
         {
@@ -283,6 +299,11 @@
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
+        "command": "extension.magit-resetting",
+        "key": "shift-x",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
         "command": "extension.magit-remoting",
         "key": "shift+m",
         "when": "editorTextFocus && editorLangId == magit"
@@ -290,6 +311,11 @@
       {
         "command": "extension.magit-logging",
         "key": "l",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "extension.magit-tagging",
+        "key": "t",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {

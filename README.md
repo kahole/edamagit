@@ -12,26 +12,35 @@ For example if there is an image subfolder under your extension project workspac
 
 > Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
+### Available features
+
+Magit commands:
+
+File popup commands:
+- Blame
+- Diff
+
 ## Usage
 ---
 
 ## Roadmap
 
 - Config menus
-- Variable menus
+- Options/variable menus
 - Branch name highlighting     
      (https://github.com/microsoft/vscode/wiki/Semantic-Highlighting-Overview)
 
-### Magit feature parity
+### Implement missing Git/Magit features
   - Diffing
+  - Show refs
+  - Cherry picking
   - Reverting
-  - Resetting
-  - Tagging
   - Bisecting
   - Worktree
-  - Cherry picking
+  - Submodules
+  - Patches
 
-### Goals
+### Long term goals
 - Own model and parser (not relying on git extension API)
   - More efficient, flexible, and stable
 - Stable v1.0

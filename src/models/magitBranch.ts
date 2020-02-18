@@ -2,7 +2,7 @@ import { Branch, Commit, UpstreamRef, Ref } from '../typings/git';
 
 export interface MagitBranch extends Branch {
   commitDetails: Commit;
-  upstreamRemote: MagitUpstreamRef;
+  upstreamRemote?: MagitUpstreamRef;
   pushRemote?: MagitUpstreamRef;
   commitsAhead?: Commit[];
   commitsBehind?: Commit[];

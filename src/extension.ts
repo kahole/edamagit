@@ -28,6 +28,8 @@ import { remoting } from './commands/remotingCommands';
 import { logging } from './commands/loggingCommands';
 import { MagitProcessLogEntry } from './models/magitProcessLogEntry';
 import { processView } from './commands/processCommands';
+import { resetting } from './commands/resettingCommands';
+import { tagging } from './commands/taggingCommands';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
@@ -78,8 +80,10 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-branching', Command.primeRepo(branching)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-merging', Command.primeRepo(merging)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-rebasing', Command.primeRepo(rebasing)));
+  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-resetting', Command.primeRepo(resetting)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-remoting', Command.primeRepo(remoting)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-logging', Command.primeRepo(logging)));
+  context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-tagging', Command.primeRepo(tagging)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-visit-at-point', Command.primeRepoAndView(magitVisitAtPoint, false)));
   context.subscriptions.push(commands.registerTextEditorCommand('extension.magit-apply-at-point', Command.primeRepoAndView(magitApplyEntityAtPoint)));

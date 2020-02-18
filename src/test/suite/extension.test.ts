@@ -1,17 +1,42 @@
 import * as assert from 'assert';
-
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
 import * as vscode from 'vscode';
-// import * as myExtension from '../extension';
+import * as extension from '../../extension';
+import { MagitState } from '../../models/magitState';
+import { RefType } from '../../typings/git';
+import MagitStatusView from '../../views/magitStatusView';
 
-// TODO: TESTS
+const TEST_REPO_FILE1 = '/README.md';
+const TEST_REPO_FILE2 = '/another.txt';
 
 suite('Extension Test Suite', () => {
   vscode.window.showInformationMessage('Start all tests.');
 
-  test('Magit Status render test', () => {
-    assert.equal(-1, [1, 2, 3].indexOf(5));
-    assert.equal(-1, [1, 2, 3].indexOf(0));
+  test('Magit Status View render test', async () => {
+
+    const expected = `Head:     somebranch ok\n`;
+
+    const magitState: MagitState = {
+      indexChanges: [],
+      log: [],
+      mergeChanges: [],
+      stashes: [],
+      untrackedFiles: [],
+      workingTreeChanges: [],
+      HEAD: {
+        name: 'somebranch',
+        type: RefType.Head,
+        commitDetails: {
+          hash: '1111111111',
+          message: 'ok',
+          parents: []
+        }
+      }
+    };
+
+    const statusView = new MagitStatusView(vscode.Uri.parse(''), magitState);
+
+    const result = statusView.render(0).join('\n');
+
+    assert.equal(result, expected);
   });
 });
