@@ -107,7 +107,8 @@ async function pushSetUpstream({ repository, ...rest }: MenuState) {
 
   if (chosenRemote && ref) {
 
-    const [remote, name] = chosenRemote.split('/');
+    const [remote, ...nameParts] = chosenRemote.split('/');
+    const name = nameParts.join('/');
 
     if (remote && name) {
 
