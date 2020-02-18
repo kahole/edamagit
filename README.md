@@ -3,7 +3,7 @@ Inspired by the awesome original, [Magit](https://magit.vc/) for Emacs
 
 **alpha**: use at own your own risk
 
-
+![Usage](https://raw.githubusercontent.com/kahole/vscodemagit/c13e273164deac7fbfc7e19970a58f90f98bff67/magit_lowdef.gif)
 
 ## Usage
 
