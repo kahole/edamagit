@@ -5,8 +5,6 @@ Inspired by the awesome original, [Magit](https://magit.vc/) for Emacs
 
 
 
-----
-
 ## Usage
 
 | VSCode Commands      | Default shortcut |
@@ -37,7 +35,6 @@ Inspired by the awesome original, [Magit](https://magit.vc/) for Emacs
 | Discarding |
 | Help |
 
----
 
 ## Roadmap
 
@@ -61,5 +58,3 @@ Inspired by the awesome original, [Magit](https://magit.vc/) for Emacs
 - Have 100% own model and parser (not relying on git extension API)
   - More efficient, flexible, and stable
 - Stable v1.0
-
---------

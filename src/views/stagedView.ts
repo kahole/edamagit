@@ -24,7 +24,10 @@ export default class StagedView extends DocumentView {
 
       // Unfold to show diff
       if (unfoldAll) {
-        stagedSection.subViews.forEach(changeView => changeView.folded = false);
+        stagedSection.subViews.forEach(changeView => {
+          changeView.folded = false;
+          changeView.subViews.forEach(hunkView => hunkView.folded = false);
+        });
       }
 
       this.subViews = [
