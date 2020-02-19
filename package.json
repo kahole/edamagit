@@ -4,8 +4,7 @@
   "description": "Magit for Visual Studio Code",
   "publisher": "kahole",
   "author": {
-    "name": "Kristian Andersen Hole",
-    "email": "kristian@hole.priv.no"
+    "name": "Kristian Andersen Hole"
   },
   "version": "0.0.1",
   "engines": {
@@ -26,10 +25,13 @@
     "commit"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/kahole/vscodemagit/blob/master/README.md",
+  "homepage": "https://github.com/kahole/vscode-magit/blob/master/README.md",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kahole/vscodemagit.git"
+    "url": "https://github.com/kahole/vscode-magit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kahole/vscode-magit/issues"
   },
   "activationEvents": [
     "onCommand:extension.magit",
