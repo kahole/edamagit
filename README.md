@@ -1,7 +1,6 @@
 # Magit for VSCode (alpha)
-Inspired by the awesome original, [Magit](https://magit.vc/) for Emacs
-
-**alpha**: use at own your own risk
+Inspired by the awesome original, [Magit](https://magit.vc/) for Emacs  
+**Alpha**: use at own your own risk!
 
 ![Usage](https://raw.githubusercontent.com/kahole/vscodemagit/c13e273164deac7fbfc7e19970a58f90f98bff67/magit_lowdef.gif)
 
@@ -14,9 +13,8 @@ Inspired by the awesome original, [Magit](https://magit.vc/) for Emacs
 | Magit Dispatch      |   `ctrl+x alt+g`    |
 | In Status: see all possible key-commands | `?` |
 
+
 ## Features
-
-
 
 | Magit commands (**C-x g**)   | File popup commands (**C-x C-g**) |
 |------------------------------|-----------------------------------|
@@ -33,7 +31,16 @@ Inspired by the awesome original, [Magit](https://magit.vc/) for Emacs
 | Resetting | 
 | Applying |
 | Discarding |
-| Help |
+
+
+## Troubleshooting
+### I can't commit
+1. git config needs to be set, for repo or global  
+`user.name` and `user.email`
+
+2. `code` needs to be in your path  
+(Doesn't apply to OS X)  
+[Adding VSCode to path](https://code.visualstudio.com/docs/editor/versioncontrol#_vs-code-as-git-editor)
 
 
 ## Roadmap
