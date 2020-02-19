@@ -49,12 +49,10 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
     stagedEditor = workspace.openTextDocument(uri)
       .then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn(), true));
 
-    // MINOR: this needs testing on linux and windows
-    // code is in path on Linux and Windows
-    // can use just "code" if it is in path. Vscode command: "Shell Command: Install code in path"
     let codePath = 'code';
 
     // Only for mac
+    // can only use "code" if it is in path. Vscode command: "Shell Command: Install code in path"
     if (process.platform === 'darwin') {
       codePath = execPath.split(/(?<=\.app)/)[0] + '/Contents/Resources/app/bin/code';
     }
