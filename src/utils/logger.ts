@@ -11,7 +11,7 @@ export default class MagitLogger {
   }
 
   public static logGitError(error: any, entry: MagitProcessLogEntry) {
-    const errorMsg = GitTextUtils.formatError(error);
+    const errorMsg = error.stderr ?? error.message;
     entry.output = errorMsg;
   }
 }

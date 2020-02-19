@@ -28,7 +28,7 @@ export default class MagitStatusView extends DocumentView {
     this.subViews = [];
 
     if (magitState.latestGitError) {
-      this.addSubview(new TextView(`GitError! ${magitState.latestGitError}`));
+      this.addSubview(new TextView(`GitError! ${magitState.latestGitError} [ $ for detailed log ]\n`));
       magitState.latestGitError = undefined;
     }
 

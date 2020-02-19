@@ -27,8 +27,10 @@ export class MenuUtil {
 
     return new Promise((resolve, reject) => {
 
+      const quickItems: MenuItem[] = [...menu.commands];
+
       if (menuState.switches) {
-        menu.commands.push({
+        quickItems.push({
           label: '-', description: 'Switches', action: async (menuState: MenuState) => {
 
             const updatedSwitches = await MenuUtil.showSwitchesMenu(menuState);
@@ -38,12 +40,11 @@ export class MenuUtil {
         });
       }
 
-
       const _quickPick = window.createQuickPick<MenuItem>();
 
       _quickPick.title = menu.title;
       _quickPick.ignoreFocusOut = true;
-      _quickPick.items = menu.commands;
+      _quickPick.items = quickItems;
 
       // Select with single key stroke
 

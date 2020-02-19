@@ -10,9 +10,9 @@ export async function gitRun(repository: MagitRepository, args: string[], spawnO
 
     // Protects against projected change in internal api in vscode git extension
     if (repository._repository.repository.run) {
-      return repository._repository.repository.run(args, spawnOptions);
+      return await repository._repository.repository.run(args, spawnOptions);
     } else {
-      return repository._repository.repository.exec!(args, spawnOptions);
+      return await repository._repository.repository.exec!(args, spawnOptions);
     }
   } catch (error) {
     MagitLogger.logGitError(error, logEntry);

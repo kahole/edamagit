@@ -69,7 +69,7 @@ export class Command {
   }
 
   static handleError(repository: MagitRepository, error: any) {
-    if (error.gitErrorCode || error instanceof MagitError) {
+    if (error.gitErrorCode || error.stderr || error instanceof MagitError) {
       repository.magitState!.latestGitError = GitTextUtils.formatError(error);
     } else {
       //   using statusBar message might be better

@@ -5,16 +5,16 @@ import MagitUtils from '../utils/magitUtils';
 import { window } from 'vscode';
 import { RefType } from '../typings/git';
 
-export async function tagging(repository: MagitRepository) {
+const taggingMenu = {
+  title: 'Tagging',
+  commands: [
+    { label: 't', description: 'Create', action: createTag },
+    { label: 'k', description: 'Delete', action: deleteTag },
+    // { label: 'p', description: 'Prune', action: pruneTags }
+  ]
+};
 
-  const taggingMenu = {
-    title: 'Tagging',
-    commands: [
-      { label: 't', description: 'Create', action: createTag },
-      { label: 'k', description: 'Delete', action: deleteTag },
-      // { label: 'p', description: 'Prune', action: pruneTags }
-    ]
-  };
+export async function tagging(repository: MagitRepository) {
 
   const switches = [
     // { shortName: '-a', longName: '--annotate', description: 'Annotate' },

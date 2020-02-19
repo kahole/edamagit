@@ -80,8 +80,16 @@ export default class GitTextUtils {
     return changeHunk.diffHeader + changeHunk.diff + '\n';
   }
 
+  private static truncate(msg: string, maxLength: number): string {
+    if (msg.length > maxLength) {
+      return msg.substring(0, maxLength - 3) + '...';
+    }
+    return msg;
+  }
+
   public static formatError(error: any): string {
-    const errorMsg: string = error.stderr ?? error.message;
-    return errorMsg.replace('error: ', '');
+    let errorMsg: string = error.friendlyMessage ?? error.stderr ?? error.message;
+    errorMsg = errorMsg.replace('error: ', '');
+    return GitTextUtils.truncate(errorMsg, 350);
   }
 }
