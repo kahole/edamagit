@@ -1,15 +1,36 @@
 {
   "name": "magit",
-  "displayName": "Magit",
+  "displayName": "Magit (alpha)",
   "description": "Magit for Visual Studio Code",
   "publisher": "kahole",
+  "author": {
+    "name": "Kristian Andersen Hole",
+    "email": "kristian@hole.priv.no"
+  },
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.40.0"
   },
+  "logo": "images/magit_logo.png",
+  "galleryBanner": {
+    "color": "#000000",
+    "theme": "dark"
+  },
   "categories": [
     "Other"
   ],
+  "keywords": [
+    "magit",
+    "git",
+    "emacs",
+    "commit"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/kahole/vscodemagit/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kahole/vscodemagit.git"
+  },
   "activationEvents": [
     "onCommand:extension.magit",
     "onCommand:extension.magit-dispatch",
