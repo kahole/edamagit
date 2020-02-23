@@ -8,7 +8,7 @@
   },
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.40.0"
+    "vscode": "^1.42.1"
   },
   "logo": "images/magit_logo.png",
   "galleryBanner": {
