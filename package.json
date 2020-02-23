@@ -34,198 +34,198 @@
     "url": "https://github.com/kahole/vscode-magit/issues"
   },
   "activationEvents": [
-    "onCommand:extension.magit",
-    "onCommand:extension.magit-dispatch",
-    "onCommand:extension.magit-file-popup"
+    "onCommand:magit.status",
+    "onCommand:magit.dispatch",
+    "onCommand:magit.file-popup"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "extension.magit",
+        "command": "magit.status",
         "title": "Magit Status"
       },
       {
-        "command": "extension.magit-toggle-fold",
+        "command": "magit.toggle-fold",
         "title": "Magit Toggle Fold"
       },
       {
-        "command": "extension.magit-dispatch",
+        "command": "magit.dispatch",
         "title": "Magit Dispatch"
       },
       {
-        "command": "extension.magit-file-popup",
+        "command": "magit.file-popup",
         "title": "Magit File Popup"
       },
       {
-        "command": "extension.magit-visit-at-point",
+        "command": "magit.visit-at-point",
         "title": "Magit Visit-at-point"
       },
       {
-        "command": "extension.magit-apply-at-point",
+        "command": "magit.apply-at-point",
         "title": "Magit Apply-at-point"
       },
       {
-        "command": "extension.magit-discard-at-point",
+        "command": "magit.discard-at-point",
         "title": "Magit Discard-at-point"
       },
       {
-        "command": "extension.magit-commit",
+        "command": "magit.commit",
         "title": "Magit Commit"
       },
       {
-        "command": "extension.magit-branching",
+        "command": "magit.branching",
         "title": "Magit Branching"
       },
       {
-        "command": "extension.magit-merging",
+        "command": "magit.merging",
         "title": "Magit Merging"
       },
       {
-        "command": "extension.magit-rebasing",
+        "command": "magit.rebasing",
         "title": "Magit Rebasing"
       },
       {
-        "command": "extension.magit-resetting",
+        "command": "magit.resetting",
         "title": "Magit Resetting"
       },
       {
-        "command": "extension.magit-pushing",
+        "command": "magit.pushing",
         "title": "Magit Pushing"
       },
       {
-        "command": "extension.magit-pulling",
+        "command": "magit.pulling",
         "title": "Magit Pulling"
       },
       {
-        "command": "extension.magit-remoting",
+        "command": "magit.remoting",
         "title": "Magit Remoting"
       },
       {
-        "command": "extension.magit-logging",
+        "command": "magit.logging",
         "title": "Magit Logging"
       },
       {
-        "command": "extension.magit-tagging",
+        "command": "magit.tagging",
         "title": "Magit Tagging"
       },
       {
-        "command": "extension.magit-stage",
+        "command": "magit.stage",
         "title": "Magit Stage"
       },
       {
-        "command": "extension.magit-stage-all",
+        "command": "magit.stage-all",
         "title": "Magit Stage All"
       },
       {
-        "command": "extension.magit-unstage",
+        "command": "magit.unstage",
         "title": "Magit Unstage"
       },
       {
-        "command": "extension.magit-unstage-all",
+        "command": "magit.unstage-all",
         "title": "Magit Unstage All"
       },
       {
-        "command": "extension.magit-help",
+        "command": "magit.help",
         "title": "Magit Help"
       },
       {
-        "command": "extension.magit-stashing",
+        "command": "magit.stashing",
         "title": "Magit Stashing"
       },
       {
-        "command": "extension.magit-fetching",
+        "command": "magit.fetching",
         "title": "Magit Fetching"
       },
       {
-        "command": "extension.magit-process-log",
+        "command": "magit.process-log",
         "title": "Magit Process Log"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "extension.magit-help",
+          "command": "magit.help",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-branching",
+          "command": "magit.branching",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-merging",
+          "command": "magit.merging",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-rebasing",
+          "command": "magit.rebasing",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-resetting",
+          "command": "magit.resetting",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-remoting",
+          "command": "magit.remoting",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-logging",
+          "command": "magit.logging",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-tagging",
+          "command": "magit.tagging",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-visit-at-point",
+          "command": "magit.visit-at-point",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-apply-at-point",
+          "command": "magit.apply-at-point",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-discard-at-point",
+          "command": "magit.discard-at-point",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-stage",
+          "command": "magit.stage",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-stage-all",
+          "command": "magit.stage-all",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-unstage",
+          "command": "magit.unstage",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-unstage-all",
+          "command": "magit.unstage-all",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-commit",
+          "command": "magit.commit",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-pushing",
+          "command": "magit.pushing",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-pulling",
+          "command": "magit.pulling",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-stashing",
+          "command": "magit.stashing",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-fetching",
+          "command": "magit.fetching",
           "when": "editorLangId == magit"
         },
         {
-          "command": "extension.magit-process-log",
+          "command": "magit.process-log",
           "when": "editorLangId == magit"
         }
       ]
@@ -257,142 +257,142 @@
     ],
     "keybindings": [
       {
-        "command": "extension.magit",
+        "command": "magit",
         "key": "ctrl+x g",
         "when": "editorTextFocus"
       },
       {
-        "command": "extension.magit-dispatch",
+        "command": "magit.dispatch",
         "key": "ctrl+x alt+g",
         "when": "editorTextFocus"
       },
       {
-        "command": "extension.magit-file-popup",
+        "command": "magit.file-popup",
         "key": "ctrl-x ctrl+g",
         "when": "editorTextFocus"
       },
       {
-        "command": "extension.magit-toggle-fold",
+        "command": "magit.toggle-fold",
         "key": "tab",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-refresh",
+        "command": "magit.refresh",
         "key": "g",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-help",
+        "command": "magit.help",
         "key": "shift+/",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-visit-at-point",
+        "command": "magit.visit-at-point",
         "key": "enter",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-apply-at-point",
+        "command": "magit.apply-at-point",
         "key": "a",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-discard-at-point",
+        "command": "magit.discard-at-point",
         "key": "k",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-commit",
+        "command": "magit.commit",
         "key": "c",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-branching",
+        "command": "magit.branching",
         "key": "b",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-merging",
+        "command": "magit.merging",
         "key": "m",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-rebasing",
+        "command": "magit.rebasing",
         "key": "r",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-resetting",
+        "command": "magit.resetting",
         "key": "shift-x",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-remoting",
+        "command": "magit.remoting",
         "key": "shift+m",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-logging",
+        "command": "magit.logging",
         "key": "l",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-tagging",
+        "command": "magit.tagging",
         "key": "t",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-pushing",
+        "command": "magit.pushing",
         "key": "shift+p",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-pulling",
+        "command": "magit.pulling",
         "key": "shift+f",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-stashing",
+        "command": "magit.stashing",
         "key": "z",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-fetching",
+        "command": "magit.fetching",
         "key": "f",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-stage",
+        "command": "magit.stage",
         "key": "s",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-stage-all",
+        "command": "magit.stage-all",
         "key": "shift+s",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-unstage",
+        "command": "magit.unstage",
         "key": "u",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-unstage-all",
+        "command": "magit.unstage-all",
         "key": "shift+u",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-process-log",
+        "command": "magit.process-log",
         "key": "shift+4",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "extension.magit-save-and-close-commit-msg",
+        "command": "magit.save-and-close-commit-msg",
         "key": "ctrl+c ctrl+c",
         "when": "editorTextFocus && editorLangId == git-commit"
       },
       {
-        "command": "extension.magit-abort-commit-msg",
+        "command": "magit.abort-commit-msg",
         "key": "ctrl+c ctrl+k",
         "when": "editorTextFocus && editorLangId == git-commit"
       },
