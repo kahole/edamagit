@@ -10,7 +10,7 @@
   "engines": {
     "vscode": "^1.42.1"
   },
-  "logo": "images/magit_logo.png",
+  "icon": "images/magit_logo.png",
   "galleryBanner": {
     "color": "#000000",
     "theme": "dark"
