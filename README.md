@@ -1,6 +1,12 @@
-# Magit for VSCode (alpha)
-## Inspired by the awesome, original, [Magit](https://magit.vc/) for Emacs  
-![Usage](images/magit_logo.png)
+<center>
+<img src="images/magit_logo.png" alt="logo" width="150"/>
+<h2>Magit for VSCode</h2>
+</center>
+
+---
+
+### Inspired by the awesome, original, [Magit](https://magit.vc/) for Emacs  
+
 ### **Alpha**: use at own your own risk!
 
 ![Usage](https://raw.githubusercontent.com/kahole/vscodemagit/c13e273164deac7fbfc7e19970a58f90f98bff67/magit_lowdef.gif)
