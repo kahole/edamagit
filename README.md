@@ -1,5 +1,7 @@
 <h2 align="center"><img src="https://github.com/kahole/vscode-magit/raw/master/images/magit_logo.png" height="128"><br>Magit for VSCode (alpha)</h2>
 
+[![vsmarketbadge](https://vsmarketplacebadge.apphb.com/version-short/kahole.magit.svg)](https://marketplace.visualstudio.com/items?itemName=kahole.magit)
+
 ### Inspired by the awesome original, [Magit](https://magit.vc/) for Emacs  
 
 ### **Alpha**: use at own your own risk!
