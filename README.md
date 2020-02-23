@@ -4,7 +4,7 @@
 
 ### **Alpha**: use at own your own risk!
 
-![Usage](https://raw.githubusercontent.com/kahole/vscodemagit/c13e273164deac7fbfc7e19970a58f90f98bff67/magit_lowdef.gif)
+![Usage](https://github.com/kahole/vscode-magit/raw/c13e273164deac7fbfc7e19970a58f90f98bff67/magit_lowdef.gif)
 
 ## Usage
 
