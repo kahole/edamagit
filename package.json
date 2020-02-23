@@ -257,7 +257,7 @@
     ],
     "keybindings": [
       {
-        "command": "magit",
+        "command": "magit.status",
         "key": "ctrl+x g",
         "when": "editorTextFocus"
       },
