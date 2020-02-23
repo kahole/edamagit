@@ -1,9 +1,4 @@
-<center>
-<img src="images/magit_logo.png" alt="logo" width="150"/>
-<h2>Magit for VSCode</h2>
-</center>
-
----
+<h2 align="center"><img src="https://github.com/kahole/vscode-magit/raw/master/images/magit_logo.png" height="128"><br>Magit for VSCode (alpha)</h2>
 
 ### Inspired by the awesome, original, [Magit](https://magit.vc/) for Emacs  
 
