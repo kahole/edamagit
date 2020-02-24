@@ -11,10 +11,10 @@ import MagitUtils from '../utils/magitUtils';
 const commitMenu = {
   title: 'Committing',
   commands: [
-    { label: 'c', description: 'Commit', action: (menuState: MenuState) => commit(menuState.repository, MenuUtil.switchesToArgs(menuState.switches)) },
-    { label: 'a', description: 'Amend', action: (menuState: MenuState) => commit(menuState.repository, ['--amend', ...MenuUtil.switchesToArgs(menuState.switches)]) },
-    { label: 'e', description: 'Extend', action: (menuState: MenuState) => commit(menuState.repository, ['--amend', '--no-edit', ...MenuUtil.switchesToArgs(menuState.switches)]) },
-    { label: 'w', description: 'Reword', action: (menuState: MenuState) => commit(menuState.repository, ['--amend', '--only', ...MenuUtil.switchesToArgs(menuState.switches)]) },
+    { label: 'c', description: 'Commit', action: commit },
+    { label: 'a', description: 'Amend', action: (menuState: MenuState) => commit(menuState, ['--amend']) },
+    { label: 'e', description: 'Extend', action: (menuState: MenuState) => commit(menuState, ['--amend', '--no-edit']) },
+    { label: 'w', description: 'Reword', action: (menuState: MenuState) => commit(menuState, ['--amend', '--only']) },
     // { label: "f", description: "Fixup", action: (menuState: MenuState) => commit(menuState.repository, ['--fixup']) },
   ]
 };
@@ -29,9 +29,9 @@ export async function magitCommit(repository: MagitRepository) {
   return MenuUtil.showMenu(commitMenu, { repository, switches });
 }
 
-export async function commit(repository: MagitRepository, commitArgs: string[] = []) {
+export async function commit({ repository, switches }: MenuState, commitArgs: string[] = []) {
 
-  const args = ['commit', ...commitArgs];
+  const args = ['commit', ...MenuUtil.switchesToArgs(switches), ...commitArgs];
 
   return runCommitLikeCommand(repository, args);
 }

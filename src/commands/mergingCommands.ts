@@ -93,8 +93,8 @@ async function _merge(repository: MagitRepository, ref: string, noCommit = false
   return gitRun(repository, args);
 }
 
-async function commitMerge({ repository }: MenuState) {
-  return CommitCommands.commit(repository);
+async function commitMerge(menuState: MenuState) {
+  return CommitCommands.commit(menuState);
 }
 
 async function abortMerge({ repository }: MenuState) {
