@@ -85,7 +85,7 @@ async function pushSetUpstream({ repository, ...rest }: MenuState) {
   let choices = [...repository.state.refs];
 
   if (repository.state.remotes.length > 0 &&
-    !choices.find(ref => ref.name === repository.magitState?.HEAD?.name && ref.remote === repository.state.remotes[0].name)) {
+    !choices.find(ref => ref.name === repository.state.remotes[0].name + '/' + repository.magitState?.HEAD?.name)) {
     choices = [{
       name: `${repository.state.remotes[0].name}/${repository.magitState?.HEAD?.name}`,
       remote: repository.state.remotes[0].name,
