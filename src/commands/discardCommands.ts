@@ -4,7 +4,7 @@ import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
 import { StashItemView, StashSectionView } from '../views/stashes/stashSectionView';
 import { ChangeView } from '../views/changes/changeView';
-import { HunkView } from '../views/changes/HunkView';
+import { HunkView } from '../views/changes/hunkView';
 import MagitUtils from '../utils/magitUtils';
 import { ChangeSectionView } from '../views/changes/changesSectionView';
 import { Section } from '../views/general/sectionHeader';

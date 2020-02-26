@@ -1,5 +1,5 @@
 import { window, commands, Uri } from 'vscode';
-import { HunkView } from '../views/changes/HunkView';
+import { HunkView } from '../views/changes/hunkView';
 import { ChangeView } from '../views/changes/changeView';
 import MagitUtils from '../utils/magitUtils';
 import FilePathUtils from '../utils/filePathUtils';
