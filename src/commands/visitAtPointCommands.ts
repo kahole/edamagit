@@ -10,7 +10,7 @@ import { StashItemView } from '../views/stashes/stashSectionView';
 import { StashDetailView } from '../views/stashDetailView';
 import { ChangeView } from '../views/changes/changeView';
 import { MagitCommit } from '../models/magitCommit';
-import { HunkView } from '../views/changes/HunkView';
+import { HunkView } from '../views/changes/hunkView';
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 
