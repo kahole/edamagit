@@ -23,7 +23,7 @@
       ]
     },
     "sectionHeader": {
-      "match": "Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits|Unmerged into|Unpulled from|GitError!|(Merging .*(?= \\())|(Rebasing .* onto .*$)|Stash@{\\d+}|(Commits in .*$)",
+      "match": "Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits|Unmerged into|Unpulled from|HEAD|Branches|Remote|Tags|GitError!|(Merging .*(?= \\())|(Rebasing .* onto .*$)|Stash@{\\d+}|(Commits in .*$)",
       "name": "strong keyword.section.header.magit"
     },
     "highlights": {

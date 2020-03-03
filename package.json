@@ -106,6 +106,10 @@
         "title": "Magit Logging"
       },
       {
+        "command": "magit.show-refs",
+        "title": "Magit Show Refs"
+      },
+      {
         "command": "magit.tagging",
         "title": "Magit Tagging"
       },
@@ -170,6 +174,10 @@
         },
         {
           "command": "magit.logging",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.show-refs",
           "when": "editorLangId == magit"
         },
         {
@@ -334,6 +342,11 @@
       {
         "command": "magit.logging",
         "key": "l",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "magit.show-refs",
+        "key": "y",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {

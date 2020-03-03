@@ -12,6 +12,7 @@ import { Section } from '../views/general/sectionHeader';
 import { gitRun } from '../utils/gitRawRunner';
 import * as Constants from '../common/constants';
 import { getCommit } from '../utils/commitCache';
+import { MagitRemote } from '../models/magitRemote';
 
 export async function magitRefresh() { }
 
@@ -230,6 +231,13 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     } catch { }
   }
 
+  const remoteBranches = repository.state.refs.filter(ref => ref.type === RefType.RemoteHead);
+
+  const remotes: MagitRemote[] = repository.state.remotes.map(remote => ({
+    ...remote,
+    branches: remoteBranches.filter(remoteBranch => remoteBranch.remote === remote.name)
+  }));
+
   repository.magitState = {
     HEAD,
     stashes: await stashTask,
@@ -240,6 +248,9 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     untrackedFiles,
     rebasingState,
     mergingState,
+    branches: repository.state.refs.filter(ref => ref.type === RefType.Head),
+    remotes,
+    tags: repository.state.refs.filter(ref => ref.type === RefType.Tag),
     latestGitError: repository.magitState?.latestGitError
   };
 }

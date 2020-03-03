@@ -8,13 +8,17 @@ export enum Section {
   RecentCommits = 'Recent commits',
   UnmergedInto = 'Unmerged into',
   UnpulledFrom = 'Unpulled from',
-  Merging = 'Merging'
+  Merging = 'Merging',
+  HEAD = 'HEAD',
+  Branches = 'Branches',
+  Remote = 'Remote',
+  Tags = 'Tags'
 }
 
 export class SectionHeaderView extends TextView {
 
-  constructor(private _section: Section, count?: number, branchName?: string) {
-    super(`${_section.valueOf()}${branchName ? ' ' + branchName + '' : ''}${count ? ' (' + count + ')' : ''}`);
+  constructor(private _section: Section, count?: number, extraText?: string) {
+    super(`${_section.valueOf()}${extraText ? ' ' + extraText + '' : ''}${count ? ' (' + count + ')' : ''}`);
   }
 
   onClicked() { return undefined; }

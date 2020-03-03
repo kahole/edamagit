@@ -4,7 +4,7 @@ import { RemoteBranchHeaderView } from './remoteBranchHeaderView';
 import { TextView } from '../general/textView';
 import { MagitBranch } from '../../models/magitBranch';
 
-export class BranchSectionView extends View {
+export class BranchHeaderSectionView extends View {
   isFoldable = true;
 
   get id() { return 'HEAD_section'; }

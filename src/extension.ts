@@ -2,7 +2,7 @@ import { workspace, extensions, commands, ExtensionContext, Disposable, language
 import ContentProvider from './providers/contentProvider';
 import { GitExtension, API } from './typings/git';
 import { pushing } from './commands/pushingCommands';
-import { branching } from './commands/branchingCommands';
+import { branching, showRefs } from './commands/branchingCommands';
 import { magitHelp } from './commands/helpCommands';
 import { magitStatus, magitRefresh } from './commands/statusCommands';
 import { magitVisitAtPoint } from './commands/visitAtPointCommands';
@@ -83,6 +83,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('magit.resetting', Command.primeRepo(resetting)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.remoting', Command.primeRepo(remoting)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.logging', Command.primeRepo(logging)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.show-refs', Command.primeRepo(showRefs)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.tagging', Command.primeRepo(tagging)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('magit.visit-at-point', Command.primeRepoAndView(magitVisitAtPoint, false)));

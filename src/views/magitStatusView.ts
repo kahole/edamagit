@@ -8,7 +8,7 @@ import { CommitSectionView } from './commits/commitSectionView';
 import { TextView } from './general/textView';
 import { LineBreakView } from './general/lineBreakView';
 import { Uri } from 'vscode';
-import { BranchSectionView } from './branches/branchSectionView';
+import { BranchHeaderSectionView } from './branches/branchHeaderSectionView';
 import { MergingSectionView } from './merging/mergingSectionView';
 import { UnsourcedCommitSectionView } from './commits/unsourcedCommitsSectionView';
 import { MagitRepository } from '../models/magitRepository';
@@ -32,7 +32,7 @@ export default class MagitStatusView extends DocumentView {
       magitState.latestGitError = undefined;
     }
 
-    this.addSubview(new BranchSectionView(magitState.HEAD));
+    this.addSubview(new BranchHeaderSectionView(magitState.HEAD));
 
     this.addSubview(new LineBreakView());
 

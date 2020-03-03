@@ -22,6 +22,9 @@ suite('Extension Test Suite', () => {
       stashes: [],
       untrackedFiles: [],
       workingTreeChanges: [],
+      branches: [],
+      remotes: [],
+      tags: [],
       HEAD: {
         name: 'somebranch',
         type: RefType.Head,
