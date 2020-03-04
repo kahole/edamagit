@@ -114,6 +114,10 @@
         "title": "Magit Tagging"
       },
       {
+        "command": "magit.worktree",
+        "title": "Magit Worktree"
+      },
+      {
         "command": "magit.stage",
         "title": "Magit Stage"
       },
@@ -182,6 +186,10 @@
         },
         {
           "command": "magit.tagging",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.worktree",
           "when": "editorLangId == magit"
         },
         {
@@ -352,6 +360,11 @@
       {
         "command": "magit.tagging",
         "key": "t",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "magit.worktree",
+        "key": "shift+5",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {

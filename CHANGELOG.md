@@ -3,6 +3,7 @@
 ### 0.0.7
 - Adds show-refs command
 - Apply- and discard-at-point entities in show-ref view
+- Worktree create commands
 
 ### 0.0.4
 - Fixes issue with filename case

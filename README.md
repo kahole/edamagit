@@ -24,17 +24,18 @@ Popup commands
   f Fetching          M Remoting          l Logging 
   m Merging           r Rebasing          t Tagging
   P Pushing           z Stashing          X Resetting
-  y Show Refs 
+  y Show Refs                             % Worktree
  
 Applying changes
   a Apply          s Stage          u Unstage
   k Discard        S Stage all      U Unstage all
-
+  
  
 Essential commands
   g     refresh current buffer
   TAB   toggle section at point
   RET   visit thing at point
+  $     show git process view
 ```
 
 ## Features
@@ -55,9 +56,9 @@ Essential commands
 | Applying |
 | Discarding |
 | Show refs  |
+| Worktee    |
 | Visit-at-point |
 | Git Process view |
-
 
 ## Troubleshooting
 ### I can't commit
@@ -71,6 +72,8 @@ Essential commands
 
 ## Roadmap
 
+_Feature requests as well as issues are welcome_
+
 ### Interface
 - Config menus
 - Options/variable menus
@@ -83,7 +86,6 @@ Essential commands
   - Reversing
   - Diffing
   - Bisecting
-  - Worktree
   - Submodules
   - Patches
 
