@@ -44,11 +44,7 @@ async function createTag({ repository, switches }: MenuState) {
 
 async function deleteTag({ repository, switches }: MenuState) {
 
-  const refs = repository.state.refs
-    .filter(ref => ref.type === RefType.Tag)
-    .map(r => r.name!);
-
-  const tagRef = await window.showQuickPick(refs, { placeHolder: 'Delete tag' });
+  const tagRef = await MagitUtils.chooseTag(repository, 'Delete tag');
 
   if (tagRef) {
 

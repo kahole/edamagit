@@ -4,6 +4,7 @@ import { window, ViewColumn, Uri } from 'vscode';
 import { internalMagitStatus } from '../commands/statusCommands';
 import { DocumentView } from '../views/general/documentView';
 import FilePathUtils from './filePathUtils';
+import { RefType } from '../typings/git';
 
 export default class MagitUtils {
 
@@ -63,6 +64,14 @@ export default class MagitUtils {
     refs.push(...repository.state.refs
       .filter(ref => ref.name !== repository.magitState?.HEAD?.name)
       .sort((refA, refB) => refA.type - refB.type).map(r => r.name!));
+
+    return window.showQuickPick(refs, { placeHolder: prompt });
+  }
+
+  public static async chooseTag(repository: MagitRepository, prompt: string) {
+    const refs = repository.state.refs
+      .filter(ref => ref.type === RefType.Tag)
+      .map(r => r.name!);
 
     return window.showQuickPick(refs, { placeHolder: prompt });
   }

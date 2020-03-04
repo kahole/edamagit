@@ -6,6 +6,7 @@ import { RefType } from '../typings/git';
 import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
 import GitTextUtils from '../utils/gitTextUtils';
 import { gitRun } from '../utils/gitRawRunner';
+import MagitUtils from '../utils/magitUtils';
 
 function generatePushingMenu(repository: MagitRepository) {
   const pushingMenuItems: MenuItem[] = [];
@@ -25,6 +26,8 @@ function generatePushingMenu(repository: MagitRepository) {
   }
 
   pushingMenuItems.push({ label: 'e', description: 'elsewhere', action: pushElsewhere });
+  pushingMenuItems.push({ label: 'T', description: 'a tag', action: pushTag });
+  pushingMenuItems.push({ label: 't', description: 'all tags', action: pushAllTags });
 
   return { title: 'Pushing', commands: pushingMenuItems };
 }
@@ -126,4 +129,26 @@ async function pushSetUpstream({ repository, ...rest }: MenuState) {
 
 async function pushElsewhere() {
   return commands.executeCommand('git.pushTo');
+}
+
+async function pushTag({ repository, switches }: MenuState) {
+  const remote = repository.magitState?.HEAD?.upstreamRemote?.remote ?? repository.magitState?.HEAD?.pushRemote?.remote;
+
+  const tag = await MagitUtils.chooseTag(repository, 'Push tag');
+
+  if (remote && tag) {
+
+    const args = ['push', ...MenuUtil.switchesToArgs(switches), remote, tag];
+    return gitRun(repository, args);
+  }
+}
+
+async function pushAllTags({ repository, switches }: MenuState) {
+  const remote = repository.magitState?.HEAD?.upstreamRemote?.remote ?? repository.magitState?.HEAD?.pushRemote?.remote;
+
+  if (remote) {
+
+    const args = ['push', ...MenuUtil.switchesToArgs(switches), remote, '--tags'];
+    return gitRun(repository, args);
+  }
 }
