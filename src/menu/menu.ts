@@ -55,7 +55,7 @@ export class MenuUtil {
           acceptListenerDisposable.dispose();
           resolve();
         }
-        const chosenItems = _quickPick.activeItems.filter(i => i.label === _quickPick.value);
+        const chosenItems = _quickPick.items.filter(i => i.label === _quickPick.value);
         if (chosenItems.length > 0) {
           _quickPick.value = '';
           _quickPick.dispose();
