@@ -9,7 +9,7 @@ import { MagitRepository } from '../models/magitRepository';
 import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
 import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
-import { apply } from './applyCommands';
+import { apply } from './applyAtPointCommands';
 import GitTextUtils from '../utils/gitTextUtils';
 
 export async function magitStage(repository: MagitRepository, currentView: DocumentView): Promise<any> {
@@ -21,7 +21,7 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
 
     if (changeHunk.section !== Section.Staged) {
       const patch = GitTextUtils.changeHunkToPatch(changeHunk);
-      return apply(repository, patch, true);
+      return apply(repository, patch, { index: true });
 
     } else {
       window.setStatusBarMessage('Already staged');
@@ -83,7 +83,7 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
 
     if (changeHunk.section === Section.Staged) {
       const patch = GitTextUtils.changeHunkToPatch(changeHunk);
-      return apply(repository, patch, true, true);
+      return apply(repository, patch, { index: true, reverse: true });
     } else {
       window.setStatusBarMessage('Already unstaged');
     }

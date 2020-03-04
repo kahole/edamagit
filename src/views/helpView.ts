@@ -35,16 +35,18 @@ export class HelpView extends DocumentView {
   f Fetching          M Remoting          l Logging 
   m Merging           r Rebasing          t Tagging
   P Pushing           z Stashing          X Resetting
+  y Show Refs 
  
- Applying changes
+Applying changes
   a Apply          s Stage          u Unstage
   k Discard        S Stage all      U Unstage all
   
  
- Essential commands
+Essential commands
   g     refresh current buffer
   TAB   toggle section at point
-  RET   visit thing at point`;
+  RET   visit thing at point
+  $     show git process view`;
 
   constructor(uri: Uri) {
     super(uri);

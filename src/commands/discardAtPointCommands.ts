@@ -9,10 +9,13 @@ import MagitUtils from '../utils/magitUtils';
 import { ChangeSectionView } from '../views/changes/changesSectionView';
 import { Section } from '../views/general/sectionHeader';
 import GitTextUtils from '../utils/gitTextUtils';
-import { apply } from './applyCommands';
-import { Status } from '../typings/git';
+import { apply } from './applyAtPointCommands';
+import { Status, GitErrorCodes } from '../typings/git';
 import { MagitChangeHunk } from '../models/magitChangeHunk';
 import FilePathUtils from '../utils/filePathUtils';
+import { TagListingView } from '../views/tags/tagListingView';
+import { BranchListingView } from '../views/branches/branchListingView';
+import { RemoteBranchListingView } from '../views/remotes/remoteBranchListingView';
 
 export async function magitDiscardAtPoint(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
@@ -86,6 +89,32 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
       const args = ['stash', 'drop', `stash@{${stash.index}}`];
       return gitRun(repository, args);
     }
+  } else if (selectedView instanceof BranchListingView || selectedView instanceof RemoteBranchListingView) {
+
+    const branch = (selectedView as BranchListingView).ref;
+
+    if (branch.name) {
+
+      if (await MagitUtils.confirmAction(`Delete branch ${branch.name}?`)) {
+        try {
+          await repository.deleteBranch(branch.name, false);
+        } catch (error) {
+          if (error.gitErrorCode === GitErrorCodes.BranchNotFullyMerged) {
+            if (await MagitUtils.confirmAction(`Delete unmerged branch ${branch.name}?`)) {
+              return repository.deleteBranch(branch.name, true);
+            }
+          }
+        }
+      }
+    }
+  } else if (selectedView instanceof TagListingView) {
+
+    const tag = (selectedView as TagListingView).ref;
+
+    if (await MagitUtils.confirmAction(`Delete tag ${tag.name}?`)) {
+      const args = ['tag', '--delete', `${tag.name}`];
+      return gitRun(repository, args);
+    }
   }
 }
 
@@ -94,11 +123,11 @@ async function discardHunk(repository: MagitRepository, changeHunk: MagitChangeH
   const patch = GitTextUtils.changeHunkToPatch(changeHunk);
 
   if (changeHunk.section === Section.Unstaged) {
-    return apply(repository, patch, false, true);
+    return apply(repository, patch, { reverse: true });
 
   } else if (changeHunk.section === Section.Staged) {
-    await apply(repository, patch, true, true);
-    return apply(repository, patch, false, true);
+    await apply(repository, patch, { index: true, reverse: true });
+    return apply(repository, patch, { reverse: true });
   }
 
   return Promise.reject();

@@ -1,7 +1,7 @@
 import { View } from '../general/view';
 import { Section, SectionHeaderView } from '../general/sectionHeader';
 import { LineBreakView } from '../general/lineBreakView';
-import { RemoteListingView } from './remoteListingView';
+import { RemoteBranchListingView } from './remoteBranchListingView';
 import { MagitRemote } from '../../models/magitRemote';
 
 export class RemoteSectionView extends View {
@@ -13,7 +13,7 @@ export class RemoteSectionView extends View {
     super();
     this.subViews = [
       new SectionHeaderView(Section.Remote, remote.branches.length, `${remote.name} (${remote.fetchUrl ?? remote.pushUrl})`),
-      ...remote.branches.map(branch => new RemoteListingView(branch)),
+      ...remote.branches.map(branch => new RemoteBranchListingView(branch)),
       new LineBreakView()
     ];
   }

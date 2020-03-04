@@ -34,7 +34,11 @@ export async function branching(repository: MagitRepository) {
 
 export async function showRefs(repository: MagitRepository) {
   const uri = ShowRefsView.encodeLocation(repository);
-  views.set(uri.toString(), new ShowRefsView(uri, repository.magitState!));
+
+  if (!views.has(uri.toString())) {
+    views.set(uri.toString(), new ShowRefsView(uri, repository.magitState!));
+  }
+
   return workspace.openTextDocument(uri)
     .then(doc => window.showTextDocument(doc));
 }

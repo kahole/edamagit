@@ -17,6 +17,25 @@
 | Magit Dispatch      |   `ctrl+x alt+g`    |
 | In Status: see all possible key-commands | `?` |
 
+From status view
+```
+Popup commands
+  b Branching         F Pulling           c Committing
+  f Fetching          M Remoting          l Logging 
+  m Merging           r Rebasing          t Tagging
+  P Pushing           z Stashing          X Resetting
+  y Show Refs 
+ 
+Applying changes
+  a Apply          s Stage          u Unstage
+  k Discard        S Stage all      U Unstage all
+
+ 
+Essential commands
+  g     refresh current buffer
+  TAB   toggle section at point
+  RET   visit thing at point
+```
 
 ## Features
 
@@ -35,6 +54,9 @@
 | Resetting | 
 | Applying |
 | Discarding |
+| Show refs  |
+| Visit-at-point |
+| Git Process view |
 
 
 ## Troubleshooting
@@ -56,10 +78,10 @@
      (https://github.com/microsoft/vscode/wiki/Semantic-Highlighting-Overview)
 
 ### Implement missing Git/Magit features
-  - Diffing
-  - Show refs
   - Cherry picking
   - Reverting
+  - Reversing
+  - Diffing
   - Bisecting
   - Worktree
   - Submodules
