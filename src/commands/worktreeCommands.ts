@@ -9,7 +9,7 @@ const worktreeMenu = {
   commands: [
     { label: 'b', description: 'Create new worktree', action: createWorktree },
     { label: 'c', description: 'Create new branch and worktree', action: createWorktreeAndBranch },
-    { label: 'k', description: 'Delete worktree', action: deleteWorktree }
+    // { label: 'k', description: 'Delete worktree', action: deleteWorktree }
   ]
 };
 
@@ -50,9 +50,4 @@ async function createWorktreeAndBranch({ repository }: MenuState) {
       }
     }
   }
-}
-
-async function deleteWorktree({ repository }: MenuState) {
-
-
 }
