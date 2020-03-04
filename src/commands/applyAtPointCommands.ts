@@ -25,8 +25,6 @@ export async function magitApplyEntityAtPoint(repository: MagitRepository, curre
 
     const ref = (selectedView as BranchListingView).ref;
 
-    // TODO: something wrong with show-refs view, it gets stale and doesnt click on views after some time!!!
-
     if (ref.commit) {
       return cherryPick(repository, ref.commit, { noCommit: true });
     }
