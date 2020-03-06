@@ -7,7 +7,7 @@ import { MagitRepository } from '../models/magitRepository';
 
 export class CommitDetailView extends DocumentView {
 
-  static UriPath: string = 'commit.diff';
+  static UriPath: string = 'commit.magit';
   isHighlightable = false;
   needsUpdate = false;
 

@@ -6,7 +6,7 @@ import { MagitRepository } from '../models/magitRepository';
 
 export class DiffView extends DocumentView {
 
-  static UriPath: string = 'magit.diff';
+  static UriPath: string = 'diff.magit';
   isHighlightable = false;
   needsUpdate = false;
 
