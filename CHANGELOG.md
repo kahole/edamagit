@@ -2,6 +2,7 @@
 
 ### 0.0.9
 - Fixes issue with discarding remote branches
+- Visit ref heads commits from show-ref view
 
 ### 0.0.8
 - Tag pushing

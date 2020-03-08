@@ -11,6 +11,9 @@ import { StashDetailView } from '../views/stashDetailView';
 import { ChangeView } from '../views/changes/changeView';
 import { MagitCommit } from '../models/magitCommit';
 import { HunkView } from '../views/changes/hunkView';
+import { BranchListingView } from '../views/branches/branchListingView';
+import { RemoteBranchListingView } from '../views/remotes/remoteBranchListingView';
+import { TagListingView } from '../views/tags/tagListingView';
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 
@@ -29,13 +32,14 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
   } else if (selectedView instanceof CommitItemView) {
 
     const commit: MagitCommit = (selectedView as CommitItemView).commit;
+    return visitCommit(repository, commit.hash);
 
-    const result = await gitRun(repository, ['show', commit.hash]);
-    commit.diff = result.stdout;
+  } else if (selectedView instanceof BranchListingView ||
+    selectedView instanceof RemoteBranchListingView ||
+    selectedView instanceof TagListingView) {
 
-    const uri = CommitDetailView.encodeLocation(commit.hash);
-    views.set(uri.toString(), new CommitDetailView(uri, commit));
-    workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn()));
+    const commit = (selectedView as BranchListingView).ref.commit;
+    return visitCommit(repository, commit!);
 
   } else if (selectedView instanceof StashItemView) {
 
@@ -48,4 +52,14 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
     views.set(uri.toString(), new StashDetailView(uri, stash, stashDiff));
     workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn()));
   }
+}
+
+async function visitCommit(repository: MagitRepository, commitHash: string) {
+  const commit: MagitCommit = { hash: commitHash, message: '', parents: [] };
+  const result = await gitRun(repository, ['show', commitHash]);
+  commit.diff = result.stdout;
+
+  const uri = CommitDetailView.encodeLocation(commit.hash);
+  views.set(uri.toString(), new CommitDetailView(uri, commit));
+  workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn()));
 }
