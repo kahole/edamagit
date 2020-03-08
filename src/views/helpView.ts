@@ -3,6 +3,7 @@ import { Uri } from 'vscode';
 import * as Constants from '../common/constants';
 import { TextView } from './general/textView';
 import { MagitRepository } from '../models/magitRepository';
+import { MagitState } from '../models/magitState';
 
 export class HelpView extends DocumentView {
 
@@ -56,7 +57,7 @@ Essential commands
     this.addSubview(diffTextView);
   }
 
-  public update(repository: MagitRepository): void { }
+  public update(state: MagitState): void { }
 
   static encodeLocation(repository: MagitRepository): Uri {
     return Uri.parse(`${Constants.MagitUriScheme}:${HelpView.UriPath}?${repository.rootUri.path}#help`);

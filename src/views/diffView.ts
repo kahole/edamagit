@@ -2,7 +2,7 @@ import { DocumentView } from './general/documentView';
 import { Uri } from 'vscode';
 import * as Constants from '../common/constants';
 import { TextView } from './general/textView';
-import { MagitRepository } from '../models/magitRepository';
+import { MagitState } from '../models/magitState';
 
 export class DiffView extends DocumentView {
 
@@ -18,7 +18,7 @@ export class DiffView extends DocumentView {
     this.addSubview(diffTextView);
   }
 
-  public update(repository: MagitRepository): void { }
+  public update(state: MagitState): void { }
 
   static index = 0;
   static encodeLocation(diffId: string): Uri {
