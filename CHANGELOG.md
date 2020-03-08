@@ -1,5 +1,8 @@
 # Change Log
 
+### 0.0.9
+- Fixes issue with discarding remote branches
+
 ### 0.0.8
 - Tag pushing
 - Fixes bug with single key-stroke menu navigation
