@@ -53,7 +53,7 @@ export async function visitCommit(repository: MagitRepository, commitHash: strin
   const result = await gitRun(repository, ['show', commitHash]);
   commit.diff = result.stdout;
 
-  const uri = CommitDetailView.encodeLocation(commit.hash);
+  const uri = CommitDetailView.encodeLocation(repository, commit.hash);
   views.set(uri.toString(), new CommitDetailView(uri, commit));
   workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn()));
 }

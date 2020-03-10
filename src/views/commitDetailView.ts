@@ -4,6 +4,7 @@ import * as Constants from '../common/constants';
 import { TextView } from './general/textView';
 import { MagitCommit } from '../models/magitCommit';
 import { MagitState } from '../models/magitState';
+import { MagitRepository } from '../models/magitRepository';
 
 export class CommitDetailView extends DocumentView {
 
@@ -21,7 +22,7 @@ export class CommitDetailView extends DocumentView {
 
   public update(state: MagitState): void { }
 
-  static encodeLocation(commitHash: string): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${CommitDetailView.UriPath}?${commitHash}`);
+  static encodeLocation(repository: MagitRepository, commitHash: string): Uri {
+    return Uri.parse(`${Constants.MagitUriScheme}:${CommitDetailView.UriPath}?${repository.rootUri.fsPath}#${commitHash}`);
   }
 }
