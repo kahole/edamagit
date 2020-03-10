@@ -3,6 +3,7 @@ import { Uri } from 'vscode';
 import * as Constants from '../common/constants';
 import { TextView } from './general/textView';
 import { MagitRepository } from '../models/magitRepository';
+import { MagitState } from '../models/magitState';
 
 export class DispatchView extends DocumentView {
 
@@ -13,17 +14,14 @@ export class DispatchView extends DocumentView {
     super(uri);
 
     this.addSubview(new TextView(`Popup and dwim commands
- A Cherry-picking    b Branching         B Bisecting         c Committing
- d Diffing           D Change diffs      e Ediff dwimming    E Ediffing
- f Fetching          F Pulling           l Logging           L Change logs
- m Merging           M Remoting          o Submodules        O Subtrees
- P Pushing           r Rebasing          t Tagging           T Notes
- V Reverting         w Apply patches     W Format patches    X Resetting
- y Show Refs         z Stashing          ! Running           % Worktree
-`));
+    d Diffing           b Branching        c Committing
+    f Fetching          F Pulling          l Logging 
+    m Merging           M Remoting         t Tagging
+    P Pushing           r Rebasing         X Resetting
+    y Show Refs         z Stashing         % Worktree`));
   }
 
-  public update(repository: MagitRepository): void { }
+  public update(state: MagitState): void { }
 
   static encodeLocation(repository: MagitRepository): Uri {
     return Uri.parse(`${Constants.MagitUriScheme}:${DispatchView.UriPath}?${repository.rootUri.fsPath}`);

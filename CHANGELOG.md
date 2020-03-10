@@ -1,5 +1,10 @@
 # Change Log
 
+### 0.0.9
+- Adds diffing commands
+- Fixes issue with discarding remote branches
+- Visit ref heads commits from show-ref view
+
 ### 0.0.8
 - Tag pushing
 - Fixes bug with single key-stroke menu navigation

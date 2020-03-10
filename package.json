@@ -110,6 +110,10 @@
         "title": "Magit Show Refs"
       },
       {
+        "command": "magit.diffing",
+        "title": "Magit Diffing"
+      },
+      {
         "command": "magit.tagging",
         "title": "Magit Tagging"
       },
@@ -182,6 +186,10 @@
         },
         {
           "command": "magit.show-refs",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.diffing",
           "when": "editorLangId == magit"
         },
         {
@@ -355,6 +363,11 @@
       {
         "command": "magit.show-refs",
         "key": "y",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "magit.diffing",
+        "key": "d",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {

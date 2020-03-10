@@ -1,6 +1,6 @@
 import { View } from './view';
 import { Uri, EventEmitter } from 'vscode';
-import { MagitRepository } from '../../models/magitRepository';
+import { MagitState } from '../../models/magitState';
 
 export abstract class DocumentView extends View {
 
@@ -11,7 +11,7 @@ export abstract class DocumentView extends View {
     super();
   }
 
-  public abstract update(repository: MagitRepository): void;
+  public abstract update(state: MagitState): void;
 
   public triggerUpdate() {
     if (this.emitter) {

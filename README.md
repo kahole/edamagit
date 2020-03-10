@@ -20,11 +20,11 @@
 From status view
 ```
 Popup commands
-  b Branching         F Pulling           c Committing
-  f Fetching          M Remoting          l Logging 
-  m Merging           r Rebasing          t Tagging
-  P Pushing           z Stashing          X Resetting
-  y Show Refs                             % Worktree
+  d Diffing           b Branching        c Committing
+  f Fetching          F Pulling          l Logging 
+  m Merging           M Remoting         t Tagging
+  P Pushing           r Rebasing         X Resetting
+  y Show Refs         z Stashing         % Worktree
  
 Applying changes
   a Apply          s Stage          u Unstage
@@ -47,6 +47,7 @@ Essential commands
 | Fetching | Diffing |
 | Remoting | Blaming |
 | Logging |
+| Diffing |
 | Merging |
 | Rebasing |
 | Tagging |
@@ -84,7 +85,6 @@ _Feature requests as well as issues are welcome_
   - Cherry picking
   - Reverting
   - Reversing
-  - Diffing
   - Bisecting
   - Submodules
   - Patches

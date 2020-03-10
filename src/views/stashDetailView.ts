@@ -4,6 +4,7 @@ import * as Constants from '../common/constants';
 import { TextView } from './general/textView';
 import { Stash } from '../common/gitApiExtensions';
 import { MagitRepository } from '../models/magitRepository';
+import { MagitState } from '../models/magitState';
 
 export class StashDetailView extends DocumentView {
 
@@ -17,7 +18,7 @@ export class StashDetailView extends DocumentView {
     this.addSubview(new TextView(diff));
   }
 
-  public update(repository: MagitRepository): void { }
+  public update(state: MagitState): void { }
 
   static index = 0;
   static encodeLocation(repository: MagitRepository, stash: Stash): Uri {

@@ -89,7 +89,7 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
       const args = ['stash', 'drop', `stash@{${stash.index}}`];
       return gitRun(repository, args);
     }
-  } else if (selectedView instanceof BranchListingView || selectedView instanceof RemoteBranchListingView) {
+  } else if (selectedView instanceof BranchListingView) {
 
     const branch = (selectedView as BranchListingView).ref;
 
@@ -97,11 +97,30 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
 
       if (await MagitUtils.confirmAction(`Delete branch ${branch.name}?`)) {
         try {
-          await repository.deleteBranch(branch.name, false);
+          await gitRun(repository, ['branch', '-d', branch.name]);
         } catch (error) {
           if (error.gitErrorCode === GitErrorCodes.BranchNotFullyMerged) {
             if (await MagitUtils.confirmAction(`Delete unmerged branch ${branch.name}?`)) {
               return repository.deleteBranch(branch.name, true);
+            }
+          }
+        }
+      }
+    }
+  } else if (selectedView instanceof RemoteBranchListingView) {
+
+    const branch = (selectedView as RemoteBranchListingView).ref;
+
+    if (branch.name) {
+
+      if (await MagitUtils.confirmAction(`Delete branch ${branch.name}?`)) {
+        const [remote, name] = GitTextUtils.remoteBranchFullNameToSegments(branch.name);
+        try {
+          await gitRun(repository, ['push', '--delete', remote, name]);
+        } catch (error) {
+          if (error.gitErrorCode === GitErrorCodes.BranchNotFullyMerged) {
+            if (await MagitUtils.confirmAction(`Delete unmerged branch ${branch.name}?`)) {
+              return gitRun(repository, ['push', '--delete', remote, name]);
             }
           }
         }

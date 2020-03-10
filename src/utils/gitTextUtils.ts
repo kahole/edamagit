@@ -68,6 +68,17 @@ export default class GitTextUtils {
     };
   }
 
+  public static remoteBranchFullNameToSegments(remoteBranchName?: string): string[] {
+
+    if (remoteBranchName) {
+      const [remote, ...nameParts] = remoteBranchName.split('/');
+      const name = nameParts.join('/');
+      return [remote, name];
+    }
+
+    return ['', ''];
+  }
+
   public static shortHash(hash?: string): string {
     return hash ? hash.slice(0, 7) : '';
   }

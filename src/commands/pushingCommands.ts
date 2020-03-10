@@ -110,8 +110,7 @@ async function pushSetUpstream({ repository, ...rest }: MenuState) {
 
   if (chosenRemote && ref) {
 
-    const [remote, ...nameParts] = chosenRemote.split('/');
-    const name = nameParts.join('/');
+    const [remote, name] = GitTextUtils.remoteBranchFullNameToSegments(chosenRemote);
 
     if (remote && name) {
 

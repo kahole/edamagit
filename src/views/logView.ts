@@ -7,6 +7,7 @@ import { CommitItemView } from './commits/commitSectionView';
 import { MagitLog } from '../models/magitLog';
 import { Commit } from '../typings/git';
 import GitTextUtils from '../utils/gitTextUtils';
+import { MagitState } from '../models/magitState';
 
 export default class LogView extends DocumentView {
 
@@ -21,7 +22,7 @@ export default class LogView extends DocumentView {
     ];
   }
 
-  public update(repository: MagitRepository): void { }
+  public update(state: MagitState): void { }
 
   static index = 0;
   static encodeLocation(repository: MagitRepository): Uri {

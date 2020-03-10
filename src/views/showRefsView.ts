@@ -27,10 +27,8 @@ export default class ShowRefsView extends DocumentView {
     ];
   }
 
-  public update(repository: MagitRepository): void {
-    if (repository.magitState) {
-      this.provideContent(repository.magitState);
-    }
+  public update(state: MagitState): void {
+    this.provideContent(state);
     this.triggerUpdate();
   }
 
