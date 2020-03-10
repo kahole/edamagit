@@ -2,11 +2,13 @@ import { window, workspace, ViewColumn, TextEditor, commands } from 'vscode';
 import * as Constants from '../common/constants';
 import { execPath } from 'process';
 import { MagitRepository } from '../models/magitRepository';
-import StagedView from '../views/stagedView';
+import SectionDiffView from '../views/sectionDiffView';
 import { gitRun } from '../utils/gitRawRunner';
 import { views } from '../extension';
 import { MenuUtil, MenuState } from '../menu/menu';
 import MagitUtils from '../utils/magitUtils';
+import { showDiffSection } from './diffingCommands';
+import { Section } from '../views/general/sectionHeader';
 
 const commitMenu = {
   title: 'Committing',
@@ -44,10 +46,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 
     instructionStatus = window.setStatusBarMessage(`Type C-c C-c to finish, or C-c C-k to cancel`);
 
-    const uri = StagedView.encodeLocation(repository);
-    views.set(uri.toString(), new StagedView(uri, repository.magitState!));
-    stagedEditor = workspace.openTextDocument(uri)
-      .then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn(), true));
+    stagedEditor = showDiffSection(repository, Section.Staged, true);
 
     let codePath = 'code';
 

@@ -3,6 +3,7 @@ import { Uri } from 'vscode';
 import * as Constants from '../common/constants';
 import { TextView } from './general/textView';
 import { MagitState } from '../models/magitState';
+import { MagitRepository } from '../models/magitRepository';
 
 export class DiffView extends DocumentView {
 
@@ -21,7 +22,7 @@ export class DiffView extends DocumentView {
   public update(state: MagitState): void { }
 
   static index = 0;
-  static encodeLocation(diffId: string): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${DiffView.UriPath}?${diffId}#${DiffView.index++}`);
+  static encodeLocation(repository: MagitRepository, diffId: string): Uri {
+    return Uri.parse(`${Constants.MagitUriScheme}:${DiffView.UriPath}?${repository.rootUri.fsPath}#${diffId}${DiffView.index++}`);
   }
 }
