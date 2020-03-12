@@ -1,5 +1,14 @@
 # Change Log
 
+### 0.1.0
+- Opens repo picker when unsure of which repo.
+
+    E.g. invoking 'status' from external file
+- No longer requires text editor focus for top level magit keybindings
+
+    i.e. status, file popup, and dispatch bindings
+- Small bug fixes
+
 ### 0.0.9
 - Adds diffing commands
 - Fixes issue with discarding remote branches
