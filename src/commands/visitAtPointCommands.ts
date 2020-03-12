@@ -22,12 +22,12 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
   if (selectedView instanceof ChangeView) {
 
     const change = (selectedView as ChangeView).change;
-    workspace.openTextDocument(change.uri).then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn()));
+    workspace.openTextDocument(change.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preview: false }));
   }
   else if (selectedView instanceof HunkView) {
 
     const changeHunk = (selectedView as HunkView).changeHunk;
-    workspace.openTextDocument(changeHunk.uri).then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn()));
+    workspace.openTextDocument(changeHunk.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preview: false }));
 
   } else if (selectedView instanceof CommitItemView) {
 
@@ -55,5 +55,5 @@ export async function visitCommit(repository: MagitRepository, commitHash: strin
 
   const uri = CommitDetailView.encodeLocation(repository, commit.hash);
   views.set(uri.toString(), new CommitDetailView(uri, commit));
-  workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn()));
+  workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preview: false }));
 }

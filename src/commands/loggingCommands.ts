@@ -26,6 +26,6 @@ async function logHead({ repository }: MenuState) {
     const uri = LogView.encodeLocation(repository);
     views.set(uri.toString(), new LogView(uri, { commits: log, refName: repository.magitState?.HEAD.name! }));
     workspace.openTextDocument(uri)
-      .then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn(), true));
+      .then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus: true, preview: false }));
   }
 }
