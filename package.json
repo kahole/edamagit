@@ -282,18 +282,15 @@
     "keybindings": [
       {
         "command": "magit.status",
-        "key": "ctrl+x g",
-        "when": "editorTextFocus"
+        "key": "ctrl+x g"
       },
       {
         "command": "magit.dispatch",
-        "key": "ctrl+x alt+g",
-        "when": "editorTextFocus"
+        "key": "ctrl+x alt+g"
       },
       {
         "command": "magit.file-popup",
-        "key": "ctrl-x ctrl+g",
-        "when": "editorTextFocus"
+        "key": "ctrl-x ctrl+g"
       },
       {
         "command": "magit.toggle-fold",
