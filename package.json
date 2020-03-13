@@ -433,7 +433,7 @@
         "when": "editorTextFocus && editorLangId == git-commit"
       },
       {
-        "command": "workbench.action.closeActiveEditor",
+        "command": "magit.quit",
         "key": "q",
         "when": "editorTextFocus && editorLangId == magit"
       }

@@ -11,3 +11,8 @@ export async function clearSaveClose(editor: TextEditor) {
   });
   return saveClose();
 }
+
+// workaround for issue #11
+export async function quitMagitView() {
+  return commands.executeCommand('workbench.action.closeActiveEditor');
+}

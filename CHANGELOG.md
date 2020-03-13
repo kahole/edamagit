@@ -1,6 +1,9 @@
 # Change Log
 
-### 0.1.0
+### 0.0.11
+- bug fix
+
+### 0.0.10
 - Opens repo picker when unsure of which repo.
 
     E.g. invoking 'status' from external file
