@@ -344,7 +344,7 @@
       },
       {
         "command": "magit.resetting",
-        "key": "shift-x",
+        "key": "shift+x",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
