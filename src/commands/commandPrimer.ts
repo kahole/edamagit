@@ -10,10 +10,9 @@ export class Command {
   static primeRepo(command: (repository: MagitRepository) => Promise<any>, triggersUpdate: boolean = true): (editor: TextEditor) => Promise<any> {
 
     return async (editor: TextEditor) => {
-      const repository = MagitUtils.getCurrentMagitRepo(editor.document.uri);
+      const repository = await MagitUtils.getCurrentMagitRepo(editor.document.uri);
 
       if (repository) {
-
         try {
           await command(repository);
         } catch (error) {
@@ -33,7 +32,6 @@ export class Command {
       const [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(editor.document.uri);
 
       if (repository && currentView) {
-
         try {
           await command(repository, currentView);
         } catch (error) {
@@ -51,10 +49,9 @@ export class Command {
     return async (editor: TextEditor) => {
 
       const fileUri = editor.document.uri;
-      const repository = MagitUtils.getCurrentMagitRepo(fileUri);
+      const repository = MagitUtils.getMagitRepoThatContainsFile(fileUri);
 
       if (repository) {
-
         try {
           await command(repository, fileUri);
         } catch (error) {

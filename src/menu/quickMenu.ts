@@ -6,14 +6,14 @@ export interface QuickItem<T> extends QuickPickItem {
 
 export class QuickMenuUtil {
 
-  static showMenu<T>(quickItems: QuickItem<T>[], title?: string): Promise<T> {
+  static showMenu<T>(quickItems: QuickItem<T>[], placeholder?: string): Promise<T> {
 
     return new Promise((resolve, reject) => {
 
       const _quickPick = window.createQuickPick<QuickItem<T>>();
 
       _quickPick.items = quickItems;
-      _quickPick.title = title;
+      _quickPick.placeholder = placeholder;
 
       const eventListenerDisposable = _quickPick.onDidAccept(async () => {
 
@@ -29,14 +29,14 @@ export class QuickMenuUtil {
     });
   }
 
-  static showMenuWithFreeform<T>(quickItems: QuickItem<string>[], title?: string): Promise<string> {
+  static showMenuWithFreeform<T>(quickItems: QuickItem<string>[], placeholder?: string): Promise<string> {
 
     return new Promise((resolve, reject) => {
 
       const _quickPick = window.createQuickPick<QuickItem<string>>();
 
       _quickPick.items = quickItems;
-      _quickPick.title = title;
+      _quickPick.placeholder = placeholder;
 
       const eventListenerDisposable = _quickPick.onDidAccept(async () => {
 

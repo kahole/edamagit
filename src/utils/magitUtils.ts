@@ -1,31 +1,58 @@
 import { MagitRepository } from '../models/magitRepository';
 import { magitRepositories, views, gitApi } from '../extension';
-import { window, ViewColumn, Uri } from 'vscode';
+import { window, ViewColumn, Uri, commands } from 'vscode';
 import { internalMagitStatus } from '../commands/statusCommands';
 import { DocumentView } from '../views/general/documentView';
 import FilePathUtils from './filePathUtils';
-import { RefType } from '../typings/git';
+import { RefType, Repository } from '../typings/git';
+import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
 
 export default class MagitUtils {
 
-  public static getCurrentMagitRepo(uri: Uri): MagitRepository | undefined {
+  public static getMagitRepoThatContainsFile(uri: Uri): MagitRepository | undefined {
+
+    for (const [key, repo] of magitRepositories.entries()) {
+      if (FilePathUtils.isDescendant(key, uri.fsPath)) {
+        return repo;
+      }
+    }
+
+    // First time encountering this repo
+    return gitApi.repositories.find(r => FilePathUtils.isDescendant(r.rootUri.fsPath, uri.fsPath));
+  }
+
+  public static async getCurrentMagitRepo(uri: Uri): Promise<MagitRepository | undefined> {
 
     let repository = magitRepositories.get(uri.query);
 
     if (!repository) {
 
-      for (const [key, repo] of magitRepositories.entries()) {
-        if (FilePathUtils.isDescendant(key, uri.fsPath)) {
-          return repo;
+      repository = this.getMagitRepoThatContainsFile(uri);
+
+      // Can't deduce a repo from uri, ask user to choose
+      if (!repository) {
+
+        if (gitApi.repositories.length) {
+
+          const repoPicker: QuickItem<Repository | undefined>[] = gitApi.repositories.map(repo => ({ label: repo.rootUri.fsPath, meta: repo }));
+          repoPicker.push({ label: 'Init repo', meta: undefined });
+          repository = await QuickMenuUtil.showMenu(repoPicker, 'Which repository?');
+        }
+
+        if (!repository) {
+          const newRepo = await commands.executeCommand('git.init');
+
+          await new Promise(r => setTimeout(r, 1000));
+
+          if (gitApi.repositories.length) {
+            repository = gitApi.repositories[0];
+          }
         }
       }
+    }
 
-      // First time encountering this repo
-      repository = gitApi.repositories.find(r => FilePathUtils.isDescendant(r.rootUri.fsPath, uri.fsPath));
-
-      if (repository) {
-        magitRepositories.set(repository.rootUri.fsPath, repository);
-      }
+    if (repository) {
+      magitRepositories.set(repository.rootUri.fsPath, repository);
     }
 
     return repository;

@@ -40,7 +40,7 @@ export async function showRefs(repository: MagitRepository) {
   }
 
   return workspace.openTextDocument(uri)
-    .then(doc => window.showTextDocument(doc));
+    .then(doc => window.showTextDocument(doc, { preview: false }));
 }
 
 async function checkout(menuState: MenuState) {

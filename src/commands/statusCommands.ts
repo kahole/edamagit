@@ -18,7 +18,7 @@ export async function magitRefresh() { }
 
 export async function magitStatus(editor: TextEditor, preserveFocus = false): Promise<any> {
 
-  const repository = MagitUtils.getCurrentMagitRepo(editor.document.uri);
+  const repository = await MagitUtils.getCurrentMagitRepo(editor.document.uri);
 
   if (repository) {
 
@@ -37,13 +37,6 @@ export async function magitStatus(editor: TextEditor, preserveFocus = false): Pr
     views.set(uri.toString(), new MagitStatusView(uri, repository.magitState!));
 
     return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false }));
-
-  } else {
-    // Prompt to create repo
-    const newRepo = await commands.executeCommand('git.init');
-    if (newRepo) {
-      return magitStatus(editor);
-    }
   }
 }
 

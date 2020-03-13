@@ -81,14 +81,14 @@ async function diff(repository: MagitRepository, id: string, args: string[] = []
 
   const uri = DiffView.encodeLocation(repository, id);
   views.set(uri.toString(), new DiffView(uri, diffResult.stdout));
-  return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn()));
+  return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preview: false }));
 }
 
 export async function showDiffSection(repository: MagitRepository, section: Section, preserveFocus = false) {
   const uri = SectionDiffView.encodeLocation(repository);
   views.set(uri.toString(), new SectionDiffView(uri, repository.magitState!, section));
   return workspace.openTextDocument(uri)
-    .then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn(), preserveFocus));
+    .then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false }));
 }
 
 async function showStash({ repository }: MenuState) {
@@ -109,7 +109,7 @@ export async function showStashDetail(repository: MagitRepository, stash: Stash)
   const stashDiff = result.stdout;
 
   views.set(uri.toString(), new StashDetailView(uri, stash, stashDiff));
-  return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, MagitUtils.oppositeActiveViewColumn()));
+  return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preview: false }));
 }
 
 async function showCommit({ repository }: MenuState) {
@@ -135,5 +135,5 @@ export async function diffFile(repository: MagitRepository, fileUri: Uri, index 
 
   const uri = DiffView.encodeLocation(repository, fileUri.path);
   views.set(uri.toString(), new DiffView(uri, diffResult.stdout));
-  return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc));
+  return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { preview: false }));
 }
