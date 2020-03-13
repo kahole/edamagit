@@ -9,7 +9,7 @@ import { magitVisitAtPoint } from './commands/visitAtPointCommands';
 import { MagitRepository } from './models/magitRepository';
 import { magitCommit } from './commands/commitCommands';
 import { magitStage, magitStageAll, magitUnstageAll, magitUnstage } from './commands/stagingCommands';
-import { saveClose, clearSaveClose } from './commands/macros';
+import { saveClose, clearSaveClose, quitMagitView } from './commands/macros';
 import HighlightProvider from './providers/highlightProvider';
 import { Command } from './commands/commandPrimer';
 import * as Constants from './common/constants';
@@ -119,6 +119,7 @@ export function activate(context: ExtensionContext) {
 
   context.subscriptions.push(commands.registerCommand('magit.save-and-close-commit-msg', saveClose));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.abort-commit-msg', clearSaveClose));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.quit', quitMagitView));
 
 }
 

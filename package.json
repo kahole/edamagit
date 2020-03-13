@@ -6,7 +6,7 @@
   "author": {
     "name": "Kristian Andersen Hole"
   },
-  "version": "0.0.10",
+  "version": "0.0.11",
   "engines": {
     "vscode": "^1.42.1"
   },
@@ -344,7 +344,7 @@
       },
       {
         "command": "magit.resetting",
-        "key": "shift-x",
+        "key": "shift+x",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
@@ -433,7 +433,7 @@
         "when": "editorTextFocus && editorLangId == git-commit"
       },
       {
-        "command": "workbench.action.closeActiveEditor",
+        "command": "magit.quit",
         "key": "q",
         "when": "editorTextFocus && editorLangId == magit"
       }
