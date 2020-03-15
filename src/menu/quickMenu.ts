@@ -13,6 +13,7 @@ export class QuickMenuUtil {
       const _quickPick = window.createQuickPick<QuickItem<T>>();
 
       _quickPick.items = quickItems;
+      _quickPick.matchOnDescription = true;
       _quickPick.placeholder = placeholder;
 
       const eventListenerDisposable = _quickPick.onDidAccept(async () => {
@@ -37,6 +38,7 @@ export class QuickMenuUtil {
 
       _quickPick.items = quickItems;
       _quickPick.placeholder = placeholder;
+      _quickPick.matchOnDescription = true;
 
       const eventListenerDisposable = _quickPick.onDidAccept(async () => {
 

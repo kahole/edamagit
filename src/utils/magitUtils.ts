@@ -99,7 +99,7 @@ export default class MagitUtils {
   public static async chooseCommit(repository: MagitRepository, prompt: string) {
     return repository.log({ maxEntries: 100 })
       .then(log => log.map(commit => {
-        const shortHash = GitTextUtils.shortHash(commit.hash)
+        const shortHash = GitTextUtils.shortHash(commit.hash);
         return {
           label: shortHash,
           description: commit.message.concat(' ').concat(commit.hash),

@@ -6,7 +6,7 @@ import { stageFile, unstageFile } from './stagingCommands';
 import { blameFile } from './blamingCommands';
 import { diffFile } from './diffingCommands';
 
-const branchingMenu = {
+const filePopupMenu = {
   title: 'File Actions',
   commands: [
     { label: 's', description: 'Stage', action: ({ repository, data }: MenuState) => stageFile(repository, data as Uri) },
@@ -25,5 +25,5 @@ const branchingMenu = {
 };
 
 export async function filePopup(repository: MagitRepository, fileUri: Uri) {
-  return MenuUtil.showMenu(branchingMenu, { repository, data: fileUri });
+  return MenuUtil.showMenu(filePopupMenu, { repository, data: fileUri });
 }
