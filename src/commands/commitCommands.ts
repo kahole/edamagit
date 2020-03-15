@@ -90,7 +90,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
           const stagedEditorViewColumn = MagitUtils.oppositeActiveViewColumn();
           await window.showTextDocument(editor.document, { viewColumn: stagedEditorViewColumn, preview: false });
           await commands.executeCommand('workbench.action.closeActiveEditor');
-          return commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === ViewColumn.One ? 'Right' : 'Left'}`);
+          commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === ViewColumn.One ? 'Right' : 'Left'}`);
         }
       }
     }
