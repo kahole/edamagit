@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.0.12
+
+- Fixup commits (@zachdaniel Zach Daniel)
+
 ### 0.0.11
 - bug fix
 
