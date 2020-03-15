@@ -6,6 +6,7 @@ import { DocumentView } from '../views/general/documentView';
 import FilePathUtils from './filePathUtils';
 import { RefType, Repository } from '../typings/git';
 import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
+import GitTextUtils from '../utils/gitTextUtils';
 
 export default class MagitUtils {
 
@@ -93,6 +94,18 @@ export default class MagitUtils {
       .sort((refA, refB) => refA.type - refB.type).map(r => r.name!));
 
     return window.showQuickPick(refs, { placeHolder: prompt });
+  }
+
+  public static async chooseCommit(repository: MagitRepository, prompt: string) {
+    return repository.log({ maxEntries: 100 })
+      .then(log => log.map(commit => {
+        const shortHash = GitTextUtils.shortHash(commit.hash)
+        return {
+          label: shortHash,
+          description: commit.message.concat(' ').concat(commit.hash),
+          meta: shortHash
+        };
+      })).then(menu => QuickMenuUtil.showMenuWithFreeform(menu));
   }
 
   public static async chooseTag(repository: MagitRepository, prompt: string) {
