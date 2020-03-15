@@ -69,7 +69,7 @@ async function createNewBranch(menuState: MenuState) {
 
 async function renameBranch({ repository }: MenuState) {
 
-  const ref = await MagitUtils.chooseRef(repository, 'Rename branch');
+  const ref = await MagitUtils.chooseRef(repository, 'Rename branch', true, false, false);
 
   if (ref) {
     const newName = await window.showInputBox({ prompt: `Rename branch '${ref}' to:` });
@@ -87,7 +87,7 @@ async function renameBranch({ repository }: MenuState) {
 
 async function deleteBranch({ repository }: MenuState) {
 
-  const ref = await MagitUtils.chooseRef(repository, 'Delete');
+  const ref = await MagitUtils.chooseRef(repository, 'Delete', false, false, false);
 
   if (ref) {
     try {
@@ -104,7 +104,7 @@ async function deleteBranch({ repository }: MenuState) {
 
 async function resetBranch({ repository }: MenuState) {
 
-  const ref = await MagitUtils.chooseRef(repository, 'Reset branch');
+  const ref = await MagitUtils.chooseRef(repository, 'Reset branch', true, false, false);
 
   const resetToRef = await MagitUtils.chooseRef(repository, `Reset ${ref} to`);
 
@@ -127,12 +127,7 @@ async function resetBranch({ repository }: MenuState) {
 
 async function _checkout({ repository }: MenuState, refs: Ref[]) {
 
-  const refsMenu: QuickItem<string>[] = refs
-    .filter(ref => ref.name !== repository.magitState?.HEAD?.name)
-    .sort((refA, refB) => refA.type - refB.type)
-    .map(r => ({ label: r.name!, description: GitTextUtils.shortHash(r.commit), meta: r.name! }));
-
-  const ref = await QuickMenuUtil.showMenuWithFreeform(refsMenu);
+  const ref = await MagitUtils.chooseRef(repository, 'Checkout');
 
   if (ref) {
     return repository.checkout(ref);
