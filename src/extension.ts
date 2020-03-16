@@ -28,7 +28,7 @@ import { remoting } from './commands/remotingCommands';
 import { logging } from './commands/loggingCommands';
 import { MagitProcessLogEntry } from './models/magitProcessLogEntry';
 import { processView } from './commands/processCommands';
-import { resetting } from './commands/resettingCommands';
+import { resetting, resetMixed, resetHard } from './commands/resettingCommands';
 import { tagging } from './commands/taggingCommands';
 import { worktree } from './commands/worktreeCommands';
 import { diffing } from './commands/diffingCommands';
@@ -83,6 +83,8 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('magit.merging', Command.primeRepo(merging)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.rebasing', Command.primeRepo(rebasing)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.resetting', Command.primeRepo(resetting)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.reset-mixed', Command.primeRepo(resetMixed)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.reset-hard', Command.primeRepo(resetHard)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.remoting', Command.primeRepo(remoting)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.logging', Command.primeRepo(logging)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.show-refs', Command.primeRepo(showRefs)));
