@@ -1,8 +1,9 @@
 # Change Log
 
 ### 0.0.12
-
 - Fixup commits (@zachdaniel Zach Daniel)
+- Allow freeform input in more menus
+- Bug fixes
 
 ### 0.0.11
 - bug fix
