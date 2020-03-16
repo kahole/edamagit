@@ -13,8 +13,8 @@
 - [Usage](#usage)
 - [Features](#features)
 - [Troubleshooting](#troubleshooting)
-  * [I can't commit](#i-can-t-commit)
-  * [Vim support (VSCodeVim)](#vim-support--vscodevim-)
+  * [I can't commit](#i-cant-commit)
+  * [Vim support (VSCodeVim)](#vim-support-vscodevim)
 - [Roadmap](#roadmap)
 
 ## Usage
