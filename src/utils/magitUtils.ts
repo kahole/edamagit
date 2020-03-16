@@ -6,6 +6,7 @@ import { DocumentView } from '../views/general/documentView';
 import FilePathUtils from './filePathUtils';
 import { RefType, Repository } from '../typings/git';
 import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
+import GitTextUtils from '../utils/gitTextUtils';
 
 export default class MagitUtils {
 
@@ -76,23 +77,52 @@ export default class MagitUtils {
       (repository.magitState.mergeChanges?.length ?? 0) > 0);
   }
 
-  public static async chooseRef(repository: MagitRepository, prompt: string, showCurrent = false, showHEAD = false) {
+  public static async chooseRef(repository: MagitRepository, prompt: string, showCurrent = false, showHEAD = false, allowFreeform = true): Promise<string> {
 
-    const refs: string[] = [];
+    const refs: QuickItem<string>[] = [];
 
     if (showCurrent && repository.magitState?.HEAD?.name) {
-      refs.push(repository.magitState.HEAD.name);
+      refs.push({
+        label: repository.magitState.HEAD.name,
+        description: GitTextUtils.shortHash(repository.magitState.HEAD.commit),
+        meta: repository.magitState.HEAD.name
+      });
     }
 
     if (showHEAD) {
-      refs.push('HEAD');
+      refs.push({
+        label: 'HEAD',
+        description: GitTextUtils.shortHash(repository.magitState?.HEAD?.commit),
+        meta: 'HEAD'
+      });
     }
 
     refs.push(...repository.state.refs
       .filter(ref => ref.name !== repository.magitState?.HEAD?.name)
-      .sort((refA, refB) => refA.type - refB.type).map(r => r.name!));
+      .sort((refA, refB) => refA.type - refB.type).map(r => ({
+        label: r.name!,
+        description: GitTextUtils.shortHash(r.commit),
+        meta: r.name!
+      })));
 
-    return window.showQuickPick(refs, { placeHolder: prompt });
+    if (allowFreeform) {
+      return QuickMenuUtil.showMenuWithFreeform(refs, prompt);
+    } else {
+      return QuickMenuUtil.showMenu(refs, prompt);
+    }
+  }
+
+  public static async chooseCommit(repository: MagitRepository, prompt: string): Promise<string> {
+
+    const log = await repository.log({ maxEntries: 100 });
+
+    const commitPicker = log.map(commit => ({
+      label: GitTextUtils.shortHash(commit.hash),
+      description: commit.message.concat(' ').concat(commit.hash),
+      meta: commit.hash
+    }));
+
+    return QuickMenuUtil.showMenuWithFreeform(commitPicker);
   }
 
   public static async chooseTag(repository: MagitRepository, prompt: string) {

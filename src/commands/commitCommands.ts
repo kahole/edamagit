@@ -17,7 +17,7 @@ const commitMenu = {
     { label: 'a', description: 'Amend', action: (menuState: MenuState) => commit(menuState, ['--amend']) },
     { label: 'e', description: 'Extend', action: (menuState: MenuState) => commit(menuState, ['--amend', '--no-edit']) },
     { label: 'w', description: 'Reword', action: (menuState: MenuState) => commit(menuState, ['--amend', '--only']) },
-    // { label: "f", description: "Fixup", action: (menuState: MenuState) => commit(menuState.repository, ['--fixup']) },
+    { label: 'f', description: 'Fixup', action: (menuState: MenuState) => fixup(menuState) },
   ]
 };
 
@@ -36,6 +36,18 @@ export async function commit({ repository, switches }: MenuState, commitArgs: st
   const args = ['commit', ...MenuUtil.switchesToArgs(switches), ...commitArgs];
 
   return runCommitLikeCommand(repository, args);
+}
+
+export async function fixup({ repository, switches }: MenuState) {
+  const sha = await MagitUtils.chooseCommit(repository, 'Fixup commit');
+
+  if (sha) {
+    const args = ['commit', ...MenuUtil.switchesToArgs(switches), '--fixup', sha];
+
+    return await gitRun(repository, args);
+  } else {
+    throw new Error('No commit chosen to fixup');
+  }
 }
 
 export async function runCommitLikeCommand(repository: MagitRepository, args: string[]) {
@@ -78,7 +90,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
           const stagedEditorViewColumn = MagitUtils.oppositeActiveViewColumn();
           await window.showTextDocument(editor.document, { viewColumn: stagedEditorViewColumn, preview: false });
           await commands.executeCommand('workbench.action.closeActiveEditor');
-          return commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === ViewColumn.One ? 'Right' : 'Left'}`);
+          commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === ViewColumn.One ? 'Right' : 'Left'}`);
         }
       }
     }

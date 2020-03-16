@@ -114,7 +114,7 @@ export async function showStashDetail(repository: MagitRepository, stash: Stash)
 
 async function showCommit({ repository }: MenuState) {
 
-  const ref = await MagitUtils.chooseRef(repository, 'Show commit');
+  const ref = await MagitUtils.chooseRef(repository, 'Show commit', true, true);
 
   if (ref) {
     return visitCommit(repository, ref);

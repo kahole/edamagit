@@ -47,7 +47,7 @@ async function merge({ repository }: MenuState, noCommit = false, squashMerge = 
 // }
 
 async function absorb({ repository }: MenuState) {
-  const ref = await MagitUtils.chooseRef(repository, 'Merge');
+  const ref = await MagitUtils.chooseRef(repository, 'Absorb');
 
   if (ref) {
     await _merge(repository, ref);

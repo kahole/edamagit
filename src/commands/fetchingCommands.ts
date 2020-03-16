@@ -4,6 +4,7 @@ import { MagitRepository } from '../models/magitRepository';
 import { MenuUtil, MenuState, Switch } from '../menu/menu';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
+import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
 
 export async function fetching(repository: MagitRepository): Promise<any> {
 
@@ -49,7 +50,10 @@ async function fetchFromUpstream({ repository, switches }: MenuState) {
 
 async function fetchFromElsewhere({ repository, switches }: MenuState) {
 
-  const chosenRemote = await MagitUtils.chooseRef(repository, 'Fetch from');
+  const remotes: QuickItem<string>[] = repository.state.remotes
+    .map(r => ({ label: r.name, description: r.pushUrl, meta: r.name }));
+
+  const chosenRemote = await QuickMenuUtil.showMenu(remotes);
 
   if (chosenRemote) {
     const args = ['fetch', ...MenuUtil.switchesToArgs(switches), chosenRemote];

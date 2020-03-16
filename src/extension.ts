@@ -89,6 +89,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('magit.diffing', Command.primeRepo(diffing)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.tagging', Command.primeRepo(tagging)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.worktree', Command.primeRepo(worktree)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.process-log', Command.primeRepo(processView, false)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('magit.visit-at-point', Command.primeRepoAndView(magitVisitAtPoint, false)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.apply-at-point', Command.primeRepoAndView(magitApplyEntityAtPoint)));
@@ -99,8 +100,6 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('magit.unstage-all', Command.primeRepoAndView(magitUnstageAll)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('magit.file-popup', Command.primeFileCommand(filePopup)));
-
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.process-log', Command.primeRepo(processView, false)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('magit.dispatch', Command.primeRepo(async (repository: MagitRepository) => {
     const uri = DispatchView.encodeLocation(repository);
@@ -117,7 +116,7 @@ export function activate(context: ExtensionContext) {
     }
   }, false)));
 
-  context.subscriptions.push(commands.registerCommand('magit.save-and-close-commit-msg', saveClose));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.save-and-close-commit-msg', saveClose));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.abort-commit-msg', clearSaveClose));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.quit', quitMagitView));
 

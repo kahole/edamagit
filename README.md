@@ -1,4 +1,4 @@
-<h2 align="center"><img src="https://github.com/kahole/vscode-magit/raw/master/images/magit_logo.png" height="128"><br>Magit for VSCode (alpha)</h2>
+<h2 align="center"><img src="https://github.com/kahole/vscode-magit/raw/master/images/magit_logo.png" height="128"><br>Magit for VSCode</h2>
 
 [![vsmarketbadge](https://vsmarketplacebadge.apphb.com/version-short/kahole.magit.svg)](https://marketplace.visualstudio.com/items?itemName=kahole.magit)
 
@@ -7,6 +7,15 @@
 ### **Alpha**: use at own your own risk!
 
 ![Usage](https://github.com/kahole/vscode-magit/raw/c13e273164deac7fbfc7e19970a58f90f98bff67/magit_lowdef.gif)
+
+### Table of Contents
+
+- [Usage](#usage)
+- [Features](#features)
+- [Troubleshooting](#troubleshooting)
+  * [I can't commit](#i-cant-commit)
+  * [Vim support (VSCodeVim)](#vim-support-vscodevim)
+- [Roadmap](#roadmap)
 
 ## Usage
 
@@ -70,6 +79,48 @@ Essential commands
 (Doesn't apply to OS X)  
 [Adding VSCode to path](https://code.visualstudio.com/docs/editor/versioncontrol#_vs-code-as-git-editor)
 
+### Vim support (VSCodeVim)
+
+Add these to your `keybindings.json` config file
+
+```json
+  {
+    "key": "tab",
+    "command": "extension.vim_tab",
+    "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert' && !editorLangId == 'magit'"
+  },
+  {
+    "key": "tab",
+    "command": "-extension.vim_tab",
+    "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert'"
+  },
+  {
+    "key": "o",
+    "command": "magit.discard-at-point",
+    "when": "editorTextFocus && editorLangId == 'magit'"
+  },
+  {
+    "key": "k",
+    "command": "-magit.discard-at-point",
+    "when": "editorTextFocus && editorLangId == 'magit'"
+  }
+```
+and if you have Vim ctrl keys enabled `"vim.useCtrlKeys"`, you **might** need to add these to your `keybindings.json` to overpower Vim
+
+```json
+  {
+    "command": "magit.status",
+    "key": "ctrl+x g"
+  },
+  {
+    "command": "magit.dispatch",
+    "key": "ctrl+x alt+g"
+  },
+  {
+    "command": "magit.file-popup",
+    "key": "ctrl-x ctrl+g"
+  }
+```
 
 ## Roadmap
 
