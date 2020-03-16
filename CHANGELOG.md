@@ -1,5 +1,8 @@
 # Change Log
 
+### 0.1.0
+- Git ignoring
+
 ### 0.0.12
 - Fixup commits (@zachdaniel Zach Daniel)
 - Allow freeform input in more menus
