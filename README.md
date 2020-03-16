@@ -8,6 +8,15 @@
 
 ![Usage](https://github.com/kahole/vscode-magit/raw/c13e273164deac7fbfc7e19970a58f90f98bff67/magit_lowdef.gif)
 
+### Table of Contents
+
+- [Usage](#usage)
+- [Features](#features)
+- [Troubleshooting](#troubleshooting)
+  * [I can't commit](#i-can-t-commit)
+  * [Vim support (VSCodeVim)](#vim-support--vscodevim-)
+- [Roadmap](#roadmap)
+
 ## Usage
 
 | VSCode Commands      | Default shortcut |
@@ -70,6 +79,48 @@ Essential commands
 (Doesn't apply to OS X)  
 [Adding VSCode to path](https://code.visualstudio.com/docs/editor/versioncontrol#_vs-code-as-git-editor)
 
+### Vim support (VSCodeVim)
+
+Add these to your `keybindings.json` config file
+
+```json
+  {
+    "key": "tab",
+    "command": "extension.vim_tab",
+    "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert' && !editorLangId == 'magit'"
+  },
+  {
+    "key": "tab",
+    "command": "-extension.vim_tab",
+    "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert'"
+  },
+  {
+    "key": "o",
+    "command": "magit.discard-at-point",
+    "when": "editorTextFocus && editorLangId == 'magit'"
+  },
+  {
+    "key": "k",
+    "command": "-magit.discard-at-point",
+    "when": "editorTextFocus && editorLangId == 'magit'"
+  }
+```
+and if you have Vim ctrl keys enabled `"vim.useCtrlKeys"`, you **might** need to add these to your `keybindings.json` to overpower Vim
+
+```json
+  {
+    "command": "magit.status",
+    "key": "ctrl+x g"
+  },
+  {
+    "command": "magit.dispatch",
+    "key": "ctrl+x alt+g"
+  },
+  {
+    "command": "magit.file-popup",
+    "key": "ctrl-x ctrl+g"
+  }
+```
 
 ## Roadmap
 
