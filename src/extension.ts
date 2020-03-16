@@ -33,6 +33,7 @@ import { tagging } from './commands/taggingCommands';
 import { worktree } from './commands/worktreeCommands';
 import { diffing } from './commands/diffingCommands';
 import { ignoring } from './commands/ignoringCommands';
+import { running } from './commands/runningCommands';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
@@ -92,6 +93,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('magit.diffing', Command.primeRepo(diffing)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.tagging', Command.primeRepo(tagging)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.ignoring', Command.primeRepo(ignoring)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.running', Command.primeRepo(running)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.worktree', Command.primeRepo(worktree)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.process-log', Command.primeRepo(processView, false)));
 

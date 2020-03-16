@@ -7,7 +7,13 @@ import { MagitRepository } from '../models/magitRepository';
 export async function processView(repository: MagitRepository) {
   const uri = ProcessView.encodeLocation(repository);
 
-  views.set(uri.toString(), new ProcessView(uri));
+  const existingView = views.get(uri.toString());
 
-  workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preview: false }));
+  if (existingView) {
+    existingView.update(repository.magitState!);
+  } else {
+    views.set(uri.toString(), new ProcessView(uri));
+  }
+
+  return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preview: false }));
 }

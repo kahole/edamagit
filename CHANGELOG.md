@@ -1,7 +1,9 @@
 # Change Log
 
-### 0.1.0
+### next version
+- Git command running (raw commands)
 - Git ignoring
+- Bug fixes
 
 ### 0.0.12
 - Fixup commits (@zachdaniel Zach Daniel)

@@ -123,6 +123,10 @@
         "title": "Magit Ignore"
       },
       {
+        "command": "magit.running",
+        "title": "Magit Running"
+      },
+      {
         "command": "magit.worktree",
         "title": "Magit Worktree"
       },
@@ -203,6 +207,10 @@
         },
         {
           "command": "magit.ignoring",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.running",
           "when": "editorLangId == magit"
         },
         {
@@ -399,6 +407,11 @@
       {
         "command": "magit.ignoring",
         "key": "shift+i",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "magit.running",
+        "key": "shift+1",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {

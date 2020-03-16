@@ -2,20 +2,37 @@ import { MagitRepository } from '../models/magitRepository';
 import { SpawnOptions } from '../common/gitApiExtensions';
 import MagitLogger from './logger';
 
-export async function gitRun(repository: MagitRepository, args: string[], spawnOptions?: SpawnOptions) {
+export enum LogLevel {
+  None,
+  Error,
+  Detailed
+}
 
-  const logEntry = MagitLogger.logGitCommand(args);
+export async function gitRun(repository: MagitRepository, args: string[], spawnOptions?: SpawnOptions, logLevel = LogLevel.Error) {
+
+  let logEntry;
+  if (logLevel > LogLevel.None) {
+    logEntry = MagitLogger.logGitCommand(args);
+  }
 
   try {
-
+    let result;
     // Protects against projected change in internal api in vscode git extension
     if (repository._repository.repository.run) {
-      return await repository._repository.repository.run(args, spawnOptions);
+      result = await repository._repository.repository.run(args, spawnOptions);
     } else {
-      return await repository._repository.repository.exec!(args, spawnOptions);
+      result = await repository._repository.repository.exec!(args, spawnOptions);
     }
+
+    if (logLevel === LogLevel.Detailed && logEntry) {
+      MagitLogger.logGitResult(result, logEntry);
+    }
+
+    return result;
   } catch (error) {
-    MagitLogger.logGitError(error, logEntry);
+    if (logLevel > LogLevel.None && logEntry) {
+      MagitLogger.logGitError(error, logEntry);
+    }
     throw error;
   }
 }

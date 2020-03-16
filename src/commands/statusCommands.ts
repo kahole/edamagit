@@ -9,7 +9,7 @@ import MagitStatusView from '../views/magitStatusView';
 import { Status, Commit, RefType } from '../typings/git';
 import { MagitBranch } from '../models/magitBranch';
 import { Section } from '../views/general/sectionHeader';
-import { gitRun } from '../utils/gitRawRunner';
+import { gitRun, LogLevel } from '../utils/gitRawRunner';
 import * as Constants from '../common/constants';
 import { getCommit } from '../utils/commitCache';
 import { MagitRemote } from '../models/magitRemote';
@@ -59,7 +59,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
   if (repository.state.HEAD?.ahead || repository.state.HEAD?.behind) {
     const ref = repository.state.HEAD.name;
     const args = ['rev-list', '--left-right', `${ref}...${ref}@{u}`];
-    const res = (await gitRun(repository, args)).stdout;
+    const res = (await gitRun(repository, args, {}, LogLevel.None)).stdout;
     [commitsAhead, commitsBehind] = GitTextUtils.parseRevListLeftRight(res);
     interestingCommits.push(...[...commitsAhead, ...commitsBehind]);
   }
