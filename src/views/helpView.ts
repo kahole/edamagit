@@ -37,6 +37,7 @@ export class HelpView extends DocumentView {
   m Merging           M Remoting         t Tagging
   P Pushing           r Rebasing         X Resetting
   y Show Refs         z Stashing         % Worktree
+  i Ignoring
  
 Applying changes
   a Apply          s Stage          u Unstage

@@ -18,7 +18,8 @@ export class DispatchView extends DocumentView {
     f Fetching          F Pulling          l Logging 
     m Merging           M Remoting         t Tagging
     P Pushing           r Rebasing         X Resetting
-    y Show Refs         z Stashing         % Worktree`));
+    y Show Refs         z Stashing         % Worktree
+    i Ignoring`));
   }
 
   public update(state: MagitState): void { }

@@ -34,6 +34,7 @@ Popup commands
   m Merging           M Remoting         t Tagging
   P Pushing           r Rebasing         X Resetting
   y Show Refs         z Stashing         % Worktree
+  i Ignoring
  
 Applying changes
   a Apply          s Stage          u Unstage
@@ -46,29 +47,6 @@ Essential commands
   RET   visit thing at point
   $     show git process view
 ```
-
-## Features
-
-| Magit commands (**C-x g**)   | File popup commands (**C-x C-g**) |
-|------------------------------|-----------------------------------|
-| Status |Staging |
-| Committing |Committing |
-| Fetching | Diffing |
-| Remoting | Blaming |
-| Logging |
-| Diffing |
-| Merging |
-| Rebasing |
-| Tagging |
-| Pushing |
-| Stashing |
-| Resetting | 
-| Applying |
-| Discarding |
-| Show refs  |
-| Worktee    |
-| Visit-at-point |
-| Git Process view |
 
 ## Troubleshooting
 ### I can't commit
