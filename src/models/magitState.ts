@@ -5,6 +5,8 @@ import { MagitBranch } from './magitBranch';
 import { MagitMergingState } from './magitMergingState';
 import { MagitRebasingState } from './magitRebasingState';
 import { MagitRemote } from './magitRemote';
+import { MagitCherryPickingState } from './magitCherryPickingState';
+import { MagitRevertingState } from './magitRevertingState';
 
 export interface MagitState {
   readonly HEAD?: MagitBranch;
@@ -16,6 +18,8 @@ export interface MagitState {
   readonly log: Commit[];
   readonly rebasingState?: MagitRebasingState;
   readonly mergingState?: MagitMergingState;
+  readonly cherryPickingState?: MagitCherryPickingState;
+  readonly revertingState?: MagitRevertingState;
   readonly branches: Ref[];
   readonly remotes: MagitRemote[];
   readonly tags: Ref[];

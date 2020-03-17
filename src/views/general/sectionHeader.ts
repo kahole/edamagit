@@ -9,6 +9,8 @@ export enum Section {
   UnmergedInto = 'Unmerged into',
   UnpulledFrom = 'Unpulled from',
   Merging = 'Merging',
+  CherryPicking = 'Cherry Picking',
+  Reverting = 'Reverting',
   HEAD = 'HEAD',
   Branches = 'Branches',
   Remote = 'Remote',

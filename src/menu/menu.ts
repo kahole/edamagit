@@ -30,8 +30,12 @@ export class MenuUtil {
       const quickItems: MenuItem[] = [...menu.commands];
 
       if (menuState.switches) {
+
+        const activeSwitches = menuState.switches.filter(s => s.activated).reduce((pres, sw) => pres + ' ' + sw.longName, '');
+        const activeSwitchesPresentation = `[ ${activeSwitches} ]`;
+
         quickItems.push({
-          label: '-', description: 'Switches', action: async (menuState: MenuState) => {
+          label: '-', description: `Switches ${activeSwitches.length > 0 ? activeSwitchesPresentation : ''}`, action: async (menuState: MenuState) => {
 
             const updatedSwitches = await MenuUtil.showSwitchesMenu(menuState);
 

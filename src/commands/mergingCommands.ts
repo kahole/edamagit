@@ -75,17 +75,9 @@ async function _merge(repository: MagitRepository, ref: string, noCommit = false
   }
 
   if (editMessage) {
-    // Should really be "merge --edit" like this, but then there's no chance to update the "staged" view
-    // args.push(...['--edit', '--no-ff']);
-    // return CommitCommands.runCommitLikeCommand(repository, args);
 
-    args.push(...['--no-commit', '--no-ff']);
-    await gitRun(repository, args);
-
-    MagitUtils.magitStatusAndUpdate(repository);
-
-    return CommitCommands.runCommitLikeCommand(repository, ['commit']);
-
+    args.push(...['--edit', '--no-ff']);
+    return CommitCommands.runCommitLikeCommand(repository, args, true);
   } else {
     args.push('--no-edit');
   }

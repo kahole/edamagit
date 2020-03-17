@@ -13,6 +13,8 @@ import { MergingSectionView } from './merging/mergingSectionView';
 import { UnsourcedCommitSectionView } from './commits/unsourcedCommitsSectionView';
 import { MagitRepository } from '../models/magitRepository';
 import { RebasingSectionView } from './rebasing/rebasingSectionView';
+import { CherryPickingSectionView } from './cherryPicking/cherryPickingSectionView';
+import { RevertingSectionView } from './reverting/revertingSectionView';
 
 export default class MagitStatusView extends DocumentView {
 
@@ -28,7 +30,7 @@ export default class MagitStatusView extends DocumentView {
     this.subViews = [];
 
     if (magitState.latestGitError) {
-      this.addSubview(new TextView(`GitError! ${magitState.latestGitError} [ $ for detailed log ]\n`));
+      this.addSubview(new TextView(`GitError! ${magitState.latestGitError.split(Constants.LineSplitterRegex)[0]} [ $ for detailed log ]`));
       magitState.latestGitError = undefined;
     }
 
@@ -42,6 +44,14 @@ export default class MagitStatusView extends DocumentView {
 
     if (magitState.rebasingState) {
       this.addSubview(new RebasingSectionView(magitState.rebasingState));
+    }
+
+    if (magitState.cherryPickingState) {
+      this.addSubview(new CherryPickingSectionView(magitState.cherryPickingState, magitState.log));
+    }
+
+    if (magitState.revertingState) {
+      this.addSubview(new RevertingSectionView(magitState.revertingState, magitState.log));
     }
 
     if (magitState.untrackedFiles.length) {

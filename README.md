@@ -1,4 +1,4 @@
-<h2 align="center"><img src="https://github.com/kahole/vscode-magit/raw/master/images/magit_logo.png" height="128"><br>Magit for VSCode</h2>
+<h2 align="center"><img src="https://github.com/kahole/vscode-magit/raw/master/images/magit_logo.png" height="100"><br>Magit for VSCode</h2>
 
 [![vsmarketbadge](https://vsmarketplacebadge.apphb.com/version-short/kahole.magit.svg)](https://marketplace.visualstudio.com/items?itemName=kahole.magit)
 
@@ -111,14 +111,10 @@ _Feature requests as well as issues are welcome_
      (https://github.com/microsoft/vscode/wiki/Semantic-Highlighting-Overview)
 
 ### Implement missing Git/Magit features
-  - Cherry picking
-  - Reverting
   - Reversing
   - Bisecting
   - Submodules
   - Patches
 
-### Long term goals
-- Have 100% own model and parser (not relying on git extension API)
-  - More efficient, flexible, and stable
+### Long term
 - Stable v1.0
