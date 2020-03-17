@@ -4,6 +4,7 @@ import { QuickMenuUtil, QuickItem } from '../menu/quickMenu';
 import FilePathUtils from '../utils/filePathUtils';
 import * as fs from 'fs';
 import { window } from 'vscode';
+import { EOL } from 'os';
 
 const ignoringMenu = {
   title: 'Ignoring',
@@ -46,7 +47,7 @@ async function ignore(repository: MagitRepository, globally = false) {
     }
 
     return new Promise((resolve, reject) => {
-      fs.appendFile(gitIgnoreFilePath, ignorePattern, (err) => {
+      fs.appendFile(gitIgnoreFilePath, EOL + ignorePattern, (err) => {
         if (err) {
           reject(err);
           return;
