@@ -15,20 +15,41 @@
           "include": "#sectionHeader"
         },
         {
-          "include": "#modified"
+          "include": "#highlight"
         },
         {
-          "include": "#highlights"
+          "include": "#highlight2"
+        },
+        {
+          "include": "#highlight3"
+        },
+        {
+          "include": "#entity"
+        },
+        {
+          "include": "#modified"
         }
       ]
     },
     "sectionHeader": {
-      "match": "Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits|Unmerged into|Unpulled from|HEAD|Branches|Remote|Tags|GitError!|(Merging .*(?= \\())|(Rebasing .* onto .*$)|Stash@{\\d+}|(Commits in .*$)",
-      "name": "strong keyword.section.header.magit"
+      "match": "Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits|Unmerged into|Unpulled from|HEAD|Branches|Remote|Tags|GitError!|(Merging .*(?= \\())|(Rebasing .* onto .*$)|Cherry Picking|Stash@{\\d+}|(Commits in .*$)",
+      "name": "strong keyword.operator.new.section.header.magit"
     },
-    "highlights": {
-      "match": "^(join)",
+    "highlight": {
+      "match": "^(join|pick)",
       "name": "string.highlight"
+    },
+    "highlight2": {
+      "match": "^(done)",
+      "name": "support.type.property-name.json"
+    },
+    "highlight3": {
+      "match": "^(onto)",
+      "name": "string.quoted.double.json"
+    },
+    "entity": {
+      "match": "(^stash@{\\d+}|((^| )(?=.*[0-9])(?=.*[a-z])([a-z0-9]{7}) ))",
+      "name": "variable.object.property"
     },
     "modified": {
       "match": "^(modified|new file|deleted|renamed|copied|unmerged)   .*$",
