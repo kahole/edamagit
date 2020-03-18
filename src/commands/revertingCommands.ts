@@ -69,11 +69,11 @@ export async function revert(repository: MagitRepository, target: string, { noCo
     args.push('--edit');
     args.push(target);
     return runCommitLikeCommand(repository, args, true);
-  } else {
-    args.push('--no-edit');
-    args.push(target);
-    return gitRun(repository, args);
   }
+
+  args.push('--no-edit');
+  args.push(target);
+  return gitRun(repository, args);
 }
 
 async function continueRevert({ repository }: MenuState) {

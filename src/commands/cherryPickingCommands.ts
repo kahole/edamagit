@@ -30,15 +30,19 @@ export async function cherryPicking(repository: MagitRepository) {
   if (repository.magitState?.cherryPickingState) {
     return MenuUtil.showMenu(whileCherryPickingMenu, { repository });
   } else {
-    return MenuUtil.showMenu(cherryPickingMenu, { repository });
+    const switches = [
+      { shortName: '-e', longName: '--edit', description: 'Edit commit messages' },
+    ];
+
+    return MenuUtil.showMenu(cherryPickingMenu, { repository, switches });
   }
 }
 
-async function pick({ repository }: MenuState) {
+async function pick({ repository, switches }: MenuState) {
   const target = await MagitUtils.chooseRef(repository, 'Cherry-pick');
 
   if (target) {
-    return cherryPick(repository, target);
+    return cherryPick(repository, target, { edit: switches?.find(s => s.shortName === '-e' && s.activated) ? true : false });
   }
 }
 
@@ -52,20 +56,24 @@ async function applySomeCommit({ repository }: MenuState) {
 
 interface CherryPickOptions {
   noCommit?: boolean;
+  edit?: boolean;
 }
 
-export async function cherryPick(repository: MagitRepository, target: string, { noCommit }: CherryPickOptions = {}) {
+export async function cherryPick(repository: MagitRepository, target: string, { noCommit, edit }: CherryPickOptions = {}) {
 
   const args = ['cherry-pick'];
 
   if (noCommit) {
     args.push('--no-commit');
+  } else if (edit) {
+    args.push('--edit');
+    args.push(target);
+    return runCommitLikeCommand(repository, args, true);
   } else {
     args.push('--ff');
   }
 
   args.push(target);
-
   return gitRun(repository, args);
 }
 
