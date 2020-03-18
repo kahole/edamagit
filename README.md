@@ -29,12 +29,12 @@
 From status view
 ```
 Popup commands
-  d Diffing           b Branching        c Committing
-  f Fetching          F Pulling          l Logging 
-  m Merging           M Remoting         t Tagging
-  P Pushing           r Rebasing         X Resetting
-  y Show Refs         z Stashing         % Worktree
-  i Ignoring                             ! Running
+  A Cherry-picking    b Branching         c Committing
+  d Diffing           f Fetching          F Pulling
+  i Ignoring          l Logging           m Merging
+  M Remoting          P Pushing           r Rebasing
+  t Tagging           V Reverting         X Resetting
+  y Show Refs         z Stashing          ! Running           % Worktree
  
 Applying changes
   a Apply          s Stage          u Unstage

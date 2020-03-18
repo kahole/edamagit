@@ -1,8 +1,11 @@
 # Change Log
 
 ### next version
+- Cherry picking
+- Reverting
 - Git command running (raw commands)
 - Git ignoring
+- More colors
 - Bug fixes
 
 ### 0.0.12
