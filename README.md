@@ -1,4 +1,4 @@
-<h2 align="center"><img src="https://github.com/kahole/vscode-magit/raw/master/images/magit_logo.png" height="128"><br>Magit for VSCode</h2>
+<h2 align="center"><img src="https://github.com/kahole/vscode-magit/raw/master/images/magit_logo.png" height="100"><br>Magit for VSCode</h2>
 
 [![vsmarketbadge](https://vsmarketplacebadge.apphb.com/version-short/kahole.magit.svg)](https://marketplace.visualstudio.com/items?itemName=kahole.magit)
 
@@ -29,46 +29,23 @@
 From status view
 ```
 Popup commands
-  d Diffing           b Branching        c Committing
-  f Fetching          F Pulling          l Logging 
-  m Merging           M Remoting         t Tagging
-  P Pushing           r Rebasing         X Resetting
-  y Show Refs         z Stashing         % Worktree
+  A Cherry-picking    b Branching         c Committing
+  d Diffing           f Fetching          F Pulling
+  i Ignoring          l Logging           m Merging
+  M Remoting          P Pushing           r Rebasing
+  t Tagging           V Reverting         X Resetting
+  y Show Refs         z Stashing          ! Running           % Worktree
  
 Applying changes
   a Apply          s Stage          u Unstage
   k Discard        S Stage all      U Unstage all
   
- 
 Essential commands
   g     refresh current buffer
   TAB   toggle section at point
   RET   visit thing at point
   $     show git process view
 ```
-
-## Features
-
-| Magit commands (**C-x g**)   | File popup commands (**C-x C-g**) |
-|------------------------------|-----------------------------------|
-| Status |Staging |
-| Committing |Committing |
-| Fetching | Diffing |
-| Remoting | Blaming |
-| Logging |
-| Diffing |
-| Merging |
-| Rebasing |
-| Tagging |
-| Pushing |
-| Stashing |
-| Resetting | 
-| Applying |
-| Discarding |
-| Show refs  |
-| Worktee    |
-| Visit-at-point |
-| Git Process view |
 
 ## Troubleshooting
 ### I can't commit
@@ -133,14 +110,10 @@ _Feature requests as well as issues are welcome_
      (https://github.com/microsoft/vscode/wiki/Semantic-Highlighting-Overview)
 
 ### Implement missing Git/Magit features
-  - Cherry picking
-  - Reverting
   - Reversing
   - Bisecting
   - Submodules
   - Patches
 
-### Long term goals
-- Have 100% own model and parser (not relying on git extension API)
-  - More efficient, flexible, and stable
+### Long term
 - Stable v1.0

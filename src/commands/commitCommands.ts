@@ -50,7 +50,7 @@ export async function fixup({ repository, switches }: MenuState) {
   }
 }
 
-export async function runCommitLikeCommand(repository: MagitRepository, args: string[]) {
+export async function runCommitLikeCommand(repository: MagitRepository, args: string[], updatePostCommitTask = false) {
 
   let stagedEditor: Thenable<TextEditor> | undefined;
   let instructionStatus;
@@ -70,7 +70,14 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 
     const env = { 'GIT_EDITOR': `"${codePath}" --wait` };
 
-    const commitSuccessMessage = await gitRun(repository, args, { env });
+    const commitSuccessMessageTask = gitRun(repository, args, { env });
+
+    if (updatePostCommitTask) {
+      await new Promise(r => setTimeout(r, 100));
+      MagitUtils.magitStatusAndUpdate(repository);
+    }
+
+    const commitSuccessMessage = await commitSuccessMessageTask;
 
     instructionStatus.dispose();
     window.setStatusBarMessage(`Git finished: ${commitSuccessMessage.stdout.replace(Constants.LineSplitterRegex, ' ')}`, Constants.StatusMessageDisplayTimeout);

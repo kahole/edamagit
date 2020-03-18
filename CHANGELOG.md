@@ -1,5 +1,13 @@
 # Change Log
 
+### 0.1.0
+- Cherry picking
+- Reverting
+- Git command running (raw commands)
+- Git ignoring
+- More colors
+- Bug fixes
+
 ### 0.0.12
 - Fixup commits (@zachdaniel Zach Daniel)
 - Allow freeform input in more menus

@@ -3,6 +3,7 @@ import { TextView } from '../general/textView';
 import { LineBreakView } from '../general/lineBreakView';
 import { MagitMergingState } from '../../models/magitMergingState';
 import { CommitItemView } from '../commits/commitSectionView';
+import { SectionHeaderView, Section } from '../general/sectionHeader';
 
 export class MergingSectionView extends View {
   isFoldable = true;
@@ -12,7 +13,7 @@ export class MergingSectionView extends View {
   constructor(mergingState: MagitMergingState) {
     super();
     this.subViews = [
-      new TextView(`Merging ${mergingState.mergingBranches[0]} (${mergingState.commits.length})`),
+      new SectionHeaderView(Section.Merging, mergingState.commits.length, `${mergingState.mergingBranches[0]}`),
       ...mergingState.commits.map(commit => new CommitItemView(commit)),
       new LineBreakView()
     ];

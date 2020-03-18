@@ -7,7 +7,7 @@
   "author": {
     "name": "Kristian Andersen Hole"
   },
-  "version": "0.0.12",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.42.1"
   },
@@ -119,6 +119,22 @@
         "title": "Magit Tagging"
       },
       {
+        "command": "magit.cherry-picking",
+        "title": "Magit Cherry Picking"
+      },
+      {
+        "command": "magit.reverting",
+        "title": "Magit Reverting"
+      },
+      {
+        "command": "magit.ignoring",
+        "title": "Magit Ignore"
+      },
+      {
+        "command": "magit.running",
+        "title": "Magit Running"
+      },
+      {
         "command": "magit.worktree",
         "title": "Magit Worktree"
       },
@@ -195,6 +211,22 @@
         },
         {
           "command": "magit.tagging",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.cherry-picking",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.reverting",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.ignoring",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.running",
           "when": "editorLangId == magit"
         },
         {
@@ -349,6 +381,16 @@
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
+        "command": "magit.reset-mixed",
+        "key": "x",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "magit.reset-hard",
+        "key": "ctrl+u x",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
         "command": "magit.remoting",
         "key": "shift+m",
         "when": "editorTextFocus && editorLangId == magit"
@@ -371,6 +413,31 @@
       {
         "command": "magit.tagging",
         "key": "t",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "magit.cherry-picking",
+        "key": "shift+a",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "magit.reverting",
+        "key": "shift+v",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "magit.ignoring",
+        "key": "i",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "magit.ignoring",
+        "key": "shift+i",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "magit.running",
+        "key": "shift+1",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {

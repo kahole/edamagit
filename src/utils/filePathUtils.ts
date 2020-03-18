@@ -37,4 +37,12 @@ export default class FilePathUtils {
     }
     return '';
   }
+
+  public static fileExtension(fileName: string) {
+    const pieces = fileName.split('.');
+    if (pieces.length > 0) {
+      return pieces[pieces.length - 1];
+    }
+    return '';
+  }
 }

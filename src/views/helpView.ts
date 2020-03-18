@@ -32,17 +32,17 @@ export class HelpView extends DocumentView {
   //   C-h m show all key bindings`;
 
   static HelpText: string = `Popup and dwim commands
-  d Diffing           b Branching        c Committing
-  f Fetching          F Pulling          l Logging 
-  m Merging           M Remoting         t Tagging
-  P Pushing           r Rebasing         X Resetting
-  y Show Refs         z Stashing         % Worktree
+  A Cherry-picking    b Branching         c Committing
+  d Diffing           f Fetching          F Pulling
+  i Ignoring          l Logging           m Merging
+  M Remoting          P Pushing           r Rebasing
+  t Tagging           V Reverting         X Resetting
+  y Show Refs         z Stashing          ! Running           % Worktree
  
 Applying changes
   a Apply          s Stage          u Unstage
   k Discard        S Stage all      U Unstage all
   
- 
 Essential commands
   g     refresh current buffer
   TAB   toggle section at point

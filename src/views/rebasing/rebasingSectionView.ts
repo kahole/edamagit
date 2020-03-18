@@ -12,7 +12,7 @@ export class RebasingSectionView extends View {
   constructor(rebasingState: MagitRebasingState) {
     super();
     this.subViews = [
-      new TextView(`Rebasing ${rebasingState.origBranchName} onto ${rebasingState.ontoBranch.name}`),
+      new RebaseSectionHeaderView(`Rebasing ${rebasingState.origBranchName} onto ${rebasingState.ontoBranch.name}`),
       ...rebasingState.upcomingCommits.map(c => new CommitItemView(c, 'pick')),
       new CommitItemView(rebasingState.currentCommit, 'join'),
       ...rebasingState.doneCommits.map(c => new CommitItemView(c, 'done')),
@@ -20,4 +20,13 @@ export class RebasingSectionView extends View {
       new LineBreakView()
     ];
   }
+}
+
+class RebaseSectionHeaderView extends TextView {
+
+  constructor(text: string) {
+    super(text);
+  }
+
+  onClicked() { return undefined; }
 }
