@@ -1,6 +1,6 @@
 # Change Log
 
-### next version
+### 0.1.0
 - Cherry picking
 - Reverting
 - Git command running (raw commands)
