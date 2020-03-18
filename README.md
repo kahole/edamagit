@@ -40,7 +40,6 @@ Applying changes
   a Apply          s Stage          u Unstage
   k Discard        S Stage all      U Unstage all
   
- 
 Essential commands
   g     refresh current buffer
   TAB   toggle section at point
