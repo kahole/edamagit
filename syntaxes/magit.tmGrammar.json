@@ -32,7 +32,7 @@
       ]
     },
     "sectionHeader": {
-      "match": "Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits|Unmerged into|Unpulled from|HEAD|Branches|Remote|Tags|GitError!|(Merging .*(?= \\())|(Rebasing .* onto .*$)|Cherry Picking|Stash@{\\d+}|(Commits in .*$)",
+      "match": "Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits|Unmerged into|Unpulled from|HEAD|Branches|Remote|Tags|GitError!|(Merging .*(?= \\())|(Rebasing .* onto .*$)|Cherry Picking|Reverting|Stash@{\\d+}|(Commits in .*$)",
       "name": "strong keyword.operator.new.section.header.magit"
     },
     "highlight": {
@@ -40,7 +40,7 @@
       "name": "string.highlight"
     },
     "highlight2": {
-      "match": "^(done)",
+      "match": "^(done|gone)",
       "name": "support.type.property-name.json"
     },
     "highlight3": {

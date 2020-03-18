@@ -54,6 +54,20 @@ export default class GitTextUtils {
     return [left, right];
   }
 
+  public static parseSequencerTodo(todo?: string): Commit[] {
+    if (!todo) {
+      return [];
+    }
+    return todo.split(Constants.LineSplitterRegex).map(line => {
+      const [label, hash, ...messageParts] = line.split(' ');
+      return {
+        hash,
+        message: messageParts.join(' '),
+        parents: []
+      };
+    });
+  }
+
   public static commitDetailTextToCommit(commitText: string): Commit {
 
     const hashMatch = /(?:^From )(.*?) /gm.exec(commitText);

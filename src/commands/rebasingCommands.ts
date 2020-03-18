@@ -16,31 +16,32 @@ const whileRebasingMenu = {
 
 export async function rebasing(repository: MagitRepository) {
 
-  const HEAD = repository.magitState?.HEAD;
-
-  const commands = [];
-
-  if (HEAD?.pushRemote) {
-    commands.push({ label: 'p', description: `onto ${HEAD.pushRemote.remote}/${HEAD.pushRemote.name}`, action: rebase });
-  }
-
-  if (HEAD?.upstreamRemote) {
-    commands.push({ label: 'u', description: `onto ${HEAD.upstreamRemote.remote}/${HEAD.upstreamRemote.name}`, action: rebase });
-  }
-
-  commands.push(...[
-    { label: 'e', description: `onto elsewhere`, action: rebase },
-    // { label: 'i', description: `interactively`, action: rebase },
-  ]);
-
-  const rebasingMenu = {
-    title: `Rebasing ${HEAD?.name}`,
-    commands
-  };
-
   if (repository.magitState?.rebasingState) {
     return MenuUtil.showMenu(whileRebasingMenu, { repository });
   } else {
+
+    const HEAD = repository.magitState?.HEAD;
+
+    const commands = [];
+
+    if (HEAD?.pushRemote) {
+      commands.push({ label: 'p', description: `onto ${HEAD.pushRemote.remote}/${HEAD.pushRemote.name}`, action: rebase });
+    }
+
+    if (HEAD?.upstreamRemote) {
+      commands.push({ label: 'u', description: `onto ${HEAD.upstreamRemote.remote}/${HEAD.upstreamRemote.name}`, action: rebase });
+    }
+
+    commands.push(...[
+      { label: 'e', description: `onto elsewhere`, action: rebase },
+      // { label: 'i', description: `interactively`, action: rebase },
+    ]);
+
+    const rebasingMenu = {
+      title: `Rebasing ${HEAD?.name}`,
+      commands
+    };
+
     return MenuUtil.showMenu(rebasingMenu, { repository });
   }
 }

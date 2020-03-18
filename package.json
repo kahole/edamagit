@@ -119,6 +119,14 @@
         "title": "Magit Tagging"
       },
       {
+        "command": "magit.cherry-picking",
+        "title": "Magit Cherry Picking"
+      },
+      {
+        "command": "magit.reverting",
+        "title": "Magit Reverting"
+      },
+      {
         "command": "magit.ignoring",
         "title": "Magit Ignore"
       },
@@ -203,6 +211,14 @@
         },
         {
           "command": "magit.tagging",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.cherry-picking",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.reverting",
           "when": "editorLangId == magit"
         },
         {
@@ -397,6 +413,16 @@
       {
         "command": "magit.tagging",
         "key": "t",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "magit.cherry-picking",
+        "key": "shift+a",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "magit.reverting",
+        "key": "shift+v",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {

@@ -8,7 +8,7 @@ export enum LogLevel {
   Detailed
 }
 
-export async function gitRun(repository: MagitRepository, args: string[], spawnOptions?: SpawnOptions, logLevel = LogLevel.Error) {
+export async function gitRun(repository: MagitRepository, args: string[], spawnOptions?: SpawnOptions, logLevel = LogLevel.Detailed) {
 
   let logEntry;
   if (logLevel > LogLevel.None) {
