@@ -323,7 +323,7 @@
       },
       {
         "command": "magit.file-popup",
-        "key": "ctrl-x ctrl+g"
+        "key": "ctrl+x ctrl+g"
       },
       {
         "command": "magit.toggle-fold",

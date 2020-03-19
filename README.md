@@ -2,7 +2,7 @@
 
 [![vsmarketbadge](https://vsmarketplacebadge.apphb.com/version-short/kahole.magit.svg)](https://marketplace.visualstudio.com/items?itemName=kahole.magit)
 
-### Inspired by the awesome original, [Magit](https://magit.vc/) for Emacs  
+### Inspired by the awesome original, [Magit](https://magit.vc/) for Emacs
 
 ### **Alpha**: use at own your own risk!
 
@@ -24,9 +24,9 @@
 | Magit Status        |   `ctrl+x g`      |
 | Magit File Popup    |   `ctrl+x ctrl+g`    |
 | Magit Dispatch      |   `ctrl+x alt+g`    |
-| In Status: see all possible key-commands | `?` |
+| Help (when in magit)| `?` |
 
-From status view
+Keybindings
 ```
 Popup commands
   A Cherry-picking    b Branching         c Committing
