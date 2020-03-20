@@ -1,7 +1,9 @@
 # Change Log
 
-### next version
+### 0.1.1
 - Reverse-at-point
+- Cherry pick --edit
+- Bug fixes
 
 ### 0.1.0
 - Cherry picking
