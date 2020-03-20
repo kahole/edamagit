@@ -24,8 +24,9 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
   if (selectedView instanceof HunkView) {
 
     const changeHunk = (selectedView as HunkView).changeHunk;
-
-    return discardHunk(repository, changeHunk);
+    if (await MagitUtils.confirmAction('Discard hunk?')) {
+      return discardHunk(repository, changeHunk);
+    }
 
   } else if (selectedView instanceof ChangeView) {
 
@@ -136,6 +137,8 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
       const args = ['tag', '--delete', `${tag.name}`];
       return gitRun(repository, args);
     }
+  } else {
+    window.setStatusBarMessage('There is no thing at point that could be deleted', 10000);
   }
 }
 

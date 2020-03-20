@@ -7,7 +7,7 @@
   "author": {
     "name": "Kristian Andersen Hole"
   },
-  "version": "0.1.0",
+  "version": "0.1.1",
   "engines": {
     "vscode": "^1.42.1"
   },
@@ -69,6 +69,10 @@
       {
         "command": "magit.discard-at-point",
         "title": "Magit Discard-at-point"
+      },
+      {
+        "command": "magit.reverse-at-point",
+        "title": "Magit Reverse-at-point"
       },
       {
         "command": "magit.commit",
@@ -246,6 +250,10 @@
           "when": "editorLangId == magit"
         },
         {
+          "command": "magit.reverse-at-point",
+          "when": "editorLangId == magit"
+        },
+        {
           "command": "magit.stage",
           "when": "editorLangId == magit"
         },
@@ -323,7 +331,7 @@
       },
       {
         "command": "magit.file-popup",
-        "key": "ctrl-x ctrl+g"
+        "key": "ctrl+x ctrl+g"
       },
       {
         "command": "magit.toggle-fold",
@@ -353,6 +361,11 @@
       {
         "command": "magit.discard-at-point",
         "key": "k",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "magit.reverse-at-point",
+        "key": "v",
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
