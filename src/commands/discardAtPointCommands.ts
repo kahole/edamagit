@@ -24,8 +24,9 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
   if (selectedView instanceof HunkView) {
 
     const changeHunk = (selectedView as HunkView).changeHunk;
-
-    return discardHunk(repository, changeHunk);
+    if (await MagitUtils.confirmAction('Discard hunk?')) {
+      return discardHunk(repository, changeHunk);
+    }
 
   } else if (selectedView instanceof ChangeView) {
 
