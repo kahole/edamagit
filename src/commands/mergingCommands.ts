@@ -77,7 +77,7 @@ async function _merge(repository: MagitRepository, ref: string, noCommit = false
   if (editMessage) {
 
     args.push(...['--edit', '--no-ff']);
-    return CommitCommands.runCommitLikeCommand(repository, args, true);
+    return CommitCommands.runCommitLikeCommand(repository, args, { updatePostCommitTask: true });
   } else {
     args.push('--no-edit');
   }

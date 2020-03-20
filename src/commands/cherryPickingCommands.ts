@@ -2,7 +2,7 @@ import { gitRun } from '../utils/gitRawRunner';
 import { MagitRepository } from '../models/magitRepository';
 import { MenuState, MenuUtil } from '../menu/menu';
 import MagitUtils from '../utils/magitUtils';
-import { runCommitLikeCommand } from './commitCommands';
+import * as CommitCommands from '../commands/commitCommands';
 
 const whileCherryPickingMenu = {
   title: 'Cherry-picking',
@@ -68,7 +68,7 @@ export async function cherryPick(repository: MagitRepository, target: string, { 
   } else if (edit) {
     args.push('--edit');
     args.push(target);
-    return runCommitLikeCommand(repository, args, true);
+    return CommitCommands.runCommitLikeCommand(repository, args, { updatePostCommitTask: true });
   } else {
     args.push('--ff');
   }
@@ -79,7 +79,7 @@ export async function cherryPick(repository: MagitRepository, target: string, { 
 
 async function continueCherryPick({ repository }: MenuState) {
   const args = ['cherry-pick', '--continue'];
-  return runCommitLikeCommand(repository, args);
+  return CommitCommands.runCommitLikeCommand(repository, args);
 }
 
 async function cherryPickControlCommand({ repository }: MenuState, command: string) {
