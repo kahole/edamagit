@@ -38,7 +38,8 @@ Popup commands
  
 Applying changes
   a Apply          s Stage          u Unstage
-  k Discard        S Stage all      U Unstage all
+  v Reverse        S Stage all      U Unstage all
+  k Discard
   
 Essential commands
   g     refresh current buffer

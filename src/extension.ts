@@ -36,6 +36,7 @@ import { ignoring } from './commands/ignoringCommands';
 import { running } from './commands/runningCommands';
 import { cherryPicking } from './commands/cherryPickingCommands';
 import { reverting } from './commands/revertingCommands';
+import { reverseAtPoint } from './commands/reverseAtPointCommands';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
@@ -104,6 +105,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('magit.visit-at-point', Command.primeRepoAndView(magitVisitAtPoint, false)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.apply-at-point', Command.primeRepoAndView(magitApplyEntityAtPoint)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.discard-at-point', Command.primeRepoAndView(magitDiscardAtPoint)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.reverse-at-point', Command.primeRepoAndView(reverseAtPoint)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.stage', Command.primeRepoAndView(magitStage)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.stage-all', Command.primeRepoAndView(magitStageAll)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.unstage', Command.primeRepoAndView(magitUnstage)));
