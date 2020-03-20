@@ -8,6 +8,7 @@ import { cherryPick } from './cherryPickingCommands';
 import { BranchListingView } from '../views/branches/branchListingView';
 import { RemoteBranchListingView } from '../views/remotes/remoteBranchListingView';
 import { TagListingView } from '../views/tags/tagListingView';
+import MagitUtils from '../utils/magitUtils';
 
 export async function magitApplyEntityAtPoint(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
@@ -35,6 +36,12 @@ export async function magitApplyEntityAtPoint(repository: MagitRepository, curre
 
     const args = ['stash', 'apply', '--index', stash.index.toString()];
     return gitRun(repository, args);
+  } else {
+    const ref = await MagitUtils.chooseRef(repository, 'Apply changes from commit');
+
+    if (ref) {
+      return cherryPick(repository, ref, { noCommit: true });
+    }
   }
 }
 

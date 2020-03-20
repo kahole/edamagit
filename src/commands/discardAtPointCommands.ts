@@ -136,6 +136,8 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
       const args = ['tag', '--delete', `${tag.name}`];
       return gitRun(repository, args);
     }
+  } else {
+    window.setStatusBarMessage('There is no thing at point that could be deleted', 10000);
   }
 }
 

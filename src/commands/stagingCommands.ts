@@ -54,7 +54,7 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
         // ...currentRepository.magitState?.mergeChanges
       ].map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri), meta: c.uri }));
 
-      const chosenFile = await QuickMenuUtil.showMenu(files);
+      const chosenFile = await QuickMenuUtil.showMenu(files, 'Stage file');
 
       if (chosenFile) {
         return stageFile(repository, chosenFile);
@@ -102,7 +102,7 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
     const files: QuickItem<Uri>[] = repository.magitState?.indexChanges!
       .map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri), meta: c.uri }));
 
-    const chosenFile = await QuickMenuUtil.showMenu<Uri>(files);
+    const chosenFile = await QuickMenuUtil.showMenu<Uri>(files, 'Unstage file');
 
     if (chosenFile) {
       return unstageFile(repository, chosenFile);

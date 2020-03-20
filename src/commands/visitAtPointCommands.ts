@@ -45,6 +45,8 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
 
     const stash = (selectedView as StashItemView).stash;
     showStashDetail(repository, stash);
+  } else {
+    window.setStatusBarMessage('There is no thing at point that could be visited', 10000);
   }
 }
 

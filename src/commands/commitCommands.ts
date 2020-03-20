@@ -1,10 +1,8 @@
-import { window, workspace, ViewColumn, TextEditor, commands } from 'vscode';
+import { window, ViewColumn, TextEditor, commands } from 'vscode';
 import * as Constants from '../common/constants';
 import { execPath } from 'process';
 import { MagitRepository } from '../models/magitRepository';
-import SectionDiffView from '../views/sectionDiffView';
 import { gitRun } from '../utils/gitRawRunner';
-import { views } from '../extension';
 import { MenuUtil, MenuState } from '../menu/menu';
 import MagitUtils from '../utils/magitUtils';
 import { showDiffSection } from './diffingCommands';
