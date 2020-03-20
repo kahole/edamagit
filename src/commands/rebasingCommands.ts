@@ -3,6 +3,8 @@ import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 import { MagitError } from '../models/magitError';
+import * as CommitCommands from '../commands/commitCommands';
+import { commands } from 'vscode';
 
 const whileRebasingMenu = {
   title: 'Rebasing',
@@ -34,7 +36,7 @@ export async function rebasing(repository: MagitRepository) {
 
     commands.push(...[
       { label: 'e', description: `onto elsewhere`, action: rebase },
-      // { label: 'i', description: `interactively`, action: rebase },
+      { label: 'i', description: `interactively`, action: rebaseInteractively }
     ]);
 
     const rebasingMenu = {
@@ -69,4 +71,19 @@ async function _rebase(repository: MagitRepository, ref: string) {
 async function rebaseControlCommand({ repository }: MenuState, command: string) {
   const args = ['rebase', command];
   return gitRun(repository, args);
+}
+
+async function rebaseInteractively({ repository }: MenuState) {
+  const ref = await MagitUtils.chooseRef(repository, 'Rebase');
+
+  if (ref) {
+    const args = ['rebase', '--interactive', ref];
+
+    return CommitCommands.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR' });
+  }
+}
+
+export async function abortInteractiveRebase(repository: MagitRepository) {
+  await commands.executeCommand('magit.clear-and-abort-editor');
+  return rebaseControlCommand({ repository }, '--abort');
 }
