@@ -35,12 +35,13 @@ async function stash({ repository, switches }: MenuState, stashArgs: string[] = 
 
   const message = await window.showInputBox({ prompt: `Stash message: ${messageIntro}` });
 
-  if (message) {
-    args.push('--message');
-    args.push(messageIntro + message);
+  if (message !== undefined) {
+    if (message !== '') {
+      args.push('--message');
+      args.push(message);
+    }
+    return gitRun(repository, args);
   }
-
-  return gitRun(repository, args);
 }
 
 function applyStash() {
