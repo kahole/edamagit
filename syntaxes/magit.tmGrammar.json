@@ -24,6 +24,9 @@
           "include": "#highlight3"
         },
         {
+          "include": "#fixup"
+        },
+        {
           "include": "#entity"
         },
         {
@@ -46,6 +49,10 @@
     "highlight3": {
       "match": "^(onto)",
       "name": "string.quoted.double.json"
+    },
+    "fixup": {
+      "match": "fixup!",
+      "name": "invalid.deprecated"
     },
     "entity": {
       "match": "(^stash@{\\d+}|((^| )(?=.*[0-9])(?=.*[a-z])([a-z0-9]{7}) ))",
