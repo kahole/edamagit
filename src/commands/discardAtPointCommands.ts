@@ -16,6 +16,7 @@ import FilePathUtils from '../utils/filePathUtils';
 import { TagListingView } from '../views/tags/tagListingView';
 import { BranchListingView } from '../views/branches/branchListingView';
 import { RemoteBranchListingView } from '../views/remotes/remoteBranchListingView';
+import * as Constants from '../common/constants';
 
 export async function magitDiscardAtPoint(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
@@ -138,7 +139,7 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
       return gitRun(repository, args);
     }
   } else {
-    window.setStatusBarMessage('There is no thing at point that could be deleted', 10000);
+    window.setStatusBarMessage('There is no thing at point that could be deleted', Constants.StatusMessageDisplayTimeout);
   }
 }
 

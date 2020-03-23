@@ -14,6 +14,7 @@ import { BranchListingView } from '../views/branches/branchListingView';
 import { RemoteBranchListingView } from '../views/remotes/remoteBranchListingView';
 import { TagListingView } from '../views/tags/tagListingView';
 import { showStashDetail } from './diffingCommands';
+import * as Constants from '../common/constants';
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 
@@ -46,7 +47,7 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
     const stash = (selectedView as StashItemView).stash;
     showStashDetail(repository, stash);
   } else {
-    window.setStatusBarMessage('There is no thing at point that could be visited', 10000);
+    window.setStatusBarMessage('There is no thing at point that could be visited', Constants.StatusMessageDisplayTimeout);
   }
 }
 

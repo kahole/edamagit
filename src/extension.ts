@@ -20,7 +20,7 @@ import { DocumentView } from './views/general/documentView';
 import { magitApplyEntityAtPoint } from './commands/applyAtPointCommands';
 import { magitDiscardAtPoint } from './commands/discardAtPointCommands';
 import { merging } from './commands/mergingCommands';
-import { rebasing, abortInteractiveRebase } from './commands/rebasingCommands';
+import { rebasing } from './commands/rebasingCommands';
 import { filePopup } from './commands/filePopupCommands';
 import { DispatchView } from './views/dispatchView';
 import MagitUtils from './utils/magitUtils';
@@ -131,8 +131,6 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('magit.quit', quitMagitView));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.save-and-close-editor', saveClose));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.clear-and-abort-editor', clearSaveClose));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.abort-interactive-rebase', Command.primeRepo(abortInteractiveRebase)));
-
 }
 
 export function deactivate() {

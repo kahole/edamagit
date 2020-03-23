@@ -81,7 +81,7 @@ export default class MagitStatusView extends DocumentView {
       }
 
     } else if (magitState.log.length > 0) {
-      this.addSubview(new CommitSectionView(Section.RecentCommits, magitState.log));
+      this.addSubview(new CommitSectionView(Section.RecentCommits, magitState.log.slice(0, 10)));
     }
   }
 

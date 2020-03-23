@@ -511,7 +511,7 @@
       {
         "command": "magit.save-and-close-editor",
         "key": "ctrl+c ctrl+c",
-        "when": "editorTextFocus && (editorLangId == git-commit || editorLangId == git-rebase)"
+        "when": "editorTextFocus && editorLangId == git-commit"
       },
       {
         "command": "magit.clear-and-abort-editor",
@@ -519,7 +519,12 @@
         "when": "editorTextFocus && editorLangId == git-commit"
       },
       {
-        "command": "magit.abort-interactive-rebase",
+        "command": "magit.save-and-close-editor",
+        "key": "ctrl+c ctrl+c",
+        "when": "editorTextFocus && editorLangId == git-rebase"
+      },
+      {
+        "command": "magit.clear-and-abort-editor",
         "key": "ctrl+c ctrl+k",
         "when": "editorTextFocus && editorLangId == git-rebase"
       }
