@@ -323,15 +323,15 @@
     "keybindings": [
       {
         "command": "magit.status",
-        "key": "ctrl+x g"
+        "key": "alt+x g"
       },
       {
         "command": "magit.dispatch",
-        "key": "ctrl+x alt+g"
+        "key": "alt+x ctrl+g"
       },
       {
         "command": "magit.file-popup",
-        "key": "ctrl+x ctrl+g"
+        "key": "alt+x alt+g"
       },
       {
         "command": "magit.toggle-fold",
