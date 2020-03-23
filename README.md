@@ -21,9 +21,9 @@
 
 | VSCode Commands      | Default shortcut |
 |---------------------|------------------|
-| Magit Status        |   `ctrl+x g`      |
-| Magit File Popup    |   `ctrl+x ctrl+g`    |
-| Magit Dispatch      |   `ctrl+x alt+g`    |
+| Magit Status        |   `alt+x g`      |
+| Magit File Popup    |   `alt+x alt+g`    |
+| Magit Dispatch      |   `alt+x ctrl+g`    |
 | Help (when in magit)| `?` |
 
 Keybindings
@@ -81,22 +81,6 @@ Add these to your `keybindings.json` config file
     "key": "k",
     "command": "-magit.discard-at-point",
     "when": "editorTextFocus && editorLangId == 'magit'"
-  }
-```
-and if you have Vim ctrl keys enabled `"vim.useCtrlKeys"`, you **might** need to add these to your `keybindings.json` to overpower Vim
-
-```json
-  {
-    "command": "magit.status",
-    "key": "ctrl+x g"
-  },
-  {
-    "command": "magit.dispatch",
-    "key": "ctrl+x alt+g"
-  },
-  {
-    "command": "magit.file-popup",
-    "key": "ctrl-x ctrl+g"
   }
 ```
 

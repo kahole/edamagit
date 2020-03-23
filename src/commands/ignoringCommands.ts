@@ -5,6 +5,7 @@ import FilePathUtils from '../utils/filePathUtils';
 import * as fs from 'fs';
 import { window } from 'vscode';
 import { EOL } from 'os';
+import * as Constants from '../common/constants';
 
 const ignoringMenu = {
   title: 'Ignoring',
@@ -52,7 +53,7 @@ async function ignore(repository: MagitRepository, globally = false) {
           reject(err);
           return;
         }
-        window.setStatusBarMessage(`Wrote file ${gitIgnoreFilePath}`, 10000);
+        window.setStatusBarMessage(`Wrote file ${gitIgnoreFilePath}`, Constants.StatusMessageDisplayTimeout);
         resolve();
       });
     });

@@ -7,7 +7,7 @@
   "author": {
     "name": "Kristian Andersen Hole"
   },
-  "version": "0.1.1",
+  "version": "0.1.2",
   "engines": {
     "vscode": "^1.42.1"
   },
@@ -323,15 +323,15 @@
     "keybindings": [
       {
         "command": "magit.status",
-        "key": "ctrl+x g"
+        "key": "alt+x g"
       },
       {
         "command": "magit.dispatch",
-        "key": "ctrl+x alt+g"
+        "key": "alt+x ctrl+g"
       },
       {
         "command": "magit.file-popup",
-        "key": "ctrl+x ctrl+g"
+        "key": "alt+x alt+g"
       },
       {
         "command": "magit.toggle-fold",
@@ -504,19 +504,29 @@
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "magit.save-and-close-commit-msg",
+        "command": "magit.quit",
+        "key": "q",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "magit.save-and-close-editor",
         "key": "ctrl+c ctrl+c",
         "when": "editorTextFocus && editorLangId == git-commit"
       },
       {
-        "command": "magit.abort-commit-msg",
+        "command": "magit.clear-and-abort-editor",
         "key": "ctrl+c ctrl+k",
         "when": "editorTextFocus && editorLangId == git-commit"
       },
       {
-        "command": "magit.quit",
-        "key": "q",
-        "when": "editorTextFocus && editorLangId == magit"
+        "command": "magit.save-and-close-editor",
+        "key": "ctrl+c ctrl+c",
+        "when": "editorTextFocus && editorLangId == git-rebase"
+      },
+      {
+        "command": "magit.clear-and-abort-editor",
+        "key": "ctrl+c ctrl+k",
+        "when": "editorTextFocus && editorLangId == git-rebase"
       }
     ]
   },
@@ -533,11 +543,11 @@
     "@types/mocha": "^7.0.1",
     "@types/node": "^12.11.7",
     "@types/vscode": "^1.42.1",
-    "eslint": "^6.8.0",
-    "@typescript-eslint/parser": "^2.18.0",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
+    "@typescript-eslint/parser": "^2.18.0",
+    "eslint": "^6.8.0",
     "glob": "^7.1.6",
-    "mocha": "^7.0.1",
+    "mocha": "^7.1.1",
     "typescript": "^3.7.5",
     "vscode-test": "^1.3.0"
   }

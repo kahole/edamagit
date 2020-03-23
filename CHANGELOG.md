@@ -1,5 +1,19 @@
 # Change Log
 
+### 0.1.2
+- Interactive rebasing
+- **Changed default top-level keybindings to avoid hijacking CUT shortcut on Linux and Windows**
+  
+  New defaults are:
+
+  ```
+    status = alt+x g
+    file popup = alt+x alt+g
+    dispatch = alt+x ctrl+g
+  ```
+
+- More colors
+
 ### 0.1.1
 - Reverse-at-point
 - Cherry pick --edit

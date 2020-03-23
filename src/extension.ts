@@ -128,10 +128,9 @@ export function activate(context: ExtensionContext) {
     }
   }, false)));
 
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.save-and-close-commit-msg', saveClose));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.abort-commit-msg', clearSaveClose));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.quit', quitMagitView));
-
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.save-and-close-editor', saveClose));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.clear-and-abort-editor', clearSaveClose));
 }
 
 export function deactivate() {
