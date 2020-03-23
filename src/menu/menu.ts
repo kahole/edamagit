@@ -107,6 +107,8 @@ export class MenuUtil {
       if (menuState.switches) {
         _quickPick.items = menuState.switches.map(s => ({ label: s.shortName, detail: s.longName, description: s.description, activated: s.activated }));
         _quickPick.selectedItems = _quickPick.items.filter(s => (s as any).activated);
+        _quickPick.matchOnDescription = true;
+        _quickPick.matchOnDetail = true;
         _quickPick.canSelectMany = true;
         _quickPick.title = 'Switches (select with <space>)';
       }

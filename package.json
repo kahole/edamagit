@@ -504,19 +504,29 @@
         "when": "editorTextFocus && editorLangId == magit"
       },
       {
-        "command": "magit.save-and-close-commit-msg",
+        "command": "magit.quit",
+        "key": "q",
+        "when": "editorTextFocus && editorLangId == magit"
+      },
+      {
+        "command": "magit.save-and-close-editor",
         "key": "ctrl+c ctrl+c",
         "when": "editorTextFocus && editorLangId == git-commit"
       },
       {
-        "command": "magit.abort-commit-msg",
+        "command": "magit.clear-and-abort-editor",
         "key": "ctrl+c ctrl+k",
         "when": "editorTextFocus && editorLangId == git-commit"
       },
       {
-        "command": "magit.quit",
-        "key": "q",
-        "when": "editorTextFocus && editorLangId == magit"
+        "command": "magit.save-and-close-editor",
+        "key": "ctrl+c ctrl+c",
+        "when": "editorTextFocus && editorLangId == git-rebase"
+      },
+      {
+        "command": "magit.clear-and-abort-editor",
+        "key": "ctrl+c ctrl+k",
+        "when": "editorTextFocus && editorLangId == git-rebase"
       }
     ]
   },

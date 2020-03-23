@@ -58,14 +58,16 @@ export default class GitTextUtils {
     if (!todo) {
       return [];
     }
-    return todo.split(Constants.LineSplitterRegex).map(line => {
-      const [label, hash, ...messageParts] = line.split(' ');
-      return {
-        hash,
-        message: messageParts.join(' '),
-        parents: []
-      };
-    });
+    return todo.split(Constants.LineSplitterRegex)
+      .filter(line => line.charAt(0) !== '#')
+      .map(line => {
+        const [label, hash, ...messageParts] = line.split(' ');
+        return {
+          hash,
+          message: messageParts.join(' '),
+          parents: []
+        };
+      });
   }
 
   public static commitDetailTextToCommit(commitText: string): Commit {

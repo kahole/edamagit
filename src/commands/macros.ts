@@ -7,7 +7,7 @@ export async function saveClose() {
 
 export async function clearSaveClose(editor: TextEditor) {
   await editor.edit(editBuilder => {
-    editBuilder.delete(new Range(0, 0, 100, 100));
+    editBuilder.delete(new Range(0, 0, 1000, 0));
   });
   return saveClose();
 }

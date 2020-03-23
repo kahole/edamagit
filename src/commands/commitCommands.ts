@@ -52,9 +52,10 @@ interface CommitEditorOptions {
   updatePostCommitTask?: boolean;
   showStagedChanges?: boolean;
   editor?: string;
+  propagateErrors?: boolean;
 }
 
-export async function runCommitLikeCommand(repository: MagitRepository, args: string[], { showStagedChanges, updatePostCommitTask, editor }: CommitEditorOptions = { showStagedChanges: true }) {
+export async function runCommitLikeCommand(repository: MagitRepository, args: string[], { showStagedChanges, updatePostCommitTask, editor, propagateErrors }: CommitEditorOptions = { showStagedChanges: true }) {
 
   let stagedEditorTask: Thenable<TextEditor> | undefined;
   let instructionStatus;
@@ -93,6 +94,9 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
       instructionStatus.dispose();
     }
     window.setStatusBarMessage(`Commit canceled.`, Constants.StatusMessageDisplayTimeout);
+    if (propagateErrors) {
+      throw e;
+    }
   } finally {
 
     const stagedEditor = await stagedEditorTask;

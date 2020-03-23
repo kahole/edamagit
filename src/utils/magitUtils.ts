@@ -114,15 +114,13 @@ export default class MagitUtils {
 
   public static async chooseCommit(repository: MagitRepository, prompt: string): Promise<string> {
 
-    const log = await repository.log({ maxEntries: 100 });
-
-    const commitPicker = log.map(commit => ({
+    const commitPicker = repository.magitState?.log.map(commit => ({
       label: GitTextUtils.shortHash(commit.hash),
       description: commit.message.concat(' ').concat(commit.hash),
       meta: commit.hash
-    }));
+    })) ?? [];
 
-    return QuickMenuUtil.showMenuWithFreeform(commitPicker);
+    return QuickMenuUtil.showMenuWithFreeform(commitPicker, prompt);
   }
 
   public static async chooseTag(repository: MagitRepository, prompt: string) {
