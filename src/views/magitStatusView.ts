@@ -70,18 +70,20 @@ export default class MagitStatusView extends DocumentView {
       this.addSubview(new StashSectionView(magitState.stashes));
     }
 
-    if (magitState.HEAD?.ahead || magitState.HEAD?.behind) {
+    if (magitState.HEAD?.upstreamRemote?.commitsAhead?.length) {
+      this.addSubview(new UnsourcedCommitSectionView(Section.UnmergedInto, magitState.HEAD.upstreamRemote, magitState.HEAD.upstreamRemote.commitsAhead));
+    } else if (magitState.HEAD?.pushRemote?.commitsAhead?.length) {
+      this.addSubview(new UnsourcedCommitSectionView(Section.UnpushedTo, magitState.HEAD.pushRemote, magitState.HEAD.pushRemote.commitsAhead));
+    }
 
-      if (magitState.HEAD?.commitsAhead?.length) {
-        this.addSubview(new UnsourcedCommitSectionView(Section.UnmergedInto, magitState.HEAD.upstream!, magitState.HEAD.commitsAhead));
-      }
-
-      if (magitState.HEAD?.commitsBehind?.length) {
-        this.addSubview(new UnsourcedCommitSectionView(Section.UnpulledFrom, magitState.HEAD.upstream!, magitState.HEAD.commitsBehind));
-      }
-
-    } else if (magitState.log.length > 0) {
+    if (magitState.log.length > 0 && !magitState.HEAD?.upstreamRemote?.commitsAhead?.length) {
       this.addSubview(new CommitSectionView(Section.RecentCommits, magitState.log.slice(0, 10)));
+    }
+
+    if (magitState.HEAD?.upstreamRemote?.commitsBehind?.length) {
+      this.addSubview(new UnsourcedCommitSectionView(Section.UnpulledFrom, magitState.HEAD.upstreamRemote, magitState.HEAD.upstreamRemote.commitsBehind));
+    } else if (magitState.HEAD?.pushRemote?.commitsBehind?.length) {
+      this.addSubview(new UnsourcedCommitSectionView(Section.UnpulledFrom, magitState.HEAD.pushRemote, magitState.HEAD.pushRemote.commitsBehind));
     }
   }
 

@@ -7,6 +7,7 @@ export enum Section {
   Stashes = 'Stashes',
   RecentCommits = 'Recent commits',
   UnmergedInto = 'Unmerged into',
+  UnpushedTo = 'Unpushed to',
   UnpulledFrom = 'Unpulled from',
   Merging = 'Merging',
   CherryPicking = 'Cherry Picking',

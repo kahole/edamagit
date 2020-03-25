@@ -7,7 +7,7 @@ import { MagitRepository } from '../models/magitRepository';
 import MagitUtils from '../utils/magitUtils';
 import MagitStatusView from '../views/magitStatusView';
 import { Status, Commit, RefType, Repository } from '../typings/git';
-import { MagitBranch } from '../models/magitBranch';
+import { MagitBranch, MagitUpstreamRef } from '../models/magitBranch';
 import { Section } from '../views/general/sectionHeader';
 import { gitRun, LogLevel } from '../utils/gitRawRunner';
 import * as Constants from '../common/constants';
@@ -46,23 +46,23 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
   await repository.status();
 
   const dotGitPath = repository.rootUri + '/.git/';
-  const interestingCommits: string[] = [];
 
   const stashTask = repository._repository.getStashes();
 
   const logTask = repository.state.HEAD?.commit ? repository.log({ maxEntries: 100 }) : Promise.resolve([]);
 
   if (repository.state.HEAD?.commit) {
-    interestingCommits.push(repository.state.HEAD?.commit);
+    getCommit(repository, repository.state.HEAD?.commit);
   }
 
-  let commitsAhead: string[] = [], commitsBehind: string[] = [];
+  let commitsAheadUpstream: string[] = [], commitsBehindUpstream: string[] = [];
   if (repository.state.HEAD?.ahead || repository.state.HEAD?.behind) {
     const ref = repository.state.HEAD.name;
     const args = ['rev-list', '--left-right', `${ref}...${ref}@{u}`];
     const res = (await gitRun(repository, args, {}, LogLevel.None)).stdout;
-    [commitsAhead, commitsBehind] = GitTextUtils.parseRevListLeftRight(res);
-    interestingCommits.push(...[...commitsAhead, ...commitsBehind]);
+    [commitsAheadUpstream, commitsBehindUpstream] = GitTextUtils.parseRevListLeftRight(res);
+    commitsAheadUpstream.map(c => getCommit(repository, c));
+    commitsBehindUpstream.map(c => getCommit(repository, c));
   }
 
   const untrackedFiles: MagitChange[] = [];
@@ -121,10 +121,6 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
   const revertHeadPath = Uri.parse(dotGitPath + 'REVERT_HEAD');
   const revertHeadFileTask = workspace.fs.readFile(revertHeadPath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''), err => undefined);
 
-  const commitTasks = Promise.all(
-    interestingCommits
-      .map(c => getCommit(repository, c)));
-
   let mergingState;
   try {
     const mergeHeadText = await mergeHeadFileTask;
@@ -141,6 +137,8 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       }
     }
   } catch { }
+
+  const rebasingStateTask = rebasingStatus(repository, dotGitPath, logTask);
 
   const sequencerTodoPath = Uri.parse(dotGitPath + 'sequencer/todo');
   const sequencerHeadPath = Uri.parse(dotGitPath + 'sequencer/head');
@@ -194,17 +192,12 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     }
   } catch { }
 
-  const commitMap: { [id: string]: Commit; } = (await commitTasks).reduce((prev, commit) => ({ ...prev, [commit.hash]: commit }), {});
-
   const HEAD = repository.state.HEAD as MagitBranch | undefined;
 
   if (HEAD?.commit) {
-    HEAD.commitDetails = commitMap[HEAD.commit];
+    HEAD.commitDetails = await getCommit(repository, HEAD.commit);
 
     HEAD.tag = repository.state.refs.find(r => HEAD?.commit === r.commit && r.type === RefType.Tag);
-
-    HEAD.commitsAhead = commitsAhead.map(hash => commitMap[hash]);
-    HEAD.commitsBehind = commitsBehind.map(hash => commitMap[hash]);
 
     try {
       const upstreamRemote = HEAD.upstream?.remote;
@@ -215,18 +208,12 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       if (HEAD.upstream) {
         HEAD.upstreamRemote = HEAD.upstream;
         HEAD.upstreamRemote.commit = await upstreamRemoteCommitDetails;
+        HEAD.upstreamRemote.commitsAhead = await Promise.all(commitsAheadUpstream.map(hash => getCommit(repository, hash)));
+        HEAD.upstreamRemote.commitsBehind = await Promise.all(commitsBehindUpstream.map(hash => getCommit(repository, hash)));
       }
     } catch { }
 
-    try {
-      const pushRemote = await repository.getConfig(`branch.${HEAD.name}.pushRemote`);
-
-      const pushRemoteCommit = repository.state.refs.find(ref => ref.remote === pushRemote && ref.name === `${pushRemote}/${HEAD.name}`)?.commit;
-      const pushRemoteCommitDetails = pushRemoteCommit ? getCommit(repository, pushRemoteCommit) : undefined;
-
-      HEAD.pushRemote = { remote: pushRemote, name: HEAD.name!, commit: await pushRemoteCommitDetails };
-
-    } catch { }
+    HEAD.pushRemote = await pushRemoteStatus(repository);
   }
 
   const remoteBranches = repository.state.refs.filter(ref => ref.type === RefType.RemoteHead);
@@ -244,7 +231,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     indexChanges: await indexChangesTasks,
     mergeChanges: await mergeChangesTasks,
     untrackedFiles,
-    rebasingState: await rebasingState(repository, dotGitPath, logTask),
+    rebasingState: await rebasingStateTask,
     mergingState,
     cherryPickingState,
     revertingState,
@@ -255,7 +242,28 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
   };
 }
 
-async function rebasingState(repository: Repository, dotGitPath: string, logTask: Promise<Commit[]>): Promise<MagitRebasingState | undefined> {
+async function pushRemoteStatus(repository: Repository): Promise<MagitUpstreamRef | undefined> {
+  try {
+    const HEAD = repository.state.HEAD;
+    const pushRemote = await repository.getConfig(`branch.${HEAD!.name}.pushRemote`);
+
+    if (HEAD?.name && pushRemote) {
+
+      const args = ['rev-list', '--left-right', `${HEAD.name}...${pushRemote}/${HEAD.name}`];
+      const res = (await gitRun(repository, args, {}, LogLevel.None)).stdout;
+      const [commitsAheadPushRemote, commitsBehindPushRemote] = GitTextUtils.parseRevListLeftRight(res);
+      const commitsAhead = await Promise.all(commitsAheadPushRemote.map(c => getCommit(repository, c)));
+      const commitsBehind = await Promise.all(commitsBehindPushRemote.map(c => getCommit(repository, c)));
+
+      const pushRemoteCommit = repository.state.refs.find(ref => ref.remote === pushRemote && ref.name === `${pushRemote}/${HEAD.name}`)?.commit;
+      const pushRemoteCommitDetails = pushRemoteCommit ? getCommit(repository, pushRemoteCommit) : Promise.resolve(undefined);
+
+      return { remote: pushRemote, name: HEAD.name, commit: await pushRemoteCommitDetails, commitsAhead, commitsBehind };
+    }
+  } catch { }
+}
+
+async function rebasingStatus(repository: Repository, dotGitPath: string, logTask: Promise<Commit[]>): Promise<MagitRebasingState | undefined> {
 
   try {
 
