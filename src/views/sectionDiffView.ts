@@ -21,10 +21,10 @@ export default class SectionDiffView extends DocumentView {
 
     if (this.section === Section.Staged) {
 
-      changeSection = new ChangeSectionView(Section.Staged, magitState.indexChanges);
+      changeSection = new ChangeSectionView(Section.Staged, magitState.indexChanges, 'sectionDiffView');
 
     } else {
-      changeSection = new ChangeSectionView(Section.Unstaged, magitState.workingTreeChanges);
+      changeSection = new ChangeSectionView(Section.Unstaged, magitState.workingTreeChanges, 'sectionDiffView');
     }
 
     // Unfold to show diff

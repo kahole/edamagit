@@ -7,13 +7,13 @@ import { LineBreakView } from '../general/lineBreakView';
 export class ChangeSectionView extends View {
   isFoldable = true;
 
-  get id() { return this.section.toString(); }
+  get id() { return this.section.toString() + this.context; }
 
-  constructor(public section: Section, public changes: MagitChange[]) {
+  constructor(public section: Section, public changes: MagitChange[], private context = '') {
     super();
     this.subViews = [
       new SectionHeaderView(section, changes.length),
-      ...changes.map(change => new ChangeView(change)),
+      ...changes.map(change => new ChangeView(change, context)),
       new LineBreakView()
     ];
   }
