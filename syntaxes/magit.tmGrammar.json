@@ -27,10 +27,10 @@
           "include": "#fixup"
         },
         {
-          "include": "#entity"
+          "include": "#modified"
         },
         {
-          "include": "#modified"
+          "include": "#entity"
         }
       ]
     },
