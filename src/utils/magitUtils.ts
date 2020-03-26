@@ -50,10 +50,10 @@ export default class MagitUtils {
           }
         }
       }
-    }
 
-    if (repository) {
-      magitRepositories.set(repository.rootUri.fsPath, repository);
+      if (repository) {
+        magitRepositories.set(repository.rootUri.fsPath, repository);
+      }
     }
 
     return repository;

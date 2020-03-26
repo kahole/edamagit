@@ -37,7 +37,12 @@
   "activationEvents": [
     "onCommand:magit.status",
     "onCommand:magit.dispatch",
-    "onCommand:magit.file-popup"
+    "onCommand:magit.commit",
+    "onCommand:magit.file-popup",
+    "onCommand:magit.blame-file",
+    "onCommand:magit.stage-file",
+    "onCommand:magit.unstage-file",
+    "onCommand:magit.diff-file"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -45,10 +50,6 @@
       {
         "command": "magit.status",
         "title": "Magit Status"
-      },
-      {
-        "command": "magit.toggle-fold",
-        "title": "Magit Toggle Fold"
       },
       {
         "command": "magit.dispatch",
@@ -194,6 +195,14 @@
     "menus": {
       "commandPalette": [
         {
+          "command": "magit.status",
+          "when": "activeEditor"
+        },
+        {
+          "command": "magit.dispatch",
+          "when": "activeEditor"
+        },
+        {
           "command": "magit.help",
           "when": "editorLangId == magit"
         },
@@ -286,7 +295,8 @@
           "when": "editorLangId == magit"
         },
         {
-          "command": "magit.commit"
+          "command": "magit.commit",
+          "when": "activeEditor"
         },
         {
           "command": "magit.pushing",
@@ -309,20 +319,24 @@
           "when": "editorLangId == magit"
         },
         {
+          "command": "magit.file-popup",
+          "when": "activeEditor && editorLangId != magit"
+        },
+        {
           "command": "magit.blame-file",
-          "when": "editorLangId != magit"
+          "when": "activeEditor && editorLangId != magit"
         },
         {
           "command": "magit.diff-file",
-          "when": "editorLangId != magit"
+          "when": "activeEditor && editorLangId != magit"
         },
         {
           "command": "magit.stage-file",
-          "when": "editorLangId != magit"
+          "when": "activeEditor && editorLangId != magit"
         },
         {
           "command": "magit.unstage-file",
-          "when": "editorLangId != magit"
+          "when": "activeEditor && editorLangId != magit"
         }
       ]
     },
@@ -362,7 +376,8 @@
       },
       {
         "command": "magit.file-popup",
-        "key": "alt+x alt+g"
+        "key": "alt+x alt+g",
+        "when": "activeEditor"
       },
       {
         "command": "magit.toggle-fold",
