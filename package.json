@@ -173,6 +173,22 @@
       {
         "command": "magit.process-log",
         "title": "Magit Process Log"
+      },
+      {
+        "command": "magit.blame-file",
+        "title": "Magit Blame File"
+      },
+      {
+        "command": "magit.diff-file",
+        "title": "Magit Diff File"
+      },
+      {
+        "command": "magit.stage-file",
+        "title": "Magit Stage File"
+      },
+      {
+        "command": "magit.unstage-file",
+        "title": "Magit Unstage File"
       }
     ],
     "menus": {
@@ -270,8 +286,7 @@
           "when": "editorLangId == magit"
         },
         {
-          "command": "magit.commit",
-          "when": "editorLangId == magit"
+          "command": "magit.commit"
         },
         {
           "command": "magit.pushing",
@@ -292,6 +307,22 @@
         {
           "command": "magit.process-log",
           "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.blame-file",
+          "when": "editorLangId != magit"
+        },
+        {
+          "command": "magit.diff-file",
+          "when": "editorLangId != magit"
+        },
+        {
+          "command": "magit.stage-file",
+          "when": "editorLangId != magit"
+        },
+        {
+          "command": "magit.unstage-file",
+          "when": "editorLangId != magit"
         }
       ]
     },
