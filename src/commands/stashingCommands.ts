@@ -11,8 +11,8 @@ const stashingMenu = {
     { label: 'p', description: 'Pop', action: popStash },
     { label: 'a', description: 'Apply', action: applyStash },
     { label: 'k', description: 'Drop', action: dropStash },
-    // { label: 'i', description: 'Save index', action: (menuState: MenuState) => stash(menuState, ['--']) },
-    // { label: 'w', description: 'Save worktree', action: (menuState: MenuState) => stash(menuState, ['--']) },
+    // { label: 'i', description: 'Save index', action: stashIndex },
+    { label: 'w', description: 'Save worktree', action: stashWorktree },
     { label: 'x', description: 'Save keeping index', action: (menuState: MenuState) => stash(menuState, ['--keep-index']) },
   ]
 };
@@ -41,6 +41,26 @@ async function stash({ repository, switches }: MenuState, stashArgs: string[] = 
       args.push(message);
     }
     return gitRun(repository, args);
+  }
+}
+
+async function stashWorktree({ repository, switches }: MenuState) {
+
+  if (repository.magitState?.HEAD?.commit) {
+
+    const intermediaryCommitArgs = ['commit', '--message', 'intermediary stash commit'];
+    const resetCommitArgs = ['reset', '--soft', repository.magitState?.HEAD?.commit];
+
+    try {
+      try {
+        await gitRun(repository, intermediaryCommitArgs);
+      } catch { }
+      await stash({ repository, switches });
+      return gitRun(repository, resetCommitArgs);
+    } catch (error) {
+      await gitRun(repository, resetCommitArgs);
+      throw error;
+    }
   }
 }
 

@@ -1,5 +1,11 @@
 # Change Log
 
+### 0.1.3
+- Unpushed/unpulled status for pushRemote (no longer just upstream)
+- Stash just worktree
+- Directly call file commands from file (e.g Magit Blame File)
+- A bunch of bug fixes
+
 ### 0.1.2
 - Interactive rebasing
 - **Changed default top-level keybindings to avoid hijacking CUT shortcut on Linux and Windows**

@@ -1,6 +1,7 @@
 <h2 align="center"><img src="https://github.com/kahole/vscode-magit/raw/master/images/magit_logo.png" height="100"><br>Magit for VSCode</h2>
 
 [![vsmarketbadge](https://vsmarketplacebadge.apphb.com/version-short/kahole.magit.svg)](https://marketplace.visualstudio.com/items?itemName=kahole.magit)
+<a href="https://www.buymeacoffee.com/kahole" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" height="30"></a>
 
 ### Inspired by the awesome original, [Magit](https://magit.vc/) for Emacs
 
@@ -19,14 +20,17 @@
 
 ## Usage
 
-| VSCode Commands      | Default shortcut |
+| VSCode Command      | Default shortcut |
 |---------------------|------------------|
 | Magit Status        |   `alt+x g`      |
 | Magit File Popup    |   `alt+x alt+g`    |
 | Magit Dispatch      |   `alt+x ctrl+g`    |
 | Help (when in magit)| `?` |
 
-Keybindings
+`> Magit ` in VSCode Command palette will show you all available Magit actions from where you are.
+
+
+Keybindings inside Magit
 ```
 Popup commands
   A Cherry-picking    b Branching         c Committing

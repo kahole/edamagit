@@ -7,9 +7,9 @@ export class ChangeView extends View {
   isFoldable = true;
   foldedByDefault = true;
 
-  get id() { return this.change.uri.toString() + this.change.section?.toString(); }
+  get id() { return this.change.uri.toString() + this.change.section?.toString() + this.context; }
 
-  constructor(public change: MagitChange) {
+  constructor(public change: MagitChange, private context = '') {
     super();
     this.addSubview(new ChangeHeaderView(change));
     if (this.change.hunks) {

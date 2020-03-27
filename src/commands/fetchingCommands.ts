@@ -1,9 +1,8 @@
-import { commands, window } from 'vscode';
+import { window } from 'vscode';
 import { MenuItem } from '../menu/menuItem';
 import { MagitRepository } from '../models/magitRepository';
 import { MenuUtil, MenuState, Switch } from '../menu/menu';
 import { gitRun } from '../utils/gitRawRunner';
-import MagitUtils from '../utils/magitUtils';
 import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
 
 export async function fetching(repository: MagitRepository): Promise<any> {
@@ -12,12 +11,12 @@ export async function fetching(repository: MagitRepository): Promise<any> {
 
   if (repository.magitState?.HEAD?.pushRemote) {
     const pushRemote = repository.magitState?.HEAD?.pushRemote;
-    fetchingMenuItems.push({ label: 'p', description: `${pushRemote.remote}/${pushRemote.name}`, action: fetchFromPushRemote });
+    fetchingMenuItems.push({ label: 'p', description: pushRemote.remote, action: fetchFromPushRemote });
   }
 
   if (repository.magitState?.HEAD?.upstream) {
     const upstream = repository.magitState?.HEAD?.upstream;
-    fetchingMenuItems.push({ label: 'u', description: `${upstream.remote}/${upstream.name}`, action: fetchFromUpstream });
+    fetchingMenuItems.push({ label: 'u', description: upstream.remote, action: fetchFromUpstream });
   }
 
   fetchingMenuItems.push({ label: 'e', description: 'elsewhere', action: fetchFromElsewhere });
@@ -42,10 +41,10 @@ async function fetchFromPushRemote({ repository, switches }: MenuState) {
 
 async function fetchFromUpstream({ repository, switches }: MenuState) {
 
-  if (switches?.find(s => s.activated)) {
-    return commands.executeCommand('git.fetchPrune');
+  if (repository.magitState?.HEAD?.upstreamRemote) {
+    const args = ['fetch', ...MenuUtil.switchesToArgs(switches), repository.magitState.HEAD.upstreamRemote.remote];
+    return gitRun(repository, args);
   }
-  return commands.executeCommand('git.fetch');
 }
 
 async function fetchFromElsewhere({ repository, switches }: MenuState) {

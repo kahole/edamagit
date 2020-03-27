@@ -1,11 +1,15 @@
 import { Commit } from '../typings/git';
 import { MagitRepository } from '../models/magitRepository';
 
-const commitCache: { [hash: string]: Commit; } = {};
+const commitCache: { [hash: string]: Promise<Commit>; } = {};
 
-export async function getCommit(repository: MagitRepository, hash: string) {
-  return commitCache[hash] ?? repository.getCommit(hash).then(c => {
-    commitCache[c.hash] = c;
-    return c;
-  });
+export function getCommit(repository: MagitRepository, hash: string): Promise<Commit> {
+
+  if (commitCache[hash]) {
+    return commitCache[hash];
+  }
+
+  const commitTask = repository.getCommit(hash);
+  commitCache[hash] = commitTask;
+  return commitTask;
 }
