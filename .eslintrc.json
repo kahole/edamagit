@@ -24,6 +24,7 @@
         "quotes": [2, "single", { "avoidEscape": true, "allowTemplateLiterals": true }],
         "curly": "warn",
         "no-empty": "off",
-        "no-unused-vars": "off"
+        "no-unused-vars": "off",
+        "semi": "warn"
     }
 }
