@@ -34,7 +34,7 @@ export async function magitApplyEntityAtPoint(repository: MagitRepository, curre
 
     const stash = (selectedView as StashItemView).stash;
 
-    const args = ['stash', 'apply', '--index', stash.index.toString()];
+    const args = ['stash', 'apply', '--index', `stash@{${stash.index}}`];
     return gitRun(repository, args);
   } else {
     const ref = await MagitUtils.chooseRef(repository, 'Apply changes from commit');
