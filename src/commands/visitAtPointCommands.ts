@@ -1,4 +1,4 @@
-import { window, workspace } from 'vscode';
+import { window, workspace, TextEditorRevealType, Range, Position, Selection } from 'vscode';
 import MagitUtils from '../utils/magitUtils';
 import { MagitRepository } from '../models/magitRepository';
 import { CommitItemView } from '../views/commits/commitSectionView';
@@ -15,20 +15,31 @@ import { RemoteBranchListingView } from '../views/remotes/remoteBranchListingVie
 import { TagListingView } from '../views/tags/tagListingView';
 import { showStashDetail } from './diffingCommands';
 import * as Constants from '../common/constants';
+import { MagitChangeHunk } from '../models/magitChangeHunk';
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 
-  const selectedView = currentView.click(window.activeTextEditor!.selection.active);
+  const activePosition = window.activeTextEditor?.selection.active;
+
+  if (!activePosition) {
+    return;
+  }
+
+  const selectedView = currentView.click(activePosition);
 
   if (selectedView instanceof ChangeView) {
 
     const change = (selectedView as ChangeView).change;
-    workspace.openTextDocument(change.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preview: false }));
+
+    if (change.hunks?.length) {
+      visitHunk(selectedView.subViews.find(v => v instanceof HunkView) as HunkView);
+    } else {
+      workspace.openTextDocument(change.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preview: false }));
+    }
   }
   else if (selectedView instanceof HunkView) {
 
-    const changeHunk = (selectedView as HunkView).changeHunk;
-    workspace.openTextDocument(changeHunk.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preview: false }));
+    visitHunk(selectedView, activePosition);
 
   } else if (selectedView instanceof CommitItemView) {
 
@@ -49,6 +60,53 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
   } else {
     window.setStatusBarMessage('There is no thing at point that could be visited', Constants.StatusMessageDisplayTimeout);
   }
+}
+
+async function visitHunk(selectedView: HunkView, activePosition?: Position) {
+
+  const changeHunk = selectedView.changeHunk;
+
+  const doc = await workspace.openTextDocument(changeHunk.uri);
+  const editor = await window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preview: false });
+
+  try {
+    const startLineMatches = changeHunk.diff.match(/(?<=\+)\d+(?=,)/g);
+
+    if (startLineMatches?.length) {
+
+      const diffStartLineInFile = Number.parseInt(startLineMatches[0].toString()) - 1; // -1 to translate to zero-based line numbering
+
+      let activeLineRelativeToDiff = 0;
+      let relevantCharacterSelection = 0;
+      if (activePosition && activePosition.line > selectedView.range.start.line) {
+
+        activeLineRelativeToDiff = activePosition.line - (selectedView.range.start.line + 1); // +1 to get past line denoting start line of diff hunk
+        relevantCharacterSelection = activePosition.character > 0 ? activePosition.character - 1 : activePosition.character;
+
+      } else {
+
+        const splitAtAdditions = changeHunk.diff.split(/^\+/gm);
+        if (splitAtAdditions.length > 1) {
+          activeLineRelativeToDiff = splitAtAdditions[0].split(Constants.LineSplitterRegex).length - 2;
+        } else {
+          const splitAtDeletions = changeHunk.diff.split(/^-/gm);
+          if (splitAtDeletions.length) {
+            activeLineRelativeToDiff = splitAtDeletions[0].split(Constants.LineSplitterRegex).length - 2;
+          }
+        }
+
+        relevantCharacterSelection = 0;
+      }
+
+      const numDeletedLinesAboveActiveLine = changeHunk.diff.split(Constants.LineSplitterRegex).slice(0, activeLineRelativeToDiff + 1).filter(line => line.charAt(0) === '-').length;
+      const relevantPositionInFile = new Position(diffStartLineInFile + activeLineRelativeToDiff - numDeletedLinesAboveActiveLine, relevantCharacterSelection);
+
+      var relevantSelection = new Selection(relevantPositionInFile, relevantPositionInFile);
+
+      editor.revealRange(new Range(relevantPositionInFile, relevantPositionInFile), TextEditorRevealType.InCenterIfOutsideViewport);
+      editor.selection = relevantSelection;
+    }
+  } catch { }
 }
 
 export async function visitCommit(repository: MagitRepository, commitHash: string) {
