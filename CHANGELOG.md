@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.1.4
+- Visiting a change will now place your cursor at the position in the file relative to the magit diff display
+- Stash just index
+
 ### 0.1.3
 - Unpushed/unpulled status for pushRemote (no longer just upstream)
 - Stash just worktree
