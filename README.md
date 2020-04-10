@@ -7,7 +7,8 @@
 
 ### **Alpha**: use at own your own risk!
 
-![Usage](https://github.com/kahole/vscode-magit/raw/c13e273164deac7fbfc7e19970a58f90f98bff67/magit_lowdef.gif)
+![Usage](https://github.com/kahole/vscode-magit/raw/294aec866fbbd3a10b3d628af92823531793a244/magit_commit_demo.gif)
+(Theme: [Dracula](https://draculatheme.com/))
 
 ### Table of Contents
 
