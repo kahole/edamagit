@@ -99,6 +99,7 @@ _Feature requests as well as issues are welcome_
      (https://github.com/microsoft/vscode/wiki/Semantic-Highlighting-Overview)
 
 ### Implement missing Git/Magit features
+  - Logging (a lot missing)
   - Bisecting
   - Submodules
   - Patches
