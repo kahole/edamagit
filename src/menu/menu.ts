@@ -35,7 +35,9 @@ export class MenuUtil {
         const activeSwitchesPresentation = `[ ${activeSwitches} ]`;
 
         quickItems.push({
-          label: '-', description: `Switches ${activeSwitches.length > 0 ? activeSwitchesPresentation : ''}`, action: async (menuState: MenuState) => {
+          label: '-',
+          description: `Switches ${activeSwitches.length > 0 ? activeSwitchesPresentation : ''}`,
+          action: async (menuState: MenuState) => {
 
             const updatedSwitches = await MenuUtil.showSwitchesMenu(menuState);
 
@@ -47,7 +49,6 @@ export class MenuUtil {
       const _quickPick = window.createQuickPick<MenuItem>();
 
       _quickPick.title = menu.title;
-      _quickPick.ignoreFocusOut = true;
       _quickPick.items = quickItems;
 
       // Select with single key stroke
@@ -103,15 +104,28 @@ export class MenuUtil {
 
       const _quickPick = window.createQuickPick<QuickPickItem>();
 
-      _quickPick.ignoreFocusOut = true;
+      _quickPick.canSelectMany = true;
+      _quickPick.title = 'Switches (type shortname of switches you want to enable)';
+
       if (menuState.switches) {
         _quickPick.items = menuState.switches.map(s => ({ label: s.shortName, detail: s.longName, description: s.description, activated: s.activated }));
         _quickPick.selectedItems = _quickPick.items.filter(s => (s as any).activated);
-        _quickPick.matchOnDescription = true;
-        _quickPick.matchOnDetail = true;
-        _quickPick.canSelectMany = true;
-        _quickPick.title = 'Switches (select with <space>)';
       }
+
+      const eventListenerDisposable = _quickPick.onDidChangeValue(async (e) => {
+
+        for (const item of _quickPick.items) {
+          if (MenuUtil.matchesSwitch(_quickPick.value, item.label)) {
+            const alreadySelectedItem = _quickPick.selectedItems.find(selItem => MenuUtil.matchesSwitch(_quickPick.value, selItem.label));
+            if (alreadySelectedItem) {
+              _quickPick.selectedItems = _quickPick.selectedItems.filter(i => i.label !== alreadySelectedItem.label);
+            } else {
+              _quickPick.selectedItems = [..._quickPick.selectedItems, item];
+            }
+            _quickPick.value = '';
+          }
+        }
+      });
 
       const acceptListenerDisposable = _quickPick.onDidAccept(async () => {
 
@@ -122,6 +136,7 @@ export class MenuUtil {
         });
 
         _quickPick.dispose();
+        eventListenerDisposable.dispose();
         acceptListenerDisposable.dispose();
         try {
           resolve(updatedSwitches);
@@ -132,6 +147,10 @@ export class MenuUtil {
 
       _quickPick.show();
     });
+  }
+
+  static matchesSwitch(input: string, switchShortName: string): boolean {
+    return input === switchShortName || input === switchShortName.replace('-', '');
   }
 
   static switchesToArgs(switches?: Switch[]): string[] {
