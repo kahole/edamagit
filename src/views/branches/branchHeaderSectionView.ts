@@ -15,7 +15,7 @@ export class BranchHeaderSectionView extends View {
       this.addSubview(new BranchHeaderView('Head', HEAD));
 
       if (HEAD.upstreamRemote) {
-        this.addSubview(new RemoteBranchHeaderView('Merge', HEAD.upstreamRemote));
+        this.addSubview(new RemoteBranchHeaderView(HEAD.upstreamRemote.rebase ? 'Rebase' : 'Merge', HEAD.upstreamRemote));
       }
 
       if (HEAD.pushRemote) {

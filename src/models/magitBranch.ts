@@ -11,4 +11,5 @@ export interface MagitUpstreamRef extends UpstreamRef {
   commit?: Commit;
   commitsAhead?: Commit[];
   commitsBehind?: Commit[];
+  rebase?: boolean;
 }

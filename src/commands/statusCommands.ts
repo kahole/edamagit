@@ -14,6 +14,7 @@ import * as Constants from '../common/constants';
 import { getCommit } from '../utils/commitCache';
 import { MagitRemote } from '../models/magitRemote';
 import { MagitRebasingState } from '../models/magitRebasingState';
+import { MagitMergingState } from '../models/magitMergingState';
 
 export async function magitRefresh() { }
 
@@ -109,35 +110,13 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       return magitChange;
     }));
 
-  const mergeHeadPath = Uri.parse(dotGitPath + 'MERGE_HEAD');
-  const mergeMsgPath = Uri.parse(dotGitPath + 'MERGE_MSG');
-
-  const mergeHeadFileTask = workspace.fs.readFile(mergeHeadPath).then(f => f.toString(), err => undefined);
-  const mergeMsgFileTask = workspace.fs.readFile(mergeMsgPath).then(f => f.toString(), err => undefined);
-
   const cherryPickHeadPath = Uri.parse(dotGitPath + 'CHERRY_PICK_HEAD');
   const cherryPickHeadFileTask = workspace.fs.readFile(cherryPickHeadPath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''), err => undefined);
 
   const revertHeadPath = Uri.parse(dotGitPath + 'REVERT_HEAD');
   const revertHeadFileTask = workspace.fs.readFile(revertHeadPath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''), err => undefined);
 
-  let mergingState;
-  try {
-    const mergeHeadText = await mergeHeadFileTask;
-    const mergeMsgText = await mergeMsgFileTask;
-    if (mergeHeadText && mergeMsgText) {
-      const parsedMergeState = GitTextUtils.parseMergeStatus(mergeHeadText, mergeMsgText);
-
-      if (parsedMergeState) {
-        const [mergeCommits, mergingBranches] = parsedMergeState;
-        mergingState = {
-          mergingBranches,
-          commits: await Promise.all(mergeCommits.map(c => getCommit(repository, c)))
-        };
-      }
-    }
-  } catch { }
-
+  const mergingStateTask = mergingStatus(repository, dotGitPath);
   const rebasingStateTask = rebasingStatus(repository, dotGitPath, logTask);
 
   const sequencerTodoPath = Uri.parse(dotGitPath + 'sequencer/todo');
@@ -200,16 +179,19 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     HEAD.tag = repository.state.refs.find(r => HEAD?.commit === r.commit && r.type === RefType.Tag);
 
     try {
-      const upstreamRemote = HEAD.upstream?.remote;
+      if (HEAD.upstream?.remote) {
+        const upstreamRemote = HEAD.upstream.remote;
 
-      const upstreamRemoteCommit = repository.state.refs.find(ref => ref.remote === upstreamRemote && ref.name === `${upstreamRemote}/${HEAD.upstream?.name}`)?.commit;
-      const upstreamRemoteCommitDetails = upstreamRemoteCommit ? getCommit(repository, upstreamRemoteCommit) : undefined;
+        const upstreamRemoteCommit = repository.state.refs.find(ref => ref.remote === upstreamRemote && ref.name === `${upstreamRemote}/${HEAD.upstream?.name}`)?.commit;
+        const upstreamRemoteCommitDetails = upstreamRemoteCommit ? getCommit(repository, upstreamRemoteCommit) : undefined;
 
-      if (HEAD.upstream) {
+        const isRebaseUpstream = repository.getConfig(`branch.${HEAD.upstream.name}.rebase`);
+
         HEAD.upstreamRemote = HEAD.upstream;
         HEAD.upstreamRemote.commit = await upstreamRemoteCommitDetails;
         HEAD.upstreamRemote.commitsAhead = await Promise.all(commitsAheadUpstream.map(hash => getCommit(repository, hash)));
         HEAD.upstreamRemote.commitsBehind = await Promise.all(commitsBehindUpstream.map(hash => getCommit(repository, hash)));
+        HEAD.upstreamRemote.rebase = (await isRebaseUpstream) === 'true';
       }
     } catch { }
 
@@ -232,7 +214,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     mergeChanges: await mergeChangesTasks,
     untrackedFiles,
     rebasingState: await rebasingStateTask,
-    mergingState,
+    mergingState: await mergingStateTask,
     cherryPickingState,
     revertingState,
     branches: repository.state.refs.filter(ref => ref.type === RefType.Head),
@@ -259,6 +241,31 @@ async function pushRemoteStatus(repository: Repository): Promise<MagitUpstreamRe
       const pushRemoteCommitDetails = pushRemoteCommit ? getCommit(repository, pushRemoteCommit) : Promise.resolve(undefined);
 
       return { remote: pushRemote, name: HEAD.name, commit: await pushRemoteCommitDetails, commitsAhead, commitsBehind };
+    }
+  } catch { }
+}
+
+async function mergingStatus(repository: Repository, dotGitPath: string): Promise<MagitMergingState | undefined> {
+
+  const mergeHeadPath = Uri.parse(dotGitPath + 'MERGE_HEAD');
+  const mergeMsgPath = Uri.parse(dotGitPath + 'MERGE_MSG');
+
+  const mergeHeadFileTask = workspace.fs.readFile(mergeHeadPath).then(f => f.toString(), err => undefined);
+  const mergeMsgFileTask = workspace.fs.readFile(mergeMsgPath).then(f => f.toString(), err => undefined);
+
+  try {
+    const mergeHeadText = await mergeHeadFileTask;
+    const mergeMsgText = await mergeMsgFileTask;
+    if (mergeHeadText && mergeMsgText) {
+      const parsedMergeState = GitTextUtils.parseMergeStatus(mergeHeadText, mergeMsgText);
+
+      if (parsedMergeState) {
+        const [mergeCommits, mergingBranches] = parsedMergeState;
+        return {
+          mergingBranches,
+          commits: await Promise.all(mergeCommits.map(c => getCommit(repository, c)))
+        };
+      }
     }
   } catch { }
 }
