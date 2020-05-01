@@ -64,29 +64,51 @@ Essential commands
 ### Vim support (VSCodeVim)
 
 Add these to your `keybindings.json` config file
-
-```json
-  {
-    "key": "tab",
-    "command": "extension.vim_tab",
-    "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert' && !editorLangId == 'magit'"
-  },
-  {
-    "key": "tab",
-    "command": "-extension.vim_tab",
-    "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert'"
-  },
-  {
-    "key": "o",
-    "command": "magit.discard-at-point",
-    "when": "editorTextFocus && editorLangId == 'magit'"
-  },
-  {
-    "key": "k",
-    "command": "-magit.discard-at-point",
-    "when": "editorTextFocus && editorLangId == 'magit'"
-  }
-```
+<details>
+  <summary>keybindings.json</summary>
+  ```json
+    {
+      "key": "tab",
+      "command": "extension.vim_tab",
+      "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert' && !editorLangId == 'magit'"
+    },
+    {
+      "key": "tab",
+      "command": "-extension.vim_tab",
+      "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert'"
+    },
+    {
+      "key": "o",
+      "command": "magit.discard-at-point",
+      "when": "editorTextFocus && editorLangId == 'magit'"
+    },
+    {
+      "key": "k",
+      "command": "-magit.discard-at-point",
+      "when": "editorTextFocus && editorLangId == 'magit'"
+    },
+    {
+      "key": "n",
+      "command": "magit.reverse-at-point",
+      "when": "editorTextFocus && editorLangId == 'magit'"
+    },
+    {
+      "key": "v",
+      "command": "-magit.reverse-at-point",
+      "when": "editorTextFocus && editorLangId == 'magit'"
+    }
+    {
+      "key": "shift+n",
+      "command": "magit.reverting",
+      "when": "editorTextFocus && editorLangId == 'magit'"
+    },
+    {
+      "key": "shift+v",
+      "command": "-magit.reverting",
+      "when": "editorTextFocus && editorLangId == 'magit'"
+    }
+  ```
+</details>
 
 ## Roadmap
 
