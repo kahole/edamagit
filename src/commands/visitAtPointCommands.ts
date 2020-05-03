@@ -15,7 +15,6 @@ import { RemoteBranchListingView } from '../views/remotes/remoteBranchListingVie
 import { TagListingView } from '../views/tags/tagListingView';
 import { showStashDetail } from './diffingCommands';
 import * as Constants from '../common/constants';
-import { MagitChangeHunk } from '../models/magitChangeHunk';
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 

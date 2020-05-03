@@ -7,7 +7,8 @@
 
 ### **Alpha**: use at own your own risk!
 
-![Usage](https://github.com/kahole/vscode-magit/raw/c13e273164deac7fbfc7e19970a58f90f98bff67/magit_lowdef.gif)
+![Usage](https://github.com/kahole/vscode-magit/raw/294aec866fbbd3a10b3d628af92823531793a244/magit_commit_demo.gif)
+(Theme: [Dracula](https://draculatheme.com/))
 
 ### Table of Contents
 
@@ -63,29 +64,51 @@ Essential commands
 ### Vim support (VSCodeVim)
 
 Add these to your `keybindings.json` config file
-
-```json
-  {
-    "key": "tab",
-    "command": "extension.vim_tab",
-    "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert' && !editorLangId == 'magit'"
-  },
-  {
-    "key": "tab",
-    "command": "-extension.vim_tab",
-    "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert'"
-  },
-  {
-    "key": "o",
-    "command": "magit.discard-at-point",
-    "when": "editorTextFocus && editorLangId == 'magit'"
-  },
-  {
-    "key": "k",
-    "command": "-magit.discard-at-point",
-    "when": "editorTextFocus && editorLangId == 'magit'"
-  }
-```
+<details>
+  <summary>keybindings.json</summary>
+  ```json
+    {
+      "key": "tab",
+      "command": "extension.vim_tab",
+      "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert' && !editorLangId == 'magit'"
+    },
+    {
+      "key": "tab",
+      "command": "-extension.vim_tab",
+      "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert'"
+    },
+    {
+      "key": "o",
+      "command": "magit.discard-at-point",
+      "when": "editorTextFocus && editorLangId == 'magit'"
+    },
+    {
+      "key": "k",
+      "command": "-magit.discard-at-point",
+      "when": "editorTextFocus && editorLangId == 'magit'"
+    },
+    {
+      "key": "n",
+      "command": "magit.reverse-at-point",
+      "when": "editorTextFocus && editorLangId == 'magit'"
+    },
+    {
+      "key": "v",
+      "command": "-magit.reverse-at-point",
+      "when": "editorTextFocus && editorLangId == 'magit'"
+    }
+    {
+      "key": "shift+n",
+      "command": "magit.reverting",
+      "when": "editorTextFocus && editorLangId == 'magit'"
+    },
+    {
+      "key": "shift+v",
+      "command": "-magit.reverting",
+      "when": "editorTextFocus && editorLangId == 'magit'"
+    }
+  ```
+</details>
 
 ## Roadmap
 
@@ -98,6 +121,7 @@ _Feature requests as well as issues are welcome_
      (https://github.com/microsoft/vscode/wiki/Semantic-Highlighting-Overview)
 
 ### Implement missing Git/Magit features
+  - Logging (a lot missing)
   - Bisecting
   - Submodules
   - Patches
