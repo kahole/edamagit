@@ -124,15 +124,18 @@ export default class GitTextUtils {
       const relativeDiffLineStart = selectedDiffRange.start.line - diffStart.line;
       const relativeDiffLineEnd = selectedDiffRange.end.line - diffStart.line;
 
+      const additionRegex = /^\+.*/;
+      const deletionRegex = /^-.*/;
+
       const savedIndices = new Set();
       let savedAdditions = 0;
       let savedDeletions = 0;
 
       for (let i = relativeDiffLineStart; i <= relativeDiffLineEnd; i++) {
         const diffLine = diffLines[i];
-        if (/^\+.*/.test(diffLine)) {
+        if (additionRegex.test(diffLine)) {
           savedAdditions++;
-        } else if (/^-.*/.test(diffLine)) {
+        } else if (deletionRegex.test(diffLine)) {
           savedDeletions++;
         } else {
           continue;
@@ -146,12 +149,12 @@ export default class GitTextUtils {
       const newDiffLines: string[] = [];
       diffLines
         .forEach((diffLine, i) => {
-          if (/^\+.*/.test(diffLine) && !savedIndices.has(i)) {
+          if (additionRegex.test(diffLine) && !savedIndices.has(i)) {
             ignoredAdditions++;
             if (reverse) {
               newDiffLines.push(' ' + diffLine.slice(1));
             }
-          } else if (/^-.*/.test(diffLine) && !savedIndices.has(i)) {
+          } else if (deletionRegex.test(diffLine) && !savedIndices.has(i)) {
             ignoredDeletions++;
             if (!reverse) {
               newDiffLines.push(' ' + diffLine.slice(1));
@@ -163,18 +166,21 @@ export default class GitTextUtils {
 
       const newDiff = newDiffLines.join('\n');
 
-      const originalLineSpanSize = Number.parseInt(fileEditDeclaration.match(/(?<=,)\d+(?= \+)/g)![0].toString());
+      const fromFileExcerptSizeRegex = /(?<=,)\d+(?= \+)/g;
+      const toFileExcerptSizeRegex = /(?<=,)\d+(?= @@)/g;
+
+      const originalLineSpanSize = Number.parseInt(fileEditDeclaration.match(fromFileExcerptSizeRegex)![0].toString());
 
       let newFileEditDeclaration;
       let newLineSpanSize = originalLineSpanSize + (savedAdditions - savedDeletions);
 
       if (reverse) {
 
-        newFileEditDeclaration = fileEditDeclaration.replace(/\d+(?= \+)/g, (originalLineSpanSize + ignoredAdditions - ignoredDeletions).toString());
-        newFileEditDeclaration = newFileEditDeclaration.replace(/(?<=,)\d+(?= @@)/g, (newLineSpanSize + ignoredAdditions - ignoredDeletions).toString());
+        newFileEditDeclaration = fileEditDeclaration.replace(fromFileExcerptSizeRegex, (originalLineSpanSize + ignoredAdditions - ignoredDeletions).toString());
+        newFileEditDeclaration = newFileEditDeclaration.replace(toFileExcerptSizeRegex, (newLineSpanSize + ignoredAdditions - ignoredDeletions).toString());
 
       } else {
-        newFileEditDeclaration = fileEditDeclaration.replace(/(?<=,)\d+(?= @@)/g, newLineSpanSize.toString());
+        newFileEditDeclaration = fileEditDeclaration.replace(toFileExcerptSizeRegex, newLineSpanSize.toString());
       }
 
       diff = `${newFileEditDeclaration}\n${newDiff}`;
