@@ -27,7 +27,7 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
       return apply(repository, patch, { index: true });
 
     } else {
-      window.setStatusBarMessage('Already staged');
+      window.setStatusBarMessage('Already staged', Constants.StatusMessageDisplayTimeout);
     }
 
   } else if (selectedView instanceof ChangeView) {
@@ -89,7 +89,7 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
       const patch = GitTextUtils.generatePatchFromChangeHunkView(selectedView, selection, true);
       return apply(repository, patch, { index: true, reverse: true });
     } else {
-      window.setStatusBarMessage('Already unstaged');
+      window.setStatusBarMessage('Already unstaged', Constants.StatusMessageDisplayTimeout);
     }
   } else if (selectedView instanceof ChangeView) {
 
@@ -99,7 +99,7 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
     if (selectedView.section === Section.Staged) {
       return magitUnstageAll(repository, currentView);
     } else {
-      window.setStatusBarMessage('Already unstaged');
+      window.setStatusBarMessage('Already unstaged', Constants.StatusMessageDisplayTimeout);
     }
   } else {
 

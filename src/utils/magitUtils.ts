@@ -7,6 +7,7 @@ import FilePathUtils from './filePathUtils';
 import { RefType, Repository } from '../typings/git';
 import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
 import GitTextUtils from '../utils/gitTextUtils';
+import * as Constants from '../common/constants';
 
 export default class MagitUtils {
 
@@ -138,7 +139,7 @@ export default class MagitUtils {
     if ((hardConfirm && confirmed?.toLowerCase() === 'yes') || (!hardConfirm && confirmed?.toLowerCase().charAt(0) === 'y')) {
       return true;
     }
-    window.setStatusBarMessage('Abort');
+    window.setStatusBarMessage('Abort', Constants.StatusMessageDisplayTimeout);
     return false;
   }
 
