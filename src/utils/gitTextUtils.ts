@@ -1,8 +1,9 @@
 import { MagitChangeHunk } from '../models/magitChangeHunk';
-import { Uri } from 'vscode';
+import { Uri, Selection } from 'vscode';
 import { Section } from '../views/general/sectionHeader';
 import * as Constants from '../common/constants';
 import { Commit } from '../typings/git';
+import { HunkView } from '../views/changes/hunkView';
 
 export default class GitTextUtils {
 
@@ -103,8 +104,88 @@ export default class GitTextUtils {
     return commitMessage ? commitMessage.split('\n')[0] : '';
   }
 
-  public static changeHunkToPatch(changeHunk: MagitChangeHunk): string {
-    return changeHunk.diffHeader + changeHunk.diff + '\n';
+  public static generatePatchFromChangeHunkView(hunkView: HunkView, selection?: Selection, reverse = false): string {
+
+    if (!selection || selection.isEmpty) {
+      return `${hunkView.changeHunk.diffHeader}${hunkView.changeHunk.diff}\n`;
+    }
+
+    let diff = '';
+    const changeHunk = hunkView.changeHunk;
+
+    const diffStart = hunkView.range.start.translate(1);
+    const diffRange = hunkView.range.with(diffStart);
+    const selectedDiffRange = diffRange.intersection(selection);
+
+    if (!selectedDiffRange) {
+      diff = changeHunk.diff;
+    } else {
+      const [fileEditDeclaration, ...diffLines] = changeHunk.diff.split(Constants.LineSplitterRegex);
+
+      const relativeDiffLineStart = selectedDiffRange.start.line - diffStart.line;
+      const relativeDiffLineEnd = selectedDiffRange.end.line - diffStart.line;
+
+      const savedIndices = new Set();
+      let savedAdditions = 0;
+      let savedDeletions = 0;
+
+      for (let i = relativeDiffLineStart; i <= relativeDiffLineEnd; i++) {
+        const diffLine = diffLines[i];
+        if (/^\+.*/.test(diffLine)) {
+          savedAdditions++;
+        } else if (/^-.*/.test(diffLine)) {
+          savedDeletions++;
+        } else {
+          continue;
+        }
+        savedIndices.add(i);
+      }
+
+      let ignoredAdditions = 0;
+      let ignoredDeletions = 0;
+
+      const newDiffLines: string[] = [];
+      diffLines
+        .forEach((diffLine, i) => {
+          if (/^\+.*/.test(diffLine) && !savedIndices.has(i)) {
+            ignoredAdditions++;
+            if (reverse) {
+              newDiffLines.push(' ' + diffLine.slice(1));
+            }
+          } else if (/^-.*/.test(diffLine) && !savedIndices.has(i)) {
+            ignoredDeletions++;
+            if (!reverse) {
+              newDiffLines.push(' ' + diffLine.slice(1));
+            }
+          } else {
+            newDiffLines.push(diffLine);
+          }
+        });
+
+      const newDiff = newDiffLines.join('\n');
+
+      const originalLineSpanSize = Number.parseInt(fileEditDeclaration.match(/(?<=,)\d+(?= \+)/g)![0].toString());
+
+      let newFileEditDeclaration;
+      let newLineSpanSize = originalLineSpanSize + (savedAdditions - savedDeletions);
+
+      if (reverse) {
+
+        newFileEditDeclaration = fileEditDeclaration.replace(/\d+(?= \+)/g, (originalLineSpanSize + ignoredAdditions - ignoredDeletions).toString());
+        newFileEditDeclaration = newFileEditDeclaration.replace(/(?<=,)\d+(?= @@)/g, (newLineSpanSize + ignoredAdditions - ignoredDeletions).toString());
+
+      } else {
+        newFileEditDeclaration = fileEditDeclaration.replace(/(?<=,)\d+(?= @@)/g, newLineSpanSize.toString());
+      }
+
+      diff = `${newFileEditDeclaration}\n${newDiff}`;
+    }
+
+    if (diff.split(Constants.LineSplitterRegex).length <= 1) {
+      diff = changeHunk.diff;
+    }
+
+    return `${changeHunk.diffHeader}${diff}\n`;
   }
 
   private static truncate(msg: string, maxLength: number): string {

@@ -1,4 +1,4 @@
-import { window, commands, workspace } from 'vscode';
+import { window, commands, workspace, Selection } from 'vscode';
 import { MagitRepository } from '../models/magitRepository';
 import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
@@ -20,13 +20,13 @@ import * as Constants from '../common/constants';
 
 export async function magitDiscardAtPoint(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
-  const selectedView = currentView.click(window.activeTextEditor!.selection.active);
+  const selection = window.activeTextEditor!.selection;
+  const selectedView = currentView.click(selection.active);
 
   if (selectedView instanceof HunkView) {
 
-    const changeHunk = (selectedView as HunkView).changeHunk;
     if (await MagitUtils.confirmAction('Discard hunk?')) {
-      return discardHunk(repository, changeHunk);
+      return discardHunk(repository, selectedView as HunkView, selection);
     }
 
   } else if (selectedView instanceof ChangeView) {
@@ -143,14 +143,14 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
   }
 }
 
-async function discardHunk(repository: MagitRepository, changeHunk: MagitChangeHunk): Promise<any> {
+async function discardHunk(repository: MagitRepository, hunkView: HunkView, selection: Selection): Promise<any> {
 
-  const patch = GitTextUtils.changeHunkToPatch(changeHunk);
+  const patch = GitTextUtils.generatePatchFromChangeHunkView(hunkView, selection, true);
 
-  if (changeHunk.section === Section.Unstaged) {
+  if (hunkView.changeHunk.section === Section.Unstaged) {
     return apply(repository, patch, { reverse: true });
 
-  } else if (changeHunk.section === Section.Staged) {
+  } else if (hunkView.changeHunk.section === Section.Staged) {
     await apply(repository, patch, { index: true, reverse: true });
     return apply(repository, patch, { reverse: true });
   }
