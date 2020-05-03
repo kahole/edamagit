@@ -1,5 +1,11 @@
 # Change Log
 
+### 0.1.5
+- Now possible to stage just selected lines from a change
+    (Sub-hunk selection for stage/unstage/discard)
+
+- Fixed issue where merging status didn't show all incoming commits
+
 ### 0.1.4
 - Visiting a change will now place your cursor at the position in the file relative to the magit diff display
 - Stash just index
