@@ -19,17 +19,16 @@ export default class GitTextUtils {
       .map(hunkText => ({ diff: hunkText, diffHeader, uri, section }));
   }
 
-  public static parseMergeStatus(mergeHashes: string, mergeMessage: string): [string[], string[]] | undefined {
+  public static parseMergeStatus(mergeHead: string, mergeMessage: string): [string, string[]] | undefined {
 
     const mergingBranches = mergeMessage.match(/'(.*?)'/g)
       ?.map(b => b.slice(1, b.length - 1));
 
-    const commits = mergeHashes
-      .replace(Constants.FinalLineBreakRegex, '')
-      .split(Constants.LineSplitterRegex);
+    const commit = mergeHead
+      .replace(Constants.FinalLineBreakRegex, '');
 
     if (mergingBranches) {
-      return [commits, mergingBranches];
+      return [commit, mergingBranches];
     }
   }
 
