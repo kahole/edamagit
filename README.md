@@ -66,6 +66,7 @@ Essential commands
 Add these to your `keybindings.json` config file
 <details>
   <summary>keybindings.json</summary>
+  
   ```json
     {
       "key": "tab",
