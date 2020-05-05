@@ -31,7 +31,7 @@ export class MenuUtil {
 
       if (menuState.switches) {
 
-        const activeSwitches = menuState.switches.filter(s => s.activated).reduce((pres, sw) => pres + ' ' + sw.longName, '');
+        const activeSwitches = menuState.switches.filter(s => s.activated).map(s => s.longName).join(' ');
         const activeSwitchesPresentation = `[ ${activeSwitches} ]`;
 
         quickItems.push({
