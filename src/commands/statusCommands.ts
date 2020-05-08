@@ -30,6 +30,9 @@ export async function magitStatus(editor: TextEditor, preserveFocus = false): Pr
       if (view instanceof MagitStatusView) {
 
         await MagitUtils.magitStatusAndUpdate(repository);
+        if (editor.document.uri.path === MagitStatusView.UriPath) {
+          return;
+        }
         return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false }));
       }
     }
