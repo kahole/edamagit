@@ -58,8 +58,8 @@ export async function magitDiscardAtPoint(repository: MagitRepository, currentVi
 
     switch (section) {
       case Section.Untracked:
-        fileNameList = changeSectionView.changes.reduce((list, change) => list + FilePathUtils.fileName(change.uri) + ', ', '');
-        if (await MagitUtils.confirmAction(`Trash ${fileNameList.slice(0, fileNameList.length - 2)}?`)) {
+        fileNameList = changeSectionView.changes.map(change => FilePathUtils.fileName(change.uri)).join(', ');
+        if (await MagitUtils.confirmAction(`Trash ${fileNameList}?`)) {
           return commands.executeCommand('git.cleanAllUntracked');
         }
 

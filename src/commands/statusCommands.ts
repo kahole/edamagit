@@ -30,6 +30,9 @@ export async function magitStatus(editor: TextEditor, preserveFocus = false): Pr
       if (view instanceof MagitStatusView) {
 
         await MagitUtils.magitStatusAndUpdate(repository);
+        if (editor.document.uri.path === MagitStatusView.UriPath) {
+          return;
+        }
         return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false }));
       }
     }
@@ -67,16 +70,26 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     commitsBehindUpstream.map(c => getCommit(repository, c));
   }
 
-  const untrackedFiles: MagitChange[] = [];
-
   const workingTreeChanges_NoUntracked = repository.state.workingTreeChanges
-    .filter(c => {
-      if (c.status === Status.UNTRACKED) {
-        untrackedFiles.push(toMagitChange(repository, c, Section.Untracked));
-        return false;
-      }
-      return true;
-    });
+    .filter(c => (c.status !== Status.UNTRACKED));
+
+  const untrackedFiles: MagitChange[] =
+    repository.state.workingTreeChanges.length > workingTreeChanges_NoUntracked.length ?
+      (await gitRun(repository, ['ls-files', '--others', '--exclude-standard', '--directory']))
+        .stdout
+        .replace(Constants.FinalLineBreakRegex, '')
+        .split(Constants.LineSplitterRegex)
+        .map(untrackedPath => {
+          const uri = Uri.parse(repository.rootUri.fsPath + '/' + untrackedPath);
+          return {
+            originalUri: uri,
+            renameUri: uri,
+            uri: uri,
+            status: Status.UNTRACKED,
+            relativePath: FilePathUtils.uriPathRelativeTo(uri, repository.rootUri),
+            section: Section.Untracked
+          };
+        }) : [];
 
   const workingTreeChangesTasks = Promise.all(workingTreeChanges_NoUntracked
     .map(async change => {

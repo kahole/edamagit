@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import { views } from '../extension';
 import * as Constants from '../common/constants';
-import { magitStatus } from '../commands/statusCommands';
 import FilePathUtils from '../utils/filePathUtils';
+import MagitUtils from '../utils/magitUtils';
 
 export default class ContentProvider implements vscode.TextDocumentContentProvider {
 
@@ -23,14 +23,15 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
           }
         }),
       vscode.workspace.onDidSaveTextDocument(
-        doc => {
-          if (doc.uri.fsPath.includes('.git')) {
-            return;
-          }
+        async doc => {
           for (const visibleEditor of vscode.window.visibleTextEditors) {
             if (visibleEditor.document.uri.scheme === Constants.MagitUriScheme) {
               if (FilePathUtils.isDescendant(visibleEditor.document.uri.query, doc.uri.fsPath)) {
-                return magitStatus(visibleEditor, true);
+                const repository = await MagitUtils.getCurrentMagitRepo(visibleEditor.document.uri);
+                if (!repository) {
+                  return;
+                }
+                return MagitUtils.magitStatusAndUpdate(repository);
               }
             }
           }

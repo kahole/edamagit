@@ -1,5 +1,8 @@
 # Change Log
 
+### 0.1.6
+- Performance and bugs
+
 ### 0.1.5
 - Now possible to stage just selected lines from a change
     (Sub-hunk selection for stage/unstage/discard)

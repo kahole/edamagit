@@ -31,7 +31,10 @@ export default class FilePathUtils {
   }
 
   public static fileName(uri: Uri) {
-    const pieces = uri.fsPath.split(sep);
+    let pieces = uri.fsPath.split('/');
+    if (pieces[pieces.length - 1].length === 0) {
+      pieces.pop();
+    }
     if (pieces.length > 0) {
       return pieces[pieces.length - 1];
     }
