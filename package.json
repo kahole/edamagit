@@ -11,7 +11,7 @@
   "engines": {
     "vscode": "^1.42.1"
   },
-  "icon": "images/magit_logo.png",
+  "icon": "images/edamagit_logo.png",
   "galleryBanner": {
     "color": "#000000",
     "theme": "dark"

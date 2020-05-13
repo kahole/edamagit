@@ -1,4 +1,4 @@
-<div align="center"><h2><img src="https://github.com/kahole/edamagit/raw/master/images/magit_logo.png" height="100"><br/>edamagit</h2>
+<div align="center"><h2><img src="https://github.com/kahole/edamagit/raw/develop/images/edamagit_logo.png" height="140"><br/>edamagit</h2>
 </div>
 
 [![vsmarketbadge](https://vsmarketplacebadge.apphb.com/version-short/kahole.magit.svg)](https://marketplace.visualstudio.com/items?itemName=kahole.magit)
