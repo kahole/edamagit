@@ -54,12 +54,8 @@ Essential commands
 
 ## Troubleshooting
 ### I can't commit
-1. git config needs to be set, for repo or global  
+- git config needs to be set, for repo or global  
 `user.name` and `user.email`
-
-2. `code` needs to be in your path  
-(Doesn't apply to OS X)  
-[Adding VSCode to path](https://code.visualstudio.com/docs/editor/versioncontrol#_vs-code-as-git-editor)
 
 ### Vim support (VSCodeVim)
 
