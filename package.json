@@ -1,13 +1,13 @@
 {
   "name": "magit",
   "preview": true,
-  "displayName": "Magit",
+  "displayName": "edamagit",
   "description": "Magit for Visual Studio Code",
   "publisher": "kahole",
   "author": {
     "name": "Kristian Andersen Hole"
   },
-  "version": "0.1.6",
+  "version": "0.1.7",
   "engines": {
     "vscode": "^1.42.1"
   },
@@ -26,13 +26,13 @@
     "commit"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/kahole/vscode-magit/blob/master/README.md",
+  "homepage": "https://github.com/kahole/edamagit/blob/master/README.md",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kahole/vscode-magit.git"
+    "url": "https://github.com/kahole/edamagit.git"
   },
   "bugs": {
-    "url": "https://github.com/kahole/vscode-magit/issues"
+    "url": "https://github.com/kahole/edamagit/issues"
   },
   "activationEvents": [
     "onCommand:magit.status",

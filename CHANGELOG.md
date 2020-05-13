@@ -1,5 +1,12 @@
 # Change Log
 
+### 0.1.7
+- Surface level renaming of the extension to 'edamagit'
+
+Courtesy of @roblabla (Robin Lambertz):
+- Automatic discovery of vscode binaries on linux and winows
+- Support for VSCode Insiders
+
 ### 0.1.6
 - Performance and bugs
 
