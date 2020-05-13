@@ -8,6 +8,7 @@ import { MenuUtil, MenuState } from '../menu/menu';
 import MagitUtils from '../utils/magitUtils';
 import { showDiffSection } from './diffingCommands';
 import { Section } from '../views/general/sectionHeader';
+import * as path from 'path';
 
 const commitMenu = {
   title: 'Committing',
@@ -77,10 +78,13 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
       codePath = 'code-insiders';
     }
 
-    // Only for mac
-    // can only use "code" if it is in path. Vscode command: "Shell Command: Install code in path"
+    // Find the code binary on different platforms.
     if (process.platform === 'darwin') {
       codePath = execPath.split(/(?<=\.app)/)[0] + '/Contents/Resources/app/bin/' + codePath;
+    } else if (process.platform === 'win32') {
+      codePath = path.join(path.dirname(execPath), 'bin', codePath);
+    } else if (process.platform === 'linux') {
+      codePath = execPath;
     }
 
     const env = { [editor ?? 'GIT_EDITOR']: `"${codePath}" --wait` };
