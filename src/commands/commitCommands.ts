@@ -1,4 +1,5 @@
 import { window, ViewColumn, TextEditor, commands } from 'vscode';
+import * as vscode from 'vscode';
 import * as Constants from '../common/constants';
 import { execPath } from 'process';
 import { MagitRepository } from '../models/magitRepository';
@@ -67,12 +68,19 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
       stagedEditorTask = showDiffSection(repository, Section.Staged, true);
     }
 
+    // Check if we are currently running a Code Insiders build.
+    // This checking code is lifted from vscode-python extension by Microsoft.
+    let isInsiders = vscode.env.appName.indexOf('Insider') > 0;
+
     let codePath = 'code';
+    if (isInsiders) {
+      codePath = 'code-insiders';
+    }
 
     // Only for mac
     // can only use "code" if it is in path. Vscode command: "Shell Command: Install code in path"
     if (process.platform === 'darwin') {
-      codePath = execPath.split(/(?<=\.app)/)[0] + '/Contents/Resources/app/bin/code';
+      codePath = execPath.split(/(?<=\.app)/)[0] + '/Contents/Resources/app/bin/' + codePath;
     }
 
     const env = { [editor ?? 'GIT_EDITOR']: `"${codePath}" --wait` };
