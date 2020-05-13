@@ -81,10 +81,8 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
     // Find the code binary on different platforms.
     if (process.platform === 'darwin') {
       codePath = execPath.split(/(?<=\.app)/)[0] + '/Contents/Resources/app/bin/' + codePath;
-    } else if (process.platform === 'win32') {
+    } else if (process.platform === 'win32' || process.platform === 'linux') {
       codePath = path.join(path.dirname(execPath), 'bin', codePath);
-    } else if (process.platform === 'linux') {
-      codePath = execPath;
     }
 
     const env = { [editor ?? 'GIT_EDITOR']: `"${codePath}" --wait` };
