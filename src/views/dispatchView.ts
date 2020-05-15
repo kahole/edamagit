@@ -14,12 +14,12 @@ export class DispatchView extends DocumentView {
     super(uri);
 
     this.addSubview(new TextView(`Popup and dwim commands
-    A Cherry-picking    b Branching         c Committing
-    d Diffing           f Fetching          F Pulling
-    i Ignoring          l Logging           m Merging
-    M Remoting          P Pushing           r Rebasing
-    t Tagging           V Reverting         X Resetting
-    y Show Refs         z Stashing          ! Running           % Worktree`));
+    A Cherry-pick       b Branch            c Commit
+    d Diff              f Fetch             F Pull
+    i Ignore            l Log               m Merge
+    M Remote            P Push              r Rebase
+    t Tag               V Revert            X Reset
+    y Show Refs         z Stash             ! Run             % Worktree`));
   }
 
   public update(state: MagitState): void { }
