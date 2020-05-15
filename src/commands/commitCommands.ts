@@ -69,19 +69,23 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
       stagedEditorTask = showDiffSection(repository, Section.Staged, true);
     }
 
-    // Check if we are currently running a Code Insiders build.
-    // This checking code is lifted from vscode-python extension by Microsoft.
-    let isInsiders = vscode.env.appName.indexOf('Insider') > 0;
+    // Check if we are currently running a Code Insiders or Codium build
+    let isInsiders = vscode.env.appName.includes('Insider');
+    let isCodium = vscode.env.appName.includes('Codium');
+    let isDarwin = process.platform === 'darwin';
 
     let codePath = 'code';
+    if (isCodium && !isDarwin) {
+      codePath = 'codium';
+    }
     if (isInsiders) {
-      codePath = 'code-insiders';
+      codePath += '-insiders';
     }
 
     // Find the code binary on different platforms.
-    if (process.platform === 'darwin') {
+    if (isDarwin) {
       codePath = execPath.split(/(?<=\.app)/)[0] + '/Contents/Resources/app/bin/' + codePath;
-    } else if (process.platform === 'win32' || process.platform === 'linux') {
+    } else {
       codePath = path.join(path.dirname(execPath), 'bin', codePath);
     }
 
