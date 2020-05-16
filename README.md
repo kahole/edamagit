@@ -78,52 +78,52 @@ Add these to your `keybindings.json` config file to get evil-magit / spacemacs l
     {
       "key": "x",
       "command": "magit.discard-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
     },
     {
       "key": "k",
       "command": "-magit.discard-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
     },
     {
       "key": "-",
       "command": "magit.reverse-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
     },
     {
       "key": "v",
       "command": "-magit.reverse-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
     },
     {
       "key": "shift+-",
       "command": "magit.reverting",
-      "when": "editorTextFocus && editorLangId == 'magit'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
     },
     {
       "key": "shift+v",
       "command": "-magit.reverting",
-      "when": "editorTextFocus && editorLangId == 'magit'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
     },
     {
       "key": "shift+o",
       "command": "magit.resetting",
-      "when": "editorTextFocus && editorLangId == 'magit'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
     },
     {
       "key": "shift+x",
       "command": "-magit.resetting",
-      "when": "editorTextFocus && editorLangId == 'magit'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
     },
     {
       "key": "x",
       "command": "-magit.reset-mixed",
-      "when": "editorTextFocus && editorLangId == 'magit'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
     },
     {
       "key": "ctrl+u x",
       "command": "-magit.reset-hard",
-      "when": "editorTextFocus && editorLangId == 'magit'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
     }
   ```
 </details>
