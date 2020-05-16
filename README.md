@@ -60,7 +60,7 @@ Essential commands
 
 ### Vim support (VSCodeVim)
 
-Add these to your `keybindings.json` config file
+Add these to your `keybindings.json` config file to get evil-magit / spacemacs like keybindings.
 <details>
   <summary>keybindings.json</summary>
   
@@ -76,7 +76,7 @@ Add these to your `keybindings.json` config file
       "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert'"
     },
     {
-      "key": "o",
+      "key": "x",
       "command": "magit.discard-at-point",
       "when": "editorTextFocus && editorLangId == 'magit'"
     },
@@ -86,7 +86,7 @@ Add these to your `keybindings.json` config file
       "when": "editorTextFocus && editorLangId == 'magit'"
     },
     {
-      "key": "n",
+      "key": "-",
       "command": "magit.reverse-at-point",
       "when": "editorTextFocus && editorLangId == 'magit'"
     },
@@ -94,15 +94,35 @@ Add these to your `keybindings.json` config file
       "key": "v",
       "command": "-magit.reverse-at-point",
       "when": "editorTextFocus && editorLangId == 'magit'"
-    }
+    },
     {
-      "key": "shift+n",
+      "key": "shift+-",
       "command": "magit.reverting",
       "when": "editorTextFocus && editorLangId == 'magit'"
     },
     {
       "key": "shift+v",
       "command": "-magit.reverting",
+      "when": "editorTextFocus && editorLangId == 'magit'"
+    },
+    {
+      "key": "shift+o",
+      "command": "magit.resetting",
+      "when": "editorTextFocus && editorLangId == 'magit'"
+    },
+    {
+      "key": "shift+x",
+      "command": "-magit.resetting",
+      "when": "editorTextFocus && editorLangId == 'magit'"
+    },
+    {
+      "key": "x",
+      "command": "-magit.reset-mixed",
+      "when": "editorTextFocus && editorLangId == 'magit'"
+    },
+    {
+      "key": "ctrl+u x",
+      "command": "-magit.reset-hard",
       "when": "editorTextFocus && editorLangId == 'magit'"
     }
   ```
