@@ -1,5 +1,13 @@
 # Change Log
 
+### 0.1.8
+- Fixes issue where '/' search with VSCodeVim wasn't working (#24)
+- Adds syntax highlighting for help view (#24)
+- Adds support for codium (#25)
+- New logo
+
+Note: keybindings have gotten an update. This might mean that your custom keybindings for removing default ones need to be updated. See VSCodeVim section of README.
+
 ### 0.1.7
 - Surface level renaming of the extension to 'edamagit'
 
