@@ -7,11 +7,11 @@
   "author": {
     "name": "Kristian Andersen Hole"
   },
-  "version": "0.1.7",
+  "version": "0.1.8",
   "engines": {
     "vscode": "^1.42.1"
   },
-  "icon": "images/magit_logo.png",
+  "icon": "images/edamagit_logo.png",
   "galleryBanner": {
     "color": "#000000",
     "theme": "dark"
@@ -382,177 +382,177 @@
       {
         "command": "magit.toggle-fold",
         "key": "tab",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.refresh",
         "key": "g",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.help",
         "key": "shift+/",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.visit-at-point",
         "key": "enter",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.apply-at-point",
         "key": "a",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.discard-at-point",
         "key": "k",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.reverse-at-point",
         "key": "v",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.commit",
         "key": "c",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.branching",
         "key": "b",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.merging",
         "key": "m",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.rebasing",
         "key": "r",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.resetting",
         "key": "shift+x",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.reset-mixed",
         "key": "x",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.reset-hard",
         "key": "ctrl+u x",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.remoting",
         "key": "shift+m",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.logging",
         "key": "l",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.show-refs",
         "key": "y",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.diffing",
         "key": "d",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.tagging",
         "key": "t",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.cherry-picking",
         "key": "shift+a",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.reverting",
         "key": "shift+v",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.ignoring",
         "key": "i",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.ignoring",
         "key": "shift+i",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.running",
         "key": "shift+1",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.worktree",
         "key": "shift+5",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.pushing",
         "key": "shift+p",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.pulling",
         "key": "shift+f",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.stashing",
         "key": "z",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.fetching",
         "key": "f",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.stage",
         "key": "s",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.stage-all",
         "key": "shift+s",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.unstage",
         "key": "u",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.unstage-all",
         "key": "shift+u",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.process-log",
         "key": "shift+4",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.quit",
         "key": "q",
-        "when": "editorTextFocus && editorLangId == magit"
+        "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
       },
       {
         "command": "magit.save-and-close-editor",

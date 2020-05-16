@@ -1,4 +1,4 @@
-<div align="center"><h2><img src="https://github.com/kahole/edamagit/raw/master/images/magit_logo.png" height="100"><br/>edamagit</h2>
+<div align="center"><h2><img src="https://github.com/kahole/edamagit/raw/develop/images/edamagit_logo.png" height="140"><br/>edamagit</h2>
 </div>
 
 [![vsmarketbadge](https://vsmarketplacebadge.apphb.com/version-short/kahole.magit.svg)](https://marketplace.visualstudio.com/items?itemName=kahole.magit)
@@ -34,12 +34,12 @@
 Keybindings inside edamagit
 ```
 Popup commands
-  A Cherry-picking    b Branching         c Committing
-  d Diffing           f Fetching          F Pulling
-  i Ignoring          l Logging           m Merging
-  M Remoting          P Pushing           r Rebasing
-  t Tagging           V Reverting         X Resetting
-  y Show Refs         z Stashing          ! Running           % Worktree
+  A Cherry-pick       b Branch            c Commit
+  d Diff              f Fetch             F Pull
+  i Ignore            l Log               m Merge
+  M Remote            P Push              r Rebase
+  t Tag               V Revert            X Reset
+  y Show Refs         z Stash             ! Run             % Worktree
  
 Applying changes
   a Apply          s Stage          u Unstage
@@ -60,7 +60,7 @@ Essential commands
 
 ### Vim support (VSCodeVim)
 
-Add these to your `keybindings.json` config file
+Add these to your `keybindings.json` config file to get evil-magit / spacemacs like keybindings.
 <details>
   <summary>keybindings.json</summary>
   
@@ -76,34 +76,54 @@ Add these to your `keybindings.json` config file
       "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert'"
     },
     {
-      "key": "o",
+      "key": "x",
       "command": "magit.discard-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
     },
     {
       "key": "k",
       "command": "-magit.discard-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
     },
     {
-      "key": "n",
+      "key": "-",
       "command": "magit.reverse-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
     },
     {
       "key": "v",
       "command": "-magit.reverse-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit'"
-    }
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
+    },
     {
-      "key": "shift+n",
+      "key": "shift+-",
       "command": "magit.reverting",
-      "when": "editorTextFocus && editorLangId == 'magit'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
     },
     {
       "key": "shift+v",
       "command": "-magit.reverting",
-      "when": "editorTextFocus && editorLangId == 'magit'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
+    },
+    {
+      "key": "shift+o",
+      "command": "magit.resetting",
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
+    },
+    {
+      "key": "shift+x",
+      "command": "-magit.resetting",
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
+    },
+    {
+      "key": "x",
+      "command": "-magit.reset-mixed",
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
+    },
+    {
+      "key": "ctrl+u x",
+      "command": "-magit.reset-hard",
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
     }
   ```
 </details>

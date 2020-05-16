@@ -31,6 +31,9 @@
         },
         {
           "include": "#entity"
+        },
+        {
+          "include": "#helpKey"
         }
       ]
     },
@@ -70,6 +73,10 @@
           "include": "source.diff"
         }
       ]
+    },
+    "helpKey": {
+      "match": "  ([a-zA-Z]|!|\\$|\\%|TAB|RET|\\_) ",
+      "name": "strong keyword.operator.new"
     }
   }
 }
