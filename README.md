@@ -78,52 +78,52 @@ Add these to your `keybindings.json` config file to get evil-magit / spacemacs l
     {
       "key": "x",
       "command": "magit.discard-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode' && vim.mode != 'CommandlineInProgress'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
     },
     {
       "key": "k",
       "command": "-magit.discard-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode' && vim.mode != 'CommandlineInProgress'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
     },
     {
       "key": "-",
       "command": "magit.reverse-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode' && vim.mode != 'CommandlineInProgress'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
     },
     {
       "key": "v",
       "command": "-magit.reverse-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode' && vim.mode != 'CommandlineInProgress'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
     },
     {
       "key": "shift+-",
       "command": "magit.reverting",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode' && vim.mode != 'CommandlineInProgress'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
     },
     {
       "key": "shift+v",
       "command": "-magit.reverting",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode' && vim.mode != 'CommandlineInProgress'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
     },
     {
       "key": "shift+o",
       "command": "magit.resetting",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode' && vim.mode != 'CommandlineInProgress'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
     },
     {
       "key": "shift+x",
       "command": "-magit.resetting",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode' && vim.mode != 'CommandlineInProgress'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
     },
     {
       "key": "x",
       "command": "-magit.reset-mixed",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode' && vim.mode != 'CommandlineInProgress'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
     },
     {
       "key": "ctrl+u x",
       "command": "-magit.reset-hard",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode' && vim.mode != 'CommandlineInProgress'"
+      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
     }
   ```
 </details>
