@@ -48,7 +48,7 @@ async function checkout(menuState: MenuState) {
 }
 
 async function checkoutLocal(menuState: MenuState) {
-  return _checkout(menuState, menuState.repository.state.refs.filter(r => r.type !== RefType.RemoteHead));
+  return _checkout(menuState, menuState.repository.state.refs.filter(r => r.type === RefType.Head));
 }
 
 async function checkoutNewBranch(menuState: MenuState) {
