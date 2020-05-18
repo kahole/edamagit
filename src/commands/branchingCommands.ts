@@ -1,13 +1,11 @@
 import { window, workspace } from 'vscode';
+import { views } from '../extension';
 import { MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
-import { Ref, GitErrorCodes, RefType } from '../typings/git';
+import { GitErrorCodes, Ref, RefType } from '../typings/git';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
-import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
-import GitTextUtils from '../utils/gitTextUtils';
 import ShowRefsView from '../views/showRefsView';
-import { views } from '../extension';
 
 const branchingMenu = {
   title: 'Branching',
