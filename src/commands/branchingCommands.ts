@@ -139,7 +139,19 @@ async function _createBranch({ repository }: MenuState, checkout: boolean) {
   const ref = await MagitUtils.chooseRef(repository, 'Create and checkout branch starting at', true, true);
 
   if (ref) {
-    const newBranchName = await window.showInputBox({ prompt: 'Name for new branch' });
+    // Check if the branch is a remote branch
+    const remoteBranchRef = repository.state.refs.find(r => r.type === RefType.RemoteHead && r.name === ref);
+    let value = '';
+    if (remoteBranchRef && remoteBranchRef.remote) {
+      const localBranchName = ref.substring(remoteBranchRef.remote.length + 1);
+      const existLocally = repository.state.refs.find(r => r.type === RefType.Head && r.name === localBranchName);
+      if (!existLocally) {
+        // Populate the inputbox with a local branch name if it doesn't exist locally
+        value = localBranchName;
+      }
+    }
+    
+    const newBranchName = await window.showInputBox({ prompt: 'Name for new branch', value: value});
 
     if (newBranchName && newBranchName.length > 0) {
 
