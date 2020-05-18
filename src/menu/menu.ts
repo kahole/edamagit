@@ -1,6 +1,6 @@
-import { window, QuickPickItem } from 'vscode';
-import { MenuItem } from './menuItem';
+import { QuickPickItem, window } from 'vscode';
 import { MagitRepository } from '../models/magitRepository';
+import { MenuItem } from './menuItem';
 
 export interface Menu {
   title: string;
@@ -99,55 +99,62 @@ export class MenuUtil {
   }
 
   static showSwitchesMenu(menuState: MenuState): Promise<Switch[]> {
-
-    return new Promise((resolve, reject) => {
-
-      const _quickPick = window.createQuickPick<QuickPickItem>();
-
-      _quickPick.canSelectMany = true;
-      _quickPick.title = 'Switches (type shortname of switches you want to enable)';
-
-      if (menuState.switches) {
-        _quickPick.items = menuState.switches.map(s => ({ label: s.shortName, detail: s.longName, description: s.description, activated: s.activated }));
-        _quickPick.selectedItems = _quickPick.items.filter(s => (s as any).activated);
-      }
-
-      const eventListenerDisposable = _quickPick.onDidChangeValue(async (e) => {
-
-        for (const item of _quickPick.items) {
-          if (MenuUtil.matchesSwitch(_quickPick.value, item.label)) {
-            const alreadySelectedItem = _quickPick.selectedItems.find(selItem => MenuUtil.matchesSwitch(_quickPick.value, selItem.label));
-            if (alreadySelectedItem) {
-              _quickPick.selectedItems = _quickPick.selectedItems.filter(i => i.label !== alreadySelectedItem.label);
-            } else {
-              _quickPick.selectedItems = [..._quickPick.selectedItems, item];
-            }
-            _quickPick.value = '';
-          }
-        }
-      });
-
-      const acceptListenerDisposable = _quickPick.onDidAccept(async () => {
-
-        const updatedSwitches: Switch[] = [];
-
-        menuState.switches!.forEach(s => {
-          updatedSwitches.push({ ...s, activated: _quickPick.selectedItems.find(item => item.label === s.shortName) !== undefined });
-        });
-
-        _quickPick.dispose();
-        eventListenerDisposable.dispose();
-        acceptListenerDisposable.dispose();
-        try {
-          resolve(updatedSwitches);
-        } catch (error) {
-          reject(error);
-        }
-      });
-
-      _quickPick.show();
+    return new Promise<Switch[]>((resolve, reject) => {
+      this._showSwitchesMenu(menuState.switches ?? [], resolve, reject);
     });
   }
+
+  private static _showSwitchesMenu(switches: Switch[], resolve: (value: Switch[]) => void, reject: (reason: any) => void) {
+    const _quickPick = window.createQuickPick<QuickPickItem>();
+
+    _quickPick.canSelectMany = true;
+    _quickPick.title = 'Switches (type shortname of switches you want to enable)';
+    _quickPick.items = switches.map(s => ({ label: s.shortName, detail: s.longName, description: s.description, activated: s.activated }));
+    _quickPick.selectedItems = _quickPick.items.filter(s => (s as any).activated);
+
+    const eventListenerDisposable = _quickPick.onDidChangeValue((value) => {
+      for (const item of _quickPick.items) {
+        if (MenuUtil.matchesSwitch(value, item.label)) {
+          const alreadySelectedItem = _quickPick.selectedItems.find(selItem => MenuUtil.matchesSwitch(value, selItem.label));
+          if (alreadySelectedItem) {
+            _quickPick.selectedItems = _quickPick.selectedItems.filter(i => i.label !== alreadySelectedItem.label);
+          } else {
+            _quickPick.selectedItems = [..._quickPick.selectedItems, item];
+          }
+
+          const updatedSwitches = switches.map(s =>
+            ({ ...s, activated: _quickPick.selectedItems.find(item => item.label === s.shortName) !== undefined })
+          );
+          
+          // Dipose the old menu and show a new switch menu to
+          // get around the fact that restting _quickPick.value
+          // would not reset the fillter
+          _quickPick.dispose();
+          eventListenerDisposable.dispose();
+          acceptListenerDisposable.dispose();
+          this._showSwitchesMenu(updatedSwitches, resolve, reject);
+          break;
+        }
+      }
+    });
+
+    const acceptListenerDisposable = _quickPick.onDidAccept(() => {
+      const updatedSwitches = switches.map(s =>
+        ({ ...s, activated: _quickPick.selectedItems.find(item => item.label === s.shortName) !== undefined })
+      );
+      _quickPick.dispose();
+      eventListenerDisposable.dispose();
+      acceptListenerDisposable.dispose();
+      try {
+        resolve(updatedSwitches);
+      } catch (error) {
+        reject(error);
+      }
+    });
+
+    _quickPick.show();
+  }
+
 
   static matchesSwitch(input: string, switchShortName: string): boolean {
     return input === switchShortName || input === switchShortName.replace('-', '');
