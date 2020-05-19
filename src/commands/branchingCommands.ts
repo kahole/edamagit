@@ -1,13 +1,11 @@
 import { window, workspace } from 'vscode';
+import { views } from '../extension';
 import { MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
-import { Ref, GitErrorCodes, RefType } from '../typings/git';
+import { GitErrorCodes, Ref, RefType } from '../typings/git';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
-import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
-import GitTextUtils from '../utils/gitTextUtils';
 import ShowRefsView from '../views/showRefsView';
-import { views } from '../extension';
 
 const branchingMenu = {
   title: 'Branching',
@@ -48,7 +46,7 @@ async function checkout(menuState: MenuState) {
 }
 
 async function checkoutLocal(menuState: MenuState) {
-  return _checkout(menuState, menuState.repository.state.refs.filter(r => r.type !== RefType.RemoteHead));
+  return _checkout(menuState, menuState.repository.state.refs.filter(r => r.type === RefType.Head));
 }
 
 async function checkoutNewBranch(menuState: MenuState) {
@@ -139,7 +137,19 @@ async function _createBranch({ repository }: MenuState, checkout: boolean) {
   const ref = await MagitUtils.chooseRef(repository, 'Create and checkout branch starting at', true, true);
 
   if (ref) {
-    const newBranchName = await window.showInputBox({ prompt: 'Name for new branch' });
+    // Check if the branch is a remote branch
+    const remoteBranchRef = repository.state.refs.find(r => r.type === RefType.RemoteHead && r.name === ref);
+    let value = '';
+    if (remoteBranchRef && remoteBranchRef.remote) {
+      const localBranchName = ref.substring(remoteBranchRef.remote.length + 1);
+      const existLocally = repository.state.refs.find(r => r.type === RefType.Head && r.name === localBranchName);
+      if (!existLocally) {
+        // Populate the inputbox with a local branch name if it doesn't exist locally
+        value = localBranchName;
+      }
+    }
+    
+    const newBranchName = await window.showInputBox({ prompt: 'Name for new branch', value: value});
 
     if (newBranchName && newBranchName.length > 0) {
 
