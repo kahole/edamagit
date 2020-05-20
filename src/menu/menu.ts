@@ -27,7 +27,7 @@ export class MenuUtil {
 
     return new Promise((resolve, reject) => {
 
-      const quickItems: MenuItem[] = [...menu.commands];
+      let quickItems: MenuItem[] = menu.commands.map(item => ({ ...item, description: `\t${item.description}` }));
 
       if (menuState.switches) {
 
@@ -36,7 +36,7 @@ export class MenuUtil {
 
         quickItems.push({
           label: '-',
-          description: `Switches ${activeSwitches.length > 0 ? activeSwitchesPresentation : ''}`,
+          description: `\tSwitches ${activeSwitches.length > 0 ? activeSwitchesPresentation : ''}`,
           action: async (menuState: MenuState) => {
 
             const updatedSwitches = await MenuUtil.showSwitchesMenu(menuState);
@@ -109,7 +109,7 @@ export class MenuUtil {
 
     _quickPick.canSelectMany = true;
     _quickPick.title = 'Switches (type shortname of switches you want to enable)';
-    _quickPick.items = switches.map(s => ({ label: s.shortName, detail: s.longName, description: s.description, activated: s.activated }));
+    _quickPick.items = switches.map(s => ({ label: s.shortName, detail: s.longName, description: `\t${s.description}`, activated: s.activated }));
     _quickPick.selectedItems = _quickPick.items.filter(s => (s as any).activated);
 
     const eventListenerDisposable = _quickPick.onDidChangeValue((value) => {
