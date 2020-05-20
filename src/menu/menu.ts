@@ -128,7 +128,7 @@ export class MenuUtil {
         _quickPick.selectedItems = _quickPick.items.filter(s => s.picked);
       });
 
-      const acceptListenerDisposable = _quickPick.onDidAccept(async () => {
+      const acceptListenerDisposable = _quickPick.onDidAccept(() => {
 
         const updatedSwitches: Switch[] = menuState.switches!.map(s =>
           ({
