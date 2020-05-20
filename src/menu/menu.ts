@@ -118,6 +118,9 @@ export class MenuUtil {
         if (_quickPick.value === 'q') {
           return _quickPick.hide();
         }
+        if (_quickPick.value === '-') {
+          return;
+        }
         let quickPickValue = _quickPick.value;
         _quickPick.value = '';
 
