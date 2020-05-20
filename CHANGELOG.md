@@ -1,5 +1,14 @@
 # Change Log
 
+### 0.1.9
+- Adds single keypress switch enablement (#35)
+    E.g. now you can `push --force` with keysequence: `P - f p`
+
+Courtesy of @stevenguh (Steven Guh):
+- Automatically fills out name of local when checking out remote branch
+- Items in menus now aligned
+- Fixed issue with branch inconsistency
+
 ### 0.1.8
 - Fixes issue where '/' search with VSCodeVim wasn't working (#24)
 - Adds syntax highlighting for help view (#24)
