@@ -16,7 +16,7 @@ class ProcessLogEntryView extends View {
   constructor(private entry: MagitProcessLogEntry) {
     super();
     this.addSubview(
-      new TextView(entry.command.reduce((msg, arg) => msg + arg + ' ', ''))
+      new TextView(entry.command.join(' '))
     );
     if (entry.output) {
       this.addSubview(new TextView(entry.output));

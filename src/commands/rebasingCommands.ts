@@ -107,7 +107,7 @@ async function rebaseInteractively({ repository, switches }: MenuState) {
   if (commit) {
     const interactiveSwitches = (switches ?? []).map(s => ({ ...s, activated: s.activated || s.longName === '--interactive' }));
 
-    const args = ['rebase', ...MenuUtil.switchesToArgs(interactiveSwitches), commit];
+    const args = ['rebase', ...MenuUtil.switchesToArgs(interactiveSwitches), `${commit}^`];
 
     return CommitCommands.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR' });
   }

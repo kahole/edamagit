@@ -1,5 +1,32 @@
 # Change Log
 
+### 0.1.8
+- Fixes issue where '/' search with VSCodeVim wasn't working (#24)
+- Adds syntax highlighting for help view (#24)
+- Adds support for codium (#25)
+- New logo
+
+Note: keybindings have gotten an update. This might mean that your custom keybindings for removing default ones need to be updated. See VSCodeVim section of README.
+
+### 0.1.7
+- Surface level renaming of the extension to 'edamagit'
+
+Courtesy of @roblabla (Robin Lambertz):
+- Automatic discovery of vscode binaries on linux and winows
+- Support for VSCode Insiders
+
+Courtesy of @angusiguess (Angus Fletcher):
+- Fixed issue where interactive rebase didn't include the selected commit itself.
+
+### 0.1.6
+- Performance and bugs
+
+### 0.1.5
+- Now possible to stage just selected lines from a change
+    (Sub-hunk selection for stage/unstage/discard)
+
+- Fixed issue where merging status didn't show all incoming commits
+
 ### 0.1.4
 - Visiting a change will now place your cursor at the position in the file relative to the magit diff display
 - Stash just index

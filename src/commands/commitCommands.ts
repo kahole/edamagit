@@ -1,4 +1,5 @@
 import { window, ViewColumn, TextEditor, commands } from 'vscode';
+import * as vscode from 'vscode';
 import * as Constants from '../common/constants';
 import { execPath } from 'process';
 import { MagitRepository } from '../models/magitRepository';
@@ -7,6 +8,7 @@ import { MenuUtil, MenuState } from '../menu/menu';
 import MagitUtils from '../utils/magitUtils';
 import { showDiffSection } from './diffingCommands';
 import { Section } from '../views/general/sectionHeader';
+import * as path from 'path';
 
 const commitMenu = {
   title: 'Committing',
@@ -67,12 +69,24 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
       stagedEditorTask = showDiffSection(repository, Section.Staged, true);
     }
 
-    let codePath = 'code';
+    // Check if we are currently running a Code Insiders or Codium build
+    let isInsiders = vscode.env.appName.includes('Insider');
+    let isCodium = vscode.env.appName.includes('Codium');
+    let isDarwin = process.platform === 'darwin';
 
-    // Only for mac
-    // can only use "code" if it is in path. Vscode command: "Shell Command: Install code in path"
-    if (process.platform === 'darwin') {
-      codePath = execPath.split(/(?<=\.app)/)[0] + '/Contents/Resources/app/bin/code';
+    let codePath = 'code';
+    if (isCodium && !isDarwin) {
+      codePath = 'codium';
+    }
+    if (isInsiders) {
+      codePath += '-insiders';
+    }
+
+    // Find the code binary on different platforms.
+    if (isDarwin) {
+      codePath = execPath.split(/(?<=\.app)/)[0] + '/Contents/Resources/app/bin/' + codePath;
+    } else {
+      codePath = path.join(path.dirname(execPath), 'bin', codePath);
     }
 
     const env = { [editor ?? 'GIT_EDITOR']: `"${codePath}" --wait` };

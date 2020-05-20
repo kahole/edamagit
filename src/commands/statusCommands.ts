@@ -6,7 +6,7 @@ import GitTextUtils from '../utils/gitTextUtils';
 import { MagitRepository } from '../models/magitRepository';
 import MagitUtils from '../utils/magitUtils';
 import MagitStatusView from '../views/magitStatusView';
-import { Status, Commit, RefType, Repository } from '../typings/git';
+import { Status, Commit, RefType, Repository, Change } from '../typings/git';
 import { MagitBranch, MagitUpstreamRef } from '../models/magitBranch';
 import { Section } from '../views/general/sectionHeader';
 import { gitRun, LogLevel } from '../utils/gitRawRunner';
@@ -15,6 +15,7 @@ import { getCommit } from '../utils/commitCache';
 import { MagitRemote } from '../models/magitRemote';
 import { MagitRebasingState } from '../models/magitRebasingState';
 import { MagitMergingState } from '../models/magitMergingState';
+import { MagitRevertingState } from '../models/magitRevertingState';
 
 export async function magitRefresh() { }
 
@@ -29,6 +30,9 @@ export async function magitStatus(editor: TextEditor, preserveFocus = false): Pr
       if (view instanceof MagitStatusView) {
 
         await MagitUtils.magitStatusAndUpdate(repository);
+        if (editor.document.uri.path === MagitStatusView.UriPath) {
+          return;
+        }
         return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false }));
       }
     }
@@ -66,110 +70,52 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     commitsBehindUpstream.map(c => getCommit(repository, c));
   }
 
-  const untrackedFiles: MagitChange[] = [];
-
   const workingTreeChanges_NoUntracked = repository.state.workingTreeChanges
-    .filter(c => {
-      if (c.status === Status.UNTRACKED) {
-        const magitChange: MagitChange = c;
-        magitChange.section = Section.Untracked;
-        magitChange.relativePath = FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri);
-        untrackedFiles.push(magitChange);
-        return false;
-      }
-      return true;
-    });
+    .filter(c => (c.status !== Status.UNTRACKED));
+
+  const untrackedFiles: MagitChange[] =
+    repository.state.workingTreeChanges.length > workingTreeChanges_NoUntracked.length ?
+      (await gitRun(repository, ['ls-files', '--others', '--exclude-standard', '--directory']))
+        .stdout
+        .replace(Constants.FinalLineBreakRegex, '')
+        .split(Constants.LineSplitterRegex)
+        .map(untrackedPath => {
+          const uri = Uri.parse(repository.rootUri.fsPath + '/' + untrackedPath);
+          return {
+            originalUri: uri,
+            renameUri: uri,
+            uri: uri,
+            status: Status.UNTRACKED,
+            relativePath: FilePathUtils.uriPathRelativeTo(uri, repository.rootUri),
+            section: Section.Untracked
+          };
+        }) : [];
 
   const workingTreeChangesTasks = Promise.all(workingTreeChanges_NoUntracked
     .map(async change => {
       const diff = await repository.diffWithHEAD(change.uri.fsPath);
-      const magitChange: MagitChange = change;
-      magitChange.section = Section.Unstaged;
-      magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
-      magitChange.hunks = GitTextUtils.diffToHunks(diff, change.uri, Section.Unstaged);
-      return magitChange;
+      return toMagitChange(repository, change, Section.Unstaged, diff);
     }));
 
   const indexChangesTasks = Promise.all(repository.state.indexChanges
     .map(async change => {
       const diff = await repository.diffIndexWithHEAD(change.uri.fsPath);
-      const magitChange: MagitChange = change;
-      magitChange.section = Section.Staged;
-      magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
-      magitChange.hunks = GitTextUtils.diffToHunks(diff, change.uri, Section.Staged);
-      return magitChange;
+      return toMagitChange(repository, change, Section.Staged, diff);
     }));
 
   const mergeChangesTasks = Promise.all(repository.state.mergeChanges
     .map(async change => {
       const diff = await repository.diffWithHEAD(change.uri.fsPath);
-      const magitChange: MagitChange = change;
-      magitChange.section = Section.Staged;
-      magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
-      magitChange.hunks = GitTextUtils.diffToHunks(diff, change.uri, Section.Staged);
-      return magitChange;
+      return toMagitChange(repository, change, Section.Unstaged, diff);
     }));
-
-  const cherryPickHeadPath = Uri.parse(dotGitPath + 'CHERRY_PICK_HEAD');
-  const cherryPickHeadFileTask = workspace.fs.readFile(cherryPickHeadPath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''), err => undefined);
-
-  const revertHeadPath = Uri.parse(dotGitPath + 'REVERT_HEAD');
-  const revertHeadFileTask = workspace.fs.readFile(revertHeadPath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''), err => undefined);
-
-  const mergingStateTask = mergingStatus(repository, dotGitPath);
-  const rebasingStateTask = rebasingStatus(repository, dotGitPath, logTask);
 
   const sequencerTodoPath = Uri.parse(dotGitPath + 'sequencer/todo');
   const sequencerHeadPath = Uri.parse(dotGitPath + 'sequencer/head');
 
-  let cherryPickingState;
-  try {
-    const cherryPickHeadCommitHash = await cherryPickHeadFileTask;
-
-    if (cherryPickHeadCommitHash) {
-
-      const sequencerTodoPathFileTask = workspace.fs.readFile(sequencerTodoPath)
-        .then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''), err => undefined);
-      const sequencerHeadPathFileTask = workspace.fs.readFile(sequencerHeadPath)
-        .then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''), err => undefined);
-
-      const todo = await sequencerTodoPathFileTask;
-      const head = await sequencerHeadPathFileTask;
-
-      const currentCommitTask = getCommit(repository, cherryPickHeadCommitHash);
-      const originalHeadTask = head ? getCommit(repository, head) : getCommit(repository, repository.state.HEAD!.commit!);
-
-      cherryPickingState = {
-        originalHead: await originalHeadTask,
-        currentCommit: await currentCommitTask,
-        upcomingCommits: GitTextUtils.parseSequencerTodo(todo).slice(1).reverse()
-      };
-    }
-  } catch { }
-
-  let revertingState;
-  try {
-    const revertHeadCommitHash = await revertHeadFileTask;
-
-    if (revertHeadCommitHash) {
-      const sequencerTodoPathFileTask = workspace.fs.readFile(sequencerTodoPath)
-        .then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''), err => undefined);
-      const sequencerHeadPathFileTask = workspace.fs.readFile(sequencerHeadPath)
-        .then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''), err => undefined);
-
-      const todo = await sequencerTodoPathFileTask;
-      const head = await sequencerHeadPathFileTask;
-
-      const currentCommitTask = getCommit(repository, revertHeadCommitHash);
-      const originalHeadTask = head ? getCommit(repository, head) : getCommit(repository, repository.state.HEAD!.commit!);
-
-      revertingState = {
-        originalHead: await originalHeadTask,
-        currentCommit: await currentCommitTask,
-        upcomingCommits: GitTextUtils.parseSequencerTodo(todo).slice(1).reverse()
-      };
-    }
-  } catch { }
+  const mergingStateTask = mergingStatus(repository, dotGitPath);
+  const rebasingStateTask = rebasingStatus(repository, dotGitPath, logTask);
+  const cherryPickingStateTask = cherryPickingStatus(repository, dotGitPath, sequencerTodoPath, sequencerHeadPath);
+  const revertingStateTask = revertingStatus(repository, dotGitPath, sequencerTodoPath, sequencerHeadPath);
 
   const HEAD = repository.state.HEAD as MagitBranch | undefined;
 
@@ -215,13 +161,21 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     untrackedFiles,
     rebasingState: await rebasingStateTask,
     mergingState: await mergingStateTask,
-    cherryPickingState,
-    revertingState,
+    cherryPickingState: await cherryPickingStateTask,
+    revertingState: await revertingStateTask,
     branches: repository.state.refs.filter(ref => ref.type === RefType.Head),
     remotes,
     tags: repository.state.refs.filter(ref => ref.type === RefType.Tag),
     latestGitError: repository.magitState?.latestGitError
   };
+}
+
+function toMagitChange(repository: Repository, change: Change, section: Section, diff?: string): MagitChange {
+  const magitChange: MagitChange = change;
+  magitChange.section = section;
+  magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
+  magitChange.hunks = diff ? GitTextUtils.diffToHunks(diff, change.uri, section) : undefined;
+  return magitChange;
 }
 
 async function pushRemoteStatus(repository: Repository): Promise<MagitUpstreamRef | undefined> {
@@ -260,7 +214,13 @@ async function mergingStatus(repository: Repository, dotGitPath: string): Promis
       const parsedMergeState = GitTextUtils.parseMergeStatus(mergeHeadText, mergeMsgText);
 
       if (parsedMergeState) {
-        const [mergeCommits, mergingBranches] = parsedMergeState;
+        const [mergeHeadCommit, mergingBranches] = parsedMergeState;
+
+        const mergeCommitsText = (await gitRun(repository, ['rev-list', `HEAD..${mergeHeadCommit}`])).stdout;
+        const mergeCommits = mergeCommitsText
+          .replace(Constants.FinalLineBreakRegex, '')
+          .split(Constants.LineSplitterRegex);
+
         return {
           mergingBranches,
           commits: await Promise.all(mergeCommits.map(c => getCommit(repository, c)))
@@ -271,7 +231,6 @@ async function mergingStatus(repository: Repository, dotGitPath: string): Promis
 }
 
 async function rebasingStatus(repository: Repository, dotGitPath: string, logTask: Promise<Commit[]>): Promise<MagitRebasingState | undefined> {
-
   try {
 
     if (repository.state.rebaseCommit) {
@@ -338,6 +297,62 @@ async function rebasingStatus(repository: Repository, dotGitPath: string, logTas
         ontoBranch,
         doneCommits,
         upcomingCommits
+      };
+    }
+  } catch { }
+}
+
+
+async function cherryPickingStatus(repository: Repository, dotGitPath: string, sequencerTodoPath: Uri, sequencerHeadPath: Uri): Promise<MagitRevertingState | undefined> {
+  try {
+
+    const cherryPickHeadPath = Uri.parse(dotGitPath + 'CHERRY_PICK_HEAD');
+    const cherryPickHeadCommitHash = await workspace.fs.readFile(cherryPickHeadPath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''), err => undefined);
+
+    if (cherryPickHeadCommitHash) {
+
+      const sequencerTodoPathFileTask = workspace.fs.readFile(sequencerTodoPath)
+        .then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''), err => undefined);
+      const sequencerHeadPathFileTask = workspace.fs.readFile(sequencerHeadPath)
+        .then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''), err => undefined);
+
+      const todo = await sequencerTodoPathFileTask;
+      const head = await sequencerHeadPathFileTask;
+
+      const currentCommitTask = getCommit(repository, cherryPickHeadCommitHash);
+      const originalHeadTask = head ? getCommit(repository, head) : getCommit(repository, repository.state.HEAD!.commit!);
+
+      return {
+        originalHead: await originalHeadTask,
+        currentCommit: await currentCommitTask,
+        upcomingCommits: GitTextUtils.parseSequencerTodo(todo).slice(1).reverse()
+      };
+    }
+  } catch { }
+}
+
+async function revertingStatus(repository: Repository, dotGitPath: string, sequencerTodoPath: Uri, sequencerHeadPath: Uri): Promise<MagitRevertingState | undefined> {
+  try {
+
+    const revertHeadPath = Uri.parse(dotGitPath + 'REVERT_HEAD');
+    const revertHeadCommitHash = await workspace.fs.readFile(revertHeadPath).then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''), err => undefined);
+
+    if (revertHeadCommitHash) {
+      const sequencerTodoPathFileTask = workspace.fs.readFile(sequencerTodoPath)
+        .then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''), err => undefined);
+      const sequencerHeadPathFileTask = workspace.fs.readFile(sequencerHeadPath)
+        .then(f => f.toString().replace(Constants.FinalLineBreakRegex, ''), err => undefined);
+
+      const todo = await sequencerTodoPathFileTask;
+      const head = await sequencerHeadPathFileTask;
+
+      const currentCommitTask = getCommit(repository, revertHeadCommitHash);
+      const originalHeadTask = head ? getCommit(repository, head) : getCommit(repository, repository.state.HEAD!.commit!);
+
+      return {
+        originalHead: await originalHeadTask,
+        currentCommit: await currentCommitTask,
+        upcomingCommits: GitTextUtils.parseSequencerTodo(todo).slice(1).reverse()
       };
     }
   } catch { }

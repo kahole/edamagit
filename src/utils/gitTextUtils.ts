@@ -1,8 +1,9 @@
 import { MagitChangeHunk } from '../models/magitChangeHunk';
-import { Uri } from 'vscode';
+import { Uri, Selection } from 'vscode';
 import { Section } from '../views/general/sectionHeader';
 import * as Constants from '../common/constants';
 import { Commit } from '../typings/git';
+import { HunkView } from '../views/changes/hunkView';
 
 export default class GitTextUtils {
 
@@ -18,17 +19,16 @@ export default class GitTextUtils {
       .map(hunkText => ({ diff: hunkText, diffHeader, uri, section }));
   }
 
-  public static parseMergeStatus(mergeHashes: string, mergeMessage: string): [string[], string[]] | undefined {
+  public static parseMergeStatus(mergeHead: string, mergeMessage: string): [string, string[]] | undefined {
 
     const mergingBranches = mergeMessage.match(/'(.*?)'/g)
       ?.map(b => b.slice(1, b.length - 1));
 
-    const commits = mergeHashes
-      .replace(Constants.FinalLineBreakRegex, '')
-      .split(Constants.LineSplitterRegex);
+    const commit = mergeHead
+      .replace(Constants.FinalLineBreakRegex, '');
 
     if (mergingBranches) {
-      return [commits, mergingBranches];
+      return [commit, mergingBranches];
     }
   }
 
@@ -103,8 +103,94 @@ export default class GitTextUtils {
     return commitMessage ? commitMessage.split('\n')[0] : '';
   }
 
-  public static changeHunkToPatch(changeHunk: MagitChangeHunk): string {
-    return changeHunk.diffHeader + changeHunk.diff + '\n';
+  public static generatePatchFromChangeHunkView(hunkView: HunkView, selection?: Selection, reverse = false): string {
+
+    if (!selection || selection.isEmpty) {
+      return `${hunkView.changeHunk.diffHeader}${hunkView.changeHunk.diff}\n`;
+    }
+
+    let diff = '';
+    const changeHunk = hunkView.changeHunk;
+
+    const diffStart = hunkView.range.start.translate(1);
+    const diffRange = hunkView.range.with(diffStart);
+    const selectedDiffRange = diffRange.intersection(selection);
+
+    if (!selectedDiffRange) {
+      diff = changeHunk.diff;
+    } else {
+      const [fileEditDeclaration, ...diffLines] = changeHunk.diff.split(Constants.LineSplitterRegex);
+
+      const relativeDiffLineStart = selectedDiffRange.start.line - diffStart.line;
+      const relativeDiffLineEnd = selectedDiffRange.end.line - diffStart.line;
+
+      const additionRegex = /^\+.*/;
+      const deletionRegex = /^-.*/;
+
+      const savedIndices = new Set();
+      let savedAdditions = 0;
+      let savedDeletions = 0;
+
+      for (let i = relativeDiffLineStart; i <= relativeDiffLineEnd; i++) {
+        const diffLine = diffLines[i];
+        if (additionRegex.test(diffLine)) {
+          savedAdditions++;
+        } else if (deletionRegex.test(diffLine)) {
+          savedDeletions++;
+        } else {
+          continue;
+        }
+        savedIndices.add(i);
+      }
+
+      let ignoredAdditions = 0;
+      let ignoredDeletions = 0;
+
+      const newDiffLines: string[] = [];
+      diffLines
+        .forEach((diffLine, i) => {
+          if (additionRegex.test(diffLine) && !savedIndices.has(i)) {
+            ignoredAdditions++;
+            if (reverse) {
+              newDiffLines.push(' ' + diffLine.slice(1));
+            }
+          } else if (deletionRegex.test(diffLine) && !savedIndices.has(i)) {
+            ignoredDeletions++;
+            if (!reverse) {
+              newDiffLines.push(' ' + diffLine.slice(1));
+            }
+          } else {
+            newDiffLines.push(diffLine);
+          }
+        });
+
+      const newDiff = newDiffLines.join('\n');
+
+      const fromFileExcerptSizeRegex = /(?<=,)\d+(?= \+)/g;
+      const toFileExcerptSizeRegex = /(?<=,)\d+(?= @@)/g;
+
+      const originalLineSpanSize = Number.parseInt(fileEditDeclaration.match(fromFileExcerptSizeRegex)![0].toString());
+
+      let newFileEditDeclaration;
+      let newLineSpanSize = originalLineSpanSize + (savedAdditions - savedDeletions);
+
+      if (reverse) {
+
+        newFileEditDeclaration = fileEditDeclaration.replace(fromFileExcerptSizeRegex, (originalLineSpanSize + ignoredAdditions - ignoredDeletions).toString());
+        newFileEditDeclaration = newFileEditDeclaration.replace(toFileExcerptSizeRegex, (newLineSpanSize + ignoredAdditions - ignoredDeletions).toString());
+
+      } else {
+        newFileEditDeclaration = fileEditDeclaration.replace(toFileExcerptSizeRegex, newLineSpanSize.toString());
+      }
+
+      diff = `${newFileEditDeclaration}\n${newDiff}`;
+    }
+
+    if (diff.split(Constants.LineSplitterRegex).length <= 1) {
+      diff = changeHunk.diff;
+    }
+
+    return `${changeHunk.diffHeader}${diff}\n`;
   }
 
   private static truncate(msg: string, maxLength: number): string {

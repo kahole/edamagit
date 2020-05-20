@@ -1,4 +1,4 @@
-import { window, commands, Uri } from 'vscode';
+import { window, commands, Uri, Range } from 'vscode';
 import { HunkView } from '../views/changes/hunkView';
 import { ChangeView } from '../views/changes/changeView';
 import MagitUtils from '../utils/magitUtils';
@@ -11,20 +11,23 @@ import { gitRun } from '../utils/gitRawRunner';
 import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
 import { apply } from './applyAtPointCommands';
 import GitTextUtils from '../utils/gitTextUtils';
+import * as Constants from '../common/constants';
 
 export async function magitStage(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
-  const selectedView = currentView.click(window.activeTextEditor!.selection.active);
+  const selection = window.activeTextEditor!.selection;
+  const selectedView = currentView.click(selection.active);
 
   if (selectedView instanceof HunkView) {
     const changeHunk = (selectedView as HunkView).changeHunk;
 
     if (changeHunk.section !== Section.Staged) {
-      const patch = GitTextUtils.changeHunkToPatch(changeHunk);
+
+      const patch = GitTextUtils.generatePatchFromChangeHunkView(selectedView, selection);
       return apply(repository, patch, { index: true });
 
     } else {
-      window.setStatusBarMessage('Already staged');
+      window.setStatusBarMessage('Already staged', Constants.StatusMessageDisplayTimeout);
     }
 
   } else if (selectedView instanceof ChangeView) {
@@ -76,16 +79,17 @@ export async function magitStageAll(repository: MagitRepository, currentView: Do
 
 export async function magitUnstage(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
-  const selectedView = currentView.click(window.activeTextEditor!.selection.active);
+  const selection = window.activeTextEditor!.selection;
+  const selectedView = currentView.click(selection.active);
 
   if (selectedView instanceof HunkView) {
     const changeHunk = (selectedView as HunkView).changeHunk;
 
     if (changeHunk.section === Section.Staged) {
-      const patch = GitTextUtils.changeHunkToPatch(changeHunk);
+      const patch = GitTextUtils.generatePatchFromChangeHunkView(selectedView, selection, true);
       return apply(repository, patch, { index: true, reverse: true });
     } else {
-      window.setStatusBarMessage('Already unstaged');
+      window.setStatusBarMessage('Already unstaged', Constants.StatusMessageDisplayTimeout);
     }
   } else if (selectedView instanceof ChangeView) {
 
@@ -95,7 +99,7 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
     if (selectedView.section === Section.Staged) {
       return magitUnstageAll(repository, currentView);
     } else {
-      window.setStatusBarMessage('Already unstaged');
+      window.setStatusBarMessage('Already unstaged', Constants.StatusMessageDisplayTimeout);
     }
   } else {
 
