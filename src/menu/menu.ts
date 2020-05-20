@@ -113,7 +113,7 @@ export class MenuUtil {
       _quickPick.items = menuState.switches.map(s => ({ label: s.shortName, detail: s.longName, description: `\t${s.description}`, picked: s.activated }));
       _quickPick.selectedItems = _quickPick.items.filter(s => s.picked);
 
-      const eventListenerDisposable = _quickPick.onDidChangeValue(async (e) => {
+      const eventListenerDisposable = _quickPick.onDidChangeValue((e) => {
 
         if (_quickPick.value === 'q') {
           return _quickPick.hide();
