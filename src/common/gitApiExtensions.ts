@@ -1,19 +1,25 @@
 import { Uri } from 'vscode';
 import * as cp from 'child_process';
 
-interface BaseBaseRepository {
+// This refers to Repository in
+// vscode/extension/git/src/git.ts
+interface GitRepository {
   run?(args: string[], options?: SpawnOptions): Promise<IExecutionResult<string>>;
   // run might become exec, included for future-proofing:
   exec?(args: string[], options?: SpawnOptions): Promise<IExecutionResult<string>>;
 }
 
+// This refers to the Repository in
+// vscode/extension/git/src/repository.ts
 interface BaseRepository {
   getStashes(): Promise<Stash[]>;
   add(resources: Uri[], opts?: { update?: boolean }): Promise<void>;
   reset(treeish: string, hard?: boolean): Promise<void>;
-  repository: BaseBaseRepository;
+  repository: GitRepository;
 }
 
+// This refers to ApiRepository from
+// vscode/extension/git/src/api/api1.ts
 declare module '../typings/git' {
   export interface Repository {
     readonly _repository: BaseRepository;
