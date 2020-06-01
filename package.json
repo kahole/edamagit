@@ -362,7 +362,9 @@
       "title": "Edamagit",
       "properties": {
         "edamagit.helpKeyConfig": {
-          "type": "object"
+          "type": "object",
+          "default": {},
+          "description": "Specifies the keys in the help text. This is useful when the default key bindings is changed."
         }
       }
     },
