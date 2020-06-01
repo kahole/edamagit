@@ -18,3 +18,8 @@ export const BranchDecoration = window.createTextEditorDecorationType({
 export const RemoteBranchDecoration = window.createTextEditorDecorationType({
   color: 'rgba(152,238,152,1.0)'
 });
+
+export const ExtensionId: string = 'edamagit';
+export const enum ConfigKey {
+  HelpKeyConfig = 'helpKeyConfig',
+}

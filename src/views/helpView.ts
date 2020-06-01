@@ -1,9 +1,31 @@
-import { DocumentView } from './general/documentView';
 import { Uri } from 'vscode';
 import * as Constants from '../common/constants';
-import { TextView } from './general/textView';
+import { HelpKeyConfig } from '../config/helpKeyConfig';
 import { MagitRepository } from '../models/magitRepository';
 import { MagitState } from '../models/magitState';
+import { DocumentView } from './general/documentView';
+import { TextView } from './general/textView';
+
+function createHelpText(c: HelpKeyConfig) {
+  return `Popup and dwim commands
+  ${c.cherryPick} Cherry-pick       ${c.branch} Branch            ${c.commit} Commit
+  ${c.diff} Diff              ${c.fetch} Fetch             ${c.pull} Pull
+  ${c.ignore} Ignore            ${c.log} Log               ${c.merge} Merge
+  ${c.remote} Remote            ${c.push} Push              ${c.rebase} Rebase
+  ${c.tag} Tag               ${c.revert} Revert            ${c.reset} Reset
+  ${c.showRefs} Show Refs         ${c.stash} Stash             ${c.run} Run             ${c.worktree} Worktree
+
+Applying changes
+  ${c.apply} Apply          ${c.stage} Stage          ${c.unstage} Unstage
+  ${c.reverse} Reverse        ${c.stageAll} Stage all      ${c.unstageAll} Unstage all
+  ${c.discard} Discard
+
+Essential commands
+ ${c.refresh}     refresh current buffer
+ TAB   toggle section at point
+ RET   visit thing at point
+ ${c.gitProcess}     show git process view`;
+}
 
 export class HelpView extends DocumentView {
 
@@ -50,10 +72,10 @@ Essential commands
   RET   visit thing at point
   $     show git process view`;
 
-  constructor(uri: Uri) {
+  constructor(uri: Uri, config: HelpKeyConfig) {
     super(uri);
 
-    const diffTextView = new TextView(HelpView.HelpText);
+    const diffTextView = new TextView(createHelpText(config));
     diffTextView.isHighlightable = false;
     this.addSubview(diffTextView);
   }

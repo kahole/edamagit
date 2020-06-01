@@ -358,6 +358,14 @@
         "editor.lineHeight": 15
       }
     },
+    "configuration": {
+      "title": "Edamagit",
+      "properties": {
+        "edamagit.helpKeyConfig": {
+          "type": "object"
+        }
+      }
+    },
     "grammars": [
       {
         "language": "magit",
