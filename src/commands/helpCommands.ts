@@ -11,14 +11,10 @@ export async function magitHelp(repository: MagitRepository) {
   let userKeyBindings = [];
 
   try {
-    userKeyBindings = await workspace.openTextDocument(keybindingsPath).then(document =>
-      JSON.parse(
-        document
-          .getText()
-          .replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '')
-      )
-    );
-  } catch { }
+    const userKeyBindingsDoc = await workspace.openTextDocument(keybindingsPath);
+    const userKeyBindingsText = userKeyBindingsDoc.getText().replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '');
+    userKeyBindings = JSON.parse(userKeyBindingsText);
+  } catch (e) { console.error(e); }
 
   const uri = HelpView.encodeLocation(repository);
   views.set(uri.toString(), new HelpView(uri, userKeyBindings));
