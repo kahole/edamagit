@@ -8,6 +8,7 @@ import { MagitLog } from '../models/magitLog';
 import { Commit } from '../typings/git';
 import GitTextUtils from '../utils/gitTextUtils';
 import { MagitState } from '../models/magitState';
+import { LogCommit } from '../commands/loggingCommands';
 
 export default class LogView extends DocumentView {
 
@@ -32,8 +33,12 @@ export default class LogView extends DocumentView {
 
 export class CommitLongFormItemView extends CommitItemView {
 
-  constructor(public commit: Commit, qualifier?: string) {
+  constructor(public commit: LogCommit) {
     super(commit);
-    this.textContent = `${GitTextUtils.shortHash(commit.hash)} * ${GitTextUtils.shortCommitMessage(commit.message)}`.substr(0, 65).padEnd(70) + `${commit.authorEmail}`;
+    this.textContent = `${GitTextUtils.shortHash(commit.hash)} ${commit.graph[0]}${GitTextUtils.shortCommitMessage(commit.message)}`.substr(0, 65).padEnd(70) + `${commit.author}`;
+      for(let i = 1; i < commit.graph.length; i++) {
+        const emptyHashSpace = ' '.repeat(8);
+        this.textContent += `\n${emptyHashSpace}${commit.graph[i]}`;
+      }
   }
 }
