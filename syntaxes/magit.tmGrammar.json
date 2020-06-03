@@ -75,7 +75,7 @@
       ]
     },
     "helpKey": {
-      "match": "  ([a-zA-Z]|!|\\$|\\%|TAB|RET|\\_|(shift(\\+|-)[^a-zA-Z])) ",
+      "match": "  ([a-zA-Z]|!|\\$|\\%|TAB|RET|\\_|-|(shift(\\+|-)[^a-zA-Z])) ",
       "name": "strong keyword.operator.new"
     }
   }
