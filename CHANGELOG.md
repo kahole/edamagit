@@ -1,5 +1,10 @@
 # Change Log
 
+### 0.2.0
+- Multi-selection staging and unstaging of changes
+- Fixed help view, it now reflects user keybindings (thank you @stevenguh (Steven Guh) for helping with this)
+- bug fixes
+
 ### 0.1.9
 - Adds single keypress switch enablement (#35)
     E.g. now you can `push --force` with keysequence: `P - f p`
