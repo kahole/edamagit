@@ -33,24 +33,26 @@
 
 Keybindings inside edamagit
 ```
-Popup commands
-  A Cherry-pick       b Branch            c Commit
-  d Diff              f Fetch             F Pull
-  i Ignore            l Log               m Merge
-  M Remote            P Push              r Rebase
-  t Tag               V Revert            X Reset
-  y Show Refs         z Stash             ! Run             % Worktree
- 
+Popup and dwim commands
+  A Cherry-pick      b Branch           c Commit
+  d Diff             f Fetch            F Pull
+  I Ignore           l Log              m Merge
+  M Remote           P Push             r Rebase
+  t Tag              V Revert           X Reset
+  y Show Refs        z Stash            shift+1 Run
+  shift+5 Worktree
+
 Applying changes
   a Apply          s Stage          u Unstage
   v Reverse        S Stage all      U Unstage all
   k Discard
-  
+
 Essential commands
-  g     refresh current buffer
-  TAB   toggle section at point
-  RET   visit thing at point
-  $     show git process view
+  g        refresh current buffer
+  TAB      toggle section at point
+  RET      visit thing at point
+  shift+4  show git process view
+  q        exit / close magit view
 ```
 
 ## Troubleshooting

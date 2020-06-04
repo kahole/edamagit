@@ -61,24 +61,24 @@ export class HelpView extends DocumentView {
 
   private static createHelpText(c: any) {
     return `Popup and dwim commands
-    ${HelpView.joinTexts(19, [`${c['magit.cherry-picking']} Cherry-pick`, `${c['magit.branching']} Branch`, `${c['magit.commit']} Commit`])}
-    ${HelpView.joinTexts(19, [`${c['magit.diffing']} Diff`, `${c['magit.fetching']} Fetch`, `${c['magit.pulling']} Pull`])}
-    ${HelpView.joinTexts(19, [`${c['magit.ignoring']} Ignore`, `${c['magit.logging']} Log`, `${c['magit.merging']} Merge`])}
-    ${HelpView.joinTexts(19, [`${c['magit.remoting']} Remote`, `${c['magit.pushing']} Push`, `${c['magit.rebasing']} Rebase`])}
-    ${HelpView.joinTexts(19, [`${c['magit.tagging']} Tag`, `${c['magit.reverting']} Revert`, `${c['magit.resetting']} Reset`])}
-    ${HelpView.joinTexts(19, [`${c['magit.show-refs']} Show Refs`, `${c['magit.stashing']} Stash`, `${c['magit.running']} Run`])}
-    ${c['magit.worktree']} Worktree
+  ${HelpView.joinTexts(19, [`${c['magit.cherry-picking']} Cherry-pick`, `${c['magit.branching']} Branch`, `${c['magit.commit']} Commit`])}
+  ${HelpView.joinTexts(19, [`${c['magit.diffing']} Diff`, `${c['magit.fetching']} Fetch`, `${c['magit.pulling']} Pull`])}
+  ${HelpView.joinTexts(19, [`${c['magit.ignoring']} Ignore`, `${c['magit.logging']} Log`, `${c['magit.merging']} Merge`])}
+  ${HelpView.joinTexts(19, [`${c['magit.remoting']} Remote`, `${c['magit.pushing']} Push`, `${c['magit.rebasing']} Rebase`])}
+  ${HelpView.joinTexts(19, [`${c['magit.tagging']} Tag`, `${c['magit.reverting']} Revert`, `${c['magit.resetting']} Reset`])}
+  ${HelpView.joinTexts(19, [`${c['magit.show-refs']} Show Refs`, `${c['magit.stashing']} Stash`, `${c['magit.running']} Run`])}
+  ${c['magit.worktree']} Worktree
 
-  Applying changes
-    ${HelpView.joinTexts(17, [`${c['magit.apply-at-point']} Apply`, `${c['magit.stage']} Stage`, `${c['magit.unstage']} Unstage`])}
-    ${HelpView.joinTexts(17, [`${c['magit.reverse-at-point']} Reverse`, `${c['magit.stage-all']} Stage all`, `${c['magit.unstage-all']} Unstage all`])}
-    ${c['magit.discard-at-point']} Discard
+Applying changes
+  ${HelpView.joinTexts(17, [`${c['magit.apply-at-point']} Apply`, `${c['magit.stage']} Stage`, `${c['magit.unstage']} Unstage`])}
+  ${HelpView.joinTexts(17, [`${c['magit.reverse-at-point']} Reverse`, `${c['magit.stage-all']} Stage all`, `${c['magit.unstage-all']} Unstage all`])}
+  ${c['magit.discard-at-point']} Discard
 
-  Essential commands
-    ${HelpView.joinTexts(9, [c['magit.refresh'], 'refresh current buffer'])}
-    ${HelpView.joinTexts(9, [c['magit.toggle-fold'], 'toggle section at point'])}
-    ${HelpView.joinTexts(9, [c['magit.visit-at-point'], 'visit thing at point'])}
-    ${HelpView.joinTexts(9, [c['magit.process-log'], 'show git process view'])}
-    ${HelpView.joinTexts(9, [c['magit.quit'], 'exit / close magit view'])}`;
+Essential commands
+  ${HelpView.joinTexts(9, [c['magit.refresh'], 'refresh current buffer'])}
+  ${HelpView.joinTexts(9, [c['magit.toggle-fold'], 'toggle section at point'])}
+  ${HelpView.joinTexts(9, [c['magit.visit-at-point'], 'visit thing at point'])}
+  ${HelpView.joinTexts(9, [c['magit.process-log'], 'show git process view'])}
+  ${HelpView.joinTexts(9, [c['magit.quit'], 'exit / close magit view'])}`;
   }
 }
