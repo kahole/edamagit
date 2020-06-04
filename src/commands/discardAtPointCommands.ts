@@ -11,7 +11,6 @@ import { Section } from '../views/general/sectionHeader';
 import GitTextUtils from '../utils/gitTextUtils';
 import { apply } from './applyAtPointCommands';
 import { Status, GitErrorCodes } from '../typings/git';
-import { MagitChangeHunk } from '../models/magitChangeHunk';
 import FilePathUtils from '../utils/filePathUtils';
 import { TagListingView } from '../views/tags/tagListingView';
 import { BranchListingView } from '../views/branches/branchListingView';
