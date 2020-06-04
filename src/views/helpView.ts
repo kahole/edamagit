@@ -78,6 +78,7 @@ export class HelpView extends DocumentView {
     ${HelpView.joinTexts(9, [c['magit.refresh'], 'refresh current buffer'])}
     ${HelpView.joinTexts(9, [c['magit.toggle-fold'], 'toggle section at point'])}
     ${HelpView.joinTexts(9, [c['magit.visit-at-point'], 'visit thing at point'])}
-    ${HelpView.joinTexts(9, [c['magit.process-log'], 'show git process view'])}`;
+    ${HelpView.joinTexts(9, [c['magit.process-log'], 'show git process view'])}
+    ${HelpView.joinTexts(9, [c['magit.quit'], 'exit / close magit view'])}`;
   }
 }
