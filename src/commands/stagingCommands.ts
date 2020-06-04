@@ -1,4 +1,4 @@
-import { window, commands, Uri, Range } from 'vscode';
+import { window, commands, Uri, Selection, Position } from 'vscode';
 import { HunkView } from '../views/changes/hunkView';
 import { ChangeView } from '../views/changes/changeView';
 import MagitUtils from '../utils/magitUtils';
@@ -12,11 +12,17 @@ import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
 import { apply } from './applyAtPointCommands';
 import GitTextUtils from '../utils/gitTextUtils';
 import * as Constants from '../common/constants';
+import { View } from '../views/general/view';
+import ViewUtils from '../utils/viewUtils';
 
 export async function magitStage(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
   const selection = window.activeTextEditor!.selection;
-  const selectedView = currentView.click(selection.active);
+
+  return ViewUtils.applyActionForSelection(repository, currentView, selection, [ChangeSectionView, ChangeView], stage);
+}
+
+async function stage(repository: MagitRepository, selection: Selection, selectedView?: View): Promise<any> {
 
   if (selectedView instanceof HunkView) {
     const changeHunk = (selectedView as HunkView).changeHunk;
@@ -41,9 +47,9 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
 
     switch (section) {
       case Section.Untracked:
-        return magitStageAll(repository, currentView, StageAllKind.AllUntracked);
+        return stageAll(StageAllKind.AllUntracked);
       case Section.Unstaged:
-        return magitStageAll(repository, currentView, StageAllKind.AllTracked);
+        return stageAll(StageAllKind.AllTracked);
       default:
         break;
     }
@@ -67,20 +73,27 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
   }
 }
 
+export async function magitStageAll(repository: MagitRepository, currentView: DocumentView): Promise<void> {
+  return stageAll();
+}
+
 export enum StageAllKind {
   All = 'stageAll',
   AllTracked = 'stageAllTracked',
   AllUntracked = 'stageAllUntracked'
 }
 
-export async function magitStageAll(repository: MagitRepository, currentView: DocumentView, kind: StageAllKind = StageAllKind.AllTracked): Promise<void> {
+async function stageAll(kind: StageAllKind = StageAllKind.AllTracked): Promise<void> {
   return commands.executeCommand('git.' + kind.valueOf());
 }
 
 export async function magitUnstage(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
   const selection = window.activeTextEditor!.selection;
-  const selectedView = currentView.click(selection.active);
+  return ViewUtils.applyActionForSelection(repository, currentView, selection, [ChangeSectionView, ChangeView], unstage);
+}
+
+async function unstage(repository: MagitRepository, selection: Selection, selectedView?: View): Promise<any> {
 
   if (selectedView instanceof HunkView) {
     const changeHunk = (selectedView as HunkView).changeHunk;
@@ -97,7 +110,7 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
 
   } else if (selectedView instanceof ChangeSectionView) {
     if (selectedView.section === Section.Staged) {
-      return magitUnstageAll(repository, currentView);
+      return unstageAll();
     } else {
       window.setStatusBarMessage('Already unstaged', Constants.StatusMessageDisplayTimeout);
     }
@@ -117,8 +130,12 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
 export async function magitUnstageAll(repository: MagitRepository, currentView: DocumentView): Promise<void> {
 
   if (await MagitUtils.confirmAction('Unstage all changes?')) {
-    return commands.executeCommand('git.unstageAll');
+    return unstageAll();
   }
+}
+
+async function unstageAll(): Promise<void> {
+  return commands.executeCommand('git.unstageAll');
 }
 
 export async function stageFile(repository: MagitRepository, fileUri: Uri, update = false) {

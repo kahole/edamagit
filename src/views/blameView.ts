@@ -21,7 +21,8 @@ export class BlameView extends DocumentView {
 
   public update(state: MagitState): void { }
 
+  static index = 0;
   static encodeLocation(repository: MagitRepository, fileUri: Uri): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${BlameView.UriPath}?${repository.rootUri.fsPath}#${fileUri.path}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${BlameView.UriPath}?${repository.rootUri.fsPath}#${fileUri.path}#${BlameView.index++}`);
   }
 }

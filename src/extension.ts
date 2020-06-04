@@ -44,6 +44,7 @@ export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
 export const processLog: MagitProcessLogEntry[] = [];
 
 export let gitApi: API;
+export let logPath: string;
 
 export function activate(context: ExtensionContext) {
 
@@ -59,6 +60,7 @@ export function activate(context: ExtensionContext) {
   }));
 
   gitApi = gitExtension.getAPI(1);
+  logPath = context.logPath;
 
   context.subscriptions.push(gitApi.onDidCloseRepository(repository => {
     magitRepositories.delete(repository.rootUri.fsPath);
