@@ -41,7 +41,9 @@ export class CommitLongFormItemView extends CommitItemView {
     const graph = commit.graph?.[0] ?? '';
     const refs = commit.refs ? `(${commit.refs}) ` : '';
     const msg = GitTextUtils.shortCommitMessage(commit.message);
-    this.textContent = truncateText(`${hash}${graph}${refs}${msg}`, 65, 70) + `${truncateText(commit.author, 15, 20)}${timeDistance}`;
+    this.textContent = truncateText(`${hash}${graph}${refs}${msg}`, 69, 70) +
+      truncateText(commit.author, 17, 18) +
+      timeDistance;
 
     // Add the rest of the graph for this commit
     if (commit.graph) {
