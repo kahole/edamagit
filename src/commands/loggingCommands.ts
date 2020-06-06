@@ -17,6 +17,7 @@ const loggingMenu = {
 };
 
 const switches: Switch[] = [
+  { shortName: '-D', longName: '--simplify-by-decoration', description: 'Simplify by decoration' },
   { shortName: '-g', longName: '--graph', description: 'Show graph', activated: true },
   { shortName: '-d', longName: '--decorate', description: 'Show refnames', activated: true }
 ];
@@ -49,6 +50,9 @@ function createLogArgs(switches: Switch[]) {
   const decorateFormat = switchMap['-d'].activated ? '%d' : '';
   const formatArg = `--format=%H${decorateFormat} [%an] [%at]%s`;
   const args = ['log', formatArg, '-n100'];
+  if (switchMap['-D'].activated) {
+    args.push(switchMap['-D'].longName);
+  }
   if (switchMap['-g'].activated) {
     args.push(switchMap['-g'].longName);
   }
