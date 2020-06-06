@@ -11,7 +11,7 @@ import { create } from 'domain';
 const loggingMenu = {
   title: 'Logging',
   commands: [
-    { label: 'c', description: 'Log current', action: logHead },
+    { label: 'l', description: 'Log current', action: logHead },
     { label: 'h', description: 'Log HEAD', action: logHead },
   ]
 };
