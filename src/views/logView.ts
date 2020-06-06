@@ -9,6 +9,7 @@ import { Commit } from '../typings/git';
 import GitTextUtils from '../utils/gitTextUtils';
 import { MagitState } from '../models/magitState';
 import { LogCommit } from '../commands/loggingCommands';
+import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
 
 export default class LogView extends DocumentView {
 
@@ -35,10 +36,19 @@ export class CommitLongFormItemView extends CommitItemView {
 
   constructor(public commit: LogCommit) {
     super(commit);
-    this.textContent = `${GitTextUtils.shortHash(commit.hash)} ${commit.graph[0]}${GitTextUtils.shortCommitMessage(commit.message)}`.substr(0, 65).padEnd(70) + `${commit.author}`;
-      for(let i = 1; i < commit.graph.length; i++) {
-        const emptyHashSpace = ' '.repeat(8);
-        this.textContent += `\n${emptyHashSpace}${commit.graph[i]}`;
-      }
+    const timeDistance = formatDistanceToNowStrict(commit.time);
+    this.textContent = truncateText(`${GitTextUtils.shortHash(commit.hash)} ${commit.graph[0]}${GitTextUtils.shortCommitMessage(commit.message)}`, 65, 70) + `${truncateText(commit.author, 15, 20)}${timeDistance}`;
+    for (let i = 1; i < commit.graph.length; i++) {
+      const emptyHashSpace = ' '.repeat(8);
+      this.textContent += `\n${emptyHashSpace}${commit.graph[i]}`;
+    }
   }
+}
+
+function truncateText(txt: string, limit: number, padEnd?: number) {
+  let ret = (txt.length >= limit) ? txt.substr(0, limit - 1) + '…' : txt;
+  if (padEnd) {
+    ret = ret.padEnd(padEnd);
+  }
+  return ret;
 }
