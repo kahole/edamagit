@@ -37,10 +37,19 @@ export class CommitLongFormItemView extends CommitItemView {
   constructor(public commit: LogCommit) {
     super(commit);
     const timeDistance = formatDistanceToNowStrict(commit.time);
-    this.textContent = truncateText(`${GitTextUtils.shortHash(commit.hash)} ${commit.graph[0]}${GitTextUtils.shortCommitMessage(commit.message)}`, 65, 70) + `${truncateText(commit.author, 15, 20)}${timeDistance}`;
-    for (let i = 1; i < commit.graph.length; i++) {
-      const emptyHashSpace = ' '.repeat(8);
-      this.textContent += `\n${emptyHashSpace}${commit.graph[i]}`;
+    const hash = `${GitTextUtils.shortHash(commit.hash)} `;
+    const graph = commit.graph?.[0] ?? '';
+    const refs = commit.refs ? `(${commit.refs}) ` : '';
+    const msg = GitTextUtils.shortCommitMessage(commit.message);
+    this.textContent = truncateText(`${hash}${graph}${refs}${msg}`, 65, 70) + `${truncateText(commit.author, 15, 20)}${timeDistance}`;
+
+    // Add the rest of the graph for this commit
+    if (commit.graph) {
+      for (let i = 1; i < commit.graph.length; i++) {
+        const g = commit.graph[i];
+        const emptyHashSpace = ' '.repeat(8);
+        this.textContent += `\n${emptyHashSpace}${g}`;
+      }
     }
   }
 }

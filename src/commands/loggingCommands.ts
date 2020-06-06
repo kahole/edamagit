@@ -1,11 +1,12 @@
 import { MagitRepository } from '../models/magitRepository';
-import { MenuUtil, MenuState } from '../menu/menu';
+import { MenuUtil, MenuState, Switch } from '../menu/menu';
 import { window, workspace } from 'vscode';
 import LogView from '../views/logView';
 import { views } from '../extension';
 import MagitUtils from '../utils/magitUtils';
 import { gitRun } from '../utils/gitRawRunner';
 import { Commit } from '../typings/git';
+import { create } from 'domain';
 
 const loggingMenu = {
   title: 'Logging',
@@ -15,16 +16,22 @@ const loggingMenu = {
   ]
 };
 
+const switches: Switch[] = [
+  { shortName: '-g', longName: '--graph', description: 'Show graph', activated: true },
+  { shortName: '-d', longName: '--decorate', description: 'Show refnames', activated: true }
+];
+
 export async function logging(repository: MagitRepository) {
-  return MenuUtil.showMenu(loggingMenu, { repository });
+  return MenuUtil.showMenu(loggingMenu, { repository, switches });
 }
 
-async function logHead({ repository }: MenuState) {
+async function logHead({ repository, switches }: MenuState) {
 
   if (repository.magitState?.HEAD) {
 
     // const log = await repository.log({ maxEntries: 100 });
-    const output = await gitRun(repository, ['log', '--format=%H%d [%an] [%at]%s', '--graph', '-n100']);
+    // const output = await gitRun(repository, ['log', '--format=%H%d [%an] [%at]%s', '--graph', '-n100']);
+    const output = await gitRun(repository, createLogArgs(switches!));
     const log = parseLog(output.stdout);
 
     const uri = LogView.encodeLocation(repository);
@@ -33,6 +40,20 @@ async function logHead({ repository }: MenuState) {
       .then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus: true, preview: false }));
   }
 }
+function createLogArgs(switches: Switch[]) {
+  const switchMap = switches.reduce((prev, current) => {
+    prev[current.shortName] = current;
+    return prev;
+  }, {} as Record<string, Switch>);
+
+  const decorateFormat = switchMap['-d'].activated ? '%d' : '';
+  const formatArg = `--format=%H${decorateFormat} [%an] [%at]%s`;
+  const args = ['log', formatArg, '-n100'];
+  if (switchMap['-g'].activated) {
+    args.push(switchMap['-g'].longName);
+  }
+  return args;
+}
 
 function parseLog(stdout: string) {
   const commits: LogCommit[] = [];
@@ -40,40 +61,36 @@ function parseLog(stdout: string) {
   // const lines = stdout.split(/(?:\u{D A}|(?!\u{D A})[\u{A}-\u{D}\u{85}\u{2028}\u{2029}]/);
   const lines = stdout.match(/[^\r\n]+/g);//.split(/\r?\n/);
   const lineRe = new RegExp(
-    '([/|\\-_* .o]+)' + // Graph
+    '^([/|\\-_* .o]+)?' + // Graph
     '([a-f0-9]{40})' + // Sha
     '( \\(([^()]+)\\))?' + // Refs
     '( \\[([^\\[\\]]+)\\])' + // Author
     '( \\[([^\\[\\]]+)\\])' + // Time
-    '(.*)', // Message
+    '(.*)$', // Message
     'g');
   lines?.forEach(l => {
     if (l.match(/^[/|\\-_* .o]+$/g)) { //graph only
       // Add to previous commits
-      if (commits.length > 0) {
-        commits[commits.length - 1].graph.push(l);
-      }
+      commits[commits.length - 1]?.graph?.push(l);
     } else {
-      // ES 2020 string to match all
-      // Convert to iterator to array with spread
-      const t = [...l.matchAll(lineRe)];
-      if (t && t.length > 0) {
+      const matches = l.matchAll(lineRe).next().value;
+      if (matches && matches.length > 0) {
+        const graph = matches[1]; // undefined if graph doesn't exist
         commits.push(new LogCommit({
-          graph: [t[0][1]],
-          hash: t[0][2],
-          refs: t[0][4],
-          author: t[0][6],
-          time: new Date(Number(t[0][8]) * 1000),
-          message: t[0][9]
+          graph: graph ? [graph] : undefined,
+          hash: matches[2],
+          refs: matches[4],
+          author: matches[6],
+          time: new Date(Number(matches[8]) * 1000),
+          message: matches[9]
         }));
       }
-      console.log(t);
     }
   });
   return commits;
 }
 interface ILogCommit {
-  graph: string[]
+  graph: string[] | undefined;
   hash: string;
   refs: string | undefined;
   author: string;
@@ -82,7 +99,7 @@ interface ILogCommit {
 }
 
 export class LogCommit implements Commit, ILogCommit {
-  graph: string[]
+  graph: string[] | undefined;
   hash: string;
   refs: string | undefined;
   author: string;
