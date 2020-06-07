@@ -120,10 +120,14 @@ async function log(repository: MagitRepository, args: string[], revs: string[]) 
 
 async function getRevs(repository: MagitRepository) {
   // TODO: Auto complete branches and tags
-  const input = await window.showInputBox({ prompt: 'Log rev,s:', placeHolder: repository.magitState?.HEAD?.name });
+  const placeHolder = repository.magitState?.HEAD?.name;
+  const input = await window.showInputBox({ prompt: 'Log rev,s:', placeHolder });
   if (input && input.length > 0) {
     // split space or commas
     return input.split(/[, ]/g).filter(r => r.length > 0);
+  } else if (placeHolder) {
+    // if user didn't enter anything, but placeholder exist
+    return [placeHolder];
   }
 
   window.setStatusBarMessage('Nothing selected', StatusMessageDisplayTimeout);
