@@ -5,14 +5,19 @@ import LogView from '../views/logView';
 import { views } from '../extension';
 import MagitUtils from '../utils/magitUtils';
 import { gitRun } from '../utils/gitRawRunner';
-import { Commit } from '../typings/git';
-import { create } from 'domain';
+import { Commit, RefType } from '../typings/git';
+import { StatusMessageDisplayTimeout } from '../common/constants';
+import { MagitLog } from '../models/magitLog';
 
 const loggingMenu = {
   title: 'Logging',
   commands: [
-    { label: 'l', description: 'Log current', action: logHead },
+    { label: 'l', description: 'Log current', action: logCurrent },
+    { label: 'o', description: 'Log other', action: logOther },
     { label: 'h', description: 'Log HEAD', action: logHead },
+    { label: 'L', description: 'Log local branches', action: logLocalBranches },
+    { label: 'b', description: 'Log branches', action: logBranches },
+    { label: 'a', description: 'Log references', action: logReferences },
   ]
 };
 
@@ -26,20 +31,102 @@ export async function logging(repository: MagitRepository) {
   return MenuUtil.showMenu(loggingMenu, { repository, switches });
 }
 
-async function logHead({ repository, switches }: MenuState) {
+async function logCurrent({ repository, switches }: MenuState) {
+  if (repository.magitState?.HEAD && switches) {
+    const args = createLogArgs(switches);
+    let revs;
+    if (repository.magitState?.HEAD.name) {
+      revs = [repository.magitState?.HEAD.name];
+    } else {
+      revs = await getRevs(repository);
+    }
 
-  if (repository.magitState?.HEAD) {
-
-    // const log = await repository.log({ maxEntries: 100 });
-    // const output = await gitRun(repository, ['log', '--format=%H%d [%an] [%at]%s', '--graph', '-n100']);
-    const output = await gitRun(repository, createLogArgs(switches!));
-    const log = parseLog(output.stdout);
-
-    const uri = LogView.encodeLocation(repository);
-    views.set(uri.toString(), new LogView(uri, { commits: log, refName: repository.magitState?.HEAD.name! }));
-    workspace.openTextDocument(uri)
-      .then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus: true, preview: false }));
+    if (revs) {
+      await log(repository, args, revs);
+    }
   }
+}
+
+async function logOther({ repository, switches }: MenuState) {
+  if (repository.magitState?.HEAD && switches) {
+    const args = createLogArgs(switches);
+    const revs = await getRevs(repository);
+    if (revs) {
+      await log(repository, args, revs);
+    }
+  }
+}
+
+async function logHead({ repository, switches }: MenuState) {
+  if (repository.magitState?.HEAD && switches) {
+    const args = createLogArgs(switches);
+    await log(repository, args, ['HEAD']);
+  }
+}
+
+async function logLocalBranches({ repository, switches }: MenuState) {
+  if (repository.magitState?.HEAD && switches) {
+    const args = createLogArgs(switches);
+    let revs;
+    if (repository.magitState?.HEAD.name) {
+      revs = [repository.magitState?.HEAD.name];
+    } else {
+      revs = ['HEAD'];
+    }
+
+    if (revs) {
+      await log(repository, args, revs.concat(['--branches']));
+    }
+  }
+}
+
+async function logBranches({ repository, switches }: MenuState) {
+  if (repository.magitState?.HEAD && switches) {
+    const args = createLogArgs(switches);
+    let revs;
+    if (repository.magitState?.HEAD.name) {
+      revs = [repository.magitState?.HEAD.name];
+    } else {
+      revs = ['HEAD'];
+    }
+
+    await log(repository, args, revs.concat(['--branches', '--remotes']));
+  }
+}
+
+async function logReferences({ repository, switches }: MenuState) {
+  if (repository.magitState?.HEAD && switches) {
+    const args = createLogArgs(switches);
+    let revs;
+    if (repository.magitState?.HEAD.name) {
+      revs = [repository.magitState?.HEAD.name];
+    } else {
+      revs = ['HEAD'];
+    }
+
+    await log(repository, args, revs.concat(['--all']));
+  }
+}
+
+async function log(repository: MagitRepository, args: string[], revs: string[]) {
+  const output = await gitRun(repository, args.concat(revs));
+  const commits = parseLog(output.stdout);
+  const revName = revs.join(' ');
+  const uri = LogView.encodeLocation(repository);
+  views.set(uri.toString(), new LogView(uri, { commits, revName }));
+  workspace.openTextDocument(uri)
+    .then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus: true, preview: false }));
+}
+
+async function getRevs(repository: MagitRepository) {
+  // TODO: Auto complete branches and tags
+  const input = await window.showInputBox({ prompt: 'Log rev,s:' });
+  if (input && input.length > 0) {
+    // split space or commas
+    return input.split(/[, ]/g).filter(r => r.length > 0);
+  }
+
+  window.setStatusBarMessage('Nothing selected', StatusMessageDisplayTimeout);
 }
 function createLogArgs(switches: Switch[]) {
   const switchMap = switches.reduce((prev, current) => {
@@ -61,9 +148,9 @@ function createLogArgs(switches: Switch[]) {
 
 function parseLog(stdout: string) {
   const commits: LogCommit[] = [];
-  // http://www.unicode.org/reports/tr18/#Line_Boundaries
-  // const lines = stdout.split(/(?:\u{D A}|(?!\u{D A})[\u{A}-\u{D}\u{85}\u{2028}\u{2029}]/);
-  const lines = stdout.match(/[^\r\n]+/g);//.split(/\r?\n/);
+  // Split stdout lines
+  const lines = stdout.match(/[^\r\n]+/g);
+  // regex to parse line
   const lineRe = new RegExp(
     '^([/|\\-_* .o]+)?' + // Graph
     '([a-f0-9]{40})' + // Sha
@@ -72,8 +159,11 @@ function parseLog(stdout: string) {
     '( \\[([^\\[\\]]+)\\])' + // Time
     '(.*)$', // Message
     'g');
+  // regex to match graph only line
+  const graphRe = /^[/|\\-_* .o]+$/g;
+
   lines?.forEach(l => {
-    if (l.match(/^[/|\\-_* .o]+$/g)) { //graph only
+    if (l.match(graphRe)) { //graph only
       // Add to previous commits
       commits[commits.length - 1]?.graph?.push(l);
     } else {
@@ -85,7 +175,7 @@ function parseLog(stdout: string) {
           hash: matches[2],
           refs: matches[4],
           author: matches[6],
-          time: new Date(Number(matches[8]) * 1000),
+          time: new Date(Number(matches[8]) * 1000), // convert seconds to milliseconds
           message: matches[9]
         }));
       }
@@ -120,9 +210,9 @@ export class LogCommit implements Commit, ILogCommit {
   }
 
   get parents(): string[] {
-    throw Error('Not Implement for LogCommit');
+    throw Error('Not Implemented for LogCommit');
   }
   get authorEmail(): string | undefined {
-    return undefined;
+    throw Error('Not Implemented for LogCommit');
   }
 }

@@ -19,7 +19,7 @@ export default class LogView extends DocumentView {
     super(uri);
 
     this.subViews = [
-      new TextView(`Commits in ${log.refName}`),
+      new TextView(`Commits in ${log.revName}`),
       ...log.commits.map(commit => new CommitLongFormItemView(commit)),
     ];
   }
