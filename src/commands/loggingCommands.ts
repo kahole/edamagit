@@ -1,23 +1,23 @@
-import { MagitRepository } from '../models/magitRepository';
-import { MenuUtil, MenuState, Switch } from '../menu/menu';
 import { window, workspace } from 'vscode';
-import LogView from '../views/logView';
-import { views } from '../extension';
-import MagitUtils from '../utils/magitUtils';
-import { gitRun } from '../utils/gitRawRunner';
-import { Commit, RefType } from '../typings/git';
 import { StatusMessageDisplayTimeout } from '../common/constants';
-import { MagitLog } from '../models/magitLog';
+import { views } from '../extension';
+import { MenuState, MenuUtil, Switch } from '../menu/menu';
+import { MagitBranch } from '../models/magitBranch';
+import { MagitLogCommit } from '../models/magitLogCommit';
+import { MagitRepository } from '../models/magitRepository';
+import { gitRun } from '../utils/gitRawRunner';
+import MagitUtils from '../utils/magitUtils';
+import LogView from '../views/logView';
 
 const loggingMenu = {
   title: 'Logging',
   commands: [
-    { label: 'l', description: 'Log current', action: logCurrent },
-    { label: 'o', description: 'Log other', action: logOther },
-    { label: 'h', description: 'Log HEAD', action: logHead },
-    { label: 'L', description: 'Log local branches', action: logLocalBranches },
-    { label: 'b', description: 'Log branches', action: logBranches },
-    { label: 'a', description: 'Log references', action: logReferences },
+    { label: 'l', description: 'Log current', action: wrap(logCurrent) },
+    { label: 'o', description: 'Log other', action: wrap(logOther) },
+    { label: 'h', description: 'Log HEAD', action: wrap(logHead) },
+    { label: 'L', description: 'Log local branches', action: wrap(logLocalBranches) },
+    { label: 'b', description: 'Log branches', action: wrap(logBranches) },
+    { label: 'a', description: 'Log references', action: wrap(logReferences) },
   ]
 };
 
@@ -31,81 +31,52 @@ export async function logging(repository: MagitRepository) {
   return MenuUtil.showMenu(loggingMenu, { repository, switches });
 }
 
-async function logCurrent({ repository, switches }: MenuState) {
-  if (repository.magitState?.HEAD && switches) {
-    const args = createLogArgs(switches);
-    let revs;
-    if (repository.magitState?.HEAD.name) {
-      revs = [repository.magitState?.HEAD.name];
-    } else {
-      revs = await getRevs(repository);
+// A function wrapping to avoid duplicate checking code
+function wrap(action: any) {
+  return ({ repository, switches }: MenuState) => {
+    if (repository.magitState?.HEAD && switches) {
+      return action(repository, repository.magitState.HEAD, switches);
     }
+  };
+}
 
-    if (revs) {
-      await log(repository, args, revs);
-    }
+async function logCurrent(repository: MagitRepository, head: MagitBranch, switches: Switch[]) {
+  const args = createLogArgs(switches);
+  let revs = head.name ? [head.name] : await getRevs(repository);
+  if (revs) {
+    await log(repository, args, revs);
   }
 }
 
-async function logOther({ repository, switches }: MenuState) {
-  if (repository.magitState?.HEAD && switches) {
-    const args = createLogArgs(switches);
-    const revs = await getRevs(repository);
-    if (revs) {
-      await log(repository, args, revs);
-    }
+async function logOther(repository: MagitRepository, head: MagitBranch, switches: Switch[]) {
+  const args = createLogArgs(switches);
+  const revs = await getRevs(repository);
+  if (revs) {
+    await log(repository, args, revs);
   }
 }
 
-async function logHead({ repository, switches }: MenuState) {
-  if (repository.magitState?.HEAD && switches) {
-    const args = createLogArgs(switches);
-    await log(repository, args, ['HEAD']);
-  }
+async function logHead(repository: MagitRepository, head: MagitBranch, switches: Switch[]) {
+  const args = createLogArgs(switches);
+  await log(repository, args, ['HEAD']);
 }
 
-async function logLocalBranches({ repository, switches }: MenuState) {
-  if (repository.magitState?.HEAD && switches) {
-    const args = createLogArgs(switches);
-    let revs;
-    if (repository.magitState?.HEAD.name) {
-      revs = [repository.magitState?.HEAD.name];
-    } else {
-      revs = ['HEAD'];
-    }
-
-    if (revs) {
-      await log(repository, args, revs.concat(['--branches']));
-    }
-  }
+async function logLocalBranches(repository: MagitRepository, head: MagitBranch, switches: Switch[]) {
+  const args = createLogArgs(switches);
+  const revs = [head.name ?? 'HEAD', '--branches'];
+  await log(repository, args, revs);
 }
 
-async function logBranches({ repository, switches }: MenuState) {
-  if (repository.magitState?.HEAD && switches) {
-    const args = createLogArgs(switches);
-    let revs;
-    if (repository.magitState?.HEAD.name) {
-      revs = [repository.magitState?.HEAD.name];
-    } else {
-      revs = ['HEAD'];
-    }
-
-    await log(repository, args, revs.concat(['--branches', '--remotes']));
-  }
+async function logBranches(repository: MagitRepository, head: MagitBranch, switches: Switch[]) {
+  const args = createLogArgs(switches);
+  const revs = [head.name ?? 'HEAD', '--branches', '--remotes'];
+  await log(repository, args, revs);
 }
 
-async function logReferences({ repository, switches }: MenuState) {
-  if (repository.magitState?.HEAD && switches) {
-    const args = createLogArgs(switches);
-    let revs;
-    if (repository.magitState?.HEAD.name) {
-      revs = [repository.magitState?.HEAD.name];
-    } else {
-      revs = ['HEAD'];
-    }
-
-    await log(repository, args, revs.concat(['--all']));
-  }
+async function logReferences(repository: MagitRepository, head: MagitBranch, switches: Switch[]) {
+  const args = createLogArgs(switches);
+  const revs = [head.name ?? 'HEAD', '--all'];
+  await log(repository, args, revs);
 }
 
 async function log(repository: MagitRepository, args: string[], revs: string[]) {
@@ -151,7 +122,7 @@ function createLogArgs(switches: Switch[]) {
 }
 
 function parseLog(stdout: string) {
-  const commits: LogCommit[] = [];
+  const commits: MagitLogCommit[] = [];
   // Split stdout lines
   const lines = stdout.match(/[^\r\n]+/g);
   // regex to parse line
@@ -174,7 +145,7 @@ function parseLog(stdout: string) {
       const matches = l.matchAll(lineRe).next().value;
       if (matches && matches.length > 0) {
         const graph = matches[1]; // undefined if graph doesn't exist
-        commits.push(new LogCommit({
+        commits.push(new MagitLogCommit({
           graph: graph ? [graph] : undefined,
           hash: matches[2],
           refs: matches[4],
@@ -186,37 +157,4 @@ function parseLog(stdout: string) {
     }
   });
   return commits;
-}
-interface ILogCommit {
-  graph: string[] | undefined;
-  hash: string;
-  refs: string | undefined;
-  author: string;
-  time: Date;
-  message: string;
-}
-
-export class LogCommit implements Commit, ILogCommit {
-  graph: string[] | undefined;
-  hash: string;
-  refs: string | undefined;
-  author: string;
-  time: Date;
-  message: string;
-
-  constructor(commit: ILogCommit) {
-    this.graph = commit.graph;
-    this.hash = commit.hash;
-    this.refs = commit.refs;
-    this.author = commit.author;
-    this.time = commit.time;
-    this.message = commit.message;
-  }
-
-  get parents(): string[] {
-    throw Error('Not Implemented for LogCommit');
-  }
-  get authorEmail(): string | undefined {
-    throw Error('Not Implemented for LogCommit');
-  }
 }

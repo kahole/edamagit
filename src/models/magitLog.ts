@@ -1,6 +1,6 @@
-import { LogCommit } from '../commands/loggingCommands';
+import { MagitLogCommit } from './magitLogCommit';
 
 export interface MagitLog {
-  commits: LogCommit[];
+  commits: MagitLogCommit[];
   revName: string;
 }

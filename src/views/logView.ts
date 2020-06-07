@@ -1,15 +1,14 @@
-import * as Constants from '../common/constants';
-import { DocumentView } from './general/documentView';
-import { Uri } from 'vscode';
-import { MagitRepository } from '../models/magitRepository';
-import { TextView } from './general/textView';
-import { CommitItemView } from './commits/commitSectionView';
-import { MagitLog } from '../models/magitLog';
-import { Commit } from '../typings/git';
-import GitTextUtils from '../utils/gitTextUtils';
-import { MagitState } from '../models/magitState';
-import { LogCommit } from '../commands/loggingCommands';
 import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
+import { Uri } from 'vscode';
+import * as Constants from '../common/constants';
+import { MagitLog } from '../models/magitLog';
+import { MagitLogCommit } from '../models/magitLogCommit';
+import { MagitRepository } from '../models/magitRepository';
+import { MagitState } from '../models/magitState';
+import GitTextUtils from '../utils/gitTextUtils';
+import { CommitItemView } from './commits/commitSectionView';
+import { DocumentView } from './general/documentView';
+import { TextView } from './general/textView';
 
 export default class LogView extends DocumentView {
 
@@ -34,7 +33,7 @@ export default class LogView extends DocumentView {
 
 export class CommitLongFormItemView extends CommitItemView {
 
-  constructor(public commit: LogCommit) {
+  constructor(public commit: MagitLogCommit) {
     super(commit);
     const timeDistance = formatDistanceToNowStrict(commit.time);
     const hash = `${GitTextUtils.shortHash(commit.hash)} `;
