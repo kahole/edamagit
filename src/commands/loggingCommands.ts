@@ -120,7 +120,7 @@ async function log(repository: MagitRepository, args: string[], revs: string[]) 
 
 async function getRevs(repository: MagitRepository) {
   // TODO: Auto complete branches and tags
-  const input = await window.showInputBox({ prompt: 'Log rev,s:' });
+  const input = await window.showInputBox({ prompt: 'Log rev,s:', placeHolder: repository.magitState?.HEAD?.name });
   if (input && input.length > 0) {
     // split space or commas
     return input.split(/[, ]/g).filter(r => r.length > 0);
