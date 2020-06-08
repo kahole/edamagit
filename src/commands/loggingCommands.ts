@@ -103,6 +103,7 @@ async function getRevs(repository: MagitRepository) {
 
   window.setStatusBarMessage('Nothing selected', StatusMessageDisplayTimeout);
 }
+
 function createLogArgs(switches: Switch[]) {
   const switchMap = switches.reduce((prev, current) => {
     prev[current.shortName] = current;
@@ -111,7 +112,7 @@ function createLogArgs(switches: Switch[]) {
 
   const decorateFormat = switchMap['-d'].activated ? '%d' : '';
   const formatArg = `--format=%H${decorateFormat} [%an] [%at]%s`;
-  const args = ['log', formatArg, '-n100'];
+  const args = ['log', formatArg, '-n100', '--use-mailmap'];
   if (switchMap['-D'].activated) {
     args.push(switchMap['-D'].longName);
   }
