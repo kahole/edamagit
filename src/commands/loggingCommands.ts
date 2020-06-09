@@ -31,8 +31,8 @@ export async function logging(repository: MagitRepository) {
   return MenuUtil.showMenu(loggingMenu, { repository, switches });
 }
 
-// A function wrapping to avoid duplicate checking code
-function wrap(action: any) {
+// A function wrapper to avoid duplicate checking code
+function wrap(action: (repository: MagitRepository, head: MagitBranch, switches: Switch[]) => Thenable<void>) {
   return ({ repository, switches }: MenuState) => {
     if (repository.magitState?.HEAD && switches) {
       return action(repository, repository.magitState.HEAD, switches);
