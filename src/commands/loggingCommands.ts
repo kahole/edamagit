@@ -146,16 +146,49 @@ function parseLog(stdout: string) {
       const matches = l.matchAll(lineRe).next().value;
       if (matches && matches.length > 0) {
         const graph = matches[1]; // undefined if graph doesn't exist
-        commits.push(new MagitLogCommit({
+        const log = new LogCommit({
           graph: graph ? [graph] : undefined,
           hash: matches[2],
           refs: matches[4],
           author: matches[6],
           time: new Date(Number(matches[8]) * 1000), // convert seconds to milliseconds
           message: matches[9]
-        }));
+        });
+        commits.push(log);
       }
     }
   });
   return commits;
+}
+
+class LogCommit implements MagitLogCommit {
+  graph: string[] | undefined;
+  hash: string;
+  refs: string | undefined;
+  author: string;
+  time: Date;
+  message: string;
+
+  constructor(commit: {
+    graph: string[] | undefined;
+    hash: string;
+    refs: string | undefined;
+    author: string;
+    time: Date;
+    message: string;
+  }) {
+    this.graph = commit.graph;
+    this.hash = commit.hash;
+    this.refs = commit.refs;
+    this.author = commit.author;
+    this.time = commit.time;
+    this.message = commit.message;
+  }
+
+  get parents(): string[] {
+    throw Error('Not Implemented for LogCommit');
+  }
+  get authorEmail(): string | undefined {
+    throw Error('Not Implemented for LogCommit');
+  }
 }
