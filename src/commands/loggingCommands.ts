@@ -3,7 +3,7 @@ import { StatusMessageDisplayTimeout } from '../common/constants';
 import { views } from '../extension';
 import { MenuState, MenuUtil, Switch } from '../menu/menu';
 import { MagitBranch } from '../models/magitBranch';
-import { MagitLogCommit } from '../models/magitLogCommit';
+import { MagitLogEntry } from '../models/magitLogCommit';
 import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
@@ -81,10 +81,10 @@ async function logReferences(repository: MagitRepository, head: MagitBranch, swi
 
 async function log(repository: MagitRepository, args: string[], revs: string[]) {
   const output = await gitRun(repository, args.concat(revs));
-  const commits = parseLog(output.stdout);
+  const logEntries = parseLog(output.stdout);
   const revName = revs.join(' ');
   const uri = LogView.encodeLocation(repository);
-  views.set(uri.toString(), new LogView(uri, { commits, revName }));
+  views.set(uri.toString(), new LogView(uri, { entries: logEntries, revName }));
   workspace.openTextDocument(uri)
     .then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus: true, preview: false }));
 }
@@ -123,7 +123,7 @@ function createLogArgs(switches: Switch[]) {
 }
 
 function parseLog(stdout: string) {
-  const commits: MagitLogCommit[] = [];
+  const commits: MagitLogEntry[] = [];
   // Split stdout lines
   const lines = stdout.match(/[^\r\n]+/g);
   // regex to parse line
@@ -146,49 +146,21 @@ function parseLog(stdout: string) {
       const matches = l.matchAll(lineRe).next().value;
       if (matches && matches.length > 0) {
         const graph = matches[1]; // undefined if graph doesn't exist
-        const log = new LogCommit({
+        const log = {
           graph: graph ? [graph] : undefined,
-          hash: matches[2],
           refs: matches[4],
           author: matches[6],
           time: new Date(Number(matches[8]) * 1000), // convert seconds to milliseconds
-          message: matches[9]
-        });
+          commit: {
+            hash: matches[2],
+            message: matches[9],
+            parents: [],
+            authorEmail: undefined
+          }
+        };
         commits.push(log);
       }
     }
   });
   return commits;
-}
-
-class LogCommit implements MagitLogCommit {
-  graph: string[] | undefined;
-  hash: string;
-  refs: string | undefined;
-  author: string;
-  time: Date;
-  message: string;
-
-  constructor(commit: {
-    graph: string[] | undefined;
-    hash: string;
-    refs: string | undefined;
-    author: string;
-    time: Date;
-    message: string;
-  }) {
-    this.graph = commit.graph;
-    this.hash = commit.hash;
-    this.refs = commit.refs;
-    this.author = commit.author;
-    this.time = commit.time;
-    this.message = commit.message;
-  }
-
-  get parents(): string[] {
-    throw Error('Not Implemented for LogCommit');
-  }
-  get authorEmail(): string | undefined {
-    throw Error('Not Implemented for LogCommit');
-  }
 }

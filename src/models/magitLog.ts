@@ -1,6 +1,6 @@
-import { MagitLogCommit } from './magitLogCommit';
+import { MagitLogEntry } from './magitLogCommit';
 
 export interface MagitLog {
-  commits: MagitLogCommit[];
+  entries: MagitLogEntry[];
   revName: string;
 }
