@@ -1,13 +1,14 @@
-import * as Constants from '../common/constants';
-import { DocumentView } from './general/documentView';
+import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
 import { Uri } from 'vscode';
-import { MagitRepository } from '../models/magitRepository';
-import { TextView } from './general/textView';
-import { CommitItemView } from './commits/commitSectionView';
+import * as Constants from '../common/constants';
 import { MagitLog } from '../models/magitLog';
-import { Commit } from '../typings/git';
-import GitTextUtils from '../utils/gitTextUtils';
+import { MagitLogEntry } from '../models/magitLogCommit';
+import { MagitRepository } from '../models/magitRepository';
 import { MagitState } from '../models/magitState';
+import GitTextUtils from '../utils/gitTextUtils';
+import { CommitItemView } from './commits/commitSectionView';
+import { DocumentView } from './general/documentView';
+import { TextView } from './general/textView';
 
 export default class LogView extends DocumentView {
 
@@ -17,8 +18,8 @@ export default class LogView extends DocumentView {
     super(uri);
 
     this.subViews = [
-      new TextView(`Commits in ${log.refName}`),
-      ...log.commits.map(commit => new CommitLongFormItemView(commit)),
+      new TextView(`Commits in ${log.revName}`),
+      ...log.entries.map(entry => new CommitLongFormItemView(entry)),
     ];
   }
 
@@ -32,8 +33,32 @@ export default class LogView extends DocumentView {
 
 export class CommitLongFormItemView extends CommitItemView {
 
-  constructor(public commit: Commit, qualifier?: string) {
-    super(commit);
-    this.textContent = `${GitTextUtils.shortHash(commit.hash)} * ${GitTextUtils.shortCommitMessage(commit.message)}`.substr(0, 65).padEnd(70) + `${commit.authorEmail}`;
+  constructor(public logEntry: MagitLogEntry) {
+    super(logEntry.commit);
+    const timeDistance = formatDistanceToNowStrict(logEntry.time);
+    const hash = `${GitTextUtils.shortHash(logEntry.commit.hash)} `;
+    const graph = logEntry.graph?.[0] ?? '';
+    const refs = logEntry.refs ? `(${logEntry.refs}) ` : '';
+    const msg = GitTextUtils.shortCommitMessage(logEntry.commit.message);
+    this.textContent = truncateText(`${hash}${graph}${refs}${msg}`, 69, 70) +
+      truncateText(logEntry.author, 17, 18) +
+      timeDistance;
+
+    // Add the rest of the graph for this commit
+    if (logEntry.graph) {
+      for (let i = 1; i < logEntry.graph.length; i++) {
+        const g = logEntry.graph[i];
+        const emptyHashSpace = ' '.repeat(8);
+        this.textContent += `\n${emptyHashSpace}${g}`;
+      }
+    }
   }
+}
+
+function truncateText(txt: string, limit: number, padEnd?: number) {
+  let ret = (txt.length >= limit) ? txt.substr(0, limit - 1) + '…' : txt;
+  if (padEnd) {
+    ret = ret.padEnd(padEnd);
+  }
+  return ret;
 }
