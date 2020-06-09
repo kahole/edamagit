@@ -3,7 +3,7 @@ import * as cp from 'child_process';
 
 // This refers to Repository in
 // vscode/extension/git/src/git.ts
-interface GitRepository {
+interface BaseGitRepository {
   run?(args: string[], options?: SpawnOptions): Promise<IExecutionResult<string>>;
   // run might become exec, included for future-proofing:
   exec?(args: string[], options?: SpawnOptions): Promise<IExecutionResult<string>>;
@@ -15,7 +15,7 @@ interface BaseRepository {
   getStashes(): Promise<Stash[]>;
   add(resources: Uri[], opts?: { update?: boolean }): Promise<void>;
   reset(treeish: string, hard?: boolean): Promise<void>;
-  repository: GitRepository;
+  repository: BaseGitRepository;
 }
 
 // This refers to ApiRepository from
