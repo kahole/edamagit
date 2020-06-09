@@ -1,11 +1,9 @@
 import { Commit } from '../typings/git';
 
-
-export interface MagitLogCommit extends Commit {
+export interface MagitLogEntry {
+  commit: Commit;
   graph: string[] | undefined;
-  hash: string;
   refs: string | undefined;
   author: string;
   time: Date;
-  message: string;
 }

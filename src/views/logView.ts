@@ -2,7 +2,7 @@ import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
 import { Uri } from 'vscode';
 import * as Constants from '../common/constants';
 import { MagitLog } from '../models/magitLog';
-import { MagitLogCommit } from '../models/magitLogCommit';
+import { MagitLogEntry } from '../models/magitLogCommit';
 import { MagitRepository } from '../models/magitRepository';
 import { MagitState } from '../models/magitState';
 import GitTextUtils from '../utils/gitTextUtils';
@@ -19,7 +19,7 @@ export default class LogView extends DocumentView {
 
     this.subViews = [
       new TextView(`Commits in ${log.revName}`),
-      ...log.commits.map(commit => new CommitLongFormItemView(commit)),
+      ...log.entries.map(entry => new CommitLongFormItemView(entry)),
     ];
   }
 
@@ -33,21 +33,21 @@ export default class LogView extends DocumentView {
 
 export class CommitLongFormItemView extends CommitItemView {
 
-  constructor(public commit: MagitLogCommit) {
-    super(commit);
-    const timeDistance = formatDistanceToNowStrict(commit.time);
-    const hash = `${GitTextUtils.shortHash(commit.hash)} `;
-    const graph = commit.graph?.[0] ?? '';
-    const refs = commit.refs ? `(${commit.refs}) ` : '';
-    const msg = GitTextUtils.shortCommitMessage(commit.message);
+  constructor(public logEntry: MagitLogEntry) {
+    super(logEntry.commit);
+    const timeDistance = formatDistanceToNowStrict(logEntry.time);
+    const hash = `${GitTextUtils.shortHash(logEntry.commit.hash)} `;
+    const graph = logEntry.graph?.[0] ?? '';
+    const refs = logEntry.refs ? `(${logEntry.refs}) ` : '';
+    const msg = GitTextUtils.shortCommitMessage(logEntry.commit.message);
     this.textContent = truncateText(`${hash}${graph}${refs}${msg}`, 69, 70) +
-      truncateText(commit.author, 17, 18) +
+      truncateText(logEntry.author, 17, 18) +
       timeDistance;
 
     // Add the rest of the graph for this commit
-    if (commit.graph) {
-      for (let i = 1; i < commit.graph.length; i++) {
-        const g = commit.graph[i];
+    if (logEntry.graph) {
+      for (let i = 1; i < logEntry.graph.length; i++) {
+        const g = logEntry.graph[i];
         const emptyHashSpace = ' '.repeat(8);
         this.textContent += `\n${emptyHashSpace}${g}`;
       }
