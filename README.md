@@ -82,7 +82,7 @@ Note: the bindings for negative commands, e.g. `-magit.discard-at-point` for key
     {
       "key": "x",
       "command": "magit.discard-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress|Visual.*).*$/"
+      "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
     },
     {
       "key": "k",
@@ -91,7 +91,7 @@ Note: the bindings for negative commands, e.g. `-magit.discard-at-point` for key
     {
       "key": "-",
       "command": "magit.reverse-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress|Visual.*).*$/"
+      "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
     },
     {
       "key": "v",
@@ -100,7 +100,7 @@ Note: the bindings for negative commands, e.g. `-magit.discard-at-point` for key
     {
       "key": "shift+-",
       "command": "magit.reverting",
-      "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress|Visual.*).*$/"
+      "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
     },
     {
       "key": "shift+v",
@@ -109,7 +109,7 @@ Note: the bindings for negative commands, e.g. `-magit.discard-at-point` for key
     {
       "key": "shift+o",
       "command": "magit.resetting",
-      "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress|Visual.*).*$/"
+      "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
     },
     {
       "key": "shift+x",
