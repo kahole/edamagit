@@ -1,5 +1,13 @@
 # Change Log
 
+### 0.2.1
+
+- Disables minimap for edamagit by default
+- Adds support for VSCodeVim command mode and visual mode
+
+@stevenguh (Steven Guh):
+- Adds a lot of logging functionality (graph, refs, decorations, etc)
+
 ### 0.2.0
 - Multi-selection staging and unstaging of changes
 - Fixed help view, it now reflects user keybindings (thank you @stevenguh (Steven Guh) for helping with this)

@@ -31,14 +31,14 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
     const change = (selectedView as ChangeView).change;
 
     if (change.hunks?.length) {
-      visitHunk(selectedView.subViews.find(v => v instanceof HunkView) as HunkView);
+      return visitHunk(selectedView.subViews.find(v => v instanceof HunkView) as HunkView);
     } else {
-      workspace.openTextDocument(change.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preview: false }));
+      return workspace.openTextDocument(change.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preview: false }));
     }
   }
   else if (selectedView instanceof HunkView) {
 
-    visitHunk(selectedView, activePosition);
+    return visitHunk(selectedView, activePosition);
 
   } else if (selectedView instanceof CommitItemView) {
 
@@ -55,7 +55,7 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
   } else if (selectedView instanceof StashItemView) {
 
     const stash = (selectedView as StashItemView).stash;
-    showStashDetail(repository, stash);
+    return showStashDetail(repository, stash);
   } else {
     window.setStatusBarMessage('There is no thing at point that could be visited', Constants.StatusMessageDisplayTimeout);
   }
@@ -109,9 +109,8 @@ async function visitHunk(selectedView: HunkView, activePosition?: Position) {
 }
 
 export async function visitCommit(repository: MagitRepository, commitHash: string) {
-  const commit: MagitCommit = { hash: commitHash, message: '', parents: [] };
   const result = await gitRun(repository, ['show', commitHash]);
-  commit.diff = result.stdout;
+  const commit: MagitCommit = { hash: commitHash, message: '', parents: [], diff: result.stdout };
 
   const uri = CommitDetailView.encodeLocation(repository, commit.hash);
   views.set(uri.toString(), new CommitDetailView(uri, commit));
