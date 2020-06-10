@@ -62,9 +62,11 @@ Essential commands
 
 ### Vim support (VSCodeVim)
 
-Add these to your `keybindings.json` config file to get evil-magit / spacemacs like keybindings.
+Add the bindings below to your `keybindings.json` config file to get evil-magit / spacemacs like keybindings.
+
 Or customize any of the keybindings to your liking.
-Note: the bindings for negative commands, e.g. `-magit.discard-at-point` for key `k`, remove the edamagit binding. This is done to remove collisions with Vim.
+
+Note: the bindings for negative commands, e.g. `-magit.discard-at-point` for key `k`, remove the default edamagit binding. This is done to remove collisions with Vim.
 <details>
   <summary>keybindings.json</summary>
   
