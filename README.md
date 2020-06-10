@@ -63,6 +63,8 @@ Essential commands
 ### Vim support (VSCodeVim)
 
 Add these to your `keybindings.json` config file to get evil-magit / spacemacs like keybindings.
+Or customize any of the keybindings to your liking.
+Note: the bindings for negative commands, e.g. `-magit.discard-at-point` for key `k`, remove the edamagit binding. This is done to remove collisions with Vim.
 <details>
   <summary>keybindings.json</summary>
   
@@ -80,52 +82,46 @@ Add these to your `keybindings.json` config file to get evil-magit / spacemacs l
     {
       "key": "x",
       "command": "magit.discard-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
+      "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress|Visual.*).*$/"
     },
     {
       "key": "k",
-      "command": "-magit.discard-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
+      "command": "-magit.discard-at-point"
     },
     {
       "key": "-",
       "command": "magit.reverse-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
+      "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress|Visual.*).*$/"
     },
     {
       "key": "v",
-      "command": "-magit.reverse-at-point",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
+      "command": "-magit.reverse-at-point"
     },
     {
       "key": "shift+-",
       "command": "magit.reverting",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
+      "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress|Visual.*).*$/"
     },
     {
       "key": "shift+v",
-      "command": "-magit.reverting",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
+      "command": "-magit.reverting"
     },
     {
       "key": "shift+o",
       "command": "magit.resetting",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
+      "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress|Visual.*).*$/"
     },
     {
       "key": "shift+x",
-      "command": "-magit.resetting",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
+      "command": "-magit.resetting"
     },
     {
       "key": "x",
-      "command": "-magit.reset-mixed",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
+      "command": "-magit.reset-mixed"
     },
     {
       "key": "ctrl+u x",
-      "command": "-magit.reset-hard",
-      "when": "editorTextFocus && editorLangId == 'magit' && !inDebugRepl && vim.mode != 'SearchInProgressMode'"
+      "command": "-magit.reset-hard"
     }
   ```
 </details>
@@ -134,17 +130,15 @@ Add these to your `keybindings.json` config file to get evil-magit / spacemacs l
 
 _Feature requests as well as issues are welcome_
 
+### Implement missing Git/Magit features
+  - Diffing (a lot missing)
+  - More logging features (https://github.com/kahole/edamagit/pull/40)
+  - Bisecting
+  - Submodules
+  - Patches
+
 ### Interface
 - Config menus
 - Options/variable menus
 - Branch name highlighting     
      (https://github.com/microsoft/vscode/wiki/Semantic-Highlighting-Overview)
-
-### Implement missing Git/Magit features
-  - Logging (a lot missing)
-  - Bisecting
-  - Submodules
-  - Patches
-
-### Long term
-- Stable v1.0
