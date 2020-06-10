@@ -86,7 +86,7 @@ async function log(repository: MagitRepository, args: string[], revs: string[]) 
   const uri = LogView.encodeLocation(repository);
   views.set(uri.toString(), new LogView(uri, { entries: logEntries, revName }));
   workspace.openTextDocument(uri)
-    .then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus: true, preview: false }));
+    .then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus: false, preview: false }));
 }
 
 async function getRevs(repository: MagitRepository) {
