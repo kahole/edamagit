@@ -1,23 +1,31 @@
-<div align="center"><h2><img src="https://github.com/kahole/edamagit/raw/develop/images/edamagit_logo.png" height="140"><br/>edamagit</h2>
-</div>
+<h1 align="center">
+  <br>
+  <a href="https://marketplace.visualstudio.com/items?itemName=kahole.magit">
+    <img src="https://github.com/kahole/edamagit/raw/develop/images/edamagit_logo.png" alt="Markdownify" width="160" />
+  </a>
+  <br>
+  edamagit
+  <br>
+</h1>
 
-[![vsmarketbadge](https://vsmarketplacebadge.apphb.com/version-short/kahole.magit.svg)](https://marketplace.visualstudio.com/items?itemName=kahole.magit)
-<a href="https://www.buymeacoffee.com/kahole" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" height="30"></a>
+<h4 align="center">Magit for VSCode, inspired by the awesome original <a href="https://magit.vc/" target="_blank">Magit</a>.</h4>
 
-### Magit for VSCode, inspired by the awesome original [Magit](https://magit.vc/)
+<p align="center">
+  <a href="https://marketplace.visualstudio.com/items?itemName=kahole.magit">
+      <img src="https://vsmarketplacebadge.apphb.com/version-short/kahole.magit.svg" >
+  </a>
+  <a href="https://www.buymeacoffee.com/kahole" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" height="25"></a>
+</p>
 
-### **Alpha**: use at own your own risk!
+<p align="center">
+  <a href="#usage">Usage</a> •
+  <a href="#troubleshooting">Troubleshooting</a> •
+  <a href="#vim-support-vscodevim">Vim Bindings</a> •
+  <a href="#roadmap">Roadmap</a>
+</p>
 
 ![Usage](https://github.com/kahole/edamagit/raw/294aec866fbbd3a10b3d628af92823531793a244/magit_commit_demo.gif)
 (Theme: [Dracula](https://draculatheme.com/))
-
-### Table of Contents
-
-- [Usage](#usage)
-- [Troubleshooting](#troubleshooting)
-  * [I can't commit](#i-cant-commit)
-  * [Vim support (VSCodeVim)](#vim-support-vscodevim)
-- [Roadmap](#roadmap)
 
 ## Usage
 
@@ -60,15 +68,16 @@ Essential commands
 - git config needs to be set, for repo or global  
 `user.name` and `user.email`
 
-### Vim support (VSCodeVim)
+## Vim support (VSCodeVim)
 
-Add the bindings below to your `keybindings.json` config file to get evil-magit / spacemacs like keybindings.
+All edamagit keybindings are customizable using VSCode's built-in `keybindings.json`.
 
-Or customize any of the keybindings to your liking.
+Below are bindings providing evil-magit / spacemacs like keybindings.
 
-Note: the bindings for negative commands, e.g. `-magit.discard-at-point` for key `k`, remove the default edamagit binding. This is done to remove collisions with Vim.
+The negative bindings, e.g. `-magit.discard-at-point` for key `k`,
+remove the default edamagit bindings and the collisions with the Vim extension.
 <details>
-  <summary>keybindings.json</summary>
+  <summary>Bindings - keybindings.json</summary>
   
   ```json
     {
