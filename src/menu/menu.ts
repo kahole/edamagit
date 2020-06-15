@@ -19,6 +19,7 @@ export interface Switch {
   longName: string;
   description: string;
   activated?: boolean;
+  onActivate?: () => Thenable<boolean>;
 }
 
 export class MenuUtil {
@@ -99,7 +100,9 @@ export class MenuUtil {
   }
 
   static showSwitchesMenu(menuState: MenuState): Promise<Switch[]> {
-
+    function toQuickPick(s: Switch) {
+      return { label: s.shortName, detail: s.longName, description: `\t${s.description}`, picked: s.activated };
+    }
     return new Promise((resolve, reject) => {
 
       if (!menuState.switches) {
@@ -110,10 +113,10 @@ export class MenuUtil {
 
       _quickPick.canSelectMany = true;
       _quickPick.title = 'Switches (type shortname of switches you want to enable)';
-      _quickPick.items = menuState.switches.map(s => ({ label: s.shortName, detail: s.longName, description: `\t${s.description}`, picked: s.activated }));
+      _quickPick.items = menuState.switches.map(s => toQuickPick(s));
       _quickPick.selectedItems = _quickPick.items.filter(s => s.picked);
 
-      const eventListenerDisposable = _quickPick.onDidChangeValue((e) => {
+      const eventListenerDisposable = _quickPick.onDidChangeValue(async (e) => {
 
         if (_quickPick.value === 'q') {
           return _quickPick.hide();
@@ -124,8 +127,25 @@ export class MenuUtil {
         let quickPickValue = _quickPick.value;
         _quickPick.value = '';
 
-        _quickPick.items = _quickPick.items.map(item => ({ ...item, picked: MenuUtil.matchesSwitch(quickPickValue, item.label) ? !item.picked : item.picked }));
-        _quickPick.selectedItems = _quickPick.items.filter(s => s.picked);
+        const selectedSwitch = menuState.switches?.find(i => MenuUtil.matchesSwitch(quickPickValue, i.shortName));
+        if (selectedSwitch?.onActivate) {
+          _quickPick.hide();
+          const picked = await selectedSwitch?.onActivate();
+          _quickPick.items = _quickPick.items.map(item => {
+            if (MenuUtil.matchesSwitch(quickPickValue, item.label)) {
+              const i = toQuickPick(selectedSwitch);
+              i.picked = picked;
+              return i;
+            } else {
+              return item;
+            }
+          });
+          _quickPick.selectedItems = _quickPick.items.filter(s => s.picked);
+          _quickPick.show();
+        } else {
+          _quickPick.items = _quickPick.items.map(item => ({ ...item, picked: MenuUtil.matchesSwitch(quickPickValue, item.label) ? !item.picked : item.picked }));
+          _quickPick.selectedItems = _quickPick.items.filter(s => s.picked);
+        }
       });
 
       const acceptListenerDisposable = _quickPick.onDidAccept(() => {

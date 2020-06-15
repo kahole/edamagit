@@ -21,13 +21,43 @@ const loggingMenu = {
   ]
 };
 
-const switches: Switch[] = [
-  { shortName: '-D', longName: '--simplify-by-decoration', description: 'Simplify by decoration' },
-  { shortName: '-g', longName: '--graph', description: 'Show graph', activated: true },
-  { shortName: '-d', longName: '--decorate', description: 'Show refnames', activated: true }
-];
+class InputSwitch implements Switch {
+  shortName = '-n';
+  get longName() {
+    return `${this.shortName}${this.maxCount ?? ''}`;
+  }
+  description = 'Limit number of commits';
+  activated = true;
+
+  async onActivate() {
+    const input = await window.showInputBox({ prompt: this.shortName });
+    if (input !== undefined) {
+      if (input === '') {
+        this.maxCount = undefined;
+      } else {
+        const count = parseInt(input);
+        if (!isNaN(count)) {
+          this.maxCount = count;
+        }
+      }
+    }
+    return this.maxCount !== undefined;
+  }
+
+  maxCount: number | undefined = 100;
+}
+
+function createSwitches() {
+  return [
+    new InputSwitch(),
+    { shortName: '-D', longName: '--simplify-by-decoration', description: 'Simplify by decoration' },
+    { shortName: '-g', longName: '--graph', description: 'Show graph', activated: true },
+    { shortName: '-d', longName: '--decorate', description: 'Show refnames', activated: true }
+  ];
+}
 
 export async function logging(repository: MagitRepository) {
+  const switches = createSwitches();
   return MenuUtil.showMenu(loggingMenu, { repository, switches });
 }
 
@@ -112,7 +142,10 @@ function createLogArgs(switches: Switch[]) {
 
   const decorateFormat = switchMap['-d'].activated ? '%d' : '';
   const formatArg = `--format=%H${decorateFormat} [%an] [%at]%s`;
-  const args = ['log', formatArg, '-n100', '--use-mailmap'];
+  const args = ['log', formatArg, '--use-mailmap'];
+  if (switchMap['-n'].activated) {
+    args.push(switchMap['-n'].longName);
+  }
   if (switchMap['-D'].activated) {
     args.push(switchMap['-D'].longName);
   }
