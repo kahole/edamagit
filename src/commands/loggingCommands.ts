@@ -24,27 +24,39 @@ const loggingMenu = {
 class InputSwitch implements Switch {
   shortName = '-n';
   get longName() {
-    return `${this.shortName}${this.maxCount ?? ''}`;
+    return `${this.shortName}${this.input ?? ''}`;
   }
   description = 'Limit number of commits';
   activated = true;
 
   async onActivate() {
-    const input = await window.showInputBox({ prompt: this.shortName });
-    if (input !== undefined) {
-      if (input === '') {
-        this.maxCount = undefined;
-      } else {
-        const count = parseInt(input);
-        if (!isNaN(count)) {
-          this.maxCount = count;
+    // Shortcut for when it is activated
+    if (this.input !== undefined) {
+      this.input = undefined;
+      return this.input !== undefined;
+    }
+
+    let placeHolder;
+    do {
+      const input = await window.showInputBox({ prompt: this.shortName, placeHolder });
+      placeHolder = undefined;
+      if (input !== undefined) {
+        if (input === '') {
+          this.input = undefined;
+        } else {
+          const count = parseInt(input);
+          if (!isNaN(count) && count > 0) {
+            this.input = `${count}`;
+          } else {
+            placeHolder = 'Please enter a natural number (excluding zero).';
+          }
         }
       }
-    }
-    return this.maxCount !== undefined;
+    } while (placeHolder !== undefined);
+    return this.input !== undefined;
   }
 
-  maxCount: number | undefined = 100;
+  input: string | undefined = `100`;
 }
 
 function createSwitches() {
