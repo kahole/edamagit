@@ -9,6 +9,7 @@ import MagitUtils from '../utils/magitUtils';
 import { showDiffSection } from './diffingCommands';
 import { Section } from '../views/general/sectionHeader';
 import * as path from 'path';
+import FilePathUtils from '../utils/filePathUtils';
 
 const commitMenu = {
   title: 'Committing',
@@ -93,7 +94,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 
     const commitSuccessMessageTask = gitRun(repository, args, { env });
     const listener = vscode.window.onDidChangeActiveTextEditor(editor => {
-      if (editor && editor.document.fileName.indexOf('COMMIT_EDITMSG') !== -1) {
+      if (editor && FilePathUtils.fileName(editor.document.uri) === 'COMMIT_EDITMSG') {
         // Move the cursor to the beginning
         const position = editor.selection.active;
         const newPosition = position.with(0, 0);
