@@ -31,7 +31,7 @@ export default class FilePathUtils {
   }
 
   public static fileName(uri: Uri) {
-    let pieces = uri.fsPath.split('/');
+    let pieces = uri.fsPath.split(/[/\\]/g);
     if (pieces[pieces.length - 1].length === 0) {
       pieces.pop();
     }
