@@ -92,6 +92,15 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
     const env = { [editor ?? 'GIT_EDITOR']: `"${codePath}" --wait` };
 
     const commitSuccessMessageTask = gitRun(repository, args, { env });
+    const listener = vscode.window.onDidChangeActiveTextEditor(editor => {
+      if (editor && editor.document.fileName.indexOf('COMMIT_EDITMSG') !== -1) {
+        // Move the cursor to the beginning
+        const position = editor.selection.active;
+        const newPosition = position.with(0, 0);
+        const newSelection = new vscode.Selection(newPosition, newPosition);
+        editor.selection = newSelection;
+      }
+    });
 
     if (updatePostCommitTask) {
       await new Promise(r => setTimeout(r, 100));
@@ -100,6 +109,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 
     const commitSuccessMessage = await commitSuccessMessageTask;
 
+    listener.dispose();
     instructionStatus.dispose();
     window.setStatusBarMessage(`Git finished: ${commitSuccessMessage.stdout.replace(Constants.LineSplitterRegex, ' ')}`, Constants.StatusMessageDisplayTimeout);
 
