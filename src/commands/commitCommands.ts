@@ -62,6 +62,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 
   let stagedEditorTask: Thenable<TextEditor> | undefined;
   let instructionStatus;
+  let editorListener;
   try {
 
     instructionStatus = window.setStatusBarMessage(`Type C-c C-c to finish, or C-c C-k to cancel`);
@@ -93,7 +94,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
     const env = { [editor ?? 'GIT_EDITOR']: `"${codePath}" --wait` };
 
     const commitSuccessMessageTask = gitRun(repository, args, { env });
-    const listener = vscode.window.onDidChangeActiveTextEditor(editor => {
+    editorListener = vscode.window.onDidChangeActiveTextEditor(editor => {
       if (editor && FilePathUtils.fileName(editor.document.uri) === 'COMMIT_EDITMSG') {
         // Move the cursor to the beginning
         const position = editor.selection.active;
@@ -110,11 +111,14 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 
     const commitSuccessMessage = await commitSuccessMessageTask;
 
-    listener.dispose();
+    editorListener.dispose();
     instructionStatus.dispose();
     window.setStatusBarMessage(`Git finished: ${commitSuccessMessage.stdout.replace(Constants.LineSplitterRegex, ' ')}`, Constants.StatusMessageDisplayTimeout);
 
   } catch (e) {
+    if (editorListener) {
+      editorListener.dispose();
+    }
     if (instructionStatus) {
       instructionStatus.dispose();
     }
