@@ -15,5 +15,5 @@ export async function processView(repository: MagitRepository) {
     views.set(uri.toString(), new ProcessView(uri));
   }
 
-  return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preview: false }));
+  return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
 }

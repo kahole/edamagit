@@ -359,6 +359,17 @@
         "editor.minimap.enabled": false
       }
     },
+    "configuration": {
+      "title": "Magit",
+      "properties": {
+        "magit.display-buffer-function": {
+          "type": "string",
+          "enum": ["other-column", "same-column"],
+          "default": "other-column",
+          "description": "Choose where new buffers will be displayed."
+        }
+      }
+    },
     "grammars": [
       {
         "language": "magit",

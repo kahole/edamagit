@@ -118,7 +118,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
       for (const visibleEditor of window.visibleTextEditors) {
         if (visibleEditor.document.uri === stagedEditor.document.uri) {
           // This is a bit of a hack. Too bad about editor.hide() and editor.show() being deprecated.
-          const stagedEditorViewColumn = MagitUtils.oppositeActiveViewColumn();
+          const stagedEditorViewColumn = MagitUtils.showDocumentColumn();
           await window.showTextDocument(stagedEditor.document, { viewColumn: stagedEditorViewColumn, preview: false });
           await commands.executeCommand('workbench.action.closeActiveEditor');
           commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === ViewColumn.One ? 'Right' : 'Left'}`);

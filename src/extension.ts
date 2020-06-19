@@ -123,7 +123,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('magit.dispatch', Command.primeRepo(async (repository: MagitRepository) => {
     const uri = DispatchView.encodeLocation(repository);
     views.set(uri.toString(), new DispatchView(uri));
-    return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preview: false }));
+    return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
   }, false)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('magit.toggle-fold', Command.primeRepoAndView(async (repo: MagitRepository, view: DocumentView) => {

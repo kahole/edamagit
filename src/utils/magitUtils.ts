@@ -1,3 +1,4 @@
+import * as vscode from 'vscode';
 import { MagitRepository } from '../models/magitRepository';
 import { magitRepositories, views, gitApi } from '../extension';
 import { window, ViewColumn, Uri, commands } from 'vscode';
@@ -143,8 +144,12 @@ export default class MagitUtils {
     return false;
   }
 
-  public static oppositeActiveViewColumn(): ViewColumn {
+  public static showDocumentColumn(): ViewColumn {
     const activeColumn = window.activeTextEditor?.viewColumn ?? 0;
+
+    if (vscode.workspace.getConfiguration('magit').get('display-buffer-function') === 'same-column') {
+      return activeColumn;
+    }
 
     if (activeColumn > ViewColumn.One) {
       return ViewColumn.One;
