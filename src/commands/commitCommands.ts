@@ -9,6 +9,7 @@ import MagitUtils from '../utils/magitUtils';
 import { showDiffSection } from './diffingCommands';
 import { Section } from '../views/general/sectionHeader';
 import * as path from 'path';
+import FilePathUtils from '../utils/filePathUtils';
 
 const commitMenu = {
   title: 'Committing',
@@ -61,6 +62,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 
   let stagedEditorTask: Thenable<TextEditor> | undefined;
   let instructionStatus;
+  let editorListener;
   try {
 
     instructionStatus = window.setStatusBarMessage(`Type C-c C-c to finish, or C-c C-k to cancel`);
@@ -92,6 +94,15 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
     const env = { [editor ?? 'GIT_EDITOR']: `"${codePath}" --wait` };
 
     const commitSuccessMessageTask = gitRun(repository, args, { env });
+    editorListener = vscode.window.onDidChangeActiveTextEditor(editor => {
+      if (editor && FilePathUtils.fileName(editor.document.uri) === 'COMMIT_EDITMSG') {
+        // Move the cursor to the beginning
+        const position = editor.selection.active;
+        const newPosition = position.with(0, 0);
+        const newSelection = new vscode.Selection(newPosition, newPosition);
+        editor.selection = newSelection;
+      }
+    });
 
     if (updatePostCommitTask) {
       await new Promise(r => setTimeout(r, 100));
@@ -100,10 +111,14 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 
     const commitSuccessMessage = await commitSuccessMessageTask;
 
+    editorListener.dispose();
     instructionStatus.dispose();
     window.setStatusBarMessage(`Git finished: ${commitSuccessMessage.stdout.replace(Constants.LineSplitterRegex, ' ')}`, Constants.StatusMessageDisplayTimeout);
 
   } catch (e) {
+    if (editorListener) {
+      editorListener.dispose();
+    }
     if (instructionStatus) {
       instructionStatus.dispose();
     }
@@ -118,7 +133,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
       for (const visibleEditor of window.visibleTextEditors) {
         if (visibleEditor.document.uri === stagedEditor.document.uri) {
           // This is a bit of a hack. Too bad about editor.hide() and editor.show() being deprecated.
-          const stagedEditorViewColumn = MagitUtils.oppositeActiveViewColumn();
+          const stagedEditorViewColumn = MagitUtils.showDocumentColumn();
           await window.showTextDocument(stagedEditor.document, { viewColumn: stagedEditorViewColumn, preview: false });
           await commands.executeCommand('workbench.action.closeActiveEditor');
           commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === ViewColumn.One ? 'Right' : 'Left'}`);

@@ -33,7 +33,7 @@ export async function magitStatus(editor: TextEditor, preserveFocus = false): Pr
         if (editor.document.uri.path === MagitStatusView.UriPath) {
           return;
         }
-        return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false }));
+        return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preserveFocus, preview: false }));
       }
     }
 
@@ -42,7 +42,7 @@ export async function magitStatus(editor: TextEditor, preserveFocus = false): Pr
     const uri = MagitStatusView.encodeLocation(repository);
     views.set(uri.toString(), new MagitStatusView(uri, repository.magitState!));
 
-    return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus, preview: false }));
+    return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preserveFocus, preview: false }));
   }
 }
 
@@ -75,7 +75,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   const untrackedFiles: MagitChange[] =
     repository.state.workingTreeChanges.length > workingTreeChanges_NoUntracked.length ?
-      (await gitRun(repository, ['ls-files', '--others', '--exclude-standard', '--directory']))
+      (await gitRun(repository, ['ls-files', '--others', '--exclude-standard', '--directory', '--no-empty-directory']))
         .stdout
         .replace(Constants.FinalLineBreakRegex, '')
         .split(Constants.LineSplitterRegex)

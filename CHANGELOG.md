@@ -1,5 +1,10 @@
 # Change Log
 
+### 0.2.3
+- Adds `magit.display-buffer-function` config option allowing you to choose where new buffers will be displayed.
+(thanks @GriffinSchneider Griffin Schneider)
+- Bugfixes (thanks @stevenguh Steven Guh)
+
 ### 0.2.2
 ### 0.2.1
 

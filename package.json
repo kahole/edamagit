@@ -7,7 +7,7 @@
   "author": {
     "name": "Kristian Andersen Hole"
   },
-  "version": "0.2.2",
+  "version": "0.2.3",
   "engines": {
     "vscode": "^1.42.1"
   },
@@ -357,6 +357,17 @@
         "editor.lineNumbers": "off",
         "editor.lineHeight": 15,
         "editor.minimap.enabled": false
+      }
+    },
+    "configuration": {
+      "title": "Magit",
+      "properties": {
+        "magit.display-buffer-function": {
+          "type": "string",
+          "enum": ["other-column", "same-column"],
+          "default": "other-column",
+          "description": "Choose where new buffers will be displayed."
+        }
       }
     },
     "grammars": [

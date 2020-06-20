@@ -18,5 +18,5 @@ export async function magitHelp(repository: MagitRepository) {
 
   const uri = HelpView.encodeLocation(repository);
   views.set(uri.toString(), new HelpView(uri, userKeyBindings));
-  workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.oppositeActiveViewColumn(), preserveFocus: true, preview: false }));
+  workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preserveFocus: true, preview: false }));
 }
