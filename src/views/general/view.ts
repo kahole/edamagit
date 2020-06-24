@@ -10,6 +10,7 @@ export abstract class View {
   isFoldable: boolean = false;
   foldedByDefault: boolean = false;
   isHighlightable: boolean = true;
+  newlineByDefault: boolean = true;
 
   get folded(): boolean {
     return this._folded;
@@ -39,23 +40,41 @@ export abstract class View {
     }
   }
 
-  render(startLineNumber: number): string[] {
+  render(startLineNumber: number, startColumnNumber: number): string {
 
     this.retrieveFold();
 
     let currentLineNumber = startLineNumber;
-    const renderedContent: string[] = [];
+    let currentColumnNumber = startColumnNumber;
+    let renderedContent: string = '';
 
-    this.subViews.forEach(
-      v => {
-        const subViewRender = v.render(currentLineNumber);
-        currentLineNumber += (v.range.end.line - v.range.start.line) + 1;
-        renderedContent.push(...subViewRender);
+    for (const [idx, v] of this.subViews.entries()) {
+      if (v.newlineByDefault && idx !== 0) {
+        if (this.folded) {
+          break;
+        }
+        currentLineNumber += 1;
+        currentColumnNumber = 0;
+        renderedContent += '\n';
       }
-    );
-    this.range = new Range(startLineNumber, 0, currentLineNumber - 1, renderedContent.length > 0 ? renderedContent[renderedContent.length - 1].length : 0);
+      let subViewRender = v.render(currentLineNumber, currentColumnNumber);
+      let foundNewline = -1;
+      if (this.folded) {
+        const foundNewline = subViewRender.indexOf('\n');
+        if (foundNewline !== -1 && idx !== 0) {
+          subViewRender = subViewRender.slice(0, foundNewline);
+        }
+      }
+      currentLineNumber += v.range.end.line - v.range.start.line;
+      currentColumnNumber += v.range.end.character - v.range.start.character;
+      renderedContent += subViewRender;
+      if (this.folded && foundNewline !== -1 && idx !== 0) {
+        break;
+      }
+    }
+    this.range = new Range(startLineNumber, startColumnNumber, currentLineNumber, currentColumnNumber);
 
-    return this.folded ? renderedContent.slice(0, 1) : renderedContent;
+    return renderedContent;
   }
 
   get id(): string | undefined { return undefined; }

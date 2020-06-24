@@ -38,7 +38,7 @@ suite('Extension Test Suite', () => {
 
     const statusView = new MagitStatusView(vscode.Uri.parse(''), magitState);
 
-    const result = statusView.render(0).join('\n');
+    const result = statusView.render(0, 0);
 
     assert.equal(result, expected);
   });

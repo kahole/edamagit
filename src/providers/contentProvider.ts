@@ -49,7 +49,7 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
 
     if (view) {
       view.emitter = this.viewUpdatedEmitter;
-      return view.render(0).join('\n');
+      return view.render(0, 0);
     }
     return '';
   }

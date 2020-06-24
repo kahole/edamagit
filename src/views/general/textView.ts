@@ -8,13 +8,19 @@ export class TextView extends View {
     super();
   }
 
-  render(startLineNumber: number): string[] {
+  render(startLineNumber: number, startColumnNumber: number): string {
 
     this.retrieveFold();
 
-    const lines = this.textContent.split(Constants.LineSplitterRegex);
-    this.range = new Range(startLineNumber, 0, startLineNumber + lines.length - 1, lines[lines.length - 1].length);
+    const content = this.folded ? this.textContent.slice(0, this.textContent.indexOf('\n')) : this.textContent;
+    const lines = content.split(Constants.LineSplitterRegex);
+    this.range = new Range(
+      startLineNumber,
+      startColumnNumber,
+      startLineNumber + lines.length - 1,
+      lines.length === 1 ? startColumnNumber + lines[0].length : lines[lines.length - 1].length,
+    );
 
-    return [this.folded ? lines[0] : this.textContent];
+    return content;
   }
 }
