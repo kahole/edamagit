@@ -80,7 +80,8 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
     if (isCodium && !isDarwin) {
       codePath = 'codium';
     }
-    if (isInsiders) {
+    if (isInsiders && !isDarwin) {
+      // On Mac the binary for the Insiders build is still called `code`
       codePath += '-insiders';
     }
 
