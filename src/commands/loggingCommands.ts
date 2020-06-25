@@ -148,7 +148,7 @@ function parseLog(stdout: string) {
         const graph = matches[1]; // undefined if graph doesn't exist
         const log = {
           graph: graph ? [graph] : undefined,
-          refs: matches[4],
+          refs: (matches[4] ?? '').split(', ').filter((m: string) => m),
           author: matches[6],
           time: new Date(Number(matches[8]) * 1000), // convert seconds to milliseconds
           commit: {

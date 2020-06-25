@@ -1,6 +1,7 @@
 import { View } from '../general/view';
 import { Section, SectionHeaderView } from '../general/sectionHeader';
-import { TextView } from '../general/textView';
+import { TokenView } from '../general/tokenView';
+import { PlainTextView } from '../general/plainTextView';
 import { Commit } from '../../typings/git';
 import { LineBreakView } from '../general/lineBreakView';
 import GitTextUtils from '../../utils/gitTextUtils';
@@ -20,9 +21,12 @@ export class CommitSectionView extends View {
   }
 }
 
-export class CommitItemView extends TextView {
+export class CommitItemView extends View {
 
   constructor(public commit: Commit, qualifier?: string) {
-    super(`${qualifier ? qualifier + ' ' : ''}${GitTextUtils.shortHash(commit.hash)} ${GitTextUtils.shortCommitMessage(commit.message)}`);
+    super();
+    this.subViews = [
+      new PlainTextView(`${qualifier ? qualifier + ' ' : ''}${GitTextUtils.shortHash(commit.hash)} ${GitTextUtils.shortCommitMessage(commit.message)}`)
+    ];
   }
 }
