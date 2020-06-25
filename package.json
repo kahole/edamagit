@@ -394,6 +394,20 @@
         "path": "./syntaxes/magit.tmGrammar.json"
       }
     ],
+    "semanticTokenTypes": [
+      {
+        "id": "magit-ref-name",
+        "superType": "label",
+        "description": "Name of a git ref."
+      }
+    ],
+    "semanticTokenScopes": [
+      {
+        "scopes": {
+          "magit-ref-name": ["entity.name.type.template"]
+        }
+      }
+    ],
     "keybindings": [
       {
         "command": "magit.status",
