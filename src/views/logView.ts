@@ -9,6 +9,7 @@ import GitTextUtils from '../utils/gitTextUtils';
 import { CommitItemView } from './commits/commitSectionView';
 import { DocumentView } from './general/documentView';
 import { TextView } from './general/textView';
+import { Token, SemanticTextView } from './general/semanticTextView';
 
 export default class LogView extends DocumentView {
 
@@ -38,18 +39,29 @@ export class CommitLongFormItemView extends CommitItemView {
     const timeDistance = formatDistanceToNowStrict(logEntry.time);
     const hash = `${GitTextUtils.shortHash(logEntry.commit.hash)} `;
     const graph = logEntry.graph?.[0] ?? '';
-    const refs = logEntry.refs ? `(${logEntry.refs}) ` : '';
+    this.subViews = [];
+
     const msg = GitTextUtils.shortCommitMessage(logEntry.commit.message);
-    this.textContent = truncateText(`${hash}${graph}${refs}${msg}`, 69, 70) +
-      truncateText(logEntry.author, 17, 18) +
-      timeDistance;
+    const textViews: TextView[] = [];
+    textViews.push(new TextView(`${hash}${graph}`));
+
+    const refViews: Token[] = logEntry.refs.map(ref => new Token(ref, 'magit-ref-name'));
+    if (refViews.length) {
+      textViews.push(new SemanticTextView('(', ...refViews, ') '));
+    }
+    this.addSubview(...textViews);
+
+    const availableMsgWidth = 70 - textViews.reduce((prev, v) => prev + v.textContent.length, 0);
+    const truncatedAuthor = truncateText(logEntry.author, 17, 18);
+    const truncatedMsg = truncateText(msg, availableMsgWidth, availableMsgWidth + 1);
+    this.addSubview(new TextView(`${truncatedMsg}${truncatedAuthor}${timeDistance}`));
 
     // Add the rest of the graph for this commit
     if (logEntry.graph) {
       for (let i = 1; i < logEntry.graph.length; i++) {
         const g = logEntry.graph[i];
         const emptyHashSpace = ' '.repeat(8);
-        this.textContent += `\n${emptyHashSpace}${g}`;
+        this.addSubview(new TextView(`\n${emptyHashSpace}${g}`));
       }
     }
   }
