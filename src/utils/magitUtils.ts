@@ -24,22 +24,37 @@ export default class MagitUtils {
     return gitApi.repositories.find(r => FilePathUtils.isDescendant(r.rootUri.fsPath, uri.fsPath));
   }
 
-  public static async getCurrentMagitRepo(uri: Uri): Promise<MagitRepository | undefined> {
+  public static async getCurrentMagitRepo(uri?: Uri): Promise<MagitRepository | undefined> {
 
-    let repository = magitRepositories.get(uri.query);
+    let repository;
+
+    if (uri) {
+      repository = magitRepositories.get(uri.query);
+    }
 
     if (!repository) {
 
-      repository = this.getMagitRepoThatContainsFile(uri);
+      if (uri) {
+        repository = this.getMagitRepoThatContainsFile(uri);
+      }
 
       // Can't deduce a repo from uri, ask user to choose
       if (!repository) {
 
-        if (gitApi.repositories.length) {
+        if (gitApi.repositories.length === 1) {
+          repository = gitApi.repositories[0];
+        }
+        else if (gitApi.repositories.length) {
 
-          const repoPicker: QuickItem<Repository | undefined>[] = gitApi.repositories.map(repo => ({ label: repo.rootUri.fsPath, meta: repo }));
-          repoPicker.push({ label: 'Init repo', meta: undefined });
-          repository = await QuickMenuUtil.showMenu(repoPicker, 'Which repository?');
+          if (vscode.workspace.workspaceFolders?.length) {
+            repository = this.getMagitRepoThatContainsFile(vscode.workspace.workspaceFolders[0].uri);
+          }
+
+          if (!repository) {
+            const repoPicker: QuickItem<Repository | undefined>[] = gitApi.repositories.map(repo => ({ label: repo.rootUri.fsPath, meta: repo }));
+            repoPicker.push({ label: 'Init repo', meta: undefined });
+            repository = await QuickMenuUtil.showMenu(repoPicker, 'Which repository?');
+          }
         }
 
         if (!repository) {
