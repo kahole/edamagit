@@ -92,7 +92,11 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
       codePath = path.join(path.dirname(execPath), 'bin', codePath);
     }
 
-    const env = { [editor ?? 'GIT_EDITOR']: `"${codePath}" --wait` };
+    const env: NodeJS.ProcessEnv = { 'GIT_EDITOR': `"${codePath}" --wait` };
+
+    if (editor) {
+      env[editor] = `"${codePath}" --wait`;
+    }
 
     const commitSuccessMessageTask = gitRun(repository, args, { env });
 
