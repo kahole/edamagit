@@ -78,7 +78,7 @@ export function activate(context: ExtensionContext) {
     providerRegistrations,
   );
 
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.status', (editor: TextEditor) => magitStatus(editor)));
+  context.subscriptions.push(commands.registerCommand('magit.status', magitStatus));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.help', Command.primeRepo(magitHelp, false)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('magit.commit', Command.primeRepo(magitCommit)));
