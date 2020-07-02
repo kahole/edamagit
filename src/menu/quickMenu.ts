@@ -21,9 +21,15 @@ export class QuickMenuUtil {
         if (_quickPick.activeItems.length > 0) {
           const chosenItem = _quickPick.activeItems[0];
           resolve(chosenItem.meta);
-          _quickPick.dispose();
-          eventListenerDisposable.dispose();
+          _quickPick.hide();
         }
+      });
+
+      const didHideDisposable = _quickPick.onDidHide(() => {
+        resolve();
+        _quickPick.dispose();
+        eventListenerDisposable.dispose();
+        didHideDisposable.dispose();
       });
 
       _quickPick.show();
@@ -48,8 +54,14 @@ export class QuickMenuUtil {
         } else {
           resolve(_quickPick.value);
         }
+        _quickPick.hide();
+      });
+
+      const didHideDisposable = _quickPick.onDidHide(() => {
+        resolve();
         _quickPick.dispose();
         eventListenerDisposable.dispose();
+        didHideDisposable.dispose();
       });
 
       _quickPick.show();
