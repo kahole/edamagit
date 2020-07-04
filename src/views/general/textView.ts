@@ -4,6 +4,10 @@ import * as Constants from '../../common/constants';
 
 export class TextView extends View {
 
+  isClickable = false;
+  newlineByDefault = false;
+  isHighlightable = false;
+
   constructor(public textContent: string = '') {
     super();
   }
@@ -23,4 +27,6 @@ export class TextView extends View {
 
     return content;
   }
+
+  onClicked() { return undefined; }
 }
