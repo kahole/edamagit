@@ -10,13 +10,13 @@ export class TextView extends View {
     super();
   }
 
-  render(startLineNumber: number, startColumnNumber: number): string {
+  render(startLineNumber: number, startCharacterNumber: number): string {
     const lines = this.textContent.split(Constants.LineSplitterRegex);
     this.range = new Range(
       startLineNumber,
-      startColumnNumber,
+      startCharacterNumber,
       startLineNumber + lines.length - 1,
-      lines.length === 1 ? startColumnNumber + lines[0].length : lines[lines.length - 1].length,
+      lines.length === 1 ? startCharacterNumber + lines[0].length : lines[lines.length - 1].length,
     );
     return this.textContent;
   }

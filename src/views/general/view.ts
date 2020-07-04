@@ -37,40 +37,40 @@ export abstract class View {
     }
   }
 
-  render(startLineNumber: number, startColumnNumber: number): string {
+  render(startLineNumber: number, startCharacterNumber: number): string {
 
     this.retrieveFold();
   
     let renderedContent: string = '';
     // If we're not at the beginning of a line, add a new line.
     // This view's range begins at the start of this new line.
-    if (startColumnNumber !== 0) {
+    if (startCharacterNumber !== 0) {
       startLineNumber += 1;
-      startColumnNumber = 0;
+      startCharacterNumber = 0;
       renderedContent += '\n';
     }
 
     let currentLineNumber = startLineNumber;
-    let currentColumnNumber = startColumnNumber;
+    let currentCharacterNumber = startCharacterNumber;
 
     for (const v of this.subViews) {
-      const subViewRender = v.render(currentLineNumber, currentColumnNumber);
+      const subViewRender = v.render(currentLineNumber, currentCharacterNumber);
       // If this view is folded, trim whatever the subviews render to only the first line, and adjust
       // the range accordingly.
       const foldEnding = this.folded ? subViewRender.search(Constants.LineSplitterRegex) : -1;
       if (foldEnding !== -1) {
         const foldedRender = subViewRender.slice(0, foldEnding);
-        currentColumnNumber += foldedRender.length;
+        currentCharacterNumber += foldedRender.length;
         renderedContent += foldedRender;
         // If this view is folded and we've already rendered a full line, then there's no point rendering any more.
         break;
       } else {
         currentLineNumber = v.range.end.line;
-        currentColumnNumber = v.range.end.character;
+        currentCharacterNumber = v.range.end.character;
         renderedContent += subViewRender;
       }
     }
-    this.range = new Range(startLineNumber, startColumnNumber, currentLineNumber, currentColumnNumber);
+    this.range = new Range(startLineNumber, startCharacterNumber, currentLineNumber, currentCharacterNumber);
 
     return renderedContent;
   }
