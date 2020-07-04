@@ -22,4 +22,5 @@ export const RemoteBranchDecoration = window.createTextEditorDecorationType({
 // Must match the semanticTokenTypes in package.json
 export const SemanticTokenTypes = [
   'magit-ref-name',
+  'magit-remote-ref-name',
 ] as const;
