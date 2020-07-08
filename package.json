@@ -195,12 +195,10 @@
     "menus": {
       "commandPalette": [
         {
-          "command": "magit.status",
-          "when": "activeEditor"
+          "command": "magit.status"
         },
         {
-          "command": "magit.dispatch",
-          "when": "activeEditor"
+          "command": "magit.dispatch"
         },
         {
           "command": "magit.help",
