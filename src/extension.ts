@@ -120,11 +120,16 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('magit.stage-file', Command.primeFileCommand(stageFile)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.unstage-file', Command.primeFileCommand(unstageFile)));
 
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.dispatch', Command.primeRepo(async (repository: MagitRepository) => {
-    const uri = DispatchView.encodeLocation(repository);
-    views.set(uri.toString(), new DispatchView(uri));
-    return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
-  }, false)));
+  context.subscriptions.push(commands.registerCommand('magit.dispatch', async () => {
+    const editor = window.activeTextEditor;
+    const repository = await MagitUtils.getCurrentMagitRepo(editor?.document.uri);
+
+    if (repository) {
+      const uri = DispatchView.encodeLocation(repository);
+      views.set(uri.toString(), new DispatchView(uri));
+      return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
+    }
+  }));
 
   context.subscriptions.push(commands.registerTextEditorCommand('magit.toggle-fold', Command.primeRepoAndView(async (repo: MagitRepository, view: DocumentView) => {
     const selectedView = view.click(window.activeTextEditor!.selection.active);
