@@ -52,9 +52,16 @@ export abstract class View {
 
     let currentLineNumber = startLineNumber;
     let currentCharacterNumber = startCharacterNumber;
+    let subViewRender: string | undefined = undefined;
 
     for (const v of this.subViews) {
-      const subViewRender = v.render(currentLineNumber, currentCharacterNumber);
+      // If the last subview we rendered ends in a newline, its range will exclude that newline.
+      // That means the range of our next subview will start on the line after the last subview's range.
+      if (Constants.FinalLineBreakRegex.test(subViewRender ?? '')) {
+        currentLineNumber += 1;
+        currentCharacterNumber = 0;
+      }
+      subViewRender = v.render(currentLineNumber, currentCharacterNumber);
       // If this view is folded, trim whatever the subviews render to only the first line, and adjust
       // the range accordingly.
       const foldEnding = this.folded ? subViewRender.search(Constants.LineSplitterRegex) : -1;

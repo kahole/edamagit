@@ -12,6 +12,11 @@ export class TextView extends View {
 
   render(startLineNumber: number, startCharacterNumber: number): string {
     const lines = this.textContent.split(Constants.LineSplitterRegex);
+    // If our content ends in a newline, we want to exclude that newline from our range.
+    // If we don't do this, our range will include the first character of the line after us.
+    if (lines[lines.length - 1] === '') {
+      lines.pop();
+    }
     this.range = new Range(
       startLineNumber,
       startCharacterNumber,
