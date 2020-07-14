@@ -141,7 +141,7 @@ remove the default edamagit bindings and the collisions with the Vim extension.
 _Feature requests as well as issues are welcome_
 
 ### Implement missing Git/Magit features
-  - Diffing (a lot missing)
+  - More diffing features
   - More logging features (https://github.com/kahole/edamagit/pull/40)
   - Bisecting
   - Submodules
@@ -150,5 +150,3 @@ _Feature requests as well as issues are welcome_
 ### Interface
 - Config menus
 - Options/variable menus
-- Branch name highlighting     
-     (https://github.com/microsoft/vscode/wiki/Semantic-Highlighting-Overview)
