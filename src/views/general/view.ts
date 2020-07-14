@@ -40,7 +40,7 @@ export abstract class View {
   render(startLineNumber: number, startCharacterNumber: number): string {
 
     this.retrieveFold();
-  
+
     let renderedContent: string = '';
     // If we're not at the beginning of a line, add a new line.
     // This view's range begins at the start of this new line.
