@@ -11,6 +11,7 @@ import { magitCommit } from './commands/commitCommands';
 import { magitStage, magitStageAll, magitUnstageAll, magitUnstage, stageFile, unstageFile } from './commands/stagingCommands';
 import { saveClose, clearSaveClose, quitMagitView } from './commands/macros';
 import HighlightProvider from './providers/highlightProvider';
+import SemanticTokensProvider from './providers/semanticTokensProvider';
 import { Command } from './commands/commandPrimer';
 import * as Constants from './common/constants';
 import { fetching } from './commands/fetchingCommands';
@@ -68,10 +69,12 @@ export function activate(context: ExtensionContext) {
 
   const contentProvider = new ContentProvider();
   const highlightProvider = new HighlightProvider();
+  const semanticTokensProvider = new SemanticTokensProvider();
 
   const providerRegistrations = Disposable.from(
     workspace.registerTextDocumentContentProvider(Constants.MagitUriScheme, contentProvider),
-    languages.registerDocumentHighlightProvider(Constants.MagitDocumentSelector, highlightProvider)
+    languages.registerDocumentHighlightProvider(Constants.MagitDocumentSelector, highlightProvider),
+    languages.registerDocumentSemanticTokensProvider(Constants.MagitDocumentSelector, semanticTokensProvider, semanticTokensProvider.legend),
   );
   context.subscriptions.push(
     contentProvider,

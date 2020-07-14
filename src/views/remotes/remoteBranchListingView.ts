@@ -1,7 +1,8 @@
 import { Ref } from '../../typings/git';
+import { View } from '../general/view';
 import { TextView } from '../general/textView';
 
-export class RemoteBranchListingView extends TextView {
+export class RemoteBranchListingView extends View {
 
   get id() { return this.ref.name?.toString() + this.ref.type.toString(); }
 
@@ -11,6 +12,6 @@ export class RemoteBranchListingView extends TextView {
     const [remote, ...nameParts] = ref.name?.split('/') ?? [];
     const name = nameParts.join('/');
 
-    this.textContent = `  ${name}`;
+    this.addSubview(new TextView(`  ${name}`));
   }
 }

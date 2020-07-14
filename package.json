@@ -378,6 +378,26 @@
         "path": "./syntaxes/magit.tmGrammar.json"
       }
     ],
+    "semanticTokenTypes": [
+      {
+        "id": "magit-ref-name",
+        "superType": "label",
+        "description": "Name of a git ref."
+      },
+      {
+        "id": "magit-remote-ref-name",
+        "superType": "label",
+        "description": "Name of a git ref from a remote."
+      }
+    ],
+    "semanticTokenScopes": [
+      {
+        "scopes": {
+          "magit-ref-name": ["entity.name.type.template"],
+          "magit-remote-ref-name": ["variable.other.constant"]
+        }
+      }
+    ],
     "keybindings": [
       {
         "command": "magit.status",
@@ -599,7 +619,7 @@
     "@types/glob": "^7.1.1",
     "@types/mocha": "^7.0.1",
     "@types/node": "^12.11.7",
-    "@types/vscode": "^1.42.1",
+    "@types/vscode": "^1.46.0",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",
     "eslint": "^6.8.0",

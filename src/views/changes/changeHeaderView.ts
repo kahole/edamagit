@@ -1,14 +1,15 @@
+import { View } from '../general/view';
 import { TextView } from '../general/textView';
 import { MagitChange } from '../../models/magitChange';
 import { Status } from '../../typings/git';
 
-export class ChangeHeaderView extends TextView {
+export class ChangeHeaderView extends View {
 
   constructor(private change: MagitChange) {
     super();
     const statusLabel = mapFileStatusToLabel(this.change.status);
     const mergingStatusLabel = mapFileStatusToMergingLabel(this.change.status);
-    this.textContent = `${statusLabel ? statusLabel + '   ' : ''}${this.change.relativePath}${mergingStatusLabel ? ` (${mergingStatusLabel})` : ''}`;
+    this.addSubview(new TextView(`${statusLabel ? statusLabel + '   ' : ''}${this.change.relativePath}${mergingStatusLabel ? ` (${mergingStatusLabel})` : ''}`));
   }
 
   onClicked() { return undefined; }

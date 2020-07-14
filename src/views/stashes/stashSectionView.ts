@@ -19,9 +19,10 @@ export class StashSectionView extends View {
   }
 }
 
-export class StashItemView extends TextView {
+export class StashItemView extends View {
 
   constructor(public stash: Stash) {
-    super(`stash@{${stash.index}} ${stash.description}`);
+    super();
+    this.addSubview(new TextView(`stash@{${stash.index}} ${stash.description}`));
   }
 }

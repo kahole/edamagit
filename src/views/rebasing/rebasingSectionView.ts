@@ -22,10 +22,11 @@ export class RebasingSectionView extends View {
   }
 }
 
-class RebaseSectionHeaderView extends TextView {
+class RebaseSectionHeaderView extends View {
 
   constructor(text: string) {
-    super(text);
+    super();
+    this.addSubview(new TextView(text));
   }
 
   onClicked() { return undefined; }

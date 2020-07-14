@@ -1,4 +1,5 @@
 import { TextView } from './textView';
+import { View } from './view';
 
 export enum Section {
   Untracked = 'Untracked files',
@@ -18,10 +19,11 @@ export enum Section {
   Tags = 'Tags'
 }
 
-export class SectionHeaderView extends TextView {
+export class SectionHeaderView extends View {
 
   constructor(private _section: Section, count?: number, extraText?: string) {
-    super(`${_section.valueOf()}${extraText ? ' ' + extraText + '' : ''}${count ? ' (' + count + ')' : ''}`);
+    super();
+    this.addSubview(new TextView(`${_section.valueOf()}${extraText ? ' ' + extraText + '' : ''}${count ? ' (' + count + ')' : ''}`));
   }
 
   onClicked() { return undefined; }

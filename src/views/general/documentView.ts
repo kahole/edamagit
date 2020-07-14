@@ -4,6 +4,8 @@ import { MagitState } from '../../models/magitState';
 
 export abstract class DocumentView extends View {
 
+  isHighlightable = false;
+
   public emitter?: EventEmitter<Uri>;
   needsUpdate: boolean = true;
 
