@@ -1,5 +1,8 @@
 # Change Log
 
+### 0.2.6
+- bugfixes
+
 ### 0.2.5
 - Allows opening edamagit without having a file open
 - bugfixes
