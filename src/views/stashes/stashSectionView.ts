@@ -2,10 +2,10 @@ import { View } from '../general/view';
 import { Section, SectionHeaderView } from '../general/sectionHeader';
 import { Stash } from '../../common/gitApiExtensions';
 import { TextView } from '../general/textView';
-import { LineBreakView } from '../general/lineBreakView';
 
 export class StashSectionView extends View {
   isFoldable = true;
+  afterMargin = 1;
 
   get id() { return Section.Stashes.toString(); }
 
@@ -14,7 +14,6 @@ export class StashSectionView extends View {
     this.subViews = [
       new SectionHeaderView(Section.Stashes, stashes.length),
       ...stashes.map(stash => new StashItemView(stash)),
-      new LineBreakView()
     ];
   }
 }

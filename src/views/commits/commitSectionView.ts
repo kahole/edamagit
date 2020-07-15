@@ -3,11 +3,11 @@ import { Section, SectionHeaderView } from '../general/sectionHeader';
 import { TokenView } from '../general/tokenView';
 import { TextView } from '../general/textView';
 import { Commit, Ref } from '../../typings/git';
-import { LineBreakView } from '../general/lineBreakView';
 import GitTextUtils from '../../utils/gitTextUtils';
 
 export class CommitSectionView extends View {
   isFoldable = true;
+  afterMargin = 1;
 
   get id() { return this.section.toString(); }
 
@@ -16,7 +16,6 @@ export class CommitSectionView extends View {
     this.subViews = [
       new SectionHeaderView(section),
       ...commits.map(commit => new CommitItemView(commit, undefined, refs)),
-      new LineBreakView()
     ];
   }
 }

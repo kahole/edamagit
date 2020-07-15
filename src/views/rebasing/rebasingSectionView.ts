@@ -1,11 +1,11 @@
 import { View } from '../general/view';
 import { TextView } from '../general/textView';
-import { LineBreakView } from '../general/lineBreakView';
 import { CommitItemView } from '../commits/commitSectionView';
 import { MagitRebasingState } from '../../models/magitRebasingState';
 
 export class RebasingSectionView extends View {
   isFoldable = true;
+  afterMargin = 1;
 
   get id() { return 'Rebasing'; }
 
@@ -17,7 +17,6 @@ export class RebasingSectionView extends View {
       new CommitItemView(rebasingState.currentCommit, 'join'),
       ...rebasingState.doneCommits.map(c => new CommitItemView(c, 'done')),
       new CommitItemView(rebasingState.ontoBranch.commitDetails, 'onto'),
-      new LineBreakView()
     ];
   }
 }

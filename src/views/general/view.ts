@@ -11,6 +11,8 @@ export abstract class View {
   isFoldable: boolean = false;
   foldedByDefault: boolean = false;
   isHighlightable: boolean = true;
+  // A number of blank lines to add between this view and the sibling view after it. Doesn't affect this view's range.
+  afterMargin = 0;
 
   get folded(): boolean {
     return this._folded;
@@ -52,16 +54,9 @@ export abstract class View {
 
     let currentLineNumber = startLineNumber;
     let currentCharacterNumber = startCharacterNumber;
-    let subViewRender: string | undefined = undefined;
 
-    for (const v of this.subViews) {
-      // If the last subview we rendered ends in a newline, its range will exclude that newline.
-      // That means the range of our next subview will start on the line after the last subview's range.
-      if (Constants.FinalLineBreakRegex.test(subViewRender ?? '')) {
-        currentLineNumber += 1;
-        currentCharacterNumber = 0;
-      }
-      subViewRender = v.render(currentLineNumber, currentCharacterNumber);
+    for (const [idx, v] of this.subViews.entries()) {
+      const subViewRender = v.render(currentLineNumber, currentCharacterNumber);
       // If this view is folded, trim whatever the subviews render to only the first line, and adjust
       // the range accordingly.
       const foldEnding = this.folded ? subViewRender.search(Constants.LineSplitterRegex) : -1;
@@ -71,10 +66,29 @@ export abstract class View {
         renderedContent += foldedRender;
         // If this view is folded and we've already rendered a full line, then there's no point rendering any more.
         break;
-      } else {
-        currentLineNumber = v.range.end.line;
-        currentCharacterNumber = v.range.end.character;
-        renderedContent += subViewRender;
+      }
+      currentLineNumber = v.range.end.line;
+      currentCharacterNumber = v.range.end.character;
+      renderedContent += subViewRender;
+      // Further operations only apply if we're going to render another subview after this one.
+      if (idx === this.subViews.length - 1) {
+        break;
+      }
+      // If the subview we just rendered ends in a newline, its range will exclude that newline.
+      // That means the range of our next subview will start on the line after the last subview's range.
+      const subViewEndsInNewline = Constants.FinalLineBreakRegex.test(subViewRender ?? '');
+      if (subViewEndsInNewline) {
+        currentLineNumber += 1;
+        currentCharacterNumber = 0;
+      }
+      // Apply the subview's afterMargin if it has one. If the subview is folded, also collapse its margin.
+      if (!v.folded && v.afterMargin) {
+        // If the subview doesn't end in a newline, we need to add an additional one to ensure there's one empty
+        // line between this subview and the next one.
+        const marginSize = v.afterMargin + (subViewEndsInNewline ? 0 : 1);
+        currentLineNumber += marginSize;
+        currentCharacterNumber = 0;
+        renderedContent += '\n'.repeat(marginSize);
       }
     }
     this.range = new Range(startLineNumber, startCharacterNumber, currentLineNumber, currentCharacterNumber);

@@ -2,10 +2,10 @@ import { View } from '../general/view';
 import { MagitChange } from '../../models/magitChange';
 import { ChangeView } from './changeView';
 import { Section, SectionHeaderView } from '../general/sectionHeader';
-import { LineBreakView } from '../general/lineBreakView';
 
 export class ChangeSectionView extends View {
   isFoldable = true;
+  afterMargin = 1;
 
   get id() { return this.section.toString() + this.context; }
 
@@ -14,7 +14,6 @@ export class ChangeSectionView extends View {
     this.subViews = [
       new SectionHeaderView(section, changes.length),
       ...changes.map(change => new ChangeView(change, context)),
-      new LineBreakView()
     ];
   }
 }

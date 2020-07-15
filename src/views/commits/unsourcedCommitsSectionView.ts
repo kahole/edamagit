@@ -1,11 +1,11 @@
 import { View } from '../general/view';
 import { Section, SectionHeaderView } from '../general/sectionHeader';
 import { Commit, UpstreamRef, Ref } from '../../typings/git';
-import { LineBreakView } from '../general/lineBreakView';
 import { CommitItemView } from './commitSectionView';
 
 export class UnsourcedCommitSectionView extends View {
   isFoldable = true;
+  afterMargin = 1;
 
   get id() { return this.section.toString(); }
 
@@ -14,7 +14,6 @@ export class UnsourcedCommitSectionView extends View {
     this.subViews = [
       new SectionHeaderView(section, commits.length, `${upstream.remote}/${upstream.name}`),
       ...commits.map(commit => new CommitItemView(commit, undefined, refs)),
-      new LineBreakView()
     ];
   }
 }

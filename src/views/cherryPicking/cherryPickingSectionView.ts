@@ -1,5 +1,4 @@
 import { View } from '../general/view';
-import { LineBreakView } from '../general/lineBreakView';
 import { MagitCherryPickingState } from '../../models/magitCherryPickingState';
 import { SectionHeaderView, Section } from '../general/sectionHeader';
 import { Commit } from '../../typings/git';
@@ -7,6 +6,7 @@ import { CommitItemView } from '../commits/commitSectionView';
 
 export class CherryPickingSectionView extends View {
   isFoldable = true;
+  afterMargin = 1;
 
   get id() { return 'CherryPicking'; }
 
@@ -28,7 +28,6 @@ export class CherryPickingSectionView extends View {
       new CommitItemView(cherryPickingState.currentCommit, 'join'),
       ...doneCommits.map(commit => new CommitItemView(commit, 'done')),
       new CommitItemView(cherryPickingState.originalHead, 'onto'),
-      new LineBreakView()
     ];
   }
 }
