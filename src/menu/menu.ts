@@ -116,7 +116,7 @@ export class MenuUtil {
       const eventListenerDisposable = _quickPick.onDidChangeValue((e) => {
 
         if (_quickPick.value === 'q') {
-          return _quickPick.hide();
+          return _quickPick.dispose();
         }
         if (_quickPick.value === '-') {
           return;
