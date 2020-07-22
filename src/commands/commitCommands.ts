@@ -1,4 +1,4 @@
-import { window, ViewColumn, TextEditor, commands } from 'vscode';
+import { window, ViewColumn, TextEditor, commands, Range } from 'vscode';
 import * as vscode from 'vscode';
 import * as Constants from '../common/constants';
 import { execPath } from 'process';
@@ -99,6 +99,19 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
     }
 
     const commitSuccessMessageTask = gitRun(repository, args, { env });
+    editorListener = vscode.window.onDidChangeActiveTextEditor(editor => {
+      if (
+        editor &&
+        FilePathUtils.fileName(editor.document.uri) === 'COMMIT_EDITMSG' &&
+        editor.document.getText(new Range(0, 0, 0, 1)) === ''
+      ) {
+        // Move the cursor to the beginning
+        const position = editor.selection.active;
+        const newPosition = position.with(0, 0);
+        const newSelection = new vscode.Selection(newPosition, newPosition);
+        editor.selection = newSelection;
+      }
+    });
 
     if (updatePostCommitTask) {
       await new Promise(r => setTimeout(r, 100));
@@ -107,10 +120,14 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 
     const commitSuccessMessage = await commitSuccessMessageTask;
 
+    editorListener.dispose();
     instructionStatus.dispose();
     window.setStatusBarMessage(`Git finished: ${commitSuccessMessage.stdout.replace(Constants.LineSplitterRegex, ' ')}`, Constants.StatusMessageDisplayTimeout);
 
   } catch (e) {
+    if (editorListener) {
+      editorListener.dispose();
+    }
     if (instructionStatus) {
       instructionStatus.dispose();
     }

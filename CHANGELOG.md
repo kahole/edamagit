@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.2.65
+- Fixed issue with wandering cursor in COMMIT_EDITMSG editor.
+(thanks @nickcernis (Nick Cernis) and @stevenguh (Steven Guh))
+
 ### 0.2.6
 - bugfixes
 
