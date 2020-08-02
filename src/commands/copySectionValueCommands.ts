@@ -38,7 +38,7 @@ export async function copySectionValueCommand(repository: MagitRepository, curre
   }
 
   if (sectionValue) {
-    env.clipboard.writeText(sectionValue);
+    await env.clipboard.writeText(sectionValue);
     window.setStatusBarMessage(sectionValue, Constants.StatusMessageDisplayTimeout);
   }
 }
