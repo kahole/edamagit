@@ -21,7 +21,15 @@ export class StashSectionView extends View {
 
 export class StashItemView extends TextView {
 
+  public get section() {
+    return StashItemView.getSection(this.stash); 
+  }
+
+  private static getSection(stash: Stash) {
+    return `stash@{${stash.index}}`;
+  }
+
   constructor(public stash: Stash) {
-    super(`stash@{${stash.index}} ${stash.description}`);
+    super(`${StashItemView.getSection(stash)} ${stash.description}`);
   }
 }

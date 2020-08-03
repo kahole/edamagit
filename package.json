@@ -190,6 +190,10 @@
       {
         "command": "magit.unstage-file",
         "title": "Magit Unstage File"
+      },
+      {
+        "command": "magit.copy-section-value",
+        "title": "Magit Copy Section value"
       }
     ],
     "menus": {
