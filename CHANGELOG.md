@@ -1,6 +1,6 @@
 # Change Log
 
-### 0.2.7
+### 0.3.0
 - Adds magit-copy-section-value (@stevenguh (Steven Guh))
 - Support for submodules
 - Bugfixes
