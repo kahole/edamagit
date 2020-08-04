@@ -7,7 +7,7 @@
   "author": {
     "name": "Kristian Andersen Hole"
   },
-  "version": "0.2.65",
+  "version": "0.2.7",
   "engines": {
     "vscode": "^1.42.1"
   },
@@ -190,6 +190,10 @@
       {
         "command": "magit.unstage-file",
         "title": "Magit Unstage File"
+      },
+      {
+        "command": "magit.copy-section-value",
+        "title": "Magit Copy Section value"
       }
     ],
     "menus": {
@@ -613,6 +617,7 @@
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
-    "date-fns": "^2.14.0"
+    "date-fns": "^2.14.0",
+    "jsonc-parser": "^2.3.0"
   }
 }

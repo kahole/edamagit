@@ -4,7 +4,7 @@ import { Status } from '../../typings/git';
 
 export class ChangeHeaderView extends TextView {
 
-  constructor(private change: MagitChange) {
+  constructor(public change: MagitChange) {
     super();
     const statusLabel = mapFileStatusToLabel(this.change.status);
     const mergingStatusLabel = mapFileStatusToMergingLabel(this.change.status);

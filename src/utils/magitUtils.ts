@@ -14,10 +14,13 @@ export default class MagitUtils {
 
   public static getMagitRepoThatContainsFile(uri: Uri): MagitRepository | undefined {
 
-    for (const [key, repo] of magitRepositories.entries()) {
-      if (FilePathUtils.isDescendant(key, uri.fsPath)) {
-        return repo;
-      }
+    let discoveredRepos = Array.from(magitRepositories.entries());
+
+    let reposContainingFile = discoveredRepos
+      .filter(([path, repo]) => FilePathUtils.isDescendant(path, uri.fsPath));
+
+    if (reposContainingFile.length > 0 && discoveredRepos.length >= gitApi.repositories.length) {
+      return reposContainingFile.sort(([pathA, repoA], [pathB, repoB]) => pathB.length - pathA.length)[0][1];
     }
 
     // First time encountering this repo

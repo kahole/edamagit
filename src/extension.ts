@@ -38,6 +38,7 @@ import { cherryPicking } from './commands/cherryPickingCommands';
 import { reverting } from './commands/revertingCommands';
 import { reverseAtPoint } from './commands/reverseAtPointCommands';
 import { blameFile } from './commands/blamingCommands';
+import { copySectionValueCommand } from './commands/copySectionValueCommands';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
@@ -119,6 +120,8 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('magit.diff-file', Command.primeFileCommand(diffFile)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.stage-file', Command.primeFileCommand(stageFile)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.unstage-file', Command.primeFileCommand(unstageFile)));
+
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.copy-section-value', Command.primeRepoAndView(copySectionValueCommand)));
 
   context.subscriptions.push(commands.registerCommand('magit.dispatch', async () => {
     const editor = window.activeTextEditor;
