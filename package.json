@@ -617,6 +617,7 @@
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
-    "date-fns": "^2.14.0"
+    "date-fns": "^2.14.0",
+    "jsonc-parser": "^2.3.0"
   }
 }

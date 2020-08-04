@@ -4,6 +4,7 @@ import { HelpView } from '../views/helpView';
 import { views, logPath } from '../extension';
 import { MagitRepository } from '../models/magitRepository';
 import * as path from 'path';
+import * as JSONC from 'jsonc-parser';
 
 export async function magitHelp(repository: MagitRepository) {
 
@@ -13,7 +14,7 @@ export async function magitHelp(repository: MagitRepository) {
   try {
     const userKeyBindingsDoc = await workspace.openTextDocument(keybindingsPath);
     const userKeyBindingsText = userKeyBindingsDoc.getText().replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '');
-    userKeyBindings = JSON.parse(userKeyBindingsText);
+    userKeyBindings = JSONC.parse(userKeyBindingsText);
   } catch (e) { console.error(e); }
 
   const uri = HelpView.encodeLocation(repository);
