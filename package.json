@@ -193,7 +193,11 @@
       },
       {
         "command": "magit.copy-section-value",
-        "title": "Magit Copy Section value"
+        "title": "Magit Copy Section Value"
+      },
+      {
+        "command": "magit.copy-buffer-revision",
+        "title": "Magit Copy Buffer Revision"
       }
     ],
     "menus": {

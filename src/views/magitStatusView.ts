@@ -15,10 +15,12 @@ import { MagitRepository } from '../models/magitRepository';
 import { RebasingSectionView } from './rebasing/rebasingSectionView';
 import { CherryPickingSectionView } from './cherryPicking/cherryPickingSectionView';
 import { RevertingSectionView } from './reverting/revertingSectionView';
+import { MagitBranch } from '../models/magitBranch';
 
 export default class MagitStatusView extends DocumentView {
 
   static UriPath: string = 'status.magit';
+  public HEAD?: MagitBranch;
 
   constructor(uri: Uri, magitState: MagitState) {
     super(uri);
@@ -26,7 +28,7 @@ export default class MagitStatusView extends DocumentView {
   }
 
   provideContent(magitState: MagitState) {
-
+    this.HEAD = magitState.HEAD;
     this.subViews = [];
 
     if (magitState.latestGitError) {
