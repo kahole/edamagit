@@ -25,6 +25,10 @@ export async function fetching(repository: MagitRepository): Promise<any> {
 
   fetchingMenuItems.push({ label: 'o', description: 'another branch', action: fetchAnotherBranch });
 
+  if (repository.state.submodules.length) {
+    fetchingMenuItems.push({ label: 's', description: 'submodules', action: fetchSubmodules });
+  }
+
   const switches: Switch[] = [
     { shortName: '-p', longName: '--prune', description: 'Prune deleted branches' }
   ];
@@ -74,4 +78,10 @@ async function fetchAnotherBranch({ repository, switches }: MenuState) {
       return gitRun(repository, args);
     }
   }
+}
+
+export async function fetchSubmodules({ repository, switches }: MenuState) {
+
+  const args = ['fetch', '--verbose', '--recurse-submodules', ...MenuUtil.switchesToArgs(switches)];
+  return gitRun(repository, args);
 }

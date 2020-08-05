@@ -144,8 +144,8 @@ _Feature requests as well as issues are welcome_
   - Diffing (a lot missing)
   - More logging features (https://github.com/kahole/edamagit/pull/40)
   - Bisecting
-  - Submodules
   - Patches
+  - Subtrees
 
 ### Interface
 - Config menus

@@ -1,4 +1,4 @@
-import { Commit, Ref } from '../typings/git';
+import { Commit, Ref, Submodule } from '../typings/git';
 import { MagitChange } from './magitChange';
 import { Stash } from '../common/gitApiExtensions';
 import { MagitBranch } from './magitBranch';
@@ -23,5 +23,6 @@ export interface MagitState {
   readonly branches: Ref[];
   readonly remotes: MagitRemote[];
   readonly tags: Ref[];
+  readonly submodules: Submodule[];
   latestGitError?: string;
 }

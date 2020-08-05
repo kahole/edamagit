@@ -77,7 +77,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   const untrackedFiles: MagitChange[] =
     repository.state.workingTreeChanges.length > workingTreeChanges_NoUntracked.length ?
-      (await gitRun(repository, ['ls-files', '--others', '--exclude-standard', '--directory', '--no-empty-directory']))
+      (await gitRun(repository, ['ls-files', '--others', '--exclude-standard', '--directory', '--no-empty-directory'], {}, LogLevel.None))
         .stdout
         .replace(Constants.FinalLineBreakRegex, '')
         .split(Constants.LineSplitterRegex)
@@ -168,6 +168,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     branches: repository.state.refs.filter(ref => ref.type === RefType.Head),
     remotes,
     tags: repository.state.refs.filter(ref => ref.type === RefType.Tag),
+    submodules: repository.state.submodules,
     latestGitError: repository.magitState?.latestGitError
   };
 }
