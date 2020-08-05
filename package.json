@@ -168,6 +168,10 @@
         "title": "Magit Stashing"
       },
       {
+        "command": "magit.submodules",
+        "title": "Magit Submodules"
+      },
+      {
         "command": "magit.fetching",
         "title": "Magit Fetching"
       },
@@ -310,6 +314,10 @@
         },
         {
           "command": "magit.stashing",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.submodules",
           "when": "editorLangId == magit"
         },
         {
@@ -534,6 +542,11 @@
       {
         "command": "magit.stashing",
         "key": "z",
+        "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
+      },
+      {
+        "command": "magit.submodules",
+        "key": "o",
         "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
       },
       {
