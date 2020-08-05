@@ -10,6 +10,7 @@ export class QuickMenuUtil {
 
     return new Promise((resolve, reject) => {
 
+      let resolveOnHide = true;
       const _quickPick = window.createQuickPick<QuickItem<T>>();
 
       _quickPick.items = quickItems;
@@ -20,16 +21,19 @@ export class QuickMenuUtil {
 
         if (_quickPick.activeItems.length > 0) {
           const chosenItem = _quickPick.activeItems[0];
-          resolve(chosenItem.meta);
+          resolveOnHide = false;
           _quickPick.hide();
+          resolve(chosenItem.meta);
         }
       });
 
       const didHideDisposable = _quickPick.onDidHide(() => {
-        resolve();
         _quickPick.dispose();
         eventListenerDisposable.dispose();
         didHideDisposable.dispose();
+        if (resolveOnHide) {
+          resolve();
+        }
       });
 
       _quickPick.show();
@@ -40,6 +44,7 @@ export class QuickMenuUtil {
 
     return new Promise((resolve, reject) => {
 
+      let resolveOnHide = true;
       const _quickPick = window.createQuickPick<QuickItem<string>>();
 
       _quickPick.items = quickItems;
@@ -48,20 +53,23 @@ export class QuickMenuUtil {
 
       const eventListenerDisposable = _quickPick.onDidAccept(async () => {
 
+        resolveOnHide = false;
+        _quickPick.hide();
         if (_quickPick.activeItems.length > 0) {
           const chosenItem = _quickPick.activeItems[0];
           resolve(chosenItem.meta);
         } else {
           resolve(_quickPick.value);
         }
-        _quickPick.hide();
       });
 
       const didHideDisposable = _quickPick.onDidHide(() => {
-        resolve();
         _quickPick.dispose();
         eventListenerDisposable.dispose();
         didHideDisposable.dispose();
+        if (resolveOnHide) {
+          resolve();
+        }
       });
 
       _quickPick.show();
