@@ -12,7 +12,7 @@ export class CommitDetailView extends DocumentView {
   isHighlightable = false;
   needsUpdate = false;
 
-  constructor(uri: Uri, private commit: MagitCommit) {
+  constructor(uri: Uri, public commit: MagitCommit) {
     super(uri);
 
     const commitTextView = new TextView(commit.diff);
