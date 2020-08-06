@@ -172,6 +172,14 @@
         "title": "Magit Submodules"
       },
       {
+        "command": "magit.apply-patches",
+        "title": "Magit Apply Patches"
+      },
+      {
+        "command": "magit.format-patches",
+        "title": "Magit Format Patches"
+      },
+      {
         "command": "magit.fetching",
         "title": "Magit Fetching"
       },
@@ -322,6 +330,14 @@
         },
         {
           "command": "magit.submodules",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.apply-patches",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.format-patches",
           "when": "editorLangId == magit"
         },
         {
@@ -551,6 +567,16 @@
       {
         "command": "magit.submodules",
         "key": "o",
+        "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
+      },
+      {
+        "command": "magit.apply-patches",
+        "key": "w",
+        "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
+      },
+      {
+        "command": "magit.format-patches",
+        "key": "shift+w",
         "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
       },
       {

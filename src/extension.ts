@@ -41,6 +41,8 @@ import { blameFile } from './commands/blamingCommands';
 import { copySectionValueCommand } from './commands/copySectionValueCommands';
 import { copyBufferRevisionCommands } from './commands/copyBufferRevisionCommands';
 import { submodules } from './commands/submodulesCommands';
+import { applyPatchesCommands } from './commands/applyPatchesCommands';
+import { formatPatchesCommands } from './commands/formatPatchesCommands';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
@@ -107,6 +109,8 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('magit.running', Command.primeRepo(running)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.worktree', Command.primeRepo(worktree)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.submodules', Command.primeRepo(submodules)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.apply-patches', Command.primeRepo(applyPatchesCommands)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.format-patches', Command.primeRepo(formatPatchesCommands)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.process-log', Command.primeRepo(processView, false)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('magit.visit-at-point', Command.primeRepoAndView(magitVisitAtPoint, false)));
