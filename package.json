@@ -7,7 +7,7 @@
   "author": {
     "name": "Kristian Andersen Hole"
   },
-  "version": "0.3.0",
+  "version": "0.4.0",
   "engines": {
     "vscode": "^1.42.1"
   },
@@ -168,6 +168,10 @@
         "title": "Magit Stashing"
       },
       {
+        "command": "magit.submodules",
+        "title": "Magit Submodules"
+      },
+      {
         "command": "magit.fetching",
         "title": "Magit Fetching"
       },
@@ -193,7 +197,11 @@
       },
       {
         "command": "magit.copy-section-value",
-        "title": "Magit Copy Section value"
+        "title": "Magit Copy Section Value"
+      },
+      {
+        "command": "magit.copy-buffer-revision",
+        "title": "Magit Copy Buffer Revision"
       }
     ],
     "menus": {
@@ -313,6 +321,10 @@
           "when": "editorLangId == magit"
         },
         {
+          "command": "magit.submodules",
+          "when": "editorLangId == magit"
+        },
+        {
           "command": "magit.fetching",
           "when": "editorLangId == magit"
         },
@@ -380,6 +392,32 @@
         "language": "magit",
         "scopeName": "source.magit",
         "path": "./syntaxes/magit.tmGrammar.json"
+      }
+    ],
+    "semanticTokenTypes": [
+      {
+        "id": "magit-ref-name",
+        "superType": "label",
+        "description": "Name of a git ref."
+      },
+      {
+        "id": "magit-remote-ref-name",
+        "superType": "label",
+        "description": "Name of a git ref from a remote."
+      },
+      {
+        "id": "magit-tag-name",
+        "superType": "label",
+        "description": "Name of a git tag."
+      }
+    ],
+    "semanticTokenScopes": [
+      {
+        "scopes": {
+          "magit-ref-name": ["entity.name.type.template"],
+          "magit-remote-ref-name": ["variable.other.constant"],
+          "magit-tag-name": ["string.highlight"]
+        }
       }
     ],
     "keybindings": [
@@ -534,6 +572,11 @@
       {
         "command": "magit.stashing",
         "key": "z",
+        "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
+      },
+      {
+        "command": "magit.submodules",
+        "key": "o",
         "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
       },
       {

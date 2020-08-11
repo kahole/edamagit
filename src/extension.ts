@@ -11,6 +11,7 @@ import { magitCommit } from './commands/commitCommands';
 import { magitStage, magitStageAll, magitUnstageAll, magitUnstage, stageFile, unstageFile } from './commands/stagingCommands';
 import { saveClose, clearSaveClose, quitMagitView } from './commands/macros';
 import HighlightProvider from './providers/highlightProvider';
+import SemanticTokensProvider from './providers/semanticTokensProvider';
 import { Command } from './commands/commandPrimer';
 import * as Constants from './common/constants';
 import { fetching } from './commands/fetchingCommands';
@@ -39,6 +40,8 @@ import { reverting } from './commands/revertingCommands';
 import { reverseAtPoint } from './commands/reverseAtPointCommands';
 import { blameFile } from './commands/blamingCommands';
 import { copySectionValueCommand } from './commands/copySectionValueCommands';
+import { copyBufferRevisionCommands } from './commands/copyBufferRevisionCommands';
+import { submodules } from './commands/submodulesCommands';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
@@ -69,10 +72,12 @@ export function activate(context: ExtensionContext) {
 
   const contentProvider = new ContentProvider();
   const highlightProvider = new HighlightProvider();
+  const semanticTokensProvider = new SemanticTokensProvider();
 
   const providerRegistrations = Disposable.from(
     workspace.registerTextDocumentContentProvider(Constants.MagitUriScheme, contentProvider),
-    languages.registerDocumentHighlightProvider(Constants.MagitDocumentSelector, highlightProvider)
+    languages.registerDocumentHighlightProvider(Constants.MagitDocumentSelector, highlightProvider),
+    languages.registerDocumentSemanticTokensProvider(Constants.MagitDocumentSelector, semanticTokensProvider, semanticTokensProvider.legend),
   );
   context.subscriptions.push(
     contentProvider,
@@ -104,6 +109,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('magit.ignoring', Command.primeRepo(ignoring)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.running', Command.primeRepo(running)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.worktree', Command.primeRepo(worktree)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.submodules', Command.primeRepo(submodules)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.process-log', Command.primeRepo(processView, false)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('magit.visit-at-point', Command.primeRepoAndView(magitVisitAtPoint, false)));
@@ -122,6 +128,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('magit.unstage-file', Command.primeFileCommand(unstageFile)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('magit.copy-section-value', Command.primeRepoAndView(copySectionValueCommand)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.copy-buffer-revision', Command.primeRepoAndView(copyBufferRevisionCommands)));
 
   context.subscriptions.push(commands.registerCommand('magit.dispatch', async () => {
     const editor = window.activeTextEditor;

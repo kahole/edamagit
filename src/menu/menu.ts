@@ -46,6 +46,7 @@ export class MenuUtil {
         });
       }
 
+      let resolveOnHide = true;
       const _quickPick = window.createQuickPick<MenuItem>();
 
       _quickPick.title = menu.title;
@@ -63,9 +64,8 @@ export class MenuUtil {
         const chosenItems = _quickPick.items.filter(i => i.label === _quickPick.value);
         if (chosenItems.length > 0) {
           _quickPick.value = '';
-          _quickPick.dispose();
-          eventListenerDisposable.dispose();
-          acceptListenerDisposable.dispose();
+          resolveOnHide = false;
+          _quickPick.hide();
           try {
 
             await chosenItems[0].action(menuState);
@@ -82,15 +82,24 @@ export class MenuUtil {
 
         if (_quickPick.activeItems.length > 0) {
           const chosenItems = _quickPick.activeItems[0] as MenuItem;
-          _quickPick.dispose();
-          eventListenerDisposable.dispose();
-          acceptListenerDisposable.dispose();
+          resolveOnHide = false;
+          _quickPick.hide();
           try {
             await chosenItems.action(menuState);
             resolve();
           } catch (error) {
             reject(error);
           }
+        }
+      });
+
+      const didHideDisposable = _quickPick.onDidHide(() => {
+        _quickPick.dispose();
+        eventListenerDisposable.dispose();
+        acceptListenerDisposable.dispose();
+        didHideDisposable.dispose();
+        if (resolveOnHide) {
+          resolve();
         }
       });
 
@@ -106,6 +115,7 @@ export class MenuUtil {
         return reject('No switches present in menu');
       }
 
+      let resolveOnHide = true;
       const _quickPick = window.createQuickPick<QuickPickItem>();
 
       _quickPick.canSelectMany = true;
@@ -116,7 +126,7 @@ export class MenuUtil {
       const eventListenerDisposable = _quickPick.onDidChangeValue((e) => {
 
         if (_quickPick.value === 'q') {
-          return _quickPick.dispose();
+          return _quickPick.hide();
         }
         if (_quickPick.value === '-') {
           return;
@@ -137,10 +147,19 @@ export class MenuUtil {
           })
         );
 
+        resolveOnHide = false;
+        _quickPick.hide();
+        resolve(updatedSwitches);
+      });
+
+      const didHideDisposable = _quickPick.onDidHide(() => {
         _quickPick.dispose();
         eventListenerDisposable.dispose();
         acceptListenerDisposable.dispose();
-        resolve(updatedSwitches);
+        didHideDisposable.dispose();
+        if (resolveOnHide) {
+          resolve();
+        }
       });
 
       _quickPick.show();

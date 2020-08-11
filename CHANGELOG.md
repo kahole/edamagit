@@ -1,5 +1,12 @@
 # Change Log
 
+### 0.4.0
+
+- Adds highlighted refs and tags next to commits, HEAD, etc (@GriffinSchneider Griffin Schneider)
+- Adds submodule commands
+- Adds copy-buffer-revision command (@stevenguh (Steven Guh))
+- bugfixes
+
 ### 0.3.0
 - Adds magit-copy-section-value (@stevenguh (Steven Guh))
 - Support for submodules

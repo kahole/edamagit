@@ -9,6 +9,8 @@ import GitTextUtils from '../utils/gitTextUtils';
 import { CommitItemView } from './commits/commitSectionView';
 import { DocumentView } from './general/documentView';
 import { TextView } from './general/textView';
+import { Token, SemanticTextView } from './general/semanticTextView';
+import { SemanticTokenTypes } from '../common/constants';
 
 export default class LogView extends DocumentView {
 
@@ -35,21 +37,39 @@ export class CommitLongFormItemView extends CommitItemView {
 
   constructor(public logEntry: MagitLogEntry) {
     super(logEntry.commit);
+
     const timeDistance = formatDistanceToNowStrict(logEntry.time);
     const hash = `${GitTextUtils.shortHash(logEntry.commit.hash)} `;
     const graph = logEntry.graph?.[0] ?? '';
-    const refs = logEntry.refs ? `(${logEntry.refs}) ` : '';
+
+    this.content = [];
+
     const msg = GitTextUtils.shortCommitMessage(logEntry.commit.message);
-    this.textContent = truncateText(`${hash}${graph}${refs}${msg}`, 69, 70) +
-      truncateText(logEntry.author, 17, 18) +
-      timeDistance;
+    this.content.push(`${hash}${graph}`);
+
+    const refTokens: Token[] = logEntry.refs.map(ref => new Token(ref, SemanticTokenTypes.RefName));
+    if (refTokens.length) {
+
+      this.content.push(' (');
+      refTokens.forEach(refToken => {
+        this.content.push(refToken, ' ');
+      });
+      this.content.pop();
+
+      this.content.push(') ');
+    }
+
+    const availableMsgWidth = 70 - this.content.reduce((prev, v) => prev + v.length, 0);
+    const truncatedAuthor = truncateText(logEntry.author, 17, 18);
+    const truncatedMsg = truncateText(msg, availableMsgWidth, availableMsgWidth + 1);
+    this.content.push(`${truncatedMsg}${truncatedAuthor}${timeDistance}`);
 
     // Add the rest of the graph for this commit
     if (logEntry.graph) {
       for (let i = 1; i < logEntry.graph.length; i++) {
         const g = logEntry.graph[i];
         const emptyHashSpace = ' '.repeat(8);
-        this.textContent += `\n${emptyHashSpace}${g}`;
+        this.content.push(`\n${emptyHashSpace}${g}`);
       }
     }
   }

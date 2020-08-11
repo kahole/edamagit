@@ -144,11 +144,9 @@ _Feature requests as well as issues are welcome_
   - Diffing (a lot missing)
   - More logging features (https://github.com/kahole/edamagit/pull/40)
   - Bisecting
-  - Submodules
   - Patches
+  - Subtrees
 
 ### Interface
 - Config menus
 - Options/variable menus
-- Branch name highlighting (WiP: [#58](https://github.com/kahole/edamagit/pull/58))
-     (https://github.com/microsoft/vscode/wiki/Semantic-Highlighting-Overview)

@@ -25,6 +25,7 @@ suite('Extension Test Suite', () => {
       branches: [],
       remotes: [],
       tags: [],
+      submodules: [],
       HEAD: {
         name: 'somebranch',
         type: RefType.Head,
