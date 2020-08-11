@@ -1,12 +1,15 @@
-import { TextView } from '../general/textView';
 import { MagitUpstreamRef } from '../../models/magitBranch';
 import GitTextUtils from '../../utils/gitTextUtils';
+import { SemanticTokenTypes } from '../../common/constants';
+import { SemanticTextView, Token } from '../general/semanticTextView';
 
-export class RemoteBranchHeaderView extends TextView {
+export class RemoteBranchHeaderView extends SemanticTextView {
 
   constructor(name: string, upstreamRef: MagitUpstreamRef) {
-    super();
-    const nameLabel = `${name}:`.padEnd(10);
-    this.textContent = `${nameLabel}${upstreamRef.remote}/${upstreamRef.name} ${GitTextUtils.shortCommitMessage(upstreamRef.commit?.message)}`;
+    super(
+      `${name}:`.padEnd(10),
+      new Token(`${upstreamRef.remote}/${upstreamRef.name}`, SemanticTokenTypes.RemoteRefName),
+      ` ${GitTextUtils.shortCommitMessage(upstreamRef.commit?.message)}`
+    );
   }
 }

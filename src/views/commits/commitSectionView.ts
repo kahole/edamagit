@@ -1,9 +1,10 @@
 import { View } from '../general/view';
 import { Section, SectionHeaderView } from '../general/sectionHeader';
-import { TextView } from '../general/textView';
 import { Commit, Ref } from '../../typings/git';
 import { LineBreakView } from '../general/lineBreakView';
 import GitTextUtils from '../../utils/gitTextUtils';
+import { SemanticTextView, Token } from '../general/semanticTextView';
+import { SemanticTokenTypes } from '../../common/constants';
 
 export class CommitSectionView extends View {
   isFoldable = true;
@@ -20,20 +21,19 @@ export class CommitSectionView extends View {
   }
 }
 
-export class CommitItemView extends TextView {
-
-  // TODO: Cherry-pick this also: 2abcc05e6b288561336ac92e84398813dabbaafd
+export class CommitItemView extends SemanticTextView {
 
   constructor(public commit: Commit, qualifier?: string, refs?: Ref[]) {
-    super(`${qualifier ? qualifier + ' ' : ''}${GitTextUtils.shortHash(commit.hash)} ${GitTextUtils.shortCommitMessage(commit.message)}`);
-    // super();
-    // this.subViews = [];
-    // this.addSubview(new PlainTextView(`${qualifier ? qualifier + ' ' : ''}${GitTextUtils.shortHash(commit.hash)} `));
-    // const matchingRefs = (refs ?? [])?.filter(ref => ref.commit === commit.hash);
-    // matchingRefs.forEach(ref => {
-    //   this.addSubview(new TokenView(ref.name ?? '', ref.remote ? 'magit-remote-ref-name' : 'magit-ref-name'));
-    //   this.addSubview(new PlainTextView(' '));
-    // });
-    // this.addSubview(new PlainTextView(`${GitTextUtils.shortCommitMessage(commit.message)}`));
+    super();
+    const matchingRefs = (refs ?? [])?.filter(ref => ref.commit === commit.hash);
+    let refsContent: (string | Token)[] = [];
+    matchingRefs.forEach(ref => {
+      refsContent.push(new Token(ref.name ?? '', ref.remote ? SemanticTokenTypes.RemoteRefName : SemanticTokenTypes.RefName));
+      refsContent.push(' ');
+    });
+    this.content = [
+      `${qualifier ? qualifier + ' ' : ''}${GitTextUtils.shortHash(commit.hash)} `,
+      ...refsContent,
+      `${GitTextUtils.shortCommitMessage(commit.message)}`];
   }
 }

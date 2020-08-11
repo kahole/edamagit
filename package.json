@@ -404,13 +404,19 @@
         "id": "magit-remote-ref-name",
         "superType": "label",
         "description": "Name of a git ref from a remote."
+      },
+      {
+        "id": "magit-tag-name",
+        "superType": "label",
+        "description": "Name of a git tag."
       }
     ],
     "semanticTokenScopes": [
       {
         "scopes": {
           "magit-ref-name": ["entity.name.type.template"],
-          "magit-remote-ref-name": ["variable.other.constant"]
+          "magit-remote-ref-name": ["variable.other.constant"],
+          "magit-tag-name": ["string.highlight"]
         }
       }
     ],

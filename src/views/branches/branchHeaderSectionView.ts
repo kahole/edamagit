@@ -3,6 +3,8 @@ import { BranchHeaderView } from './branchHeaderView';
 import { RemoteBranchHeaderView } from './remoteBranchHeaderView';
 import { TextView } from '../general/textView';
 import { MagitBranch } from '../../models/magitBranch';
+import { SemanticTextView, Token } from '../general/semanticTextView';
+import { SemanticTokenTypes } from '../../common/constants';
 
 export class BranchHeaderSectionView extends View {
   isFoldable = true;
@@ -22,8 +24,8 @@ export class BranchHeaderSectionView extends View {
         this.addSubview(new RemoteBranchHeaderView('Push', HEAD.pushRemote));
       }
 
-      if (HEAD.tag) {
-        this.addSubview(new TextView('Tag: '.padEnd(10) + HEAD.tag.name));
+      if (HEAD.tag?.name) {
+        this.addSubview(new SemanticTextView('Tag: '.padEnd(10), new Token(HEAD.tag.name!, SemanticTokenTypes.TagName)));
       }
     } else {
       this.addSubview(new TextView('In the beginning there was darkness'));

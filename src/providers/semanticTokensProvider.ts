@@ -6,7 +6,7 @@ import { SemanticTextView } from '../views/general/semanticTextView';
 
 export default class SemanticTokensProvider implements vscode.DocumentSemanticTokensProvider {
 
-  readonly legend = new vscode.SemanticTokensLegend([...SemanticTokenTypes], []);
+  readonly legend = new vscode.SemanticTokensLegend(Object.values(SemanticTokenTypes), []);
 
   dispose() { }
 
@@ -26,6 +26,18 @@ export default class SemanticTokensProvider implements vscode.DocumentSemanticTo
       });
     }
 
-    view.subViews.forEach(v => this.visitNode(v, builder));
+    if (!view.folded) {
+      view.subViews.forEach(v => this.visitNode(v, builder));
+
+      // Include first 'line' of folded view, but only if it's a SemanticTextView
+    } else if (view.subViews.length) {
+
+      let firstSubView = view.subViews[0];
+      if (firstSubView instanceof SemanticTextView) {
+        firstSubView.tokens.forEach(token => {
+          builder.push(token.range, token.tokenType);
+        });
+      }
+    }
   }
 }

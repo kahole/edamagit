@@ -1,4 +1,4 @@
-import { DocumentSelector, window, ThemeColor } from 'vscode';
+import { DocumentSelector } from 'vscode';
 
 export const LineSplitterRegex: RegExp = /\r?\n/g;
 
@@ -10,17 +10,9 @@ export const MagitUriScheme: string = 'magit';
 
 export const MagitDocumentSelector: DocumentSelector = { scheme: MagitUriScheme, language: 'magit' };
 
-export const BranchDecoration = window.createTextEditorDecorationType({
-  color: 'rgba(202,212,255,1.0)'
-  // color: new ThemeColor('textLink.foreground')
-});
-
-export const RemoteBranchDecoration = window.createTextEditorDecorationType({
-  color: 'rgba(152,238,152,1.0)'
-});
-
 // Must match the semanticTokenTypes in package.json
-export const SemanticTokenTypes = [
-  'magit-ref-name',
-  'magit-remote-ref-name',
-] as const;
+export enum SemanticTokenTypes {
+  RefName = 'magit-ref-name',
+  RemoteRefName = 'magit-remote-ref-name',
+  TagName = 'magit-tag-name',
+}
