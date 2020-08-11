@@ -22,6 +22,8 @@ export class CommitSectionView extends View {
 
 export class CommitItemView extends TextView {
 
+  // TODO: Cherry-pick this also: 2abcc05e6b288561336ac92e84398813dabbaafd
+
   constructor(public commit: Commit, qualifier?: string, refs?: Ref[]) {
     super(`${qualifier ? qualifier + ' ' : ''}${GitTextUtils.shortHash(commit.hash)} ${GitTextUtils.shortCommitMessage(commit.message)}`);
     // super();

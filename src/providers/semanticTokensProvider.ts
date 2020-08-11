@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import { views } from '../extension';
-import { TokenView } from '../views/general/tokenView';
 import { View } from '../views/general/view';
 import { SemanticTokenTypes } from '../common/constants';
+import { SemanticTextView } from '../views/general/semanticTextView';
 
 export default class SemanticTokensProvider implements vscode.DocumentSemanticTokensProvider {
 
@@ -20,11 +20,12 @@ export default class SemanticTokensProvider implements vscode.DocumentSemanticTo
   }
 
   visitNode(view: View, builder: vscode.SemanticTokensBuilder) {
-    if (view instanceof TokenView) {
-      builder.push(view.range, view.tokenType);
+    if (view instanceof SemanticTextView) {
+      view.tokens.forEach(token => {
+        builder.push(token.range, token.tokenType);
+      });
     }
-    if (!view.folded) {
-      view.subViews.forEach(v => this.visitNode(v, builder));
-    }
+
+    view.subViews.forEach(v => this.visitNode(v, builder));
   }
 }

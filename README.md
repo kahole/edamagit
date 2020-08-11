@@ -150,5 +150,3 @@ _Feature requests as well as issues are welcome_
 ### Interface
 - Config menus
 - Options/variable menus
-- Branch name highlighting (WiP: [#58](https://github.com/kahole/edamagit/pull/58))
-     (https://github.com/microsoft/vscode/wiki/Semantic-Highlighting-Overview)
