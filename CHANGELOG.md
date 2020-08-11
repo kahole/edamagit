@@ -1,5 +1,6 @@
 # Change Log
 
+### 0.4.1
 ### 0.4.0
 
 - Adds highlighted refs and tags next to commits, HEAD, etc (@GriffinSchneider Griffin Schneider)
