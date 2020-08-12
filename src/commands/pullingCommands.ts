@@ -23,7 +23,7 @@ export async function pulling(repository: MagitRepository): Promise<any> {
   return MenuUtil.showMenu({ title: 'Pulling', commands: pullingMenuItems }, { repository });
 }
 
-function pullFromPushRemote({ repository }: MenuState) {
+async function pullFromPushRemote({ repository }: MenuState) {
   const pushRemote = repository.magitState?.HEAD?.pushRemote;
   if (pushRemote) {
     const args = ['pull', pushRemote.remote, pushRemote.name];
@@ -36,6 +36,6 @@ function pullFromUpstream({ repository }: MenuState) {
   return gitRun(repository, args);
 }
 
-function pullFromElsewhere() {
+async function pullFromElsewhere() {
   return commands.executeCommand('git.pullFrom');
 }

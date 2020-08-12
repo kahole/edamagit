@@ -102,15 +102,15 @@ async function stashIndex({ repository, switches }: MenuState) {
   }
 }
 
-function applyStash() {
+async function applyStash() {
   return commands.executeCommand('git.stashApply');
 }
 
-function dropStash() {
+async function dropStash() {
   return commands.executeCommand('git.stashDrop');
 }
 
-function popStash() {
+async function popStash() {
   return commands.executeCommand('git.stashPop');
 }
 
