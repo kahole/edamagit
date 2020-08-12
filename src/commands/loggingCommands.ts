@@ -5,7 +5,7 @@ import { MenuState, MenuUtil, Switch } from '../menu/menu';
 import { MagitBranch } from '../models/magitBranch';
 import { MagitLogEntry } from '../models/magitLogCommit';
 import { MagitRepository } from '../models/magitRepository';
-import { gitRun } from '../utils/gitRawRunner';
+import { gitRun, LogLevel } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 import LogView from '../views/logView';
 
@@ -80,7 +80,7 @@ async function logReferences(repository: MagitRepository, head: MagitBranch, swi
 }
 
 async function log(repository: MagitRepository, args: string[], revs: string[]) {
-  const output = await gitRun(repository, args.concat(revs));
+  const output = await gitRun(repository, args.concat(revs), {}, LogLevel.Error);
   const logEntries = parseLog(output.stdout);
   const revName = revs.join(' ');
   const uri = LogView.encodeLocation(repository);
