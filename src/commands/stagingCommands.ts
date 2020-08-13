@@ -116,7 +116,7 @@ async function unstage(repository: MagitRepository, selection: Selection, select
     }
   } else {
 
-    const files: QuickItem<Uri>[] = repository.magitState?.indexChanges!
+    const files: QuickItem<Uri>[] = repository.magitState!.indexChanges!
       .map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri), meta: c.uri }));
 
     const chosenFile = await QuickMenuUtil.showMenu<Uri>(files, 'Unstage file');
