@@ -150,7 +150,9 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   const remotes: MagitRemote[] = repository.state.remotes.map(remote => ({
     ...remote,
-    branches: remoteBranches.filter(remoteBranch => remoteBranch.remote === remote.name)
+    branches: remoteBranches.filter(remoteBranch =>
+      remoteBranch.remote === remote.name &&
+      remoteBranch.name !== remote.name + '/HEAD') // filter out uninteresting remote/HEAD element
   }));
 
   repository.magitState = {

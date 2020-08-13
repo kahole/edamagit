@@ -4,16 +4,20 @@ import { Selection, Position } from 'vscode';
 
 export default class ViewUtils {
 
-  public static applyActionForSelection(repository: MagitRepository, currentView: View, selection: Selection, multiSelectableViewTypes: any[], action: Function): Promise<any> {
+  public static async applyActionForSelection(repository: MagitRepository, currentView: View, selection: Selection, multiSelectableViewTypes: any[], action: Function): Promise<any> {
 
     if (!selection.isSingleLine) {
 
       let clickedViews = ViewUtils.multilineClick(currentView, selection, multiSelectableViewTypes);
 
       if (clickedViews.length > 0) {
-
-        let actionTasks = clickedViews.map(v => action(repository, selection, v));
-        return Promise.all(actionTasks);
+        let actionResults = [];
+        for (const v of clickedViews) {
+          actionResults.push(
+            await action(repository, selection, v)
+          );
+        }
+        return actionResults;
       }
     }
 

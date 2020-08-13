@@ -5,7 +5,7 @@ import { MenuState, MenuUtil, Switch } from '../menu/menu';
 import { MagitBranch } from '../models/magitBranch';
 import { MagitLogEntry } from '../models/magitLogCommit';
 import { MagitRepository } from '../models/magitRepository';
-import { gitRun } from '../utils/gitRawRunner';
+import { gitRun, LogLevel } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 import LogView from '../views/logView';
 
@@ -32,8 +32,8 @@ export async function logging(repository: MagitRepository) {
 }
 
 // A function wrapper to avoid duplicate checking code
-function wrap(action: (repository: MagitRepository, head: MagitBranch, switches: Switch[]) => Thenable<void>) {
-  return ({ repository, switches }: MenuState) => {
+function wrap(action: (repository: MagitRepository, head: MagitBranch, switches: Switch[]) => Promise<any>) {
+  return async ({ repository, switches }: MenuState) => {
     if (repository.magitState?.HEAD && switches) {
       return action(repository, repository.magitState.HEAD, switches);
     }
@@ -80,7 +80,7 @@ async function logReferences(repository: MagitRepository, head: MagitBranch, swi
 }
 
 async function log(repository: MagitRepository, args: string[], revs: string[]) {
-  const output = await gitRun(repository, args.concat(revs));
+  const output = await gitRun(repository, args.concat(revs), {}, LogLevel.Error);
   const logEntries = parseLog(output.stdout);
   const revName = revs.join(' ');
   const uri = LogView.encodeLocation(repository);
