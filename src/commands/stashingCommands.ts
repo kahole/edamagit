@@ -20,8 +20,8 @@ const stashingMenu = {
 export async function stashing(repository: MagitRepository): Promise<any> {
 
   const switches = [
-    { shortName: '-u', longName: '--include-untracked', description: 'Also save untracked files' },
-    { shortName: '-a', longName: '--all', description: 'Also save untracked files and ignored files' }
+    { key: '-u', name: '--include-untracked', description: 'Also save untracked files' },
+    { key: '-a', name: '--all', description: 'Also save untracked files and ignored files' }
   ];
 
   return MenuUtil.showMenu(stashingMenu, { repository, switches });

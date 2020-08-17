@@ -1,5 +1,4 @@
-import { window, QuickPickItem } from 'vscode';
-import { MenuItem } from './menuItem';
+import { window, QuickPickItem, QuickPick } from 'vscode';
 import { MagitRepository } from '../models/magitRepository';
 
 export interface Menu {
@@ -7,59 +6,92 @@ export interface Menu {
   commands: MenuItem[];
 }
 
+export interface MenuItem extends QuickPickItem {
+  action: (menuState: MenuState) => Promise<any>;
+}
+
 export interface MenuState {
   repository: MagitRepository;
   switches?: Switch[];
-  options?: any;
+  options?: Option[];
   data?: any;
 }
 
 export interface Switch {
-  shortName: string;
-  longName: string;
+  key: string;
+  name: string;
   description: string;
   activated?: boolean;
+}
+
+export interface Option extends Switch {
+  value?: string;
 }
 
 export class MenuUtil {
 
   static showMenu(menu: Menu, menuState: MenuState): Promise<void> {
 
+    let menuItems: MenuItem[] = menu.commands.map(item => ({ ...item, description: `\t${item.description}` }));
+
+    if (menuState.switches) {
+
+      const activeSwitches = menuState.switches.filter(s => s.activated).map(s => s.name).join(' ');
+      const activeSwitchesPresentation = `[ ${activeSwitches} ]`;
+
+      menuItems.push({
+        label: '-',
+        description: `\tSwitches ${activeSwitches.length > 0 ? activeSwitchesPresentation : ''}`,
+        action: async (menuState: MenuState) => {
+
+          const updatedSwitches = await MenuUtil.showSwitchesMenu(menuState);
+          return MenuUtil.showMenu(menu, { ...menuState, switches: updatedSwitches });
+        }
+      });
+    }
+
+    if (menuState.options) {
+
+      const activeOptions = menuState.options.filter(s => s.activated).map(s => `${s.name}"${s.value}"`).join(' ');
+      const activeOptionsPresentation = `[ ${activeOptions} ]`;
+
+      menuItems.push({
+        label: '=',
+        description: `\tOptions ${activeOptions.length > 0 ? activeOptionsPresentation : ''}`,
+        action: async (menuState: MenuState) => {
+
+          const updatedOptions = await MenuUtil.showOptionsMenu(menuState);
+          return MenuUtil.showMenu(menu, { ...menuState, options: updatedOptions });
+        }
+      });
+    }
+
+    return MenuUtil.runMenu({ ...menu, commands: menuItems }, menuState);
+  }
+
+  static switchesToArgs(switches?: Switch[]): string[] {
+    return switches?.filter(s => s.activated).map(s => s.name) ?? [];
+  }
+
+  static optionsToArgs(options?: Option[]): string[] {
+    return options?.filter(s => s.activated).map(s => `${s.name}${s.value}`) ?? [];
+  }
+
+  private static runMenu(menu: Menu, menuState: MenuState): Promise<void> {
+
     return new Promise((resolve, reject) => {
-
-      let quickItems: MenuItem[] = menu.commands.map(item => ({ ...item, description: `\t${item.description}` }));
-
-      if (menuState.switches) {
-
-        const activeSwitches = menuState.switches.filter(s => s.activated).map(s => s.longName).join(' ');
-        const activeSwitchesPresentation = `[ ${activeSwitches} ]`;
-
-        quickItems.push({
-          label: '-',
-          description: `\tSwitches ${activeSwitches.length > 0 ? activeSwitchesPresentation : ''}`,
-          action: async (menuState: MenuState) => {
-
-            const updatedSwitches = await MenuUtil.showSwitchesMenu(menuState);
-
-            return MenuUtil.showMenu(menu, { repository: menuState.repository, switches: updatedSwitches });
-          }
-        });
-      }
 
       let resolveOnHide = true;
       const _quickPick = window.createQuickPick<MenuItem>();
 
       _quickPick.title = menu.title;
-      _quickPick.items = quickItems;
+      _quickPick.items = menu.commands;
 
       // Select with single key stroke
 
       const eventListenerDisposable = _quickPick.onDidChangeValue(async (e) => {
         if (_quickPick.value === 'q') {
-          _quickPick.dispose();
-          eventListenerDisposable.dispose();
-          acceptListenerDisposable.dispose();
-          resolve();
+          return _quickPick.hide();
         }
         const chosenItems = _quickPick.items.filter(i => i.label === _quickPick.value);
         if (chosenItems.length > 0) {
@@ -67,7 +99,6 @@ export class MenuUtil {
           resolveOnHide = false;
           _quickPick.hide();
           try {
-
             await chosenItems[0].action(menuState);
             resolve();
           } catch (error) {
@@ -107,70 +138,134 @@ export class MenuUtil {
     });
   }
 
-  static showSwitchesMenu(menuState: MenuState): Promise<Switch[]> {
+  private static showSwitchesMenu(menuState: MenuState): Promise<Switch[]> {
+
+    let getUpdatedSwitches = (quickPick: QuickPick<QuickPickItem>, { switches }: MenuState) => switches!.map(s =>
+      ({
+        ...s,
+        activated: quickPick.selectedItems.find(item => item.label === s.key) !== undefined
+      })
+    );
+
+    let items = menuState.switches!.map(s => ({ label: s.key, detail: s.name, description: `\t${s.description}`, picked: s.activated }));
+
+    return MenuUtil.showSwitchLikeMenu<Switch[]>(items, menuState,
+      async (item) => {
+        return { ...item, picked: !item.picked };
+      },
+      getUpdatedSwitches,
+      'Switches (press letter for switches you want to enable)',
+      true,
+      '-'
+    );
+  }
+
+  private static showOptionsMenu(menuState: MenuState): Promise<Option[]> {
+
+    let items = menuState.options!.map(s => ({ label: s.key, detail: `${s.name}"${s.value}"`, description: `\t${s.description}`, picked: s.activated }));
+
+    let getUpdatedOptions = (quickPick: QuickPick<QuickPickItem>, { options }: MenuState) => options!.map(s => {
+      let selectedItem = quickPick.selectedItems.find(item => item.label === s.key);
+      return {
+        ...s,
+        activated: selectedItem !== undefined,
+        value: selectedItem?.detail?.split('"')[1]
+      };
+    });
+
+    return MenuUtil.showSwitchLikeMenu<Option[]>(items, menuState,
+      async (item) => {
+        let [prompt, oldVal, ...rest] = item.detail!.split('"');
+        let val = !item.picked ? await window.showInputBox({ prompt: `${prompt}=` }) : oldVal;
+        return { ...item, picked: !item.picked, detail: `${prompt}"${val}"` };
+      },
+      getUpdatedOptions,
+      'Options (press the letter of the option you want to set)',
+      true,
+      '='
+    );
+  }
+
+  private static matchesSwitchOrOption(input: string, switchkey: string): boolean {
+    return input === switchkey ||
+      input === switchkey.replace('-', '') ||
+      input === switchkey.replace('=', '');
+  }
+
+  private static showSwitchLikeMenu<T>(
+    items: QuickPickItem[],
+    menuState: MenuState,
+    processItemSelection: (q: QuickPickItem) => Promise<QuickPickItem>,
+    getUpdatedState: (q: QuickPick<QuickPickItem>, m: MenuState) => T,
+    title = '',
+    canSelectMany = false,
+    ignoreKey?: string): Promise<T> {
 
     return new Promise((resolve, reject) => {
 
-      if (!menuState.switches) {
-        return reject('No switches present in menu');
-      }
-
       let resolveOnHide = true;
+      let shouldDispose = true;
       const _quickPick = window.createQuickPick<QuickPickItem>();
 
-      _quickPick.canSelectMany = true;
-      _quickPick.title = 'Switches (type shortname of switches you want to enable)';
-      _quickPick.items = menuState.switches.map(s => ({ label: s.shortName, detail: s.longName, description: `\t${s.description}`, picked: s.activated }));
-      _quickPick.selectedItems = _quickPick.items.filter(s => s.picked);
+      _quickPick.canSelectMany = canSelectMany;
+      _quickPick.title = title;
+      _quickPick.items = items;
+      if (canSelectMany) {
+        _quickPick.selectedItems = _quickPick.items.filter(s => s.picked);
+      }
 
-      const eventListenerDisposable = _quickPick.onDidChangeValue((e) => {
+      const eventListenerDisposable = _quickPick.onDidChangeValue(async (e) => {
 
         if (_quickPick.value === 'q') {
           return _quickPick.hide();
         }
-        if (_quickPick.value === '-') {
+        if (ignoreKey && _quickPick.value === ignoreKey) {
           return;
         }
         let quickPickValue = _quickPick.value;
         _quickPick.value = '';
 
-        _quickPick.items = _quickPick.items.map(item => ({ ...item, picked: MenuUtil.matchesSwitch(quickPickValue, item.label) ? !item.picked : item.picked }));
-        _quickPick.selectedItems = _quickPick.items.filter(s => s.picked);
+        shouldDispose = false;
+
+        let updated: QuickPickItem[] = [];
+
+        for (let item of _quickPick.items) {
+          if (MenuUtil.matchesSwitchOrOption(quickPickValue, item.label)) {
+            updated.push(await processItemSelection(item));
+          } else {
+            updated.push({ ...item });
+          }
+        }
+
+        _quickPick.items = updated;
+        if (canSelectMany) {
+          _quickPick.selectedItems = _quickPick.items.filter(s => s.picked);
+        }
+
+        shouldDispose = true;
+        _quickPick.show();
       });
 
       const acceptListenerDisposable = _quickPick.onDidAccept(() => {
-
-        const updatedSwitches: Switch[] = menuState.switches!.map(s =>
-          ({
-            ...s,
-            activated: _quickPick.selectedItems.find(item => item.label === s.shortName) !== undefined
-          })
-        );
-
         resolveOnHide = false;
         _quickPick.hide();
-        resolve(updatedSwitches);
+        resolve(getUpdatedState(_quickPick, menuState));
       });
 
       const didHideDisposable = _quickPick.onDidHide(() => {
+        if (!shouldDispose) {
+          return;
+        }
         _quickPick.dispose();
         eventListenerDisposable.dispose();
         acceptListenerDisposable.dispose();
         didHideDisposable.dispose();
         if (resolveOnHide) {
-          resolve();
+          resolve(getUpdatedState(_quickPick, menuState));
         }
       });
 
       _quickPick.show();
     });
-  }
-
-  static matchesSwitch(input: string, switchShortName: string): boolean {
-    return input === switchShortName || input === switchShortName.replace('-', '');
-  }
-
-  static switchesToArgs(switches?: Switch[]): string[] {
-    return switches?.filter(s => s.activated).map(s => s.longName) ?? [];
   }
 }

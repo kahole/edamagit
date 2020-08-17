@@ -1,9 +1,8 @@
 import { MagitRepository } from '../models/magitRepository';
 import { commands } from 'vscode';
-import { MenuItem } from '../menu/menuItem';
-import { MenuUtil, MenuState } from '../menu/menu';
+import { MenuUtil, MenuState, MenuItem } from '../menu/menu';
 import { RefType } from '../typings/git';
-import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
+import { PickMenuItem, PickMenuUtil } from '../menu/pickMenu';
 import GitTextUtils from '../utils/gitTextUtils';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
@@ -35,10 +34,10 @@ function generatePushingMenu(repository: MagitRepository) {
 export async function pushing(repository: MagitRepository) {
 
   const switches = [
-    { shortName: '-f', longName: '--force-with-lease', description: 'Force with lease' },
-    { shortName: '-F', longName: '--force', description: 'Force' },
-    { shortName: '-h', longName: '--no-verify', description: 'Disable hooks' },
-    { shortName: '-d', longName: '--dry-run', description: 'Dry run' }
+    { key: '-f', name: '--force-with-lease', description: 'Force with lease' },
+    { key: '-F', name: '--force', description: 'Force' },
+    { key: '-h', name: '--no-verify', description: 'Disable hooks' },
+    { key: '-d', name: '--dry-run', description: 'Dry run' }
   ];
 
   return MenuUtil.showMenu(generatePushingMenu(repository), { repository, switches });
@@ -57,10 +56,10 @@ async function pushToPushRemote({ repository, switches }: MenuState) {
 }
 
 async function pushSetPushRemote({ repository, ...rest }: MenuState) {
-  const remotes: QuickItem<string>[] = repository.state.remotes
+  const remotes: PickMenuItem<string>[] = repository.state.remotes
     .map(r => ({ label: r.name, description: r.pushUrl, meta: r.name }));
 
-  const chosenRemote = await QuickMenuUtil.showMenu(remotes);
+  const chosenRemote = await PickMenuUtil.showMenu(remotes);
 
   const ref = repository.magitState?.HEAD?.name;
 
@@ -96,14 +95,14 @@ async function pushSetUpstream({ repository, ...rest }: MenuState) {
     }, ...choices];
   }
 
-  const refs: QuickItem<string>[] = choices
+  const refs: PickMenuItem<string>[] = choices
     .filter(ref => ref.type !== RefType.Tag && ref.name !== repository.magitState?.HEAD?.name)
     .sort((refA, refB) => refB.type - refA.type)
     .map(r => ({ label: r.name!, description: GitTextUtils.shortHash(r.commit), meta: r.name! }));
 
   let chosenRemote;
   try {
-    chosenRemote = await QuickMenuUtil.showMenu(refs);
+    chosenRemote = await PickMenuUtil.showMenu(refs);
   } catch { }
 
   const ref = repository.magitState?.HEAD?.name;

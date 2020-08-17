@@ -8,7 +8,7 @@ import { Section } from '../views/general/sectionHeader';
 import { MagitRepository } from '../models/magitRepository';
 import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
-import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
+import { PickMenuItem, PickMenuUtil } from '../menu/pickMenu';
 import { apply } from './applyAtPointCommands';
 import GitTextUtils from '../utils/gitTextUtils';
 import * as Constants from '../common/constants';
@@ -57,13 +57,13 @@ async function stage(repository: MagitRepository, selection: Selection, selected
 
     if (repository.magitState?.workingTreeChanges.length || repository.magitState?.untrackedFiles.length) {
 
-      const files: QuickItem<Uri>[] = [
+      const files: PickMenuItem<Uri>[] = [
         ...repository.magitState?.workingTreeChanges,
         ...repository.magitState?.untrackedFiles,
         // ...currentRepository.magitState?.mergeChanges
       ].map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri), meta: c.uri }));
 
-      const chosenFile = await QuickMenuUtil.showMenu(files, 'Stage file');
+      const chosenFile = await PickMenuUtil.showMenu(files, 'Stage file');
 
       if (chosenFile) {
         return stageFile(repository, chosenFile);
@@ -116,10 +116,10 @@ async function unstage(repository: MagitRepository, selection: Selection, select
     }
   } else {
 
-    const files: QuickItem<Uri>[] = repository.magitState!.indexChanges!
+    const files: PickMenuItem<Uri>[] = repository.magitState!.indexChanges!
       .map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri), meta: c.uri }));
 
-    const chosenFile = await QuickMenuUtil.showMenu<Uri>(files, 'Unstage file');
+    const chosenFile = await PickMenuUtil.showMenu<Uri>(files, 'Unstage file');
 
     if (chosenFile) {
       return unstageFile(repository, chosenFile);
