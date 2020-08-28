@@ -374,7 +374,7 @@
       }
     },
     "configuration": {
-      "title": "Magit",
+      "title": "Edamagit",
       "properties": {
         "magit.display-buffer-function": {
           "type": "string",

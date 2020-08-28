@@ -7,6 +7,9 @@ export default class MagitLogger {
   public static logGitCommand(args: string[]): MagitProcessLogEntry {
     const logEntry = { command: ['git', ...args], index: processLog.length };
     processLog.push(logEntry);
+    if (processLog.length > 100) {
+      processLog.shift();
+    }
     return logEntry;
   }
 
