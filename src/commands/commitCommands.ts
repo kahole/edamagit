@@ -10,6 +10,7 @@ import { showDiffSection } from './diffingCommands';
 import { Section } from '../views/general/sectionHeader';
 import * as path from 'path';
 import FilePathUtils from '../utils/filePathUtils';
+import * as fs from 'fs';
 
 const commitMenu = {
   title: 'Committing',
@@ -58,6 +59,8 @@ interface CommitEditorOptions {
   propagateErrors?: boolean;
 }
 
+const codePath: string = findCodePath();
+
 export async function runCommitLikeCommand(repository: MagitRepository, args: string[], { showStagedChanges, updatePostCommitTask, editor, propagateErrors }: CommitEditorOptions = { showStagedChanges: true }) {
 
   let stagedEditorTask: Thenable<TextEditor> | undefined;
@@ -71,27 +74,6 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
       stagedEditorTask = showDiffSection(repository, Section.Staged, true);
     }
 
-    // Check if we are currently running a Code Insiders or Codium build
-    let isInsiders = vscode.env.appName.includes('Insider');
-    let isCodium = vscode.env.appName.includes('Codium');
-    let isDarwin = process.platform === 'darwin';
-
-    let codePath = 'code';
-    if (isCodium && !isDarwin) {
-      codePath = 'codium';
-    }
-    if (isInsiders && !isDarwin) {
-      // On Mac the binary for the Insiders build is still called `code`
-      codePath += '-insiders';
-    }
-
-    // Find the code binary on different platforms.
-    if (isDarwin) {
-      codePath = execPath.split(/(?<=\.app)/)[0] + '/Contents/Resources/app/bin/' + codePath;
-    } else {
-      codePath = path.join(path.dirname(execPath), 'bin', codePath);
-    }
-
     const env: NodeJS.ProcessEnv = { 'GIT_EDITOR': `"${codePath}" --wait` };
 
     if (editor) {
@@ -99,6 +81,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
     }
 
     const commitSuccessMessageTask = gitRun(repository, args, { env });
+
     editorListener = vscode.window.onDidChangeActiveTextEditor(editor => {
       if (
         editor &&
@@ -120,22 +103,20 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 
     const commitSuccessMessage = await commitSuccessMessageTask;
 
-    editorListener.dispose();
-    instructionStatus.dispose();
     window.setStatusBarMessage(`Git finished: ${commitSuccessMessage.stdout.replace(Constants.LineSplitterRegex, ' ')}`, Constants.StatusMessageDisplayTimeout);
 
   } catch (e) {
+    window.setStatusBarMessage(`Commit canceled.`, Constants.StatusMessageDisplayTimeout);
+    if (propagateErrors) {
+      throw e;
+    }
+  } finally {
     if (editorListener) {
       editorListener.dispose();
     }
     if (instructionStatus) {
       instructionStatus.dispose();
     }
-    window.setStatusBarMessage(`Commit canceled.`, Constants.StatusMessageDisplayTimeout);
-    if (propagateErrors) {
-      throw e;
-    }
-  } finally {
 
     const stagedEditor = await stagedEditorTask;
     if (stagedEditor) {
@@ -150,4 +131,33 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
       }
     }
   }
+}
+
+function findCodePath(): string {
+  // Check if we are currently running a Code Insiders or Codium build
+  let isInsiders = vscode.env.appName.includes('Insider');
+  let isCodium = vscode.env.appName.includes('Codium');
+  let isDarwin = process.platform === 'darwin';
+
+  let codePath = 'code';
+  if (isCodium && !isDarwin) {
+    codePath = 'codium';
+  }
+  if (isInsiders && !isDarwin) {
+    // On Mac the binary for the Insiders build is still called `code`
+    codePath += '-insiders';
+  }
+
+  // Find the code binary on different platforms.
+  if (isDarwin) {
+    codePath = execPath.split(/(?<=\.app)/)[0] + '/Contents/Resources/app/bin/' + codePath;
+  } else {
+    codePath = path.join(path.dirname(execPath), 'bin', codePath);
+  }
+
+  if (!fs.existsSync(codePath)) {
+    return 'code';
+  }
+
+  return codePath;
 }
