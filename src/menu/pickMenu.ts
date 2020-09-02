@@ -25,7 +25,10 @@ export class PickMenuUtil {
           _quickPick.hide();
           resolve(chosenItem.meta);
         } else if (freeformResolver) {
-          resolve(freeformResolver(_quickPick.value));
+          let freeformVal = _quickPick.value;
+          resolveOnHide = false;
+          _quickPick.hide();
+          resolve(freeformResolver(freeformVal));
         }
       });
 
