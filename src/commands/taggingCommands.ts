@@ -17,9 +17,9 @@ const taggingMenu = {
 export async function tagging(repository: MagitRepository) {
 
   const switches = [
-    // { shortName: '-a', longName: '--annotate', description: 'Annotate' },
-    { shortName: '-f', longName: '--force', description: 'Force' },
-    // { shortName: '-s', longName: '--sign', description: 'Sign' }
+    // { key: '-a', name: '--annotate', description: 'Annotate' },
+    { key: '-f', name: '--force', description: 'Force' },
+    // { key: '-s', name: '--sign', description: 'Sign' }
   ];
 
   return MenuUtil.showMenu(taggingMenu, { repository, switches });

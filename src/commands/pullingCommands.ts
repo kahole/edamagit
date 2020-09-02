@@ -1,6 +1,5 @@
 import { MagitRepository } from '../models/magitRepository';
-import { MenuItem } from '../menu/menuItem';
-import { MenuUtil, MenuState } from '../menu/menu';
+import { MenuUtil, MenuState, MenuItem } from '../menu/menu';
 import { commands } from 'vscode';
 import { gitRun } from '../utils/gitRawRunner';
 

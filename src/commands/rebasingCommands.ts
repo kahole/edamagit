@@ -23,13 +23,13 @@ export async function rebasing(repository: MagitRepository) {
   } else {
 
     const switches = [
-      { shortName: '-k', longName: '--keep-empty', description: 'Keep empty commits' },
-      { shortName: '-p', longName: '--preserve-merges', description: 'Preserve merges' },
-      { shortName: '-c', longName: '--committer-date-is-author-date', description: 'Lie about committer date' },
-      { shortName: '-a', longName: '--autosquash', description: 'Autosquash' },
-      { shortName: '-A', longName: '--autostash', description: 'Autostash' },
-      { shortName: '-i', longName: '--interactive', description: 'Interactive' },
-      { shortName: '-h', longName: '--no-verify', description: 'Disable hooks' },
+      { key: '-k', name: '--keep-empty', description: 'Keep empty commits' },
+      { key: '-p', name: '--preserve-merges', description: 'Preserve merges' },
+      { key: '-c', name: '--committer-date-is-author-date', description: 'Lie about committer date' },
+      { key: '-a', name: '--autosquash', description: 'Autosquash' },
+      { key: '-A', name: '--autostash', description: 'Autostash' },
+      { key: '-i', name: '--interactive', description: 'Interactive' },
+      { key: '-h', name: '--no-verify', description: 'Disable hooks' },
     ];
 
     const HEAD = repository.magitState?.HEAD;
@@ -78,7 +78,7 @@ async function _rebase(repository: MagitRepository, ref: string, switches: Switc
 
   try {
 
-    if (switches.find(s => s.activated && s.longName === '--interactive')) {
+    if (switches.find(s => s.activated && s.name === '--interactive')) {
       return CommitCommands.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR' });
     }
 
@@ -105,7 +105,7 @@ async function rebaseInteractively({ repository, switches }: MenuState) {
   const commit = await MagitUtils.chooseCommit(repository, 'Rebase commit and all above it');
 
   if (commit) {
-    const interactiveSwitches = (switches ?? []).map(s => ({ ...s, activated: s.activated || s.longName === '--interactive' }));
+    const interactiveSwitches = (switches ?? []).map(s => ({ ...s, activated: s.activated || s.name === '--interactive' }));
 
     const args = ['rebase', ...MenuUtil.switchesToArgs(interactiveSwitches), `${commit}^`];
 

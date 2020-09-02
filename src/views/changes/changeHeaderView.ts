@@ -8,7 +8,7 @@ export class ChangeHeaderView extends TextView {
     super();
     const statusLabel = mapFileStatusToLabel(this.change.status);
     const mergingStatusLabel = mapFileStatusToMergingLabel(this.change.status);
-    this.textContent = `${statusLabel ? statusLabel + '   ' : ''}${this.change.relativePath}${mergingStatusLabel ? ` (${mergingStatusLabel})` : ''}`;
+    this.textContent = `${statusLabel ? statusLabel.padEnd(11) : ''}${this.change.relativePath}${mergingStatusLabel ? ` (${mergingStatusLabel})` : ''}`;
   }
 
   onClicked() { return undefined; }

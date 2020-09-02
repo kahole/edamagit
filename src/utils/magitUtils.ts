@@ -6,7 +6,7 @@ import { internalMagitStatus } from '../commands/statusCommands';
 import { DocumentView } from '../views/general/documentView';
 import FilePathUtils from './filePathUtils';
 import { RefType, Repository } from '../typings/git';
-import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
+import { PickMenuItem, PickMenuUtil } from '../menu/pickMenu';
 import GitTextUtils from '../utils/gitTextUtils';
 import * as Constants from '../common/constants';
 
@@ -54,9 +54,9 @@ export default class MagitUtils {
           }
 
           if (!repository) {
-            const repoPicker: QuickItem<Repository | undefined>[] = gitApi.repositories.map(repo => ({ label: repo.rootUri.fsPath, meta: repo }));
+            const repoPicker: PickMenuItem<Repository | undefined>[] = gitApi.repositories.map(repo => ({ label: repo.rootUri.fsPath, meta: repo }));
             repoPicker.push({ label: 'Init repo', meta: undefined });
-            repository = await QuickMenuUtil.showMenu(repoPicker, 'Which repository?');
+            repository = await PickMenuUtil.showMenu(repoPicker, 'Which repository?');
           }
         }
 
@@ -99,7 +99,7 @@ export default class MagitUtils {
 
   public static async chooseRef(repository: MagitRepository, prompt: string, showCurrent = false, showHEAD = false, allowFreeform = true): Promise<string> {
 
-    const refs: QuickItem<string>[] = [];
+    const refs: PickMenuItem<string>[] = [];
 
     if (showCurrent && repository.magitState?.HEAD?.name) {
       refs.push({
@@ -126,9 +126,9 @@ export default class MagitUtils {
       })));
 
     if (allowFreeform) {
-      return QuickMenuUtil.showMenuWithFreeform(refs, prompt);
+      return PickMenuUtil.showMenuWithFreeform(refs, prompt);
     } else {
-      return QuickMenuUtil.showMenu(refs, prompt);
+      return PickMenuUtil.showMenu(refs, prompt);
     }
   }
 
@@ -140,7 +140,7 @@ export default class MagitUtils {
       meta: commit.hash
     })) ?? [];
 
-    return QuickMenuUtil.showMenuWithFreeform(commitPicker, prompt);
+    return PickMenuUtil.showMenuWithFreeform(commitPicker, prompt);
   }
 
   public static async chooseTag(repository: MagitRepository, prompt: string) {
