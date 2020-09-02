@@ -16,11 +16,18 @@ import { TagListingView } from '../views/tags/tagListingView';
 import { BranchListingView } from '../views/branches/branchListingView';
 import { RemoteBranchListingView } from '../views/remotes/remoteBranchListingView';
 import * as Constants from '../common/constants';
+import ViewUtils from '../utils/viewUtils';
+import { View } from '../views/general/view';
+
 
 export async function magitDiscardAtPoint(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
   const selection = window.activeTextEditor!.selection;
-  const selectedView = currentView.click(selection.active);
+
+  return ViewUtils.applyActionForSelection(repository, currentView, selection, [ChangeView, ChangeSectionView, StashItemView, BranchListingView, RemoteBranchListingView, TagListingView], discard);
+}
+
+async function discard(repository: MagitRepository, selection: Selection, selectedView?: View): Promise<any> {
 
   if (selectedView instanceof HunkView) {
 
