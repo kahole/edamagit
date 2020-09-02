@@ -162,7 +162,7 @@ export class MenuUtil {
 
   private static showOptionsMenu(menuState: MenuState): Promise<Option[]> {
 
-    let items = menuState.options!.map(s => ({ label: s.key, detail: `${s.name}"${s.value}"`, description: `\t${s.description}`, picked: s.activated }));
+    let items = menuState.options!.map(s => ({ label: s.key, detail: s.activated ? `${s.name}"${s.value}"` : s.name, description: `\t${s.description}`, picked: s.activated }));
 
     let getUpdatedOptions = (quickPick: QuickPick<QuickPickItem>, { options }: MenuState) => options!.map(s => {
       let selectedItem = quickPick.selectedItems.find(item => item.label === s.key);
