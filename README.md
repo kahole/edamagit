@@ -14,7 +14,7 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=kahole.magit">
       <img src="https://vsmarketplacebadge.apphb.com/version-short/kahole.magit.svg" >
   </a>
-  <a href="https://www.buymeacoffee.com/kahole" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" height="25"></a>
+  <a href="https://www.buymeacoffee.com/kahole" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" height="28"></a>
 </p>
 
 <p align="center">
