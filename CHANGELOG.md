@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.4] - 2020-09-02
+### Fixed
+- Fixed issue where branch/commit choosing menus wouldnt close.
+
 ## [0.4.3] - 2020-09-02
 ### Added
 - Adds very simple multi selection for discard at point
