@@ -1,9 +1,8 @@
 import { window } from 'vscode';
-import { MenuItem } from '../menu/menuItem';
 import { MagitRepository } from '../models/magitRepository';
-import { MenuUtil, MenuState, Switch } from '../menu/menu';
+import { MenuUtil, MenuState, Switch, MenuItem } from '../menu/menu';
 import { gitRun } from '../utils/gitRawRunner';
-import { QuickItem, QuickMenuUtil } from '../menu/quickMenu';
+import { PickMenuItem, PickMenuUtil } from '../menu/pickMenu';
 
 export async function fetching(repository: MagitRepository): Promise<any> {
 
@@ -30,7 +29,7 @@ export async function fetching(repository: MagitRepository): Promise<any> {
   }
 
   const switches: Switch[] = [
-    { shortName: '-p', longName: '--prune', description: 'Prune deleted branches' }
+    { key: '-p', name: '--prune', description: 'Prune deleted branches' }
   ];
 
   return MenuUtil.showMenu({ title: 'Fetching', commands: fetchingMenuItems }, { repository, switches });
@@ -53,10 +52,10 @@ async function fetchFromUpstream({ repository, switches }: MenuState) {
 
 async function fetchFromElsewhere({ repository, switches }: MenuState) {
 
-  const remotes: QuickItem<string>[] = repository.state.remotes
+  const remotes: PickMenuItem<string>[] = repository.state.remotes
     .map(r => ({ label: r.name, description: r.pushUrl, meta: r.name }));
 
-  const chosenRemote = await QuickMenuUtil.showMenu(remotes);
+  const chosenRemote = await PickMenuUtil.showMenu(remotes);
 
   if (chosenRemote) {
     const args = ['fetch', ...MenuUtil.switchesToArgs(switches), chosenRemote];

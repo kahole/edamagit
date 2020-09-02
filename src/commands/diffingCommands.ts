@@ -4,7 +4,7 @@ import { gitRun } from '../utils/gitRawRunner';
 import { views } from '../extension';
 import { DiffView } from '../views/diffView';
 import { MenuUtil, MenuState } from '../menu/menu';
-import { QuickMenuUtil, QuickItem } from '../menu/quickMenu';
+import { PickMenuUtil, PickMenuItem } from '../menu/pickMenu';
 import { Stash } from '../common/gitApiExtensions';
 import { StashDetailView } from '../views/stashDetailView';
 import MagitUtils from '../utils/magitUtils';
@@ -28,11 +28,11 @@ const diffingMenu = {
 export async function diffing(repository: MagitRepository) {
 
   // const switches = [
-  // { shortName: '-f', longName: '--function-context', description: 'Show surrounding functions' },
-  // { shortName: '-b', longName: '--ignore-space-change', description: 'Ignore whitespace changes' },
-  // { shortName: '-w', longName: '--ignore-all-space', description: 'Ignore all whitespace' },
-  // { shortName: '-x', longName: '--no-ext-diff', description: 'Disallow external diff drivers', activated: true },
-  // { shortName: '-s', longName: '--stat', description: 'Show stats', activated: true },
+  // { key: '-f', name: '--function-context', description: 'Show surrounding functions' },
+  // { key: '-b', name: '--ignore-space-change', description: 'Ignore whitespace changes' },
+  // { key: '-w', name: '--ignore-all-space', description: 'Ignore all whitespace' },
+  // { key: '-x', name: '--no-ext-diff', description: 'Disallow external diff drivers', activated: true },
+  // { key: '-s', name: '--stat', description: 'Show stats', activated: true },
   // ];
 
   return MenuUtil.showMenu(diffingMenu, { repository });
@@ -93,9 +93,9 @@ export async function showDiffSection(repository: MagitRepository, section: Sect
 
 async function showStash({ repository }: MenuState) {
 
-  const stashesPicker: QuickItem<Stash>[] = repository.magitState?.stashes.map(stash => ({ label: `stash@{${stash.index}}`, meta: stash })) ?? [];
+  const stashesPicker: PickMenuItem<Stash>[] = repository.magitState?.stashes.map(stash => ({ label: `stash@{${stash.index}}`, meta: stash })) ?? [];
 
-  const chosenStash = await QuickMenuUtil.showMenu(stashesPicker);
+  const chosenStash = await PickMenuUtil.showMenu(stashesPicker);
 
   if (chosenStash) {
     return showStashDetail(repository, chosenStash);

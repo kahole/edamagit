@@ -1,7 +1,7 @@
 import { window, workspace } from 'vscode';
 import { StatusMessageDisplayTimeout } from '../common/constants';
 import { views } from '../extension';
-import { MenuState, MenuUtil, Switch } from '../menu/menu';
+import { MenuState, MenuUtil, Switch, Option } from '../menu/menu';
 import { MagitBranch } from '../models/magitBranch';
 import { MagitLogEntry } from '../models/magitLogCommit';
 import { MagitRepository } from '../models/magitRepository';
@@ -22,59 +22,63 @@ const loggingMenu = {
 };
 
 const switches: Switch[] = [
-  { shortName: '-D', longName: '--simplify-by-decoration', description: 'Simplify by decoration' },
-  { shortName: '-g', longName: '--graph', description: 'Show graph', activated: true },
-  { shortName: '-d', longName: '--decorate', description: 'Show refnames', activated: true }
+  { key: '-D', name: '--simplify-by-decoration', description: 'Simplify by decoration' },
+  { key: '-g', name: '--graph', description: 'Show graph', activated: true },
+  { key: '-d', name: '--decorate', description: 'Show refnames', activated: true }
+];
+
+const options: Option[] = [
+  { key: '=n', name: '-n', description: 'Limit number of commits', value: '256', activated: true },
 ];
 
 export async function logging(repository: MagitRepository) {
-  return MenuUtil.showMenu(loggingMenu, { repository, switches });
+  return MenuUtil.showMenu(loggingMenu, { repository, switches, options });
 }
 
 // A function wrapper to avoid duplicate checking code
-function wrap(action: (repository: MagitRepository, head: MagitBranch, switches: Switch[]) => Promise<any>) {
-  return async ({ repository, switches }: MenuState) => {
-    if (repository.magitState?.HEAD && switches) {
-      return action(repository, repository.magitState.HEAD, switches);
+function wrap(action: (repository: MagitRepository, head: MagitBranch, switches: Switch[], options: Option[]) => Promise<any>) {
+  return async ({ repository, switches, options }: MenuState) => {
+    if (repository.magitState?.HEAD && switches && options) {
+      return action(repository, repository.magitState.HEAD, switches, options);
     }
   };
 }
 
-async function logCurrent(repository: MagitRepository, head: MagitBranch, switches: Switch[]) {
-  const args = createLogArgs(switches);
+async function logCurrent(repository: MagitRepository, head: MagitBranch, switches: Switch[], options: Option[]) {
+  const args = createLogArgs(switches, options);
   let revs = head.name ? [head.name] : await getRevs(repository);
   if (revs) {
     await log(repository, args, revs);
   }
 }
 
-async function logOther(repository: MagitRepository, head: MagitBranch, switches: Switch[]) {
-  const args = createLogArgs(switches);
+async function logOther(repository: MagitRepository, head: MagitBranch, switches: Switch[], options: Option[]) {
+  const args = createLogArgs(switches, options);
   const revs = await getRevs(repository);
   if (revs) {
     await log(repository, args, revs);
   }
 }
 
-async function logHead(repository: MagitRepository, head: MagitBranch, switches: Switch[]) {
-  const args = createLogArgs(switches);
+async function logHead(repository: MagitRepository, head: MagitBranch, switches: Switch[], options: Option[]) {
+  const args = createLogArgs(switches, options);
   await log(repository, args, ['HEAD']);
 }
 
-async function logLocalBranches(repository: MagitRepository, head: MagitBranch, switches: Switch[]) {
-  const args = createLogArgs(switches);
+async function logLocalBranches(repository: MagitRepository, head: MagitBranch, switches: Switch[], options: Option[]) {
+  const args = createLogArgs(switches, options);
   const revs = [head.name ?? 'HEAD', '--branches'];
   await log(repository, args, revs);
 }
 
-async function logBranches(repository: MagitRepository, head: MagitBranch, switches: Switch[]) {
-  const args = createLogArgs(switches);
+async function logBranches(repository: MagitRepository, head: MagitBranch, switches: Switch[], options: Option[]) {
+  const args = createLogArgs(switches, options);
   const revs = [head.name ?? 'HEAD', '--branches', '--remotes'];
   await log(repository, args, revs);
 }
 
-async function logReferences(repository: MagitRepository, head: MagitBranch, switches: Switch[]) {
-  const args = createLogArgs(switches);
+async function logReferences(repository: MagitRepository, head: MagitBranch, switches: Switch[], options: Option[]) {
+  const args = createLogArgs(switches, options);
   const revs = [head.name ?? 'HEAD', '--all'];
   await log(repository, args, revs);
 }
@@ -104,20 +108,20 @@ async function getRevs(repository: MagitRepository) {
   window.setStatusBarMessage('Nothing selected', StatusMessageDisplayTimeout);
 }
 
-function createLogArgs(switches: Switch[]) {
+function createLogArgs(switches: Switch[], options: Option[]) {
   const switchMap = switches.reduce((prev, current) => {
-    prev[current.shortName] = current;
+    prev[current.key] = current;
     return prev;
   }, {} as Record<string, Switch>);
 
   const decorateFormat = switchMap['-d'].activated ? '%d' : '';
   const formatArg = `--format=%H${decorateFormat} [%an] [%at]%s`;
-  const args = ['log', formatArg, '-n100', '--use-mailmap'];
+  const args = ['log', formatArg, '--use-mailmap', ...MenuUtil.optionsToArgs(options)];
   if (switchMap['-D'].activated) {
-    args.push(switchMap['-D'].longName);
+    args.push(switchMap['-D'].name);
   }
   if (switchMap['-g'].activated) {
-    args.push(switchMap['-g'].longName);
+    args.push(switchMap['-g'].name);
   }
   return args;
 }

@@ -1,6 +1,6 @@
 import { MagitRepository } from '../models/magitRepository';
 import { MenuUtil, MenuState } from '../menu/menu';
-import { QuickMenuUtil, QuickItem } from '../menu/quickMenu';
+import { PickMenuUtil, PickMenuItem } from '../menu/pickMenu';
 import FilePathUtils from '../utils/filePathUtils';
 import * as fs from 'fs';
 import { window } from 'vscode';
@@ -21,7 +21,7 @@ export async function ignoring(repository: MagitRepository) {
 
 async function ignore(repository: MagitRepository, globally = false) {
 
-  const ignoreSuggestions: QuickItem<string>[] = [];
+  const ignoreSuggestions: PickMenuItem<string>[] = [];
 
   repository.magitState?.untrackedFiles.forEach(change => {
     const fileName = FilePathUtils.fileName(change.originalUri);
@@ -35,7 +35,7 @@ async function ignore(repository: MagitRepository, globally = false) {
     ignoreSuggestions.push({ label: globPattern2, meta: globPattern2 });
   }) ?? [];
 
-  const ignorePattern = await QuickMenuUtil.showMenuWithFreeform(ignoreSuggestions, `File or pattern to ignore ${globally ? 'globally' : 'locally'}`);
+  const ignorePattern = await PickMenuUtil.showMenuWithFreeform(ignoreSuggestions, `File or pattern to ignore ${globally ? 'globally' : 'locally'}`);
 
   if (ignorePattern) {
 

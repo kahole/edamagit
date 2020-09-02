@@ -26,8 +26,8 @@ const commitMenu = {
 export async function magitCommit(repository: MagitRepository) {
 
   const switches = [
-    { shortName: '-a', longName: '--all', description: 'Stage all modified and deleted files' },
-    { shortName: '-e', longName: '--allow-empty', description: 'Allow empty commit' }
+    { key: '-a', name: '--all', description: 'Stage all modified and deleted files' },
+    { key: '-e', name: '--allow-empty', description: 'Allow empty commit' }
   ];
 
   return MenuUtil.showMenu(commitMenu, { repository, switches });
