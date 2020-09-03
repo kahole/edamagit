@@ -1,5 +1,6 @@
 import { Ref } from '../../typings/git';
 import { TextView } from '../general/textView';
+import GitTextUtils from '../../utils/gitTextUtils';
 
 export class RemoteBranchListingView extends TextView {
 
@@ -8,9 +9,8 @@ export class RemoteBranchListingView extends TextView {
   constructor(public ref: Ref) {
     super();
 
-    const [remote, ...nameParts] = ref.name?.split('/') ?? [];
-    const name = nameParts.join('/');
+    let [remotePart, namePart] = GitTextUtils.remoteBranchFullNameToSegments(ref.name);
 
-    this.textContent = `  ${name}`;
+    this.textContent = `  ${namePart}`;
   }
 }

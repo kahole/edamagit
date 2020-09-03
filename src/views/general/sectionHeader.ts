@@ -20,8 +20,8 @@ export enum Section {
 
 export class SectionHeaderView extends TextView {
 
-  constructor(private _section: Section, count?: number, extraText?: string) {
-    super(`${_section.valueOf()}${extraText ? ' ' + extraText + '' : ''}${count ? ' (' + count + ')' : ''}`);
+  constructor(section: Section, count?: number, extraText?: string) {
+    super(`${section.valueOf()}${extraText ? ' ' + extraText + '' : ''}${count ? ' (' + count + ')' : ''}`);
   }
 
   onClicked() { return undefined; }
