@@ -11,6 +11,9 @@ import MagitUtils from '../utils/magitUtils';
 import SectionDiffView from '../views/sectionDiffView';
 import { visitCommit } from './visitAtPointCommands';
 import { Section } from '../views/general/sectionHeader';
+import { Change, Status } from '../typings/git';
+import { LineSplitterRegex } from '../common/constants';
+import { MagitChange } from '../models/magitChange';
 
 const diffingMenu = {
   title: 'Diffing',
@@ -105,10 +108,28 @@ async function showStash({ repository }: MenuState) {
 export async function showStashDetail(repository: MagitRepository, stash: Stash) {
   const uri = StashDetailView.encodeLocation(repository, stash);
 
-  const result = await gitRun(repository, ['stash', 'show', '-p', `stash@{${stash.index}}`]);
-  const stashDiff = result.stdout;
+  const stashShowTask = gitRun(repository, ['stash', 'show', '-p', `stash@{${stash.index}}`]);
+  let stashUntrackedFiles: MagitChange[] = [];
+  try {
+    let untracked = await gitRun(repository, ['ls-tree', '-r', 'stash@{0}^3', '--name-only']);
 
-  views.set(uri.toString(), new StashDetailView(uri, stash, stashDiff));
+    let untrackedList = untracked.stdout.split(LineSplitterRegex);
+    untrackedList = untrackedList.slice(0, untrackedList.length - 1);
+
+    stashUntrackedFiles = untrackedList.map(fileName => ({
+      uri: Uri.parse(fileName),
+      originalUri: Uri.parse(fileName),
+      relativePath: fileName,
+      renameUri: undefined,
+      status: Status.UNTRACKED,
+      section: Section.Untracked
+    }));
+
+  } catch { }
+
+  const stashDiff = (await stashShowTask).stdout;
+
+  views.set(uri.toString(), new StashDetailView(uri, stash, stashDiff, stashUntrackedFiles));
   return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
 }
 

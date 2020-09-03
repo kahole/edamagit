@@ -144,7 +144,6 @@ _Feature requests as well as issues are welcome_
 ### Interface
   - More interactivity in second-tier views (commit view, stash view, etc)
   - Config menus
-  - Options/variable menus
 
 ### Missing Git/Magit features
   - More diffing features
