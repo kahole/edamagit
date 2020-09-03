@@ -23,8 +23,8 @@ import { View } from '../views/general/view';
 export async function magitDiscardAtPoint(repository: MagitRepository, currentView: DocumentView): Promise<any> {
 
   const selection = window.activeTextEditor!.selection;
-
-  return ViewUtils.applyActionForSelection(repository, currentView, selection, [ChangeView, ChangeSectionView, StashItemView, BranchListingView, RemoteBranchListingView, TagListingView], discard);
+  // Warning, anything with relative referencing is dangerous here, e.g. stash@{1}:
+  return ViewUtils.applyActionForSelection(repository, currentView, selection, [ChangeView, ChangeSectionView, BranchListingView, RemoteBranchListingView, TagListingView], discard);
 }
 
 async function discard(repository: MagitRepository, selection: Selection, selectedView?: View): Promise<any> {
