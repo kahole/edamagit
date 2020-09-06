@@ -351,6 +351,14 @@
         {
           "command": "magit.unstage-file",
           "when": "activeEditor && editorLangId != magit"
+        },
+        {
+          "command": "magit.copy-section-value",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.copy-buffer-revision",
+          "when": "editorLangId == magit"
         }
       ]
     },
