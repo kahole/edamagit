@@ -1,14 +1,14 @@
 <h1 align="center">
   <br>
   <a href="https://marketplace.visualstudio.com/items?itemName=kahole.magit">
-    <img src="https://github.com/kahole/edamagit/raw/develop/images/edamagit_logo.png" alt="Markdownify" width="160" />
+    <img src="https://github.com/kahole/edamagit/raw/develop/images/edamagit_logo.png" alt="edamagit" width="120" />
   </a>
   <br>
   edamagit
   <br>
 </h1>
 
-<h4 align="center">Magit for VSCode, inspired by the awesome original <a href="https://magit.vc/" target="_blank">Magit</a>.</h4>
+<h3 align="center">Magit for VSCode, inspired by the awesome original <a href="https://magit.vc/" target="_blank">Magit</a>.</h3>
 
 <p align="center">
   <a href="https://marketplace.visualstudio.com/items?itemName=kahole.magit">
