@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.5] - 2020-09-06
+### Fixed
+- Stash detail now shows untracked files
+- Fixed stash deletion bug
+- small ui improvements
+
 ## [0.4.4] - 2020-09-02
 ### Fixed
 - Fixed issue where branch/commit choosing menus wouldnt close.
