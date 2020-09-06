@@ -1,10 +1,11 @@
 import { View } from '../general/view';
 import { Section, SectionHeaderView } from '../general/sectionHeader';
-import { Commit, Ref } from '../../typings/git';
+import { Commit, Ref, RefType } from '../../typings/git';
 import { LineBreakView } from '../general/lineBreakView';
 import GitTextUtils from '../../utils/gitTextUtils';
 import { SemanticTextView, Token } from '../general/semanticTextView';
 import { SemanticTokenTypes } from '../../common/constants';
+import ViewUtils from '../../utils/viewUtils';
 
 export class CommitSectionView extends View {
   isFoldable = true;
@@ -25,15 +26,10 @@ export class CommitItemView extends SemanticTextView {
 
   constructor(public commit: Commit, qualifier?: string, refs?: Ref[]) {
     super();
-    const matchingRefs = (refs ?? [])?.filter(ref => ref.commit === commit.hash);
-    let refsContent: (string | Token)[] = [];
-    matchingRefs.forEach(ref => {
-      refsContent.push(new Token(ref.name ?? '', ref.remote ? SemanticTokenTypes.RemoteRefName : SemanticTokenTypes.RefName));
-      refsContent.push(' ');
-    });
+
     this.content = [
       `${qualifier ? qualifier + ' ' : ''}${GitTextUtils.shortHash(commit.hash)} `,
-      ...refsContent,
+      ...ViewUtils.generateRefTokensLine(commit.hash, refs),
       `${GitTextUtils.shortCommitMessage(commit.message)}`];
   }
 }

@@ -1,14 +1,14 @@
 <h1 align="center">
   <br>
   <a href="https://marketplace.visualstudio.com/items?itemName=kahole.magit">
-    <img src="https://github.com/kahole/edamagit/raw/develop/images/edamagit_logo.png" alt="Markdownify" width="160" />
+    <img src="https://github.com/kahole/edamagit/raw/develop/images/edamagit_logo.png" alt="edamagit" width="120" />
   </a>
   <br>
   edamagit
   <br>
 </h1>
 
-<h4 align="center">Magit for VSCode, inspired by the awesome original <a href="https://magit.vc/" target="_blank">Magit</a>.</h4>
+<h3 align="center">Magit for VSCode, inspired by the awesome original <a href="https://magit.vc/" target="_blank">Magit</a>.</h3>
 
 <p align="center">
   <a href="https://marketplace.visualstudio.com/items?itemName=kahole.magit">
@@ -17,14 +17,20 @@
   <a href="https://www.buymeacoffee.com/kahole" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" height="28"></a>
 </p>
 
-<p align="center">
+<h3 align="center">
   <a href="#usage">Usage</a> •
   <a href="#troubleshooting">Troubleshooting</a> •
   <a href="#vim-support-vscodevim">Vim Bindings</a> •
   <a href="#roadmap">Roadmap</a>
-</p>
+</h3>
 
-![Usage](https://github.com/kahole/edamagit/raw/294aec866fbbd3a10b3d628af92823531793a244/magit_commit_demo.gif)
+---
+
+## Keyboard driven Git interface
+![Usage](https://github.com/kahole/edamagit/raw/5ebf38107c6130cc16a23f18d84aeecc21f09fe8/magit_commit_demo.gif)
+
+## Sub hunk staging
+![Usage](https://github.com/kahole/edamagit/raw/5ebf38107c6130cc16a23f18d84aeecc21f09fe8/sub_hunk_staging.gif)
 (Theme: [Dracula](https://draculatheme.com/))
 
 ## Usage
@@ -34,7 +40,7 @@
 | Magit Status        |   `alt+x g`      |
 | Magit File Popup    |   `alt+x alt+g`    |
 | Magit Dispatch      |   `alt+x ctrl+g`    |
-| Help (when in edamagit)| `?` |
+| Help                | `?` |
 
 `> Magit ` in VSCode Command palette will show you all available Magit actions from where you are.
 
@@ -144,7 +150,6 @@ _Feature requests as well as issues are welcome_
 ### Interface
   - More interactivity in second-tier views (commit view, stash view, etc)
   - Config menus
-  - Options/variable menus
 
 ### Missing Git/Magit features
   - More diffing features

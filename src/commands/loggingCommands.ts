@@ -126,7 +126,7 @@ function createLogArgs(switches: Switch[], options: Option[]) {
   return args;
 }
 
-function parseLog(stdout: string) {
+function parseLog(stdout: string): MagitLogEntry[] {
   const commits: MagitLogEntry[] = [];
   // Split stdout lines
   const lines = stdout.match(/[^\r\n]+/g);

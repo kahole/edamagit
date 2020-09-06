@@ -7,7 +7,7 @@
   "author": {
     "name": "Kristian Andersen Hole"
   },
-  "version": "0.4.4",
+  "version": "0.4.5",
   "engines": {
     "vscode": "^1.42.1"
   },
@@ -351,6 +351,14 @@
         {
           "command": "magit.unstage-file",
           "when": "activeEditor && editorLangId != magit"
+        },
+        {
+          "command": "magit.copy-section-value",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.copy-buffer-revision",
+          "when": "editorLangId == magit"
         }
       ]
     },
