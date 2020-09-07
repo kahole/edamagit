@@ -16,6 +16,7 @@ import { MagitRemote } from '../models/magitRemote';
 import { MagitRebasingState } from '../models/magitRebasingState';
 import { MagitMergingState } from '../models/magitMergingState';
 import { MagitRevertingState } from '../models/magitRevertingState';
+import { Stash } from '../models/stash';
 
 export async function magitRefresh() { }
 
@@ -54,7 +55,7 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
 
   const dotGitPath = repository.rootUri + '/.git/';
 
-  const stashTask = repository._repository.getStashes();
+  const stashTask = getStashes(repository);
 
   const logTask = repository.state.HEAD?.commit ? repository.log({ maxEntries: 100 }) : Promise.resolve([]);
 
@@ -361,4 +362,20 @@ async function revertingStatus(repository: Repository, dotGitPath: string, seque
       };
     }
   } catch { }
+}
+
+async function getStashes(repository: Repository): Promise<Stash[]> {
+
+  let args = ['stash', 'list'];
+
+  try {
+    let stashesList = await gitRun(repository, args, {}, LogLevel.None);
+    return stashesList.stdout
+      .replace(Constants.FinalLineBreakRegex, '')
+      .split(Constants.LineSplitterRegex)
+      .map((stashLine, index) => ({ index, description: stashLine.replace(/stash@{\d+}: /g, '') }));
+
+  } catch {
+    return [];
+  }
 }

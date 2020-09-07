@@ -2,12 +2,12 @@ import { DocumentView } from './general/documentView';
 import { Uri } from 'vscode';
 import * as Constants from '../common/constants';
 import { TextView } from './general/textView';
-import { Stash } from '../common/gitApiExtensions';
 import { MagitRepository } from '../models/magitRepository';
 import { MagitState } from '../models/magitState';
 import { ChangeSectionView } from './changes/changesSectionView';
 import { Section } from './general/sectionHeader';
 import { MagitChange } from '../models/magitChange';
+import { Stash } from '../models/stash';
 
 export class StashDetailView extends DocumentView {
 

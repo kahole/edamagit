@@ -11,7 +11,6 @@ interface BaseGitRepository {
 // This refers to the Repository in
 // vscode/extension/git/src/repository.ts
 interface BaseRepository {
-  getStashes(): Promise<Stash[]>;
   repository: BaseGitRepository;
 }
 
@@ -29,11 +28,6 @@ export interface IExecutionResult<T extends string | Buffer> {
   exitCode: number;
   stdout: T;
   stderr: string;
-}
-
-export interface Stash {
-  index: number;
-  description: string;
 }
 
 export interface SpawnOptions extends cp.SpawnOptions {

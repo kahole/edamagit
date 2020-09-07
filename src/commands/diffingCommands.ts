@@ -5,7 +5,6 @@ import { views } from '../extension';
 import { DiffView } from '../views/diffView';
 import { MenuUtil, MenuState } from '../menu/menu';
 import { PickMenuUtil, PickMenuItem } from '../menu/pickMenu';
-import { Stash } from '../common/gitApiExtensions';
 import { StashDetailView } from '../views/stashDetailView';
 import MagitUtils from '../utils/magitUtils';
 import SectionDiffView from '../views/sectionDiffView';
@@ -14,6 +13,7 @@ import { Section } from '../views/general/sectionHeader';
 import { Change, Status } from '../typings/git';
 import { LineSplitterRegex } from '../common/constants';
 import { MagitChange } from '../models/magitChange';
+import { Stash } from '../models/stash';
 
 const diffingMenu = {
   title: 'Diffing',

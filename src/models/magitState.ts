@@ -1,12 +1,12 @@
 import { Commit, Ref, Submodule } from '../typings/git';
 import { MagitChange } from './magitChange';
-import { Stash } from '../common/gitApiExtensions';
 import { MagitBranch } from './magitBranch';
 import { MagitMergingState } from './magitMergingState';
 import { MagitRebasingState } from './magitRebasingState';
 import { MagitRemote } from './magitRemote';
 import { MagitCherryPickingState } from './magitCherryPickingState';
 import { MagitRevertingState } from './magitRevertingState';
+import { Stash } from './stash';
 
 export interface MagitState {
   readonly HEAD?: MagitBranch;
