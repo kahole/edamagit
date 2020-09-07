@@ -2,7 +2,7 @@ import { MagitRepository } from '../models/magitRepository';
 import { MenuUtil, MenuState } from '../menu/menu';
 import { window, workspace, Uri } from 'vscode';
 import { gitRun, LogLevel } from '../utils/gitRawRunner';
-import { processView } from './processCommands';
+import * as ProcessCommands from './processCommands';
 import { SpawnOptions } from 'child_process';
 
 const runningMenu = {
@@ -31,7 +31,7 @@ async function run(repository: MagitRepository, directory?: Uri) {
     const args = userCommand.replace('git ', '').split(' ');
     await gitRun(repository, args, spawnOptions, LogLevel.Detailed);
 
-    await processView(repository);
+    await ProcessCommands.processView(repository);
 
     return;
   }

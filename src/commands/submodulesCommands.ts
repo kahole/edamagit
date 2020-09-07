@@ -2,7 +2,7 @@ import { MagitRepository } from '../models/magitRepository';
 import { MenuUtil, MenuState } from '../menu/menu';
 import { gitRun } from '../utils/gitRawRunner';
 import { window, workspace } from 'vscode';
-import { fetchSubmodules } from './fetchingCommands';
+import * as Fetching from './fetchingCommands';
 import SubmoduleListView from '../views/submoduleListView';
 import { views } from '../extension';
 
@@ -125,7 +125,7 @@ async function listAll({ repository, switches }: MenuState) {
 }
 
 function fetchAll({ repository, switches }: MenuState) {
-  return fetchSubmodules({ repository, switches });
+  return Fetching.fetchSubmodules({ repository, switches });
 }
 
 async function pickSubmodule(repository: MagitRepository, prompt: string): Promise<string | undefined> {

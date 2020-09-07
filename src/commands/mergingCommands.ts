@@ -1,7 +1,7 @@
 import { MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
-import * as CommitCommands from '../commands/commitCommands';
+import * as Commit from '../commands/commitCommands';
 import MagitUtils from '../utils/magitUtils';
 
 const mergingMenu = {
@@ -77,7 +77,7 @@ async function _merge(repository: MagitRepository, ref: string, noCommit = false
   if (editMessage) {
 
     args.push(...['--edit', '--no-ff']);
-    return CommitCommands.runCommitLikeCommand(repository, args, { updatePostCommitTask: true });
+    return Commit.runCommitLikeCommand(repository, args, { updatePostCommitTask: true });
   } else {
     args.push('--no-edit');
   }
@@ -86,7 +86,7 @@ async function _merge(repository: MagitRepository, ref: string, noCommit = false
 }
 
 async function commitMerge(menuState: MenuState) {
-  return CommitCommands.commit(menuState);
+  return Commit.commit(menuState);
 }
 
 async function abortMerge({ repository }: MenuState) {

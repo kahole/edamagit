@@ -1,4 +1,3 @@
-import { window, ViewColumn, TextEditor, commands, Range } from 'vscode';
 import * as vscode from 'vscode';
 import * as Constants from '../common/constants';
 import { execPath } from 'process';
@@ -6,7 +5,7 @@ import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
 import { MenuUtil, MenuState } from '../menu/menu';
 import MagitUtils from '../utils/magitUtils';
-import { showDiffSection } from './diffingCommands';
+import * as Diffing from './diffingCommands';
 import { Section } from '../views/general/sectionHeader';
 import * as path from 'path';
 import FilePathUtils from '../utils/filePathUtils';
@@ -63,15 +62,15 @@ const codePath: string = findCodePath();
 
 export async function runCommitLikeCommand(repository: MagitRepository, args: string[], { showStagedChanges, updatePostCommitTask, editor, propagateErrors }: CommitEditorOptions = { showStagedChanges: true }) {
 
-  let stagedEditorTask: Thenable<TextEditor> | undefined;
+  let stagedEditorTask: Thenable<vscode.TextEditor> | undefined;
   let instructionStatus;
   let editorListener;
   try {
 
-    instructionStatus = window.setStatusBarMessage(`Type C-c C-c to finish, or C-c C-k to cancel`);
+    instructionStatus = vscode.window.setStatusBarMessage(`Type C-c C-c to finish, or C-c C-k to cancel`);
 
     if (showStagedChanges) {
-      stagedEditorTask = showDiffSection(repository, Section.Staged, true);
+      stagedEditorTask = Diffing.showDiffSection(repository, Section.Staged, true);
     }
 
     const env: NodeJS.ProcessEnv = { 'GIT_EDITOR': `"${codePath}" --wait` };
@@ -86,7 +85,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
       if (
         editor &&
         FilePathUtils.fileName(editor.document.uri) === 'COMMIT_EDITMSG' &&
-        editor.document.getText(new Range(0, 0, 0, 1)) === ''
+        editor.document.getText(new vscode.Range(0, 0, 0, 1)) === ''
       ) {
         // Move the cursor to the beginning
         const position = editor.selection.active;
@@ -103,10 +102,10 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 
     const commitSuccessMessage = await commitSuccessMessageTask;
 
-    window.setStatusBarMessage(`Git finished: ${commitSuccessMessage.stdout.replace(Constants.LineSplitterRegex, ' ')}`, Constants.StatusMessageDisplayTimeout);
+    vscode.window.setStatusBarMessage(`Git finished: ${commitSuccessMessage.stdout.replace(Constants.LineSplitterRegex, ' ')}`, Constants.StatusMessageDisplayTimeout);
 
   } catch (e) {
-    window.setStatusBarMessage(`Commit canceled.`, Constants.StatusMessageDisplayTimeout);
+    vscode.window.setStatusBarMessage(`Commit canceled.`, Constants.StatusMessageDisplayTimeout);
     if (propagateErrors) {
       throw e;
     }
@@ -120,13 +119,13 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 
     const stagedEditor = await stagedEditorTask;
     if (stagedEditor) {
-      for (const visibleEditor of window.visibleTextEditors) {
+      for (const visibleEditor of vscode.window.visibleTextEditors) {
         if (visibleEditor.document.uri === stagedEditor.document.uri) {
           // This is a bit of a hack. Too bad about editor.hide() and editor.show() being deprecated.
           const stagedEditorViewColumn = MagitUtils.showDocumentColumn();
-          await window.showTextDocument(stagedEditor.document, { viewColumn: stagedEditorViewColumn, preview: false });
-          await commands.executeCommand('workbench.action.closeActiveEditor');
-          commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === ViewColumn.One ? 'Right' : 'Left'}`);
+          await vscode.window.showTextDocument(stagedEditor.document, { viewColumn: stagedEditorViewColumn, preview: false });
+          await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
+          vscode.commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === vscode.ViewColumn.One ? 'Right' : 'Left'}`);
         }
       }
     }

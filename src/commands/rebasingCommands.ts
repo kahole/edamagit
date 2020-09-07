@@ -3,8 +3,7 @@ import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 import { MagitError } from '../models/magitError';
-import * as CommitCommands from '../commands/commitCommands';
-import { commands } from 'vscode';
+import * as Commit from '../commands/commitCommands';
 
 const whileRebasingMenu = {
   title: 'Rebasing',
@@ -79,7 +78,7 @@ async function _rebase(repository: MagitRepository, ref: string, switches: Switc
   try {
 
     if (switches.find(s => s.activated && s.name === '--interactive')) {
-      return CommitCommands.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR' });
+      return Commit.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR' });
     }
 
     return await gitRun(repository, args);
@@ -98,7 +97,7 @@ async function editTodo({ repository }: MenuState) {
 
   const args = ['rebase', '--edit-todo'];
 
-  return CommitCommands.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR', propagateErrors: true });
+  return Commit.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR', propagateErrors: true });
 }
 
 async function rebaseInteractively({ repository, switches }: MenuState) {
@@ -109,6 +108,6 @@ async function rebaseInteractively({ repository, switches }: MenuState) {
 
     const args = ['rebase', ...MenuUtil.switchesToArgs(interactiveSwitches), `${commit}^`];
 
-    return CommitCommands.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR' });
+    return Commit.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR' });
   }
 }

@@ -8,10 +8,10 @@ import { PickMenuUtil, PickMenuItem } from '../menu/pickMenu';
 import { StashDetailView } from '../views/stashDetailView';
 import MagitUtils from '../utils/magitUtils';
 import SectionDiffView from '../views/sectionDiffView';
-import { visitCommit } from './visitAtPointCommands';
+import * as VisitAtPoint from './visitAtPointCommands';
+import * as Constants from '../common/constants';
 import { Section } from '../views/general/sectionHeader';
 import { Change, Status } from '../typings/git';
-import { LineSplitterRegex } from '../common/constants';
 import { MagitChange } from '../models/magitChange';
 import { Stash } from '../models/stash';
 
@@ -113,7 +113,7 @@ export async function showStashDetail(repository: MagitRepository, stash: Stash)
   try {
     let untracked = await gitRun(repository, ['ls-tree', '-r', 'stash@{0}^3', '--name-only']);
 
-    let untrackedList = untracked.stdout.split(LineSplitterRegex);
+    let untrackedList = untracked.stdout.split(Constants.LineSplitterRegex);
     untrackedList = untrackedList.slice(0, untrackedList.length - 1);
 
     stashUntrackedFiles = untrackedList.map(fileName => ({
@@ -138,7 +138,7 @@ async function showCommit({ repository }: MenuState) {
   const ref = await MagitUtils.chooseRef(repository, 'Show commit', true, true);
 
   if (ref) {
-    return visitCommit(repository, ref);
+    return VisitAtPoint.visitCommit(repository, ref);
   }
 }
 

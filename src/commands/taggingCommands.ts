@@ -3,7 +3,6 @@ import { MenuUtil, MenuState } from '../menu/menu';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 import { window } from 'vscode';
-import { RefType } from '../typings/git';
 
 const taggingMenu = {
   title: 'Tagging',

@@ -2,7 +2,7 @@ import { gitRun } from '../utils/gitRawRunner';
 import { MagitRepository } from '../models/magitRepository';
 import { MenuState, MenuUtil } from '../menu/menu';
 import MagitUtils from '../utils/magitUtils';
-import * as CommitCommands from '../commands/commitCommands';
+import * as Commit from '../commands/commitCommands';
 
 const whileRevertingMenu = {
   title: 'Reverting',
@@ -68,7 +68,7 @@ export async function revert(repository: MagitRepository, target: string, { noCo
   if (edit) {
     args.push('--edit');
     args.push(target);
-    return CommitCommands.runCommitLikeCommand(repository, args, { updatePostCommitTask: true });
+    return Commit.runCommitLikeCommand(repository, args, { updatePostCommitTask: true });
   }
 
   args.push('--no-edit');
@@ -78,7 +78,7 @@ export async function revert(repository: MagitRepository, target: string, { noCo
 
 async function continueRevert({ repository }: MenuState) {
   const args = ['revert', '--continue'];
-  return CommitCommands.runCommitLikeCommand(repository, args);
+  return Commit.runCommitLikeCommand(repository, args);
 }
 
 async function revertControlCommand({ repository }: MenuState, command: string) {

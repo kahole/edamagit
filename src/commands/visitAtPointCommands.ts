@@ -13,7 +13,7 @@ import { HunkView } from '../views/changes/hunkView';
 import { BranchListingView } from '../views/branches/branchListingView';
 import { RemoteBranchListingView } from '../views/remotes/remoteBranchListingView';
 import { TagListingView } from '../views/tags/tagListingView';
-import { showStashDetail } from './diffingCommands';
+import * as Diffing from './diffingCommands';
 import * as Constants from '../common/constants';
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
@@ -55,7 +55,7 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
   } else if (selectedView instanceof StashItemView) {
 
     const stash = (selectedView as StashItemView).stash;
-    return showStashDetail(repository, stash);
+    return Diffing.showStashDetail(repository, stash);
   } else {
     window.setStatusBarMessage('There is no thing at point that could be visited', Constants.StatusMessageDisplayTimeout);
   }

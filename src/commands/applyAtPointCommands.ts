@@ -4,7 +4,7 @@ import { CommitItemView } from '../views/commits/commitSectionView';
 import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
 import { StashItemView } from '../views/stashes/stashSectionView';
-import { cherryPick } from './cherryPickingCommands';
+import * as CherryPicking from './cherryPickingCommands';
 import { BranchListingView } from '../views/branches/branchListingView';
 import { RemoteBranchListingView } from '../views/remotes/remoteBranchListingView';
 import { TagListingView } from '../views/tags/tagListingView';
@@ -18,7 +18,7 @@ export async function magitApplyEntityAtPoint(repository: MagitRepository, curre
 
     const commit = (selectedView as CommitItemView).commit;
 
-    return cherryPick(repository, commit.hash, { noCommit: true });
+    return CherryPicking.cherryPick(repository, commit.hash, { noCommit: true });
 
   } else if (selectedView instanceof BranchListingView ||
     selectedView instanceof RemoteBranchListingView ||
@@ -27,7 +27,7 @@ export async function magitApplyEntityAtPoint(repository: MagitRepository, curre
     const ref = (selectedView as BranchListingView).ref;
 
     if (ref.commit) {
-      return cherryPick(repository, ref.commit, { noCommit: true });
+      return CherryPicking.cherryPick(repository, ref.commit, { noCommit: true });
     }
 
   } else if (selectedView instanceof StashItemView) {
@@ -40,7 +40,7 @@ export async function magitApplyEntityAtPoint(repository: MagitRepository, curre
     const ref = await MagitUtils.chooseRef(repository, 'Apply changes from commit');
 
     if (ref) {
-      return cherryPick(repository, ref, { noCommit: true });
+      return CherryPicking.cherryPick(repository, ref, { noCommit: true });
     }
   }
 }

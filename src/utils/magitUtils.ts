@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { MagitRepository } from '../models/magitRepository';
 import { magitRepositories, views, gitApi } from '../extension';
 import { window, ViewColumn, Uri, commands } from 'vscode';
-import { internalMagitStatus } from '../commands/statusCommands';
+import * as Status from '../commands/statusCommands';
 import { DocumentView } from '../views/general/documentView';
 import FilePathUtils from './filePathUtils';
 import { RefType, Repository } from '../typings/git';
@@ -86,7 +86,7 @@ export default class MagitUtils {
   }
 
   public static async magitStatusAndUpdate(repository: MagitRepository) {
-    await internalMagitStatus(repository);
+    await Status.internalMagitStatus(repository);
     views.forEach(view => view.needsUpdate ? view.update(repository.magitState!) : undefined);
   }
 

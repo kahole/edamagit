@@ -9,7 +9,7 @@ import MagitUtils from '../utils/magitUtils';
 import { ChangeSectionView } from '../views/changes/changesSectionView';
 import { Section } from '../views/general/sectionHeader';
 import GitTextUtils from '../utils/gitTextUtils';
-import { apply } from './applyAtPointCommands';
+import * as ApplyAtPoint from './applyAtPointCommands';
 import { Status, GitErrorCodes } from '../typings/git';
 import FilePathUtils from '../utils/filePathUtils';
 import { TagListingView } from '../views/tags/tagListingView';
@@ -154,11 +154,11 @@ async function discardHunk(repository: MagitRepository, hunkView: HunkView, sele
   const patch = GitTextUtils.generatePatchFromChangeHunkView(hunkView, selection, true);
 
   if (hunkView.changeHunk.section === Section.Unstaged) {
-    return apply(repository, patch, { reverse: true });
+    return ApplyAtPoint.apply(repository, patch, { reverse: true });
 
   } else if (hunkView.changeHunk.section === Section.Staged) {
-    await apply(repository, patch, { index: true, reverse: true });
-    return apply(repository, patch, { reverse: true });
+    await ApplyAtPoint.apply(repository, patch, { index: true, reverse: true });
+    return ApplyAtPoint.apply(repository, patch, { reverse: true });
   }
 
   return Promise.reject();

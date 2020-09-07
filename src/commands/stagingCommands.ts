@@ -1,4 +1,4 @@
-import { window, commands, Uri, Selection, Position } from 'vscode';
+import { window, commands, Uri, Selection } from 'vscode';
 import { HunkView } from '../views/changes/hunkView';
 import { ChangeView } from '../views/changes/changeView';
 import MagitUtils from '../utils/magitUtils';
@@ -9,7 +9,7 @@ import { MagitRepository } from '../models/magitRepository';
 import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
 import { PickMenuItem, PickMenuUtil } from '../menu/pickMenu';
-import { apply } from './applyAtPointCommands';
+import * as ApplyAtPoint from './applyAtPointCommands';
 import GitTextUtils from '../utils/gitTextUtils';
 import * as Constants from '../common/constants';
 import { View } from '../views/general/view';
@@ -30,7 +30,7 @@ async function stage(repository: MagitRepository, selection: Selection, selected
     if (changeHunk.section !== Section.Staged) {
 
       const patch = GitTextUtils.generatePatchFromChangeHunkView(selectedView, selection);
-      return apply(repository, patch, { index: true });
+      return ApplyAtPoint.apply(repository, patch, { index: true });
 
     } else {
       window.setStatusBarMessage('Already staged', Constants.StatusMessageDisplayTimeout);
@@ -100,7 +100,7 @@ async function unstage(repository: MagitRepository, selection: Selection, select
 
     if (changeHunk.section === Section.Staged) {
       const patch = GitTextUtils.generatePatchFromChangeHunkView(selectedView, selection, true);
-      return apply(repository, patch, { index: true, reverse: true });
+      return ApplyAtPoint.apply(repository, patch, { index: true, reverse: true });
     } else {
       window.setStatusBarMessage('Already unstaged', Constants.StatusMessageDisplayTimeout);
     }
