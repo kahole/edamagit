@@ -14,11 +14,12 @@ export default class MagitLogger {
   }
 
   public static logGitResult(result: IExecutionResult<string>, entry: MagitProcessLogEntry) {
-    entry.output = result.stdout;
+    entry.stdout = result.stdout;
+    entry.stderr = result.stderr;
   }
 
   public static logGitError(error: any, entry: MagitProcessLogEntry) {
     const errorMsg = error.stderr ?? error.message;
-    entry.output = errorMsg;
+    entry.stderr = errorMsg;
   }
 }

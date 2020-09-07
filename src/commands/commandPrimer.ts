@@ -66,12 +66,14 @@ export class Command {
   }
 
   static handleError(repository: MagitRepository, error: any) {
+
     if (error.gitErrorCode || error.stderr || error instanceof MagitError) {
       repository.magitState!.latestGitError = GitTextUtils.formatError(error);
     } else {
       //   using statusBar message might be better
       //   but then custom, shorter messages are needed
       window.showErrorMessage(GitTextUtils.formatError(error));
+      console.error(error);
     }
   }
 }

@@ -18,8 +18,11 @@ class ProcessLogEntryView extends View {
     this.addSubview(
       new TextView(entry.command.join(' '))
     );
-    if (entry.output) {
-      this.addSubview(new TextView(entry.output));
+    if (entry.stdout) {
+      this.addSubview(new TextView(entry.stdout));
+    }
+    if (entry.stderr) {
+      this.addSubview(new TextView(entry.stderr));
     }
   }
 }
