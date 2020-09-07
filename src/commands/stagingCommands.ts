@@ -139,9 +139,17 @@ async function unstageAll(): Promise<void> {
 }
 
 export async function stageFile(repository: MagitRepository, fileUri: Uri, update = false) {
-  return repository
-    ._repository
-    .add([fileUri], { update });
+  let args = ['add'];
+
+  if (update) {
+    args.push('-u');
+  } else {
+    args.push('-A');
+  }
+
+  args.push('--', fileUri.fsPath);
+
+  return gitRun(repository, args);
 }
 
 export async function unstageFile(repository: MagitRepository, fileUri: Uri) {

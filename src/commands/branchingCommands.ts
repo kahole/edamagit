@@ -110,11 +110,14 @@ async function resetBranch({ repository }: MenuState) {
 
     if (ref === repository.magitState?.HEAD?.name) {
 
+      const args = ['reset', '--hard', resetToRef];
       if (MagitUtils.magitAnythingModified(repository)) {
 
         if (await MagitUtils.confirmAction(`Uncommitted changes will be lost. Proceed?`)) {
-          return repository._repository.reset(resetToRef, true);
+          return await gitRun(repository, args);
         }
+      } else {
+        return await gitRun(repository, args);
       }
     } else {
       const args = ['update-ref', `refs/heads/${ref}`, `refs/heads/${resetToRef}`];
@@ -128,7 +131,8 @@ async function _checkout({ repository }: MenuState, refs: Ref[]) {
   const ref = await MagitUtils.chooseRef(repository, 'Checkout');
 
   if (ref) {
-    return repository.checkout(ref);
+    const args = ['checkout', ref];
+    return gitRun(repository, args);
   }
 }
 
@@ -148,8 +152,8 @@ async function _createBranch({ repository }: MenuState, checkout: boolean) {
         value = localBranchName;
       }
     }
-    
-    const newBranchName = await window.showInputBox({ prompt: 'Name for new branch', value: value});
+
+    const newBranchName = await window.showInputBox({ prompt: 'Name for new branch', value: value });
 
     if (newBranchName && newBranchName.length > 0) {
 
