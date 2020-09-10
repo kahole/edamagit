@@ -19,60 +19,87 @@ export default class MagitUtils {
     let reposContainingFile = discoveredRepos
       .filter(([path, repo]) => FilePathUtils.isDescendant(path, uri.fsPath));
 
+    if (reposContainingFile.length === 1) {
+      return reposContainingFile[0][1];
+    }
+
     if (reposContainingFile.length > 0 && discoveredRepos.length >= gitApi.repositories.length) {
       return reposContainingFile.sort(([pathA, repoA], [pathB, repoB]) => pathB.length - pathA.length)[0][1];
     }
-
-    // First time encountering this repo
-    return gitApi.repositories.find(r => FilePathUtils.isDescendant(r.rootUri.fsPath, uri.fsPath));
   }
 
   public static async getCurrentMagitRepo(uri?: Uri): Promise<MagitRepository | undefined> {
 
-    let repository;
+    let magitRepository = await this.getCurrentMagitRepoNO_STATUS(uri);
+
+    if (!magitRepository) {
+      let repository = await this.discoverRepo(uri);
+      if (repository) {
+        let tmpMagitRepository: any = repository;
+        tmpMagitRepository.magitState = await Status.internalMagitStatus(repository);
+        magitRepository = tmpMagitRepository;
+
+        if (magitRepository) {
+          magitRepositories.set(magitRepository.magitState.uri.fsPath, magitRepository);
+        }
+      }
+    }
+
+    return magitRepository;
+  }
+
+  public static async getCurrentMagitRepoNO_STATUS(uri?: Uri): Promise<MagitRepository | undefined> {
+    let magitRepository: MagitRepository | undefined;
 
     if (uri) {
-      repository = magitRepositories.get(uri.query);
+      magitRepository = magitRepositories.get(uri.query);
+      if (!magitRepository) {
+        magitRepository = this.getMagitRepoThatContainsFile(uri);
+      }
+    }
+
+    return magitRepository;
+  }
+
+  private static discoverRepoThatContainsFile(uri: Uri): Repository | undefined {
+    let reposContainingFile = gitApi.repositories.filter(r => FilePathUtils.isDescendant(r.rootUri.fsPath, uri.fsPath));
+
+    if (reposContainingFile.length === 1) {
+      return reposContainingFile[0];
+    }
+
+    if (reposContainingFile.length > 0) {
+      return reposContainingFile.sort((repoA, repoB) => repoB.rootUri.fsPath.length - repoA.rootUri.fsPath.length)[0];
+    }
+  }
+
+  public static async discoverRepo(uri?: Uri): Promise<Repository | undefined> {
+
+    let repository;
+
+    if (gitApi.repositories.length === 1) {
+      repository = gitApi.repositories[0];
+    }
+    else if (gitApi.repositories.length) {
+
+      if (vscode.workspace.workspaceFolders?.length) {
+        repository = this.discoverRepoThatContainsFile(uri ?? vscode.workspace.workspaceFolders[0].uri);
+      }
+
+      if (!repository) {
+        const repoPicker: PickMenuItem<Repository | undefined>[] = gitApi.repositories.map(repo => ({ label: repo.rootUri.fsPath, meta: repo }));
+        repoPicker.push({ label: 'Init repo', meta: undefined });
+        repository = await PickMenuUtil.showMenu(repoPicker, 'Which repository?');
+      }
     }
 
     if (!repository) {
+      await commands.executeCommand('git.init');
 
-      if (uri) {
-        repository = this.getMagitRepoThatContainsFile(uri);
-      }
+      await new Promise(r => setTimeout(r, 1000));
 
-      // Can't deduce a repo from uri, ask user to choose
-      if (!repository) {
-
-        if (gitApi.repositories.length === 1) {
-          repository = gitApi.repositories[0];
-        }
-        else if (gitApi.repositories.length) {
-
-          if (vscode.workspace.workspaceFolders?.length) {
-            repository = this.getMagitRepoThatContainsFile(vscode.workspace.workspaceFolders[0].uri);
-          }
-
-          if (!repository) {
-            const repoPicker: PickMenuItem<Repository | undefined>[] = gitApi.repositories.map(repo => ({ label: repo.rootUri.fsPath, meta: repo }));
-            repoPicker.push({ label: 'Init repo', meta: undefined });
-            repository = await PickMenuUtil.showMenu(repoPicker, 'Which repository?');
-          }
-        }
-
-        if (!repository) {
-          const newRepo = await commands.executeCommand('git.init');
-
-          await new Promise(r => setTimeout(r, 1000));
-
-          if (gitApi.repositories.length) {
-            repository = gitApi.repositories[0];
-          }
-        }
-      }
-
-      if (repository) {
-        magitRepositories.set(repository.rootUri.fsPath, repository);
+      if (gitApi.repositories.length) {
+        repository = gitApi.repositories[0];
       }
     }
 
@@ -86,8 +113,8 @@ export default class MagitUtils {
   }
 
   public static async magitStatusAndUpdate(repository: MagitRepository) {
-    await Status.internalMagitStatus(repository);
-    views.forEach(view => view.needsUpdate ? view.update(repository.magitState!) : undefined);
+    repository.magitState = await Status.internalMagitStatus(repository);
+    views.forEach(view => view.needsUpdate ? view.update(repository.magitState) : undefined);
   }
 
   public static magitAnythingModified(repository: MagitRepository): boolean {
@@ -101,7 +128,7 @@ export default class MagitUtils {
 
     const refs: PickMenuItem<string>[] = [];
 
-    if (showCurrent && repository.magitState?.HEAD?.name) {
+    if (showCurrent && repository.magitState.HEAD?.name) {
       refs.push({
         label: repository.magitState.HEAD.name,
         description: GitTextUtils.shortHash(repository.magitState.HEAD.commit),
@@ -112,13 +139,13 @@ export default class MagitUtils {
     if (showHEAD) {
       refs.push({
         label: 'HEAD',
-        description: GitTextUtils.shortHash(repository.magitState?.HEAD?.commit),
+        description: GitTextUtils.shortHash(repository.magitState.HEAD?.commit),
         meta: 'HEAD'
       });
     }
 
-    refs.push(...repository.state.refs
-      .filter(ref => ref.name !== repository.magitState?.HEAD?.name)
+    refs.push(...repository.magitState.refs
+      .filter(ref => ref.name !== repository.magitState.HEAD?.name)
       .sort((refA, refB) => refA.type - refB.type).map(r => ({
         label: r.name!,
         description: GitTextUtils.shortHash(r.commit),
@@ -134,7 +161,7 @@ export default class MagitUtils {
 
   public static async chooseCommit(repository: MagitRepository, prompt: string): Promise<string> {
 
-    const commitPicker = repository.magitState?.log.map(commit => ({
+    const commitPicker = repository.magitState.log.map(commit => ({
       label: GitTextUtils.shortHash(commit.hash),
       description: commit.message.concat(' ').concat(commit.hash),
       meta: commit.hash
@@ -144,7 +171,7 @@ export default class MagitUtils {
   }
 
   public static async chooseTag(repository: MagitRepository, prompt: string) {
-    const refs = repository.state.refs
+    const refs = repository.magitState.refs
       .filter(ref => ref.type === RefType.Tag)
       .map(r => r.name!);
 

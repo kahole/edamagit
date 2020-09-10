@@ -33,7 +33,7 @@ export class HelpView extends DocumentView {
   public update(state: MagitState): void { }
 
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${HelpView.UriPath}?${repository.rootUri.path}#help`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${HelpView.UriPath}?${repository.magitState.uri.path}#help`);
   }
 
   private static joinTexts(spacing: number, texts: string[]) {

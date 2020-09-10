@@ -51,6 +51,6 @@ export default class ProcessView extends DocumentView {
   }
 
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${ProcessView.UriPath}?${repository.rootUri.path}#process`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${ProcessView.UriPath}?${repository.magitState.uri.path}#process`);
   }
 }

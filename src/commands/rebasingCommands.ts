@@ -17,7 +17,7 @@ const whileRebasingMenu = {
 
 export async function rebasing(repository: MagitRepository) {
 
-  if (repository.magitState?.rebasingState) {
+  if (repository.magitState.rebasingState) {
     return MenuUtil.showMenu(whileRebasingMenu, { repository });
   } else {
 
@@ -31,7 +31,7 @@ export async function rebasing(repository: MagitRepository) {
       { key: '-h', name: '--no-verify', description: 'Disable hooks' },
     ];
 
-    const HEAD = repository.magitState?.HEAD;
+    const HEAD = repository.magitState.HEAD;
 
     const commands = [];
 

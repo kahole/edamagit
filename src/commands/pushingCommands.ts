@@ -6,19 +6,20 @@ import { PickMenuItem, PickMenuUtil } from '../menu/pickMenu';
 import GitTextUtils from '../utils/gitTextUtils';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
+import GitUtils from '../utils/gitUtils';
 
 function generatePushingMenu(repository: MagitRepository) {
   const pushingMenuItems: MenuItem[] = [];
 
-  if (repository.magitState?.HEAD?.pushRemote) {
-    const pushRemote = repository.magitState?.HEAD?.pushRemote;
+  if (repository.magitState.HEAD?.pushRemote) {
+    const pushRemote = repository.magitState.HEAD?.pushRemote;
     pushingMenuItems.push({ label: 'p', description: `${pushRemote.remote}/${pushRemote.name}`, action: pushToPushRemote });
   } else {
     pushingMenuItems.push({ label: 'p', description: `pushRemote, after setting that`, action: pushSetPushRemote });
   }
 
-  if (repository.magitState?.HEAD?.upstream) {
-    const upstream = repository.magitState?.HEAD?.upstream;
+  if (repository.magitState.HEAD?.upstream) {
+    const upstream = repository.magitState.HEAD?.upstream;
     pushingMenuItems.push({ label: 'u', description: `${upstream.remote}/${upstream.name}`, action: pushUpstream });
   } else {
     pushingMenuItems.push({ label: 'u', description: `@{upstream}, after setting that`, action: pushSetUpstream });
@@ -45,8 +46,8 @@ export async function pushing(repository: MagitRepository) {
 
 async function pushToPushRemote({ repository, switches }: MenuState) {
 
-  const pushRemote = repository.magitState?.HEAD?.pushRemote;
-  const ref = repository.magitState?.HEAD?.name;
+  const pushRemote = repository.magitState.HEAD?.pushRemote;
+  const ref = repository.magitState.HEAD?.name;
 
   if (pushRemote?.remote && ref) {
 
@@ -56,24 +57,25 @@ async function pushToPushRemote({ repository, switches }: MenuState) {
 }
 
 async function pushSetPushRemote({ repository, ...rest }: MenuState) {
-  const remotes: PickMenuItem<string>[] = repository.state.remotes
+  const remotes: PickMenuItem<string>[] = repository.magitState.remotes
     .map(r => ({ label: r.name, description: r.pushUrl, meta: r.name }));
 
   const chosenRemote = await PickMenuUtil.showMenu(remotes);
 
-  const ref = repository.magitState?.HEAD?.name;
+  const ref = repository.magitState.HEAD?.name;
 
   if (chosenRemote && ref) {
-    await repository.setConfig(`branch.${ref}.pushRemote`, chosenRemote);
-    repository.magitState!.HEAD!.pushRemote = { name: ref, remote: chosenRemote };
+    await GitUtils.setConfigVariable(repository, `branch.${ref}.pushRemote`, chosenRemote);
+
+    repository.magitState.HEAD!.pushRemote = { name: ref, remote: chosenRemote };
     return pushToPushRemote({ repository, ...rest });
   }
 }
 
 async function pushUpstream({ repository, switches }: MenuState) {
 
-  const upstreamRemote = repository.magitState?.HEAD?.upstreamRemote;
-  const ref = repository.magitState?.HEAD?.name;
+  const upstreamRemote = repository.magitState.HEAD?.upstreamRemote;
+  const ref = repository.magitState.HEAD?.name;
 
   if (upstreamRemote?.remote && ref) {
 
@@ -84,19 +86,19 @@ async function pushUpstream({ repository, switches }: MenuState) {
 
 async function pushSetUpstream({ repository, ...rest }: MenuState) {
 
-  let choices = [...repository.state.refs];
+  let choices = [...repository.magitState.refs];
 
-  if (repository.state.remotes.length > 0 &&
-    !choices.find(ref => ref.name === repository.state.remotes[0].name + '/' + repository.magitState?.HEAD?.name)) {
+  if (repository.magitState.remotes.length > 0 &&
+    !choices.find(ref => ref.name === repository.magitState.remotes[0].name + '/' + repository.magitState.HEAD?.name)) {
     choices = [{
-      name: `${repository.state.remotes[0].name}/${repository.magitState?.HEAD?.name}`,
-      remote: repository.state.remotes[0].name,
+      name: `${repository.magitState.remotes[0].name}/${repository.magitState.HEAD?.name}`,
+      remote: repository.magitState.remotes[0].name,
       type: RefType.RemoteHead
     }, ...choices];
   }
 
   const refs: PickMenuItem<string>[] = choices
-    .filter(ref => ref.type !== RefType.Tag && ref.name !== repository.magitState?.HEAD?.name)
+    .filter(ref => ref.type !== RefType.Tag && ref.name !== repository.magitState.HEAD?.name)
     .sort((refA, refB) => refB.type - refA.type)
     .map(r => ({ label: r.name!, description: GitTextUtils.shortHash(r.commit), meta: r.name! }));
 
@@ -105,7 +107,7 @@ async function pushSetUpstream({ repository, ...rest }: MenuState) {
     chosenRemote = await PickMenuUtil.showMenu(refs);
   } catch { }
 
-  const ref = repository.magitState?.HEAD?.name;
+  const ref = repository.magitState.HEAD?.name;
 
   if (chosenRemote && ref) {
 
@@ -114,11 +116,11 @@ async function pushSetUpstream({ repository, ...rest }: MenuState) {
     if (remote && name) {
 
       await Promise.all([
-        repository.setConfig(`branch.${ref}.merge`, `refs/heads/${name}`),
-        repository.setConfig(`branch.${ref}.remote`, remote)
+        GitUtils.setConfigVariable(repository, `branch.${ref}.merge`, `refs/heads/${name}`),
+        GitUtils.setConfigVariable(repository, `branch.${ref}.remote`, remote)
       ]);
 
-      repository.magitState!.HEAD!.upstreamRemote = { name, remote };
+      repository.magitState.HEAD!.upstreamRemote = { name, remote };
 
       return pushUpstream({ repository, ...rest });
     }
@@ -130,7 +132,7 @@ async function pushElsewhere() {
 }
 
 async function pushTag({ repository, switches }: MenuState) {
-  const remote = repository.magitState?.HEAD?.upstreamRemote?.remote ?? repository.magitState?.HEAD?.pushRemote?.remote;
+  const remote = repository.magitState.HEAD?.upstreamRemote?.remote ?? repository.magitState.HEAD?.pushRemote?.remote;
 
   const tag = await MagitUtils.chooseTag(repository, 'Push tag');
 
@@ -142,7 +144,7 @@ async function pushTag({ repository, switches }: MenuState) {
 }
 
 async function pushAllTags({ repository, switches }: MenuState) {
-  const remote = repository.magitState?.HEAD?.upstreamRemote?.remote ?? repository.magitState?.HEAD?.pushRemote?.remote;
+  const remote = repository.magitState.HEAD?.upstreamRemote?.remote ?? repository.magitState.HEAD?.pushRemote?.remote;
 
   if (remote) {
 

@@ -1,5 +1,5 @@
-import { MagitRepository } from '../models/magitRepository';
 import { SpawnOptions } from '../common/gitApiExtensions';
+import { Repository } from '../typings/git';
 import MagitLogger from './logger';
 
 export enum LogLevel {
@@ -8,7 +8,7 @@ export enum LogLevel {
   Detailed
 }
 
-export async function gitRun(repository: MagitRepository, args: string[], spawnOptions?: SpawnOptions, logLevel = LogLevel.Detailed) {
+export async function gitRun(repository: Repository, args: string[], spawnOptions?: SpawnOptions, logLevel = LogLevel.Detailed) {
 
   let logEntry;
   if (logLevel > LogLevel.None) {

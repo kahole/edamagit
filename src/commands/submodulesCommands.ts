@@ -117,7 +117,7 @@ async function listAll({ repository, switches }: MenuState) {
   const uri = SubmoduleListView.encodeLocation(repository);
 
   if (!views.has(uri.toString())) {
-    views.set(uri.toString(), new SubmoduleListView(uri, repository.magitState!));
+    views.set(uri.toString(), new SubmoduleListView(uri, repository.magitState));
   }
 
   return workspace.openTextDocument(uri)
@@ -129,5 +129,5 @@ function fetchAll({ repository, switches }: MenuState) {
 }
 
 async function pickSubmodule(repository: MagitRepository, prompt: string): Promise<string | undefined> {
-  return await window.showQuickPick(repository.magitState!.submodules.map(r => r.name), { placeHolder: prompt });
+  return await window.showQuickPick(repository.magitState.submodules.map(r => r.name), { placeHolder: prompt });
 }

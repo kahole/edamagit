@@ -16,6 +16,7 @@ import { RebasingSectionView } from './rebasing/rebasingSectionView';
 import { CherryPickingSectionView } from './cherryPicking/cherryPickingSectionView';
 import { RevertingSectionView } from './reverting/revertingSectionView';
 import { MagitBranch } from '../models/magitBranch';
+import { getLatestGitError } from '../commands/commandPrimer';
 
 export default class MagitStatusView extends DocumentView {
 
@@ -31,9 +32,9 @@ export default class MagitStatusView extends DocumentView {
     this.HEAD = magitState.HEAD;
     this.subViews = [];
 
-    if (magitState.latestGitError) {
-      this.addSubview(new TextView(`GitError! ${magitState.latestGitError.split(Constants.LineSplitterRegex)[0]} [ $ for detailed log ]`));
-      magitState.latestGitError = undefined;
+    let latestGitError = getLatestGitError(magitState);
+    if (latestGitError) {
+      this.addSubview(new TextView(`GitError! ${latestGitError.split(Constants.LineSplitterRegex)[0]} [ $ for detailed log ]`));
     }
 
     this.addSubview(new BranchHeaderSectionView(magitState.HEAD));
@@ -97,6 +98,6 @@ export default class MagitStatusView extends DocumentView {
   }
 
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${MagitStatusView.UriPath}?${repository.rootUri.fsPath}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${MagitStatusView.UriPath}?${repository.magitState.uri.fsPath}`);
   }
 }

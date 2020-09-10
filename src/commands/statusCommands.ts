@@ -1,9 +1,8 @@
 import { MagitChange } from '../models/magitChange';
 import { workspace, window, Uri } from 'vscode';
-import { views } from '../extension';
+import { magitRepositories, views } from '../extension';
 import FilePathUtils from '../utils/filePathUtils';
 import GitTextUtils from '../utils/gitTextUtils';
-import { MagitRepository } from '../models/magitRepository';
 import MagitUtils from '../utils/magitUtils';
 import MagitStatusView from '../views/magitStatusView';
 import { Status, Commit, RefType, Repository, Change } from '../typings/git';
@@ -17,6 +16,7 @@ import { MagitRebasingState } from '../models/magitRebasingState';
 import { MagitMergingState } from '../models/magitMergingState';
 import { MagitRevertingState } from '../models/magitRevertingState';
 import { Stash } from '../models/stash';
+import { MagitState } from '../models/magitState';
 
 export async function magitRefresh() { }
 
@@ -24,7 +24,7 @@ export async function magitStatus(): Promise<any> {
 
   const editor = window.activeTextEditor;
 
-  const repository = await MagitUtils.getCurrentMagitRepo(editor?.document.uri);
+  let repository = await MagitUtils.getCurrentMagitRepoNO_STATUS(editor?.document.uri);
 
   if (repository) {
 
@@ -40,16 +40,36 @@ export async function magitStatus(): Promise<any> {
       }
     }
 
-    await internalMagitStatus(repository);
+    repository.magitState = await internalMagitStatus(repository);
 
     const uri = MagitStatusView.encodeLocation(repository);
-    views.set(uri.toString(), new MagitStatusView(uri, repository.magitState!));
+    views.set(uri.toString(), new MagitStatusView(uri, repository.magitState));
 
     return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
+  } else {
+
+    let discoveredRepository = await MagitUtils.discoverRepo(editor?.document.uri);
+
+    if (discoveredRepository) {
+      // TODO: REFACTOR
+      // in sync with magitUtils
+      let tmpMagitRepository: any = discoveredRepository;
+      tmpMagitRepository.magitState = await internalMagitStatus(discoveredRepository);
+      repository = tmpMagitRepository;
+
+      if (repository) {
+        magitRepositories.set(repository.magitState.uri.fsPath, repository);
+
+        const uri = MagitStatusView.encodeLocation(repository);
+        views.set(uri.toString(), new MagitStatusView(uri, repository.magitState));
+
+        return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
+      }
+    }
   }
 }
 
-export async function internalMagitStatus(repository: MagitRepository): Promise<void> {
+export async function internalMagitStatus(repository: Repository): Promise<MagitState> {
 
   await repository.status();
 
@@ -156,7 +176,8 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       remoteBranch.name !== remote.name + '/HEAD') // filter out uninteresting remote/HEAD element
   }));
 
-  repository.magitState = {
+  return {
+    uri: repository.rootUri,
     HEAD,
     stashes: await stashTask,
     log: await logTask,
@@ -171,8 +192,8 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     branches: repository.state.refs.filter(ref => ref.type === RefType.Head),
     remotes,
     tags: repository.state.refs.filter(ref => ref.type === RefType.Tag),
-    submodules: repository.state.submodules,
-    latestGitError: repository.magitState?.latestGitError
+    refs: repository.state.refs,
+    submodules: repository.state.submodules
   };
 }
 

@@ -23,7 +23,7 @@ async function createWorktree({ repository }: MenuState) {
   const ref = await MagitUtils.chooseRef(repository, 'Checkout ');
 
   if (ref) {
-    const worktreePath = await window.showInputBox({ value: repository.rootUri.fsPath, prompt: 'Create worktree' });
+    const worktreePath = await window.showInputBox({ value: repository.magitState.uri.fsPath, prompt: 'Create worktree' });
 
     if (worktreePath) {
       const args = ['worktree', 'add', worktreePath, ref];
@@ -34,7 +34,7 @@ async function createWorktree({ repository }: MenuState) {
 
 async function createWorktreeAndBranch({ repository }: MenuState) {
 
-  const worktreePath = await window.showInputBox({ value: repository.rootUri.fsPath, prompt: 'Create worktree' });
+  const worktreePath = await window.showInputBox({ value: repository.magitState.uri.fsPath, prompt: 'Create worktree' });
 
   if (worktreePath) {
 

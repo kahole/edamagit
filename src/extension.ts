@@ -12,7 +12,7 @@ import { magitStage, magitStageAll, magitUnstageAll, magitUnstage, stageFile, un
 import { saveClose, clearSaveClose, quitMagitView } from './commands/macros';
 import HighlightProvider from './providers/highlightProvider';
 import SemanticTokensProvider from './providers/semanticTokensProvider';
-import { Command } from './commands/commandPrimer';
+import { CommandPrimer } from './commands/commandPrimer';
 import * as Constants from './common/constants';
 import { fetching } from './commands/fetchingCommands';
 import { pulling } from './commands/pullingCommands';
@@ -85,50 +85,50 @@ export function activate(context: ExtensionContext) {
   );
 
   context.subscriptions.push(commands.registerCommand('magit.status', magitStatus));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.help', Command.primeRepo(magitHelp, false)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.help', CommandPrimer.primeRepo(magitHelp, false)));
 
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.commit', Command.primeRepo(magitCommit)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.refresh', Command.primeRepo(magitRefresh)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.pulling', Command.primeRepo(pulling)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.pushing', Command.primeRepo(pushing)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.stashing', Command.primeRepo(stashing)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.fetching', Command.primeRepo(fetching)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.branching', Command.primeRepo(branching)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.merging', Command.primeRepo(merging)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.rebasing', Command.primeRepo(rebasing)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.resetting', Command.primeRepo(resetting)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.reset-mixed', Command.primeRepo(resetMixed)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.reset-hard', Command.primeRepo(resetHard)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.remoting', Command.primeRepo(remoting)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.logging', Command.primeRepo(logging)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.show-refs', Command.primeRepo(showRefs)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.diffing', Command.primeRepo(diffing)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.tagging', Command.primeRepo(tagging)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.cherry-picking', Command.primeRepo(cherryPicking)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.reverting', Command.primeRepo(reverting)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.ignoring', Command.primeRepo(ignoring)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.running', Command.primeRepo(running)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.worktree', Command.primeRepo(worktree)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.submodules', Command.primeRepo(submodules)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.process-log', Command.primeRepo(processView, false)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.commit', CommandPrimer.primeRepo(magitCommit)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.refresh', CommandPrimer.primeRepo(magitRefresh)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.pulling', CommandPrimer.primeRepo(pulling)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.pushing', CommandPrimer.primeRepo(pushing)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.stashing', CommandPrimer.primeRepo(stashing)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.fetching', CommandPrimer.primeRepo(fetching)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.branching', CommandPrimer.primeRepo(branching)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.merging', CommandPrimer.primeRepo(merging)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.rebasing', CommandPrimer.primeRepo(rebasing)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.resetting', CommandPrimer.primeRepo(resetting)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.reset-mixed', CommandPrimer.primeRepo(resetMixed)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.reset-hard', CommandPrimer.primeRepo(resetHard)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.remoting', CommandPrimer.primeRepo(remoting)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.logging', CommandPrimer.primeRepo(logging)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.show-refs', CommandPrimer.primeRepo(showRefs)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.diffing', CommandPrimer.primeRepo(diffing)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.tagging', CommandPrimer.primeRepo(tagging)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.cherry-picking', CommandPrimer.primeRepo(cherryPicking)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.reverting', CommandPrimer.primeRepo(reverting)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.ignoring', CommandPrimer.primeRepo(ignoring)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.running', CommandPrimer.primeRepo(running)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.worktree', CommandPrimer.primeRepo(worktree)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.submodules', CommandPrimer.primeRepo(submodules)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.process-log', CommandPrimer.primeRepo(processView, false)));
 
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.visit-at-point', Command.primeRepoAndView(magitVisitAtPoint, false)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.apply-at-point', Command.primeRepoAndView(magitApplyEntityAtPoint)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.discard-at-point', Command.primeRepoAndView(magitDiscardAtPoint)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.reverse-at-point', Command.primeRepoAndView(reverseAtPoint)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.stage', Command.primeRepoAndView(magitStage)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.stage-all', Command.primeRepoAndView(magitStageAll)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.unstage', Command.primeRepoAndView(magitUnstage)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.unstage-all', Command.primeRepoAndView(magitUnstageAll)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.visit-at-point', CommandPrimer.primeRepoAndView(magitVisitAtPoint, false)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.apply-at-point', CommandPrimer.primeRepoAndView(magitApplyEntityAtPoint)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.discard-at-point', CommandPrimer.primeRepoAndView(magitDiscardAtPoint)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.reverse-at-point', CommandPrimer.primeRepoAndView(reverseAtPoint)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.stage', CommandPrimer.primeRepoAndView(magitStage)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.stage-all', CommandPrimer.primeRepoAndView(magitStageAll)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.unstage', CommandPrimer.primeRepoAndView(magitUnstage)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.unstage-all', CommandPrimer.primeRepoAndView(magitUnstageAll)));
 
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.file-popup', Command.primeFileCommand(filePopup)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.blame-file', Command.primeFileCommand(blameFile)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.diff-file', Command.primeFileCommand(diffFile)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.stage-file', Command.primeFileCommand(stageFile)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.unstage-file', Command.primeFileCommand(unstageFile)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.file-popup', CommandPrimer.primeFileCommand(filePopup)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.blame-file', CommandPrimer.primeFileCommand(blameFile)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.diff-file', CommandPrimer.primeFileCommand(diffFile)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.stage-file', CommandPrimer.primeFileCommand(stageFile)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.unstage-file', CommandPrimer.primeFileCommand(unstageFile)));
 
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.copy-section-value', Command.primeRepoAndView(copySectionValueCommand)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.copy-buffer-revision', Command.primeRepoAndView(copyBufferRevisionCommands)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.copy-section-value', CommandPrimer.primeRepoAndView(copySectionValueCommand)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.copy-buffer-revision', CommandPrimer.primeRepoAndView(copyBufferRevisionCommands)));
 
   context.subscriptions.push(commands.registerCommand('magit.dispatch', async () => {
     const editor = window.activeTextEditor;
@@ -141,7 +141,7 @@ export function activate(context: ExtensionContext) {
     }
   }));
 
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.toggle-fold', Command.primeRepoAndView(async (repo: MagitRepository, view: DocumentView) => {
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.toggle-fold', CommandPrimer.primeRepoAndView(async (repo: MagitRepository, view: DocumentView) => {
     const selectedView = view.click(window.activeTextEditor!.selection.active);
 
     if (selectedView?.isFoldable) {

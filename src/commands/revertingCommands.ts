@@ -23,7 +23,7 @@ const revertingMenu = {
 
 export async function reverting(repository: MagitRepository) {
 
-  if (repository.magitState?.revertingState) {
+  if (repository.magitState.revertingState) {
     return MenuUtil.showMenu(whileRevertingMenu, { repository });
   } else {
 

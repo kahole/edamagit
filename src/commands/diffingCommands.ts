@@ -11,7 +11,7 @@ import SectionDiffView from '../views/sectionDiffView';
 import * as VisitAtPoint from './visitAtPointCommands';
 import * as Constants from '../common/constants';
 import { Section } from '../views/general/sectionHeader';
-import { Change, Status } from '../typings/git';
+import { Status } from '../typings/git';
 import { MagitChange } from '../models/magitChange';
 import { Stash } from '../models/stash';
 
@@ -43,10 +43,10 @@ export async function diffing(repository: MagitRepository) {
 
 async function diffRange({ repository }: MenuState) {
 
-  let range = await window.showInputBox({ prompt: `Diff for range (${repository.magitState?.HEAD?.name})` });
+  let range = await window.showInputBox({ prompt: `Diff for range (${repository.magitState.HEAD?.name})` });
 
   if (!range) {
-    range = repository.magitState?.HEAD?.name;
+    range = repository.magitState.HEAD?.name;
   }
 
   if (range) {
@@ -56,11 +56,11 @@ async function diffRange({ repository }: MenuState) {
 }
 
 async function diffPaths({ repository }: MenuState) {
-  const fileA = await window.showInputBox({ prompt: 'First file', value: repository.rootUri.fsPath });
+  const fileA = await window.showInputBox({ prompt: 'First file', value: repository.magitState.uri.fsPath });
 
   if (fileA) {
 
-    const fileB = await window.showInputBox({ prompt: 'Second file', value: repository.rootUri.fsPath });
+    const fileB = await window.showInputBox({ prompt: 'Second file', value: repository.magitState.uri.fsPath });
 
     if (fileB) {
       return diff(repository, 'files', ['--no-index', fileA, fileB]);
@@ -89,14 +89,14 @@ async function diff(repository: MagitRepository, id: string, args: string[] = []
 
 export async function showDiffSection(repository: MagitRepository, section: Section, preserveFocus = false) {
   const uri = SectionDiffView.encodeLocation(repository);
-  views.set(uri.toString(), new SectionDiffView(uri, repository.magitState!, section));
+  views.set(uri.toString(), new SectionDiffView(uri, repository.magitState, section));
   return workspace.openTextDocument(uri)
     .then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preserveFocus, preview: false }));
 }
 
 async function showStash({ repository }: MenuState) {
 
-  const stashesPicker: PickMenuItem<Stash>[] = repository.magitState?.stashes.map(stash => ({ label: `stash@{${stash.index}}`, meta: stash })) ?? [];
+  const stashesPicker: PickMenuItem<Stash>[] = repository.magitState.stashes.map(stash => ({ label: `stash@{${stash.index}}`, meta: stash })) ?? [];
 
   const chosenStash = await PickMenuUtil.showMenu(stashesPicker);
 

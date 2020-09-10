@@ -23,7 +23,7 @@ async function ignore(repository: MagitRepository, globally = false) {
 
   const ignoreSuggestions: PickMenuItem<string>[] = [];
 
-  repository.magitState?.untrackedFiles.forEach(change => {
+  repository.magitState.untrackedFiles.forEach(change => {
     const fileName = FilePathUtils.fileName(change.originalUri);
     const fileExtension = FilePathUtils.fileExtension(fileName);
 
@@ -33,7 +33,7 @@ async function ignore(repository: MagitRepository, globally = false) {
     ignoreSuggestions.push({ label: fileName, meta: fileName });
     ignoreSuggestions.push({ label: globPattern1, meta: globPattern1 });
     ignoreSuggestions.push({ label: globPattern2, meta: globPattern2 });
-  }) ?? [];
+  });
 
   const ignorePattern = await PickMenuUtil.showMenuWithFreeform(ignoreSuggestions, `File or pattern to ignore ${globally ? 'globally' : 'locally'}`);
 
@@ -42,9 +42,9 @@ async function ignore(repository: MagitRepository, globally = false) {
     let gitIgnoreFilePath: string;
 
     if (globally) {
-      gitIgnoreFilePath = repository.rootUri.fsPath + '/.gitignore';
+      gitIgnoreFilePath = repository.magitState.uri.fsPath + '/.gitignore';
     } else {
-      gitIgnoreFilePath = repository.rootUri.fsPath + '/.git/info/exclude';
+      gitIgnoreFilePath = repository.magitState.uri.fsPath + '/.git/info/exclude';
     }
 
     return new Promise((resolve, reject) => {

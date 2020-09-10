@@ -7,8 +7,10 @@ import { MagitRemote } from './magitRemote';
 import { MagitCherryPickingState } from './magitCherryPickingState';
 import { MagitRevertingState } from './magitRevertingState';
 import { Stash } from './stash';
+import { Uri } from 'vscode';
 
 export interface MagitState {
+  readonly uri: Uri;
   readonly HEAD?: MagitBranch;
   readonly workingTreeChanges: MagitChange[];
   readonly indexChanges: MagitChange[];
@@ -23,6 +25,6 @@ export interface MagitState {
   readonly branches: Ref[];
   readonly remotes: MagitRemote[];
   readonly tags: Ref[];
+  readonly refs: Ref[];
   readonly submodules: Submodule[];
-  latestGitError?: string;
 }

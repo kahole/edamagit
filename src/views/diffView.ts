@@ -23,6 +23,6 @@ export class DiffView extends DocumentView {
 
   static index = 0;
   static encodeLocation(repository: MagitRepository, diffId: string): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${DiffView.UriPath}?${repository.rootUri.fsPath}#${diffId}${DiffView.index++}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${DiffView.UriPath}?${repository.magitState.uri.fsPath}#${diffId}${DiffView.index++}`);
   }
 }

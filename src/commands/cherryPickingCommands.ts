@@ -27,7 +27,7 @@ const cherryPickingMenu = {
 
 export async function cherryPicking(repository: MagitRepository) {
 
-  if (repository.magitState?.cherryPickingState) {
+  if (repository.magitState.cherryPickingState) {
     return MenuUtil.showMenu(whileCherryPickingMenu, { repository });
   } else {
     const switches = [

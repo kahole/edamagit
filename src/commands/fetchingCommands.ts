@@ -8,13 +8,13 @@ export async function fetching(repository: MagitRepository): Promise<any> {
 
   const fetchingMenuItems: MenuItem[] = [];
 
-  if (repository.magitState?.HEAD?.pushRemote) {
-    const pushRemote = repository.magitState?.HEAD?.pushRemote;
+  if (repository.magitState.HEAD?.pushRemote) {
+    const pushRemote = repository.magitState.HEAD?.pushRemote;
     fetchingMenuItems.push({ label: 'p', description: pushRemote.remote, action: fetchFromPushRemote });
   }
 
-  if (repository.magitState?.HEAD?.upstream) {
-    const upstream = repository.magitState?.HEAD?.upstream;
+  if (repository.magitState.HEAD?.upstream) {
+    const upstream = repository.magitState.HEAD?.upstream;
     fetchingMenuItems.push({ label: 'u', description: upstream.remote, action: fetchFromUpstream });
   }
 
@@ -24,7 +24,7 @@ export async function fetching(repository: MagitRepository): Promise<any> {
 
   fetchingMenuItems.push({ label: 'o', description: 'another branch', action: fetchAnotherBranch });
 
-  if (repository.state.submodules.length) {
+  if (repository.magitState.submodules.length) {
     fetchingMenuItems.push({ label: 's', description: 'submodules', action: fetchSubmodules });
   }
 
@@ -36,7 +36,7 @@ export async function fetching(repository: MagitRepository): Promise<any> {
 }
 
 async function fetchFromPushRemote({ repository, switches }: MenuState) {
-  if (repository.magitState?.HEAD?.pushRemote) {
+  if (repository.magitState.HEAD?.pushRemote) {
     const args = ['fetch', ...MenuUtil.switchesToArgs(switches), repository.magitState.HEAD.pushRemote.remote];
     return gitRun(repository, args);
   }
@@ -44,7 +44,7 @@ async function fetchFromPushRemote({ repository, switches }: MenuState) {
 
 async function fetchFromUpstream({ repository, switches }: MenuState) {
 
-  if (repository.magitState?.HEAD?.upstreamRemote) {
+  if (repository.magitState.HEAD?.upstreamRemote) {
     const args = ['fetch', ...MenuUtil.switchesToArgs(switches), repository.magitState.HEAD.upstreamRemote.remote];
     return gitRun(repository, args);
   }
@@ -52,7 +52,7 @@ async function fetchFromUpstream({ repository, switches }: MenuState) {
 
 async function fetchFromElsewhere({ repository, switches }: MenuState) {
 
-  const remotes: PickMenuItem<string>[] = repository.state.remotes
+  const remotes: PickMenuItem<string>[] = repository.magitState.remotes
     .map(r => ({ label: r.name, description: r.pushUrl, meta: r.name }));
 
   const chosenRemote = await PickMenuUtil.showMenu(remotes);

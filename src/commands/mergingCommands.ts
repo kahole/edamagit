@@ -27,7 +27,7 @@ const whileMergingMenu = {
 
 export async function merging(repository: MagitRepository) {
 
-  if (repository.magitState?.mergingState) {
+  if (repository.magitState.mergingState) {
     return MenuUtil.showMenu(whileMergingMenu, { repository });
   } else {
     return MenuUtil.showMenu(mergingMenu, { repository });
@@ -51,7 +51,7 @@ async function absorb({ repository }: MenuState) {
 
   if (ref) {
     await _merge(repository, ref);
-    return await repository.deleteBranch(ref, false);
+    return await gitRun(repository, ['branch', '--delete', ref]);
   }
 }
 

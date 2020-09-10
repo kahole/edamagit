@@ -9,7 +9,7 @@ const runningMenu = {
   title: 'Running',
   commands: [
     { label: '!', description: 'Git subcommand (in topdir)', action: ({ repository }: MenuState) => run(repository) },
-    { label: 'p', description: 'Git subcommand (in pwd)', action: ({ repository }: MenuState) => run(repository, workspace.getWorkspaceFolder(repository.rootUri)?.uri) }
+    { label: 'p', description: 'Git subcommand (in pwd)', action: ({ repository }: MenuState) => run(repository, workspace.getWorkspaceFolder(repository.magitState.uri)?.uri) }
   ]
 };
 

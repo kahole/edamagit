@@ -16,6 +16,8 @@ suite('Extension Test Suite', () => {
     const expected = `Head:     somebranch ok\n`;
 
     const magitState: MagitState = {
+      refs: [],
+      uri: vscode.Uri.parse(''),
       indexChanges: [],
       log: [],
       mergeChanges: [],

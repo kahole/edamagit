@@ -38,7 +38,7 @@ export async function logging(repository: MagitRepository) {
 // A function wrapper to avoid duplicate checking code
 function wrap(action: (repository: MagitRepository, head: MagitBranch, switches: Switch[], options: Option[]) => Promise<any>) {
   return async ({ repository, switches, options }: MenuState) => {
-    if (repository.magitState?.HEAD && switches && options) {
+    if (repository.magitState.HEAD && switches && options) {
       return action(repository, repository.magitState.HEAD, switches, options);
     }
   };
@@ -95,7 +95,7 @@ async function log(repository: MagitRepository, args: string[], revs: string[]) 
 
 async function getRevs(repository: MagitRepository) {
   // TODO: Auto complete branches and tags
-  const placeHolder = repository.magitState?.HEAD?.name;
+  const placeHolder = repository.magitState.HEAD?.name;
   const input = await window.showInputBox({ prompt: 'Log rev,s:', placeHolder });
   if (input && input.length > 0) {
     // split space or commas

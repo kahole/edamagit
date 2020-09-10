@@ -50,14 +50,14 @@ async function _stash({ repository, switches }: MenuState, message: string, stas
 
 async function stashWorktree({ repository, switches }: MenuState) {
 
-  if (repository.magitState?.HEAD?.commit) {
+  if (repository.magitState.HEAD?.commit) {
 
     const message = await askForStashMessage(repository);
 
     if (message !== undefined) {
 
       const intermediaryCommitArgs = ['commit', '--message', 'intermediary stash commit'];
-      const resetCommitArgs = ['reset', '--soft', repository.magitState?.HEAD?.commit];
+      const resetCommitArgs = ['reset', '--soft', repository.magitState.HEAD?.commit];
 
       try {
         try {
@@ -75,7 +75,7 @@ async function stashWorktree({ repository, switches }: MenuState) {
 
 async function stashIndex({ repository, switches }: MenuState) {
 
-  if (repository.magitState?.HEAD?.commit) {
+  if (repository.magitState.HEAD?.commit) {
 
     const message = await askForStashMessage(repository);
 
@@ -83,7 +83,7 @@ async function stashIndex({ repository, switches }: MenuState) {
 
       const intermediaryCommitArgs = ['commit', '--message', 'intermediary stash commit'];
       const stashWorktree = ['stash', 'push', '--message', 'intermediary stash'];
-      const resetCommitArgs = ['reset', '--soft', repository.magitState?.HEAD?.commit];
+      const resetCommitArgs = ['reset', '--soft', repository.magitState.HEAD?.commit];
       const popIntermediateStashArgs = ['stash', 'pop', '--index', 'stash@{1}'];
 
       try {
@@ -115,6 +115,6 @@ async function popStash() {
 }
 
 function askForStashMessage(repository: MagitRepository): Thenable<string | undefined> {
-  const messageIntro = `On ${repository.magitState?.HEAD?.name ?? GitTextUtils.shortHash(repository.magitState?.HEAD?.commit)}: `;
+  const messageIntro = `On ${repository.magitState.HEAD?.name ?? GitTextUtils.shortHash(repository.magitState.HEAD?.commit)}: `;
   return window.showInputBox({ prompt: `Stash message: ${messageIntro}` });
 }

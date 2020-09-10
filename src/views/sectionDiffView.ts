@@ -47,6 +47,6 @@ export default class SectionDiffView extends DocumentView {
 
   static index = 0;
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${SectionDiffView.UriPath}?${repository.rootUri.fsPath}#${SectionDiffView.index++}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${SectionDiffView.UriPath}?${repository.magitState.uri.fsPath}#${SectionDiffView.index++}`);
   }
 }

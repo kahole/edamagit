@@ -12,10 +12,10 @@ export class CommitDetailView extends DocumentView {
   isHighlightable = false;
   needsUpdate = false;
 
-  constructor(uri: Uri, public commit: MagitCommit) {
+  constructor(uri: Uri, public commit: MagitCommit, diff: string) {
     super(uri);
 
-    const commitTextView = new TextView(commit.diff);
+    const commitTextView = new TextView(diff);
     commitTextView.isHighlightable = false;
     this.addSubview(commitTextView);
   }
@@ -23,6 +23,6 @@ export class CommitDetailView extends DocumentView {
   public update(state: MagitState): void { }
 
   static encodeLocation(repository: MagitRepository, commitHash: string): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${CommitDetailView.UriPath}?${repository.rootUri.fsPath}#${commitHash}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${CommitDetailView.UriPath}?${repository.magitState.uri.fsPath}#${commitHash}`);
   }
 }
