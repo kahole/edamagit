@@ -3,7 +3,6 @@ import { Uri } from 'vscode';
 import * as Constants from '../common/constants';
 import { TextView } from './general/textView';
 import { MagitRepository } from '../models/magitRepository';
-import { MagitState } from '../models/magitState';
 import { ChangeSectionView } from './changes/changesSectionView';
 import { Section } from './general/sectionHeader';
 import { MagitChange } from '../models/magitChange';
@@ -26,10 +25,10 @@ export class StashDetailView extends DocumentView {
     this.addSubview(new TextView(diff));
   }
 
-  public update(state: MagitState): void { }
+  public update(state: MagitRepository): void { }
 
   static index = 0;
   static encodeLocation(repository: MagitRepository, stash: Stash): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${StashDetailView.UriPath}?${repository.magitState.uri.fsPath}#stash@{${stash.index}}#${StashDetailView.index++}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${StashDetailView.UriPath}?${repository.uri.fsPath}#stash@{${stash.index}}#${StashDetailView.index++}`);
   }
 }

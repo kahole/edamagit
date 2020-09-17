@@ -1,5 +1,4 @@
 import * as Constants from '../common/constants';
-import { MagitState } from '../models/magitState';
 import { ChangeSectionView } from './changes/changesSectionView';
 import { Section } from './general/sectionHeader';
 import { DocumentView } from './general/documentView';
@@ -23,12 +22,12 @@ export default class MagitStatusView extends DocumentView {
   static UriPath: string = 'status.magit';
   public HEAD?: MagitBranch;
 
-  constructor(uri: Uri, magitState: MagitState) {
+  constructor(uri: Uri, magitState: MagitRepository) {
     super(uri);
     this.provideContent(magitState);
   }
 
-  provideContent(magitState: MagitState) {
+  provideContent(magitState: MagitRepository) {
     this.HEAD = magitState.HEAD;
     this.subViews = [];
 
@@ -92,12 +91,12 @@ export default class MagitStatusView extends DocumentView {
     }
   }
 
-  public update(state: MagitState): void {
+  public update(state: MagitRepository): void {
     this.provideContent(state);
     this.triggerUpdate();
   }
 
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${MagitStatusView.UriPath}?${repository.magitState.uri.fsPath}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${MagitStatusView.UriPath}?${repository.uri.fsPath}`);
   }
 }

@@ -27,7 +27,7 @@ const cherryPickingMenu = {
 
 export async function cherryPicking(repository: MagitRepository) {
 
-  if (repository.magitState.cherryPickingState) {
+  if (repository.cherryPickingState) {
     return MenuUtil.showMenu(whileCherryPickingMenu, { repository });
   } else {
     const switches = [
@@ -74,7 +74,7 @@ export async function cherryPick(repository: MagitRepository, target: string, { 
   }
 
   args.push(target);
-  return gitRun(repository, args);
+  return gitRun(repository.gitRepository, args);
 }
 
 async function continueCherryPick({ repository }: MenuState) {
@@ -84,5 +84,5 @@ async function continueCherryPick({ repository }: MenuState) {
 
 async function cherryPickControlCommand({ repository }: MenuState, command: string) {
   const args = ['cherry-pick', command];
-  return gitRun(repository, args);
+  return gitRun(repository.gitRepository, args);
 }

@@ -3,7 +3,6 @@ import { Uri } from 'vscode';
 import * as Constants from '../common/constants';
 import { TextView } from './general/textView';
 import { MagitCommit } from '../models/magitCommit';
-import { MagitState } from '../models/magitState';
 import { MagitRepository } from '../models/magitRepository';
 
 export class CommitDetailView extends DocumentView {
@@ -20,9 +19,9 @@ export class CommitDetailView extends DocumentView {
     this.addSubview(commitTextView);
   }
 
-  public update(state: MagitState): void { }
+  public update(state: MagitRepository): void { }
 
   static encodeLocation(repository: MagitRepository, commitHash: string): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${CommitDetailView.UriPath}?${repository.magitState.uri.fsPath}#${commitHash}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${CommitDetailView.UriPath}?${repository.uri.fsPath}#${commitHash}`);
   }
 }

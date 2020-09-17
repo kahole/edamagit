@@ -45,7 +45,7 @@ export async function fixup({ repository, switches }: MenuState) {
   if (sha) {
     const args = ['commit', ...MenuUtil.switchesToArgs(switches), '--fixup', sha];
 
-    return await gitRun(repository, args);
+    return await gitRun(repository.gitRepository, args);
   } else {
     throw new Error('No commit chosen to fixup');
   }
@@ -79,7 +79,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
       env[editor] = `"${codePath}" --wait`;
     }
 
-    const commitSuccessMessageTask = gitRun(repository, args, { env });
+    const commitSuccessMessageTask = gitRun(repository.gitRepository, args, { env });
 
     editorListener = vscode.window.onDidChangeActiveTextEditor(editor => {
       if (

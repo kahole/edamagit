@@ -17,7 +17,7 @@ const whileRebasingMenu = {
 
 export async function rebasing(repository: MagitRepository) {
 
-  if (repository.magitState.rebasingState) {
+  if (repository.rebasingState) {
     return MenuUtil.showMenu(whileRebasingMenu, { repository });
   } else {
 
@@ -31,7 +31,7 @@ export async function rebasing(repository: MagitRepository) {
       { key: '-h', name: '--no-verify', description: 'Disable hooks' },
     ];
 
-    const HEAD = repository.magitState.HEAD;
+    const HEAD = repository.HEAD;
 
     const commands = [];
 
@@ -81,7 +81,7 @@ async function _rebase(repository: MagitRepository, ref: string, switches: Switc
       return Commit.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR' });
     }
 
-    return await gitRun(repository, args);
+    return await gitRun(repository.gitRepository, args);
   }
   catch (e) {
     throw new MagitError('Failed to merge in the changes.', e);
@@ -90,7 +90,7 @@ async function _rebase(repository: MagitRepository, ref: string, switches: Switc
 
 async function rebaseControlCommand({ repository }: MenuState, command: string) {
   const args = ['rebase', command];
-  return gitRun(repository, args);
+  return gitRun(repository.gitRepository, args);
 }
 
 async function editTodo({ repository }: MenuState) {

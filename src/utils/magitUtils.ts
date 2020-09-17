@@ -35,13 +35,8 @@ export default class MagitUtils {
     if (!magitRepository) {
       let repository = await this.discoverRepo(uri);
       if (repository) {
-        let tmpMagitRepository: any = repository;
-        tmpMagitRepository.magitState = await Status.internalMagitStatus(repository);
-        magitRepository = tmpMagitRepository;
-
-        if (magitRepository) {
-          magitRepositories.set(magitRepository.magitState.uri.fsPath, magitRepository);
-        }
+        let magitRepository = await Status.internalMagitStatus(repository);
+        magitRepositories.set(magitRepository.uri.fsPath, magitRepository);
       }
     }
 
@@ -113,39 +108,40 @@ export default class MagitUtils {
   }
 
   public static async magitStatusAndUpdate(repository: MagitRepository) {
-    repository.magitState = await Status.internalMagitStatus(repository);
-    views.forEach(view => view.needsUpdate ? view.update(repository.magitState) : undefined);
+    let updatedRepository = await Status.internalMagitStatus(repository.gitRepository);
+    magitRepositories.set(updatedRepository.uri.fsPath, updatedRepository);
+    views.forEach(view => view.needsUpdate ? view.update(updatedRepository) : undefined);
   }
 
   public static magitAnythingModified(repository: MagitRepository): boolean {
-    return repository.magitState !== undefined && (
-      repository.magitState.indexChanges.length > 0 ||
-      repository.magitState.workingTreeChanges.length > 0 ||
-      (repository.magitState.mergeChanges?.length ?? 0) > 0);
+    return repository !== undefined && (
+      repository.indexChanges.length > 0 ||
+      repository.workingTreeChanges.length > 0 ||
+      (repository.mergeChanges?.length ?? 0) > 0);
   }
 
   public static async chooseRef(repository: MagitRepository, prompt: string, showCurrent = false, showHEAD = false, allowFreeform = true): Promise<string> {
 
     const refs: PickMenuItem<string>[] = [];
 
-    if (showCurrent && repository.magitState.HEAD?.name) {
+    if (showCurrent && repository.HEAD?.name) {
       refs.push({
-        label: repository.magitState.HEAD.name,
-        description: GitTextUtils.shortHash(repository.magitState.HEAD.commit),
-        meta: repository.magitState.HEAD.name
+        label: repository.HEAD.name,
+        description: GitTextUtils.shortHash(repository.HEAD.commit),
+        meta: repository.HEAD.name
       });
     }
 
     if (showHEAD) {
       refs.push({
         label: 'HEAD',
-        description: GitTextUtils.shortHash(repository.magitState.HEAD?.commit),
+        description: GitTextUtils.shortHash(repository.HEAD?.commit),
         meta: 'HEAD'
       });
     }
 
-    refs.push(...repository.magitState.refs
-      .filter(ref => ref.name !== repository.magitState.HEAD?.name)
+    refs.push(...repository.refs
+      .filter(ref => ref.name !== repository.HEAD?.name)
       .sort((refA, refB) => refA.type - refB.type).map(r => ({
         label: r.name!,
         description: GitTextUtils.shortHash(r.commit),
@@ -161,7 +157,7 @@ export default class MagitUtils {
 
   public static async chooseCommit(repository: MagitRepository, prompt: string): Promise<string> {
 
-    const commitPicker = repository.magitState.log.map(commit => ({
+    const commitPicker = repository.log.map(commit => ({
       label: GitTextUtils.shortHash(commit.hash),
       description: commit.message.concat(' ').concat(commit.hash),
       meta: commit.hash
@@ -171,7 +167,7 @@ export default class MagitUtils {
   }
 
   public static async chooseTag(repository: MagitRepository, prompt: string) {
-    const refs = repository.magitState.refs
+    const refs = repository.refs
       .filter(ref => ref.type === RefType.Tag)
       .map(r => r.name!);
 

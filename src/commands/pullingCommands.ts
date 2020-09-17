@@ -7,13 +7,13 @@ export async function pulling(repository: MagitRepository): Promise<any> {
 
   const pullingMenuItems: MenuItem[] = [];
 
-  if (repository.magitState.HEAD?.pushRemote) {
-    const pushRemote = repository.magitState.HEAD?.pushRemote;
+  if (repository.HEAD?.pushRemote) {
+    const pushRemote = repository.HEAD?.pushRemote;
     pullingMenuItems.push({ label: 'p', description: `${pushRemote.remote}/${pushRemote.name}`, action: pullFromPushRemote });
   }
 
-  if (repository.magitState.HEAD?.upstream) {
-    const upstream = repository.magitState.HEAD?.upstream;
+  if (repository.HEAD?.upstream) {
+    const upstream = repository.HEAD?.upstream;
     pullingMenuItems.push({ label: 'u', description: `${upstream.remote}/${upstream.name}`, action: pullFromUpstream });
   }
 
@@ -23,16 +23,16 @@ export async function pulling(repository: MagitRepository): Promise<any> {
 }
 
 async function pullFromPushRemote({ repository }: MenuState) {
-  const pushRemote = repository.magitState.HEAD?.pushRemote;
+  const pushRemote = repository.HEAD?.pushRemote;
   if (pushRemote) {
     const args = ['pull', pushRemote.remote, pushRemote.name];
-    return gitRun(repository, args);
+    return gitRun(repository.gitRepository, args);
   }
 }
 
 function pullFromUpstream({ repository }: MenuState) {
   const args = ['pull'];
-  return gitRun(repository, args);
+  return gitRun(repository.gitRepository, args);
 }
 
 async function pullFromElsewhere() {

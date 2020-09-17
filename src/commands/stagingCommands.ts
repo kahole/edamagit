@@ -55,13 +55,13 @@ async function stage(repository: MagitRepository, selection: Selection, selected
     }
   } else {
 
-    if (repository.magitState.workingTreeChanges.length || repository.magitState.untrackedFiles.length) {
+    if (repository.workingTreeChanges.length || repository.untrackedFiles.length) {
 
       const files: PickMenuItem<Uri>[] = [
-        ...repository.magitState.workingTreeChanges,
-        ...repository.magitState.untrackedFiles,
-        // ...currentRepository.magitState.mergeChanges
-      ].map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.magitState.uri), meta: c.uri }));
+        ...repository.workingTreeChanges,
+        ...repository.untrackedFiles,
+        // ...currentrepository.mergeChanges
+      ].map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.uri), meta: c.uri }));
 
       const chosenFile = await PickMenuUtil.showMenu(files, 'Stage file');
 
@@ -116,8 +116,8 @@ async function unstage(repository: MagitRepository, selection: Selection, select
     }
   } else {
 
-    const files: PickMenuItem<Uri>[] = repository.magitState.indexChanges!
-      .map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.magitState.uri), meta: c.uri }));
+    const files: PickMenuItem<Uri>[] = repository.indexChanges!
+      .map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.uri), meta: c.uri }));
 
     const chosenFile = await PickMenuUtil.showMenu<Uri>(files, 'Unstage file');
 
@@ -149,10 +149,10 @@ export async function stageFile(repository: MagitRepository, fileUri: Uri, updat
 
   args.push('--', fileUri.fsPath);
 
-  return gitRun(repository, args);
+  return gitRun(repository.gitRepository, args);
 }
 
 export async function unstageFile(repository: MagitRepository, fileUri: Uri) {
   const args = ['reset', '--', fileUri.fsPath];
-  return gitRun(repository, args);
+  return gitRun(repository.gitRepository, args);
 }

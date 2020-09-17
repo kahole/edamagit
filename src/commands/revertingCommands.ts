@@ -23,7 +23,7 @@ const revertingMenu = {
 
 export async function reverting(repository: MagitRepository) {
 
-  if (repository.magitState.revertingState) {
+  if (repository.revertingState) {
     return MenuUtil.showMenu(whileRevertingMenu, { repository });
   } else {
 
@@ -73,7 +73,7 @@ export async function revert(repository: MagitRepository, target: string, { noCo
 
   args.push('--no-edit');
   args.push(target);
-  return gitRun(repository, args);
+  return gitRun(repository.gitRepository, args);
 }
 
 async function continueRevert({ repository }: MenuState) {
@@ -83,5 +83,5 @@ async function continueRevert({ repository }: MenuState) {
 
 async function revertControlCommand({ repository }: MenuState, command: string) {
   const args = ['revert', command];
-  return gitRun(repository, args);
+  return gitRun(repository.gitRepository, args);
 }

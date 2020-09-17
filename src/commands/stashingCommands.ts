@@ -44,29 +44,29 @@ async function _stash({ repository, switches }: MenuState, message: string, stas
       args.push('--message');
       args.push(message);
     }
-    return gitRun(repository, args);
+    return gitRun(repository.gitRepository, args);
   }
 }
 
 async function stashWorktree({ repository, switches }: MenuState) {
 
-  if (repository.magitState.HEAD?.commit) {
+  if (repository.HEAD?.commit) {
 
     const message = await askForStashMessage(repository);
 
     if (message !== undefined) {
 
       const intermediaryCommitArgs = ['commit', '--message', 'intermediary stash commit'];
-      const resetCommitArgs = ['reset', '--soft', repository.magitState.HEAD?.commit];
+      const resetCommitArgs = ['reset', '--soft', repository.HEAD?.commit];
 
       try {
         try {
-          await gitRun(repository, intermediaryCommitArgs);
+          await gitRun(repository.gitRepository, intermediaryCommitArgs);
         } catch { }
         await _stash({ repository, switches }, message);
-        return gitRun(repository, resetCommitArgs);
+        return gitRun(repository.gitRepository, resetCommitArgs);
       } catch (error) {
-        await gitRun(repository, resetCommitArgs);
+        await gitRun(repository.gitRepository, resetCommitArgs);
         throw error;
       }
     }
@@ -75,7 +75,7 @@ async function stashWorktree({ repository, switches }: MenuState) {
 
 async function stashIndex({ repository, switches }: MenuState) {
 
-  if (repository.magitState.HEAD?.commit) {
+  if (repository.HEAD?.commit) {
 
     const message = await askForStashMessage(repository);
 
@@ -83,19 +83,19 @@ async function stashIndex({ repository, switches }: MenuState) {
 
       const intermediaryCommitArgs = ['commit', '--message', 'intermediary stash commit'];
       const stashWorktree = ['stash', 'push', '--message', 'intermediary stash'];
-      const resetCommitArgs = ['reset', '--soft', repository.magitState.HEAD?.commit];
+      const resetCommitArgs = ['reset', '--soft', repository.HEAD?.commit];
       const popIntermediateStashArgs = ['stash', 'pop', '--index', 'stash@{1}'];
 
       try {
         try {
-          await gitRun(repository, intermediaryCommitArgs);
-          await gitRun(repository, stashWorktree);
-          await gitRun(repository, resetCommitArgs);
+          await gitRun(repository.gitRepository, intermediaryCommitArgs);
+          await gitRun(repository.gitRepository, stashWorktree);
+          await gitRun(repository.gitRepository, resetCommitArgs);
         } catch { }
         await _stash({ repository, switches }, message);
-        return gitRun(repository, popIntermediateStashArgs);
+        return gitRun(repository.gitRepository, popIntermediateStashArgs);
       } catch (error) {
-        await gitRun(repository, popIntermediateStashArgs);
+        await gitRun(repository.gitRepository, popIntermediateStashArgs);
         throw error;
       }
     }
@@ -115,6 +115,6 @@ async function popStash() {
 }
 
 function askForStashMessage(repository: MagitRepository): Thenable<string | undefined> {
-  const messageIntro = `On ${repository.magitState.HEAD?.name ?? GitTextUtils.shortHash(repository.magitState.HEAD?.commit)}: `;
+  const messageIntro = `On ${repository.HEAD?.name ?? GitTextUtils.shortHash(repository.HEAD?.commit)}: `;
   return window.showInputBox({ prompt: `Stash message: ${messageIntro}` });
 }

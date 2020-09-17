@@ -6,7 +6,6 @@ import { processLog } from '../extension';
 import { View } from './general/view';
 import { MagitProcessLogEntry } from '../models/magitProcessLogEntry';
 import { TextView } from './general/textView';
-import { MagitState } from '../models/magitState';
 
 class ProcessLogEntryView extends View {
   isFoldable = true;
@@ -45,12 +44,12 @@ export default class ProcessView extends DocumentView {
     }
   }
 
-  public update(state: MagitState): void {
+  public update(state: MagitRepository): void {
     this.provideContent();
     this.triggerUpdate();
   }
 
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${ProcessView.UriPath}?${repository.magitState.uri.path}#process`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${ProcessView.UriPath}?${repository.uri.path}#process`);
   }
 }

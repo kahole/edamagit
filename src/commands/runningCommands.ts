@@ -9,7 +9,7 @@ const runningMenu = {
   title: 'Running',
   commands: [
     { label: '!', description: 'Git subcommand (in topdir)', action: ({ repository }: MenuState) => run(repository) },
-    { label: 'p', description: 'Git subcommand (in pwd)', action: ({ repository }: MenuState) => run(repository, workspace.getWorkspaceFolder(repository.magitState.uri)?.uri) }
+    { label: 'p', description: 'Git subcommand (in pwd)', action: ({ repository }: MenuState) => run(repository, workspace.getWorkspaceFolder(repository.uri)?.uri) }
   ]
 };
 
@@ -29,7 +29,7 @@ async function run(repository: MagitRepository, directory?: Uri) {
 
   if (userCommand) {
     const args = userCommand.replace('git ', '').split(' ');
-    await gitRun(repository, args, spawnOptions, LogLevel.Detailed);
+    await gitRun(repository.gitRepository, args, spawnOptions, LogLevel.Detailed);
 
     await ProcessCommands.processView(repository);
 

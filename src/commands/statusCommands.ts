@@ -16,7 +16,7 @@ import { MagitRebasingState } from '../models/magitRebasingState';
 import { MagitMergingState } from '../models/magitMergingState';
 import { MagitRevertingState } from '../models/magitRevertingState';
 import { Stash } from '../models/stash';
-import { MagitState } from '../models/magitState';
+import { MagitRepository } from '../models/magitRepository';
 
 export async function magitRefresh() { }
 
@@ -40,10 +40,10 @@ export async function magitStatus(): Promise<any> {
       }
     }
 
-    repository.magitState = await internalMagitStatus(repository);
+    repository = await internalMagitStatus(repository.gitRepository);
 
     const uri = MagitStatusView.encodeLocation(repository);
-    views.set(uri.toString(), new MagitStatusView(uri, repository.magitState));
+    views.set(uri.toString(), new MagitStatusView(uri, repository));
 
     return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
   } else {
@@ -53,23 +53,19 @@ export async function magitStatus(): Promise<any> {
     if (discoveredRepository) {
       // TODO: REFACTOR
       // in sync with magitUtils
-      let tmpMagitRepository: any = discoveredRepository;
-      tmpMagitRepository.magitState = await internalMagitStatus(discoveredRepository);
-      repository = tmpMagitRepository;
+      repository = await internalMagitStatus(discoveredRepository);
 
-      if (repository) {
-        magitRepositories.set(repository.magitState.uri.fsPath, repository);
+      magitRepositories.set(repository.uri.fsPath, repository);
 
-        const uri = MagitStatusView.encodeLocation(repository);
-        views.set(uri.toString(), new MagitStatusView(uri, repository.magitState));
+      const uri = MagitStatusView.encodeLocation(repository);
+      views.set(uri.toString(), new MagitStatusView(uri, repository));
 
-        return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
-      }
+      return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
     }
   }
 }
 
-export async function internalMagitStatus(repository: Repository): Promise<MagitState> {
+export async function internalMagitStatus(repository: Repository): Promise<MagitRepository> {
 
   await repository.status();
 
@@ -193,7 +189,8 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
     remotes,
     tags: repository.state.refs.filter(ref => ref.type === RefType.Tag),
     refs: repository.state.refs,
-    submodules: repository.state.submodules
+    submodules: repository.state.submodules,
+    gitRepository: repository
   };
 }
 

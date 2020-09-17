@@ -22,7 +22,7 @@ async function addRemote() {
 
 async function renameRemote({ repository }: MenuState) {
 
-  const remote = await window.showQuickPick(repository.magitState.remotes.map(r => r.name), { placeHolder: 'Rename remote' });
+  const remote = await window.showQuickPick(repository.remotes.map(r => r.name), { placeHolder: 'Rename remote' });
 
   if (remote) {
 
@@ -30,7 +30,7 @@ async function renameRemote({ repository }: MenuState) {
 
     if (newName) {
       const args = ['remote', 'rename', remote, newName];
-      gitRun(repository, args);
+      gitRun(repository.gitRepository, args);
     }
   }
 }

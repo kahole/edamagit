@@ -4,7 +4,6 @@ import { TextEditor, window, Uri } from 'vscode';
 import { DocumentView } from '../views/general/documentView';
 import GitTextUtils from '../utils/gitTextUtils';
 import { MagitError } from '../models/magitError';
-import { MagitState } from '../models/magitState';
 
 type Command = (repository: MagitRepository) => Promise<any>;
 type ViewCommand = (repository: MagitRepository, view: DocumentView) => Promise<any>;
@@ -73,7 +72,7 @@ export class CommandPrimer {
   static handleError(repository: MagitRepository, error: any) {
 
     if (error.gitErrorCode || error.stderr || error instanceof MagitError) {
-      pushLatestGitError(repository.magitState, GitTextUtils.formatError(error));
+      pushLatestGitError(repository, GitTextUtils.formatError(error));
     } else {
       //   using statusBar message might be better
       //   but then custom, shorter messages are needed
@@ -84,10 +83,10 @@ export class CommandPrimer {
 }
 
 let latestGitErrorCache = new Map<string, string>();
-function pushLatestGitError(repository: MagitState, error: string) {
+function pushLatestGitError(repository: MagitRepository, error: string) {
   latestGitErrorCache.set(repository.uri.fsPath, error);
 }
-export function getLatestGitError(repository: MagitState): string | undefined {
+export function getLatestGitError(repository: MagitRepository): string | undefined {
   let error = latestGitErrorCache.get(repository.uri.fsPath);
   latestGitErrorCache.delete(repository.uri.fsPath);
   return error;

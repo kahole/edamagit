@@ -1,5 +1,4 @@
 import * as Constants from '../common/constants';
-import { MagitState } from '../models/magitState';
 import { Section, SectionHeaderView } from './general/sectionHeader';
 import { DocumentView } from './general/documentView';
 import { Uri } from 'vscode';
@@ -12,12 +11,12 @@ export default class ShowRefsView extends DocumentView {
 
   static UriPath: string = 'refs.magit';
 
-  constructor(uri: Uri, magitState: MagitState) {
+  constructor(uri: Uri, magitState: MagitRepository) {
     super(uri);
     this.provideContent(magitState);
   }
 
-  provideContent(magitState: MagitState) {
+  provideContent(magitState: MagitRepository) {
 
     this.subViews = [
       new SectionHeaderView(Section.HEAD),
@@ -27,12 +26,12 @@ export default class ShowRefsView extends DocumentView {
     ];
   }
 
-  public update(state: MagitState): void {
+  public update(state: MagitRepository): void {
     this.provideContent(state);
     this.triggerUpdate();
   }
 
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${ShowRefsView.UriPath}?${repository.magitState.uri.fsPath}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${ShowRefsView.UriPath}?${repository.uri.fsPath}`);
   }
 }

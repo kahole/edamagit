@@ -4,7 +4,6 @@ import * as Constants from '../common/constants';
 import { MagitLog } from '../models/magitLog';
 import { MagitLogEntry } from '../models/magitLogCommit';
 import { MagitRepository } from '../models/magitRepository';
-import { MagitState } from '../models/magitState';
 import GitTextUtils from '../utils/gitTextUtils';
 import { CommitItemView } from './commits/commitSectionView';
 import { DocumentView } from './general/documentView';
@@ -25,11 +24,11 @@ export default class LogView extends DocumentView {
     ];
   }
 
-  public update(state: MagitState): void { }
+  public update(state: MagitRepository): void { }
 
   static index = 0;
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${LogView.UriPath}?${repository.magitState.uri.fsPath}#${LogView.index++}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${LogView.UriPath}?${repository.uri.fsPath}#${LogView.index++}`);
   }
 }
 

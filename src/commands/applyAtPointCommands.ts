@@ -35,7 +35,7 @@ export async function magitApplyEntityAtPoint(repository: MagitRepository, curre
     const stash = (selectedView as StashItemView).stash;
 
     const args = ['stash', 'apply', '--index', `stash@{${stash.index}}`];
-    return gitRun(repository, args);
+    return gitRun(repository.gitRepository, args);
   } else {
     const ref = await MagitUtils.chooseRef(repository, 'Apply changes from commit');
 
@@ -62,5 +62,5 @@ export async function apply(repository: MagitRepository, patch: string, { index,
     args.push('--reverse');
   }
 
-  return gitRun(repository, args, { input: patch });
+  return gitRun(repository.gitRepository, args, { input: patch });
 }

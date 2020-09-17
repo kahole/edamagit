@@ -36,7 +36,7 @@ async function createTag({ repository, switches }: MenuState) {
 
       const args = ['tag', ...MenuUtil.switchesToArgs(switches), tagName, ref];
 
-      return await gitRun(repository, args);
+      return await gitRun(repository.gitRepository, args);
     }
   }
 }
@@ -49,6 +49,6 @@ async function deleteTag({ repository, switches }: MenuState) {
 
     const args = ['tag', '-d', ...MenuUtil.switchesToArgs(switches), tagRef];
 
-    return await gitRun(repository, args);
+    return await gitRun(repository.gitRepository, args);
   }
 }

@@ -10,7 +10,7 @@ export async function processView(repository: MagitRepository) {
   const existingView = views.get(uri.toString());
 
   if (existingView) {
-    existingView.update(repository.magitState);
+    existingView.update(repository);
   } else {
     views.set(uri.toString(), new ProcessView(uri));
   }
