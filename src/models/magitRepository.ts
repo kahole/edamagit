@@ -28,5 +28,5 @@ export interface MagitRepository {
   readonly tags: Ref[];
   readonly refs: Ref[];
   readonly submodules: Submodule[];
-  gitRepository: Repository;
+  readonly gitRepository: Repository;
 }
