@@ -193,7 +193,10 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
     submodules: repository.state.submodules,
     gitRepository: repository,
 
-    pullRequests: await forge?.getPullRequests() || []
+    forgeState: forgeRemote ? {
+      forgeRemote: forgeRemote.name,
+      pullRequests: await forge?.getPullRequests() || []
+    } : undefined,
   };
 }
 
