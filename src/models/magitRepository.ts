@@ -8,6 +8,7 @@ import { MagitRemote } from './magitRemote';
 import { MagitCherryPickingState } from './magitCherryPickingState';
 import { MagitRevertingState } from './magitRevertingState';
 import { Stash } from './stash';
+import { PullRequest } from './pullRequest';
 import { Uri } from 'vscode';
 
 export interface MagitRepository {
@@ -29,4 +30,6 @@ export interface MagitRepository {
   readonly refs: Ref[];
   readonly submodules: Submodule[];
   readonly gitRepository: Repository;
+
+  readonly pullRequests: PullRequest[];
 }

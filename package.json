@@ -685,6 +685,7 @@
   },
   "dependencies": {
     "date-fns": "^2.16.1",
-    "jsonc-parser": "^3.0.0"
+    "jsonc-parser": "^3.0.0",
+    "@octokit/rest": "18.0.6"
   }
 }
