@@ -23,12 +23,15 @@ class Github implements Forge {
         repo: this.repo,
       });
 
-      return prs.data.map(v => {
-        return {
-          id: v.number,
-          name: v.title
-        };
-      });
+      return prs.data.map(v => ({
+        id: v.number,
+        name: v.title,
+        labels: v.labels.map(v => ({
+          name: v.name,
+          color: v.color,
+        })),
+        remoteRef: `pull/${v.number}/head`,
+      }));
     } catch (err) {
       // Catch errors like 404, return an empty list instead.
       console.error(err);

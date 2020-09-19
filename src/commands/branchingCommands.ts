@@ -1,5 +1,6 @@
 import { ViewColumn, window } from 'vscode';
 import { MenuState, MenuUtil } from '../menu/menu';
+import { PickMenuUtil } from '../menu/pickMenu';
 import { MagitRepository } from '../models/magitRepository';
 import { GitErrorCodes, Ref, RefType } from '../typings/git';
 import { gitRun } from '../utils/gitRawRunner';
@@ -7,27 +8,35 @@ import MagitUtils from '../utils/magitUtils';
 import ViewUtils from '../utils/viewUtils';
 import ShowRefsView from '../views/showRefsView';
 
-const branchingMenu = {
-  title: 'Branching',
-  commands: [
-    { label: 'b', description: 'Checkout', action: checkout },
-    { label: 'l', description: 'Checkout local branch', action: checkoutLocal },
-    { label: 'c', description: 'Checkout new branch', action: checkoutNewBranch },
-    // { label: "w", description: "Checkout new worktree", action: checkout },
-    // { label: "y", description: "Checkout pull-request", action: checkout },
-    // { label: "s", description: "Create new spin-off", action: createNewSpinoff },
-    { label: 'n', description: 'Create new branch', action: createNewBranch },
-    // { label: "W", description: "Create new worktree", action: checkout },
-    // { label: "Y", description: "Create from pull-request", action: checkout },
-    // { label: 'C', description: 'Configure', action: configureBranch },
-    { label: 'm', description: 'Rename', action: renameBranch },
-    { label: 'x', description: 'Reset', action: resetBranch },
-    { label: 'k', description: 'Delete', action: deleteBranch },
-  ]
-};
+const branchingCommands = [
+  { label: 'b', description: 'Checkout', action: checkout },
+  { label: 'l', description: 'Checkout local branch', action: checkoutLocal },
+  { label: 'c', description: 'Checkout new branch', action: checkoutNewBranch },
+  // { label: "w", description: "Checkout new worktree", action: checkout },
+  // { label: "y", description: "Checkout pull-request", action: checkout },
+  // { label: "s", description: "Create new spin-off", action: createNewSpinoff },
+  { label: 'n', description: 'Create new branch', action: createNewBranch },
+  // { label: "W", description: "Create new worktree", action: checkout },
+  // { label: "Y", description: "Create from pull-request", action: checkout },
+  // { label: 'C', description: 'Configure', action: configureBranch },
+  { label: 'm', description: 'Rename', action: renameBranch },
+  { label: 'x', description: 'Reset', action: resetBranch },
+  { label: 'k', description: 'Delete', action: deleteBranch },
+];
+
+const forgeBranchingCommands = [
+  { label: 'y', description: 'Checkout pull request', action: checkoutPullRequest },
+];
 
 export async function branching(repository: MagitRepository) {
-  return MenuUtil.showMenu(branchingMenu, { repository });
+  let menu = {
+    title: 'Branching',
+    commands: Array.from(branchingCommands)
+  };
+  if (repository.forgeState !== null) {
+    menu.commands.push(...forgeBranchingCommands);
+  }
+  return MenuUtil.showMenu(menu, { repository });
 }
 
 export async function showRefs(repository: MagitRepository) {
@@ -48,6 +57,24 @@ async function checkoutLocal(menuState: MenuState) {
 
 async function checkoutNewBranch(menuState: MenuState) {
   return _createBranch(menuState, true);
+}
+
+async function checkoutPullRequest(menuState: MenuState) {
+  const state = menuState.repository;
+  const prs = state.forgeState?.pullRequests;
+  if (state.forgeState === undefined || !prs?.length) {
+    // TODO: User feedback when there are no PRs to checkout.
+    return;
+  }
+  const prItems = prs.map((v, idx) => ({
+    label: v.id.toString(),
+    description: v.name,
+    meta: idx
+  }));
+  const prIdx = await PickMenuUtil.showMenu(prItems, 'Checkout pull request');
+  const pr = prs[prIdx];
+  await gitRun(state.gitRepository, ['fetch', state.forgeState?.forgeRemote, `${pr.remoteRef}:pr-${pr.id}`]);
+  return gitRun(state.gitRepository, ['checkout', `pr-${pr.id}`]);
 }
 
 async function createNewBranch(menuState: MenuState) {
