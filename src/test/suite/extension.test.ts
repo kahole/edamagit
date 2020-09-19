@@ -36,7 +36,6 @@ suite('Extension Test Suite', () => {
     //       parents: []
     //     }
     //   },
-    //   pullRequests: [],
     // };
 
     // const statusView = new MagitStatusView(vscode.Uri.parse(''), magitState);

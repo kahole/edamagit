@@ -31,5 +31,10 @@ export interface MagitRepository {
   readonly submodules: Submodule[];
   readonly gitRepository: Repository;
 
+  readonly forgeState?: ForgeState;
+}
+
+export interface ForgeState {
+  readonly forgeRemote: string;
   readonly pullRequests: PullRequest[];
 }

@@ -91,8 +91,8 @@ export default class MagitStatusView extends DocumentView {
       this.addSubview(new UnsourcedCommitSectionView(Section.UnpulledFrom, magitState.HEAD.pushRemote, magitState.HEAD.pushRemote.commitsBehind, refs));
     }
 
-    if (magitState.pullRequests?.length) {
-      this.addSubview(new PullRequestSectionView(magitState.pullRequests));
+    if (magitState.forgeState?.pullRequests?.length) {
+      this.addSubview(new PullRequestSectionView(magitState.forgeState?.pullRequests));
     }
   }
 
