@@ -7,7 +7,7 @@ import { TextView } from '../general/textView';
 export class PullRequestSectionView extends View {
   isFoldable = true;
 
-  get id() { return Section.Stashes.toString(); }
+  get id() { return Section.PullRequests.toString(); }
 
   constructor(prs: PullRequest[]) {
     super();
