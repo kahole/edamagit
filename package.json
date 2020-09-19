@@ -9,7 +9,7 @@
   },
   "version": "0.4.5",
   "engines": {
-    "vscode": "^1.42.1"
+    "vscode": "^1.48.0"
   },
   "icon": "images/edamagit_logo.png",
   "galleryBanner": {
@@ -659,7 +659,7 @@
   "devDependencies": {
     "@types/glob": "^7.1.3",
     "@types/mocha": "^7.0.1",
-    "@types/vscode": "^1.42.1",
+    "@types/vscode": "^1.48.0",
     "@types/node": "^12.12.55",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
@@ -675,6 +675,7 @@
   },
   "dependencies": {
     "date-fns": "^2.16.1",
-    "jsonc-parser": "^2.3.0"
+    "jsonc-parser": "^2.3.0",
+    "@octokit/rest": "18.0.6"
   }
 }

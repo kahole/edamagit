@@ -38,7 +38,7 @@
       ]
     },
     "sectionHeader": {
-      "match": "^(Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits|Unmerged into|Unpushed to|Unpulled from|HEAD|Branches|Remote|Tags|GitError!|(Merging .*(?= \\())|(Rebasing .* onto .*$)|Cherry Picking|Reverting|Stash@{\\d+}|(Commits in .*$))",
+      "match": "^(Untracked files|((Unstaged|Staged) changes)|Stashes|Recent commits|Unmerged into|Unpushed to|Unpulled from|HEAD|Branches|Remote|Tags|Pull Requests|GitError!|(Merging .*(?= \\())|(Rebasing .* onto .*$)|Cherry Picking|Reverting|Stash@{\\d+}|(Commits in .*$))",
       "name": "strong keyword.operator.new.section.header.magit"
     },
     "highlight": {
@@ -65,7 +65,7 @@
       "match": "^(modified|new file|deleted|renamed|copied|unmerged)   .*$",
       "name": "strong"
     },
-    "diff": { 
+    "diff": {
       "begin": "(?=^@@)",
       "end": "(?=^(modified|new file|deleted|renamed|copied|unmerged))|(?=$^)",
       "patterns": [
