@@ -378,7 +378,8 @@
       "[magit]": {
         "editor.lineNumbers": "off",
         "editor.lineHeight": 15,
-        "editor.minimap.enabled": false
+        "editor.minimap.enabled": false,
+        "editor.renderWhitespace": "none"
       }
     },
     "configuration": {
