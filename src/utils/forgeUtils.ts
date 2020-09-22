@@ -14,13 +14,13 @@ class Github implements Forge {
   constructor(
     public owner: string,
     public repo: string,
-    public octokit: Octokit) {}
+    public octokit: Octokit) { }
 
   async getPullRequests(): Promise<PullRequest[]> {
     try {
       let prs = await this.octokit.pulls.list({
         owner: this.owner,
-        repo: this.repo,
+        repo: this.repo.replace('.git', '')
       });
 
       return prs.data.map(v => ({
