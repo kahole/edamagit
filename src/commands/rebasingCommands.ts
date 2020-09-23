@@ -95,7 +95,7 @@ async function rebaseControlCommand({ repository }: MenuState, command: string) 
 
 async function rebaseContinue({ repository }: MenuState) {
   const args = ['rebase', '--continue'];
-  return Commit.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR', propagateErrors: true });
+  return Commit.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR' });
 }
 
 async function editTodo({ repository }: MenuState) {
