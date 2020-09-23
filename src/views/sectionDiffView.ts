@@ -1,5 +1,4 @@
 import * as Constants from '../common/constants';
-import { MagitState } from '../models/magitState';
 import { Section } from './general/sectionHeader';
 import { DocumentView } from './general/documentView';
 import { Uri } from 'vscode';
@@ -10,12 +9,12 @@ export default class SectionDiffView extends DocumentView {
 
   static UriPath: string = 'staged.magit';
 
-  constructor(uri: Uri, magitState: MagitState, private section: Section) {
+  constructor(uri: Uri, magitState: MagitRepository, private section: Section) {
     super(uri);
     this.provideContent(magitState, true);
   }
 
-  provideContent(magitState: MagitState, unfoldAll = false) {
+  provideContent(magitState: MagitRepository, unfoldAll = false) {
 
     let changeSection;
 
@@ -40,13 +39,13 @@ export default class SectionDiffView extends DocumentView {
     ];
   }
 
-  public update(state: MagitState): void {
+  public update(state: MagitRepository): void {
     this.provideContent(state);
     this.triggerUpdate();
   }
 
   static index = 0;
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${SectionDiffView.UriPath}?${repository.rootUri.fsPath}#${SectionDiffView.index++}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${SectionDiffView.UriPath}?${repository.uri.fsPath}#${SectionDiffView.index++}`);
   }
 }

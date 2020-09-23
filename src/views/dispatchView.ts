@@ -3,7 +3,6 @@ import { Uri } from 'vscode';
 import * as Constants from '../common/constants';
 import { TextView } from './general/textView';
 import { MagitRepository } from '../models/magitRepository';
-import { MagitState } from '../models/magitState';
 
 export class DispatchView extends DocumentView {
 
@@ -22,9 +21,9 @@ export class DispatchView extends DocumentView {
     y Show Refs         z Stash             ! Run             % Worktree`));
   }
 
-  public update(state: MagitState): void { }
+  public update(state: MagitRepository): void { }
 
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${DispatchView.UriPath}?${repository.rootUri.fsPath}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${DispatchView.UriPath}?${repository.uri.fsPath}`);
   }
 }

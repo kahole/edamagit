@@ -1,5 +1,4 @@
 import * as Constants from '../common/constants';
-import { MagitState } from '../models/magitState';
 import { ChangeSectionView } from './changes/changesSectionView';
 import { Section } from './general/sectionHeader';
 import { DocumentView } from './general/documentView';
@@ -16,24 +15,25 @@ import { RebasingSectionView } from './rebasing/rebasingSectionView';
 import { CherryPickingSectionView } from './cherryPicking/cherryPickingSectionView';
 import { RevertingSectionView } from './reverting/revertingSectionView';
 import { MagitBranch } from '../models/magitBranch';
+import { getLatestGitError } from '../commands/commandPrimer';
 
 export default class MagitStatusView extends DocumentView {
 
   static UriPath: string = 'status.magit';
   public HEAD?: MagitBranch;
 
-  constructor(uri: Uri, magitState: MagitState) {
+  constructor(uri: Uri, magitState: MagitRepository) {
     super(uri);
     this.provideContent(magitState);
   }
 
-  provideContent(magitState: MagitState) {
+  provideContent(magitState: MagitRepository) {
     this.HEAD = magitState.HEAD;
     this.subViews = [];
 
-    if (magitState.latestGitError) {
-      this.addSubview(new TextView(`GitError! ${magitState.latestGitError.split(Constants.LineSplitterRegex)[0]} [ $ for detailed log ]`));
-      magitState.latestGitError = undefined;
+    let latestGitError = getLatestGitError(magitState);
+    if (latestGitError) {
+      this.addSubview(new TextView(`GitError! ${latestGitError.split(Constants.LineSplitterRegex)[0]} [ $ for detailed log ]`));
     }
 
     this.addSubview(new BranchHeaderSectionView(magitState.HEAD));
@@ -91,12 +91,12 @@ export default class MagitStatusView extends DocumentView {
     }
   }
 
-  public update(state: MagitState): void {
+  public update(state: MagitRepository): void {
     this.provideContent(state);
     this.triggerUpdate();
   }
 
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${MagitStatusView.UriPath}?${repository.rootUri.fsPath}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${MagitStatusView.UriPath}?${repository.uri.fsPath}`);
   }
 }

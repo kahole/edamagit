@@ -1,9 +1,8 @@
 import { MagitChange } from '../models/magitChange';
-import { workspace, window, Uri, TextEditor } from 'vscode';
-import { views } from '../extension';
+import { workspace, window, Uri } from 'vscode';
+import { magitRepositories, views } from '../extension';
 import FilePathUtils from '../utils/filePathUtils';
 import GitTextUtils from '../utils/gitTextUtils';
-import { MagitRepository } from '../models/magitRepository';
 import MagitUtils from '../utils/magitUtils';
 import MagitStatusView from '../views/magitStatusView';
 import { Status, Commit, RefType, Repository, Change } from '../typings/git';
@@ -16,6 +15,8 @@ import { MagitRemote } from '../models/magitRemote';
 import { MagitRebasingState } from '../models/magitRebasingState';
 import { MagitMergingState } from '../models/magitMergingState';
 import { MagitRevertingState } from '../models/magitRevertingState';
+import { Stash } from '../models/stash';
+import { MagitRepository } from '../models/magitRepository';
 
 export async function magitRefresh() { }
 
@@ -23,7 +24,7 @@ export async function magitStatus(): Promise<any> {
 
   const editor = window.activeTextEditor;
 
-  const repository = await MagitUtils.getCurrentMagitRepo(editor?.document.uri);
+  let repository = await MagitUtils.getCurrentMagitRepoNO_STATUS(editor?.document.uri);
 
   if (repository) {
 
@@ -39,22 +40,38 @@ export async function magitStatus(): Promise<any> {
       }
     }
 
-    await internalMagitStatus(repository);
+    repository = await internalMagitStatus(repository.gitRepository);
 
     const uri = MagitStatusView.encodeLocation(repository);
-    views.set(uri.toString(), new MagitStatusView(uri, repository.magitState!));
+    views.set(uri.toString(), new MagitStatusView(uri, repository));
 
     return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
+  } else {
+
+    let discoveredRepository = await MagitUtils.discoverRepo(editor?.document.uri);
+
+    if (discoveredRepository) {
+      // TODO: REFACTOR
+      // in sync with magitUtils
+      repository = await internalMagitStatus(discoveredRepository);
+
+      magitRepositories.set(repository.uri.fsPath, repository);
+
+      const uri = MagitStatusView.encodeLocation(repository);
+      views.set(uri.toString(), new MagitStatusView(uri, repository));
+
+      return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
+    }
   }
 }
 
-export async function internalMagitStatus(repository: MagitRepository): Promise<void> {
+export async function internalMagitStatus(repository: Repository): Promise<MagitRepository> {
 
   await repository.status();
 
   const dotGitPath = repository.rootUri + '/.git/';
 
-  const stashTask = repository._repository.getStashes();
+  const stashTask = getStashes(repository);
 
   const logTask = repository.state.HEAD?.commit ? repository.log({ maxEntries: 100 }) : Promise.resolve([]);
 
@@ -155,7 +172,8 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
       remoteBranch.name !== remote.name + '/HEAD') // filter out uninteresting remote/HEAD element
   }));
 
-  repository.magitState = {
+  return {
+    uri: repository.rootUri,
     HEAD,
     stashes: await stashTask,
     log: await logTask,
@@ -170,8 +188,9 @@ export async function internalMagitStatus(repository: MagitRepository): Promise<
     branches: repository.state.refs.filter(ref => ref.type === RefType.Head),
     remotes,
     tags: repository.state.refs.filter(ref => ref.type === RefType.Tag),
+    refs: repository.state.refs,
     submodules: repository.state.submodules,
-    latestGitError: repository.magitState?.latestGitError
+    gitRepository: repository
   };
 }
 
@@ -361,4 +380,20 @@ async function revertingStatus(repository: Repository, dotGitPath: string, seque
       };
     }
   } catch { }
+}
+
+async function getStashes(repository: Repository): Promise<Stash[]> {
+
+  let args = ['stash', 'list'];
+
+  try {
+    let stashesList = await gitRun(repository, args, {}, LogLevel.None);
+    return stashesList.stdout
+      .replace(Constants.FinalLineBreakRegex, '')
+      .split(Constants.LineSplitterRegex)
+      .map((stashLine, index) => ({ index, description: stashLine.replace(/stash@{\d+}: /g, '') }));
+
+  } catch {
+    return [];
+  }
 }

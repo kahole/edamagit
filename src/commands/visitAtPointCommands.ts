@@ -13,7 +13,7 @@ import { HunkView } from '../views/changes/hunkView';
 import { BranchListingView } from '../views/branches/branchListingView';
 import { RemoteBranchListingView } from '../views/remotes/remoteBranchListingView';
 import { TagListingView } from '../views/tags/tagListingView';
-import { showStashDetail } from './diffingCommands';
+import * as Diffing from './diffingCommands';
 import * as Constants from '../common/constants';
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
@@ -55,7 +55,7 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
   } else if (selectedView instanceof StashItemView) {
 
     const stash = (selectedView as StashItemView).stash;
-    return showStashDetail(repository, stash);
+    return Diffing.showStashDetail(repository, stash);
   } else {
     window.setStatusBarMessage('There is no thing at point that could be visited', Constants.StatusMessageDisplayTimeout);
   }
@@ -109,10 +109,10 @@ async function visitHunk(selectedView: HunkView, activePosition?: Position) {
 }
 
 export async function visitCommit(repository: MagitRepository, commitHash: string) {
-  const result = await gitRun(repository, ['show', commitHash]);
-  const commit: MagitCommit = { hash: commitHash, message: '', parents: [], diff: result.stdout };
+  const result = await gitRun(repository.gitRepository, ['show', commitHash]);
+  const commit: MagitCommit = { hash: commitHash, message: '', parents: [] };
 
   const uri = CommitDetailView.encodeLocation(repository, commit.hash);
-  views.set(uri.toString(), new CommitDetailView(uri, commit));
+  views.set(uri.toString(), new CommitDetailView(uri, commit, result.stdout));
   workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
 }

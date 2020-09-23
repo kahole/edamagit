@@ -5,15 +5,15 @@ import { views } from '../extension';
 import { DiffView } from '../views/diffView';
 import { MenuUtil, MenuState } from '../menu/menu';
 import { PickMenuUtil, PickMenuItem } from '../menu/pickMenu';
-import { Stash } from '../common/gitApiExtensions';
 import { StashDetailView } from '../views/stashDetailView';
 import MagitUtils from '../utils/magitUtils';
 import SectionDiffView from '../views/sectionDiffView';
-import { visitCommit } from './visitAtPointCommands';
+import * as VisitAtPoint from './visitAtPointCommands';
+import * as Constants from '../common/constants';
 import { Section } from '../views/general/sectionHeader';
-import { Change, Status } from '../typings/git';
-import { LineSplitterRegex } from '../common/constants';
+import { Status } from '../typings/git';
 import { MagitChange } from '../models/magitChange';
+import { Stash } from '../models/stash';
 
 const diffingMenu = {
   title: 'Diffing',
@@ -43,10 +43,10 @@ export async function diffing(repository: MagitRepository) {
 
 async function diffRange({ repository }: MenuState) {
 
-  let range = await window.showInputBox({ prompt: `Diff for range (${repository.magitState?.HEAD?.name})` });
+  let range = await window.showInputBox({ prompt: `Diff for range (${repository.HEAD?.name})` });
 
   if (!range) {
-    range = repository.magitState?.HEAD?.name;
+    range = repository.HEAD?.name;
   }
 
   if (range) {
@@ -56,11 +56,11 @@ async function diffRange({ repository }: MenuState) {
 }
 
 async function diffPaths({ repository }: MenuState) {
-  const fileA = await window.showInputBox({ prompt: 'First file', value: repository.rootUri.fsPath });
+  const fileA = await window.showInputBox({ prompt: 'First file', value: repository.uri.fsPath });
 
   if (fileA) {
 
-    const fileB = await window.showInputBox({ prompt: 'Second file', value: repository.rootUri.fsPath });
+    const fileB = await window.showInputBox({ prompt: 'Second file', value: repository.uri.fsPath });
 
     if (fileB) {
       return diff(repository, 'files', ['--no-index', fileA, fileB]);
@@ -80,7 +80,7 @@ async function diffWorktree({ repository }: MenuState) {
 }
 
 async function diff(repository: MagitRepository, id: string, args: string[] = []) {
-  const diffResult = await gitRun(repository, ['diff', ...args]);
+  const diffResult = await gitRun(repository.gitRepository, ['diff', ...args]);
 
   const uri = DiffView.encodeLocation(repository, id);
   views.set(uri.toString(), new DiffView(uri, diffResult.stdout));
@@ -89,14 +89,14 @@ async function diff(repository: MagitRepository, id: string, args: string[] = []
 
 export async function showDiffSection(repository: MagitRepository, section: Section, preserveFocus = false) {
   const uri = SectionDiffView.encodeLocation(repository);
-  views.set(uri.toString(), new SectionDiffView(uri, repository.magitState!, section));
+  views.set(uri.toString(), new SectionDiffView(uri, repository, section));
   return workspace.openTextDocument(uri)
     .then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preserveFocus, preview: false }));
 }
 
 async function showStash({ repository }: MenuState) {
 
-  const stashesPicker: PickMenuItem<Stash>[] = repository.magitState?.stashes.map(stash => ({ label: `stash@{${stash.index}}`, meta: stash })) ?? [];
+  const stashesPicker: PickMenuItem<Stash>[] = repository.stashes.map(stash => ({ label: `stash@{${stash.index}}`, meta: stash })) ?? [];
 
   const chosenStash = await PickMenuUtil.showMenu(stashesPicker);
 
@@ -108,12 +108,12 @@ async function showStash({ repository }: MenuState) {
 export async function showStashDetail(repository: MagitRepository, stash: Stash) {
   const uri = StashDetailView.encodeLocation(repository, stash);
 
-  const stashShowTask = gitRun(repository, ['stash', 'show', '-p', `stash@{${stash.index}}`]);
+  const stashShowTask = gitRun(repository.gitRepository, ['stash', 'show', '-p', `stash@{${stash.index}}`]);
   let stashUntrackedFiles: MagitChange[] = [];
   try {
-    let untracked = await gitRun(repository, ['ls-tree', '-r', 'stash@{0}^3', '--name-only']);
+    let untracked = await gitRun(repository.gitRepository, ['ls-tree', '-r', 'stash@{0}^3', '--name-only']);
 
-    let untrackedList = untracked.stdout.split(LineSplitterRegex);
+    let untrackedList = untracked.stdout.split(Constants.LineSplitterRegex);
     untrackedList = untrackedList.slice(0, untrackedList.length - 1);
 
     stashUntrackedFiles = untrackedList.map(fileName => ({
@@ -138,7 +138,7 @@ async function showCommit({ repository }: MenuState) {
   const ref = await MagitUtils.chooseRef(repository, 'Show commit', true, true);
 
   if (ref) {
-    return visitCommit(repository, ref);
+    return VisitAtPoint.visitCommit(repository, ref);
   }
 }
 
@@ -152,7 +152,7 @@ export async function diffFile(repository: MagitRepository, fileUri: Uri, index 
 
   args.push(fileUri.fsPath);
 
-  const diffResult = await gitRun(repository, args);
+  const diffResult = await gitRun(repository.gitRepository, args);
 
   const uri = DiffView.encodeLocation(repository, fileUri.path);
   views.set(uri.toString(), new DiffView(uri, diffResult.stdout));

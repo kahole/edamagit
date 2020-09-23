@@ -3,7 +3,6 @@ import { Uri } from 'vscode';
 import * as Constants from '../common/constants';
 import { TextView } from './general/textView';
 import { MagitRepository } from '../models/magitRepository';
-import { MagitState } from '../models/magitState';
 
 export class BlameView extends DocumentView {
 
@@ -19,10 +18,10 @@ export class BlameView extends DocumentView {
     this.addSubview(blameTextView);
   }
 
-  public update(state: MagitState): void { }
+  public update(state: MagitRepository): void { }
 
   static index = 0;
   static encodeLocation(repository: MagitRepository, fileUri: Uri): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${BlameView.UriPath}?${repository.rootUri.fsPath}#${fileUri.path}#${BlameView.index++}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${BlameView.UriPath}?${repository.uri.fsPath}#${fileUri.path}#${BlameView.index++}`);
   }
 }

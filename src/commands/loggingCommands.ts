@@ -38,8 +38,8 @@ export async function logging(repository: MagitRepository) {
 // A function wrapper to avoid duplicate checking code
 function wrap(action: (repository: MagitRepository, head: MagitBranch, switches: Switch[], options: Option[]) => Promise<any>) {
   return async ({ repository, switches, options }: MenuState) => {
-    if (repository.magitState?.HEAD && switches && options) {
-      return action(repository, repository.magitState.HEAD, switches, options);
+    if (repository.HEAD && switches && options) {
+      return action(repository, repository.HEAD, switches, options);
     }
   };
 }
@@ -84,7 +84,7 @@ async function logReferences(repository: MagitRepository, head: MagitBranch, swi
 }
 
 async function log(repository: MagitRepository, args: string[], revs: string[]) {
-  const output = await gitRun(repository, args.concat(revs), {}, LogLevel.Error);
+  const output = await gitRun(repository.gitRepository, args.concat(revs), {}, LogLevel.Error);
   const logEntries = parseLog(output.stdout);
   const revName = revs.join(' ');
   const uri = LogView.encodeLocation(repository);
@@ -95,7 +95,7 @@ async function log(repository: MagitRepository, args: string[], revs: string[]) 
 
 async function getRevs(repository: MagitRepository) {
   // TODO: Auto complete branches and tags
-  const placeHolder = repository.magitState?.HEAD?.name;
+  const placeHolder = repository.HEAD?.name;
   const input = await window.showInputBox({ prompt: 'Log rev,s:', placeHolder });
   if (input && input.length > 0) {
     // split space or commas

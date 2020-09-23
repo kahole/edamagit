@@ -3,7 +3,6 @@ import { MenuUtil, MenuState } from '../menu/menu';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 import { window } from 'vscode';
-import { RefType } from '../typings/git';
 
 const taggingMenu = {
   title: 'Tagging',
@@ -37,7 +36,7 @@ async function createTag({ repository, switches }: MenuState) {
 
       const args = ['tag', ...MenuUtil.switchesToArgs(switches), tagName, ref];
 
-      return await gitRun(repository, args);
+      return await gitRun(repository.gitRepository, args);
     }
   }
 }
@@ -50,6 +49,6 @@ async function deleteTag({ repository, switches }: MenuState) {
 
     const args = ['tag', '-d', ...MenuUtil.switchesToArgs(switches), tagRef];
 
-    return await gitRun(repository, args);
+    return await gitRun(repository.gitRepository, args);
   }
 }

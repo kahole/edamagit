@@ -1,7 +1,7 @@
 import { MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
-import * as CommitCommands from '../commands/commitCommands';
+import * as Commit from '../commands/commitCommands';
 import MagitUtils from '../utils/magitUtils';
 
 const mergingMenu = {
@@ -27,7 +27,7 @@ const whileMergingMenu = {
 
 export async function merging(repository: MagitRepository) {
 
-  if (repository.magitState?.mergingState) {
+  if (repository.mergingState) {
     return MenuUtil.showMenu(whileMergingMenu, { repository });
   } else {
     return MenuUtil.showMenu(mergingMenu, { repository });
@@ -51,7 +51,7 @@ async function absorb({ repository }: MenuState) {
 
   if (ref) {
     await _merge(repository, ref);
-    return await repository.deleteBranch(ref, false);
+    return await gitRun(repository.gitRepository, ['branch', '--delete', ref]);
   }
 }
 
@@ -77,21 +77,21 @@ async function _merge(repository: MagitRepository, ref: string, noCommit = false
   if (editMessage) {
 
     args.push(...['--edit', '--no-ff']);
-    return CommitCommands.runCommitLikeCommand(repository, args, { updatePostCommitTask: true });
+    return Commit.runCommitLikeCommand(repository, args, { updatePostCommitTask: true });
   } else {
     args.push('--no-edit');
   }
 
-  return gitRun(repository, args);
+  return gitRun(repository.gitRepository, args);
 }
 
 async function commitMerge(menuState: MenuState) {
-  return CommitCommands.commit(menuState);
+  return Commit.commit(menuState);
 }
 
 async function abortMerge({ repository }: MenuState) {
   if (await MagitUtils.confirmAction(`Abort merge?`)) {
     const args = ['merge', '--abort'];
-    return gitRun(repository, args);
+    return gitRun(repository.gitRepository, args);
   }
 }

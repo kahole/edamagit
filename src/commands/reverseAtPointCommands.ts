@@ -2,12 +2,11 @@ import { window } from 'vscode';
 import { MagitRepository } from '../models/magitRepository';
 import { CommitItemView } from '../views/commits/commitSectionView';
 import { DocumentView } from '../views/general/documentView';
-import { gitRun } from '../utils/gitRawRunner';
 import { StashItemView } from '../views/stashes/stashSectionView';
 import { BranchListingView } from '../views/branches/branchListingView';
 import { RemoteBranchListingView } from '../views/remotes/remoteBranchListingView';
 import { TagListingView } from '../views/tags/tagListingView';
-import { revert } from './revertingCommands';
+import * as Reverting from './revertingCommands';
 import MagitUtils from '../utils/magitUtils';
 
 export async function reverseAtPoint(repository: MagitRepository, currentView: DocumentView): Promise<any> {
@@ -18,7 +17,7 @@ export async function reverseAtPoint(repository: MagitRepository, currentView: D
 
     const commit = (selectedView as CommitItemView).commit;
 
-    return revert(repository, commit.hash, { noCommit: true });
+    return Reverting.revert(repository, commit.hash, { noCommit: true });
 
   } else if (selectedView instanceof BranchListingView ||
     selectedView instanceof RemoteBranchListingView ||
@@ -27,7 +26,7 @@ export async function reverseAtPoint(repository: MagitRepository, currentView: D
     const ref = (selectedView as BranchListingView).ref;
 
     if (ref.commit) {
-      return revert(repository, ref.commit, { noCommit: true });
+      return Reverting.revert(repository, ref.commit, { noCommit: true });
     }
 
   } else if (selectedView instanceof StashItemView) {
@@ -35,12 +34,12 @@ export async function reverseAtPoint(repository: MagitRepository, currentView: D
     //   const stash = (selectedView as StashItemView).stash;
 
     //   const args = ['stash', 'apply', '--index', `stash@{${stash.index}}`];
-    //   return gitRun(repository, args);
+    //   return gitRun(repository.gitRepository, args);
   } else {
     const ref = await MagitUtils.chooseRef(repository, 'Revert changes', true, true);
 
     if (ref) {
-      return revert(repository, ref, { noCommit: true });
+      return Reverting.revert(repository, ref, { noCommit: true });
     }
   }
 }

@@ -3,13 +3,12 @@ import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 import { MagitError } from '../models/magitError';
-import * as CommitCommands from '../commands/commitCommands';
-import { commands } from 'vscode';
+import * as Commit from '../commands/commitCommands';
 
 const whileRebasingMenu = {
   title: 'Rebasing',
   commands: [
-    { label: 'r', description: 'Continue', action: (state: MenuState) => rebaseControlCommand(state, '--continue') },
+    { label: 'r', description: 'Continue', action: (state: MenuState) => rebaseContinue(state) },
     { label: 's', description: 'Skip', action: (state: MenuState) => rebaseControlCommand(state, '--skip') },
     { label: 'e', description: 'Edit', action: editTodo },
     { label: 'a', description: 'Abort', action: (state: MenuState) => rebaseControlCommand(state, '--abort') }
@@ -18,7 +17,7 @@ const whileRebasingMenu = {
 
 export async function rebasing(repository: MagitRepository) {
 
-  if (repository.magitState?.rebasingState) {
+  if (repository.rebasingState) {
     return MenuUtil.showMenu(whileRebasingMenu, { repository });
   } else {
 
@@ -32,7 +31,7 @@ export async function rebasing(repository: MagitRepository) {
       { key: '-h', name: '--no-verify', description: 'Disable hooks' },
     ];
 
-    const HEAD = repository.magitState?.HEAD;
+    const HEAD = repository.HEAD;
 
     const commands = [];
 
@@ -79,10 +78,10 @@ async function _rebase(repository: MagitRepository, ref: string, switches: Switc
   try {
 
     if (switches.find(s => s.activated && s.name === '--interactive')) {
-      return CommitCommands.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR' });
+      return Commit.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR' });
     }
 
-    return await gitRun(repository, args);
+    return await gitRun(repository.gitRepository, args);
   }
   catch (e) {
     throw new MagitError('Failed to merge in the changes.', e);
@@ -91,14 +90,19 @@ async function _rebase(repository: MagitRepository, ref: string, switches: Switc
 
 async function rebaseControlCommand({ repository }: MenuState, command: string) {
   const args = ['rebase', command];
-  return gitRun(repository, args);
+  return gitRun(repository.gitRepository, args);
+}
+
+async function rebaseContinue({ repository }: MenuState) {
+  const args = ['rebase', '--continue'];
+  return Commit.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR' });
 }
 
 async function editTodo({ repository }: MenuState) {
 
   const args = ['rebase', '--edit-todo'];
 
-  return CommitCommands.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR', propagateErrors: true });
+  return Commit.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR', propagateErrors: true });
 }
 
 async function rebaseInteractively({ repository, switches }: MenuState) {
@@ -109,6 +113,6 @@ async function rebaseInteractively({ repository, switches }: MenuState) {
 
     const args = ['rebase', ...MenuUtil.switchesToArgs(interactiveSwitches), `${commit}^`];
 
-    return CommitCommands.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR' });
+    return Commit.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR' });
   }
 }

@@ -2,5 +2,6 @@
 export interface MagitProcessLogEntry {
   index: number;
   command: string[];
-  output?: string;
+  stdout?: string;
+  stderr?: string;
 }

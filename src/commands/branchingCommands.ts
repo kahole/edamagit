@@ -34,7 +34,7 @@ export async function showRefs(repository: MagitRepository) {
   const uri = ShowRefsView.encodeLocation(repository);
 
   if (!views.has(uri.toString())) {
-    views.set(uri.toString(), new ShowRefsView(uri, repository.magitState!));
+    views.set(uri.toString(), new ShowRefsView(uri, repository));
   }
 
   return workspace.openTextDocument(uri)
@@ -42,11 +42,11 @@ export async function showRefs(repository: MagitRepository) {
 }
 
 async function checkout(menuState: MenuState) {
-  return _checkout(menuState, menuState.repository.state.refs);
+  return _checkout(menuState, menuState.repository.refs);
 }
 
 async function checkoutLocal(menuState: MenuState) {
-  return _checkout(menuState, menuState.repository.state.refs.filter(r => r.type === RefType.Head));
+  return _checkout(menuState, menuState.repository.refs.filter(r => r.type === RefType.Head));
 }
 
 async function checkoutNewBranch(menuState: MenuState) {
@@ -60,9 +60,9 @@ async function createNewBranch(menuState: MenuState) {
 // async function configureBranch(menuState: MenuState) {
 
 //   // 1. Select branch? or grab current?
-//   // 2. Read all configs: menuState.repository.getConfigs
+//   // 2. Read all configs: menuState.repository.getConfigs ()
 //   //    already exist in repo state?
-//   // 3. repository.setConfig("branch.${ref}.someProperty")
+//   // 3. repository.setConfig ("branch.${ref}.someProperty")
 // }
 
 async function renameBranch({ repository }: MenuState) {
@@ -75,7 +75,7 @@ async function renameBranch({ repository }: MenuState) {
     if (newName && newName.length > 0) {
 
       const args = ['branch', '--move', ref, newName];
-      return gitRun(repository, args);
+      return gitRun(repository.gitRepository, args);
 
     } else {
       throw new Error('No name given for branch rename');
@@ -89,11 +89,11 @@ async function deleteBranch({ repository }: MenuState) {
 
   if (ref) {
     try {
-      await repository.deleteBranch(ref, false);
+      await gitRun(repository.gitRepository, ['branch', '--delete', ref]);
     } catch (error) {
       if (error.gitErrorCode === GitErrorCodes.BranchNotFullyMerged) {
         if (await MagitUtils.confirmAction(`Delete unmerged branch ${ref}?`)) {
-          return repository.deleteBranch(ref, true);
+          return await gitRun(repository.gitRepository, ['branch', '--delete', '--force', ref]);
         }
       }
     }
@@ -108,17 +108,20 @@ async function resetBranch({ repository }: MenuState) {
 
   if (ref && resetToRef) {
 
-    if (ref === repository.magitState?.HEAD?.name) {
+    if (ref === repository.HEAD?.name) {
 
+      const args = ['reset', '--hard', resetToRef];
       if (MagitUtils.magitAnythingModified(repository)) {
 
         if (await MagitUtils.confirmAction(`Uncommitted changes will be lost. Proceed?`)) {
-          return repository._repository.reset(resetToRef, true);
+          return await gitRun(repository.gitRepository, args);
         }
+      } else {
+        return await gitRun(repository.gitRepository, args);
       }
     } else {
       const args = ['update-ref', `refs/heads/${ref}`, `refs/heads/${resetToRef}`];
-      return gitRun(repository, args);
+      return gitRun(repository.gitRepository, args);
     }
   }
 }
@@ -128,7 +131,8 @@ async function _checkout({ repository }: MenuState, refs: Ref[]) {
   const ref = await MagitUtils.chooseRef(repository, 'Checkout');
 
   if (ref) {
-    return repository.checkout(ref);
+    const args = ['checkout', ref];
+    return gitRun(repository.gitRepository, args);
   }
 }
 
@@ -138,22 +142,31 @@ async function _createBranch({ repository }: MenuState, checkout: boolean) {
 
   if (ref) {
     // Check if the branch is a remote branch
-    const remoteBranchRef = repository.state.refs.find(r => r.type === RefType.RemoteHead && r.name === ref);
+    const remoteBranchRef = repository.refs.find(r => r.type === RefType.RemoteHead && r.name === ref);
     let value = '';
     if (remoteBranchRef && remoteBranchRef.remote) {
       const localBranchName = ref.substring(remoteBranchRef.remote.length + 1);
-      const existLocally = repository.state.refs.find(r => r.type === RefType.Head && r.name === localBranchName);
+      const existLocally = repository.refs.find(r => r.type === RefType.Head && r.name === localBranchName);
       if (!existLocally) {
         // Populate the inputbox with a local branch name if it doesn't exist locally
         value = localBranchName;
       }
     }
-    
-    const newBranchName = await window.showInputBox({ prompt: 'Name for new branch', value: value});
+
+    const newBranchName = await window.showInputBox({ prompt: 'Name for new branch', value: value });
 
     if (newBranchName && newBranchName.length > 0) {
 
-      return repository.createBranch(newBranchName, checkout, ref);
+      let args: string[] = [];
+
+      if (checkout) {
+        args = ['checkout', '-b'];
+      } else {
+        args = ['branch'];
+      }
+
+      args.push(newBranchName, ref);
+      return gitRun(repository.gitRepository, args);
 
     } else {
       throw new Error('No name given for new branch');

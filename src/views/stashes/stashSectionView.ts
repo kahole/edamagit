@@ -1,8 +1,8 @@
 import { View } from '../general/view';
 import { Section, SectionHeaderView } from '../general/sectionHeader';
-import { Stash } from '../../common/gitApiExtensions';
 import { TextView } from '../general/textView';
 import { LineBreakView } from '../general/lineBreakView';
+import { Stash } from '../../models/stash';
 
 export class StashSectionView extends View {
   isFoldable = true;
@@ -22,7 +22,7 @@ export class StashSectionView extends View {
 export class StashItemView extends TextView {
 
   public get section() {
-    return StashItemView.getSection(this.stash); 
+    return StashItemView.getSection(this.stash);
   }
 
   private static getSection(stash: Stash) {

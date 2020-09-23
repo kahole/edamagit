@@ -2,7 +2,7 @@ import { MagitRepository } from '../models/magitRepository';
 import { MenuUtil, MenuState } from '../menu/menu';
 import { gitRun } from '../utils/gitRawRunner';
 import { window, workspace } from 'vscode';
-import { fetchSubmodules } from './fetchingCommands';
+import * as Fetching from './fetchingCommands';
 import SubmoduleListView from '../views/submoduleListView';
 import { views } from '../extension';
 
@@ -43,7 +43,7 @@ async function add({ repository, switches }: MenuState) {
   if (submoduleRemote) {
 
     const args = ['submodule', 'add', ...MenuUtil.switchesToArgs(switches), submoduleRemote];
-    return await gitRun(repository, args);
+    return await gitRun(repository.gitRepository, args);
   }
 }
 
@@ -53,7 +53,7 @@ async function init({ repository, switches }: MenuState) {
 
   if (submodule) {
     const args = ['submodule', 'init', ...MenuUtil.switchesToArgs(switches), '--', submodule];
-    return await gitRun(repository, args);
+    return await gitRun(repository.gitRepository, args);
   }
 }
 
@@ -63,7 +63,7 @@ async function populate({ repository, switches }: MenuState) {
 
   if (submodule) {
     const args = ['submodule', 'update', '--init', ...MenuUtil.switchesToArgs(switches), '--', submodule];
-    return await gitRun(repository, args);
+    return await gitRun(repository.gitRepository, args);
   }
 }
 
@@ -73,7 +73,7 @@ async function update({ repository, switches }: MenuState) {
 
   if (submodule) {
     const args = ['submodule', 'update', ...MenuUtil.switchesToArgs(switches), '--', submodule];
-    return await gitRun(repository, args);
+    return await gitRun(repository.gitRepository, args);
   }
 }
 
@@ -83,7 +83,7 @@ async function sync({ repository, switches }: MenuState) {
 
   if (submodule) {
     const args = ['submodule', 'sync', ...MenuUtil.switchesToArgs(switches), '--', submodule];
-    return await gitRun(repository, args);
+    return await gitRun(repository.gitRepository, args);
   }
 }
 
@@ -93,7 +93,7 @@ async function unpopulate({ repository, switches }: MenuState) {
 
   if (submodule) {
     const args = ['submodule', 'deinit', ...MenuUtil.switchesToArgs(switches), '--', submodule];
-    return await gitRun(repository, args);
+    return await gitRun(repository.gitRepository, args);
   }
 }
 
@@ -107,9 +107,9 @@ async function remove({ repository, switches }: MenuState) {
     const deinitArgs = ['submodule', 'deinit', '--', submodule];
     const removeArgs = ['rm', '--', submodule];
 
-    await gitRun(repository, absorbArgs);
-    await gitRun(repository, deinitArgs);
-    return await gitRun(repository, removeArgs);
+    await gitRun(repository.gitRepository, absorbArgs);
+    await gitRun(repository.gitRepository, deinitArgs);
+    return await gitRun(repository.gitRepository, removeArgs);
   }
 }
 
@@ -117,7 +117,7 @@ async function listAll({ repository, switches }: MenuState) {
   const uri = SubmoduleListView.encodeLocation(repository);
 
   if (!views.has(uri.toString())) {
-    views.set(uri.toString(), new SubmoduleListView(uri, repository.magitState!));
+    views.set(uri.toString(), new SubmoduleListView(uri, repository));
   }
 
   return workspace.openTextDocument(uri)
@@ -125,9 +125,9 @@ async function listAll({ repository, switches }: MenuState) {
 }
 
 function fetchAll({ repository, switches }: MenuState) {
-  return fetchSubmodules({ repository, switches });
+  return Fetching.fetchSubmodules({ repository, switches });
 }
 
 async function pickSubmodule(repository: MagitRepository, prompt: string): Promise<string | undefined> {
-  return await window.showQuickPick(repository.magitState!.submodules.map(r => r.name), { placeHolder: prompt });
+  return await window.showQuickPick(repository.submodules.map(r => r.name), { placeHolder: prompt });
 }

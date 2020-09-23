@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.6] - 2020-09-23
+### Fixed
+- Cases where rebase->continue wasn't working
+- Sets default configuration renderWhitespace to 'none' for magit editors.
+- small bugfixes
+
 ## [0.4.5] - 2020-09-06
 ### Fixed
 - Stash detail now shows untracked files

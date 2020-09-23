@@ -1,9 +1,8 @@
-import { Commit } from '../typings/git';
-import { MagitRepository } from '../models/magitRepository';
+import { Commit, Repository } from '../typings/git';
 
 const commitCache: { [hash: string]: Promise<Commit>; } = {};
 
-export function getCommit(repository: MagitRepository, hash: string): Promise<Commit> {
+export function getCommit(repository: Repository, hash: string): Promise<Commit> {
 
   if (commitCache[hash]) {
     return commitCache[hash];

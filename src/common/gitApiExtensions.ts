@@ -1,4 +1,3 @@
-import { Uri } from 'vscode';
 import * as cp from 'child_process';
 
 // This refers to Repository in
@@ -12,9 +11,6 @@ interface BaseGitRepository {
 // This refers to the Repository in
 // vscode/extension/git/src/repository.ts
 interface BaseRepository {
-  getStashes(): Promise<Stash[]>;
-  add(resources: Uri[], opts?: { update?: boolean }): Promise<void>;
-  reset(treeish: string, hard?: boolean): Promise<void>;
   repository: BaseGitRepository;
 }
 
@@ -32,11 +28,6 @@ export interface IExecutionResult<T extends string | Buffer> {
   exitCode: number;
   stdout: T;
   stderr: string;
-}
-
-export interface Stash {
-  index: number;
-  description: string;
 }
 
 export interface SpawnOptions extends cp.SpawnOptions {

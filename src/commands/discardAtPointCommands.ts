@@ -9,7 +9,7 @@ import MagitUtils from '../utils/magitUtils';
 import { ChangeSectionView } from '../views/changes/changesSectionView';
 import { Section } from '../views/general/sectionHeader';
 import GitTextUtils from '../utils/gitTextUtils';
-import { apply } from './applyAtPointCommands';
+import * as ApplyAtPoint from './applyAtPointCommands';
 import { Status, GitErrorCodes } from '../typings/git';
 import FilePathUtils from '../utils/filePathUtils';
 import { TagListingView } from '../views/tags/tagListingView';
@@ -52,7 +52,7 @@ async function discard(repository: MagitRepository, selection: Selection, select
       if (await MagitUtils.confirmAction(`Discard ${sectionLabel} ${change.relativePath}?`)) {
 
         const args = ['checkout', 'HEAD', '--', change.uri.fsPath];
-        return gitRun(repository, args);
+        return gitRun(repository.gitRepository, args);
       }
     }
 
@@ -78,7 +78,7 @@ async function discard(repository: MagitRepository, selection: Selection, select
       case Section.Staged:
         if (await MagitUtils.confirmAction('Discard all staged changes?')) {
           const args = ['checkout', 'HEAD', '--', ...changeSectionView.changes.map(change => change.uri.fsPath)];
-          return gitRun(repository, args);
+          return gitRun(repository.gitRepository, args);
         }
         break;
       default:
@@ -89,7 +89,7 @@ async function discard(repository: MagitRepository, selection: Selection, select
 
     if (await MagitUtils.confirmAction('Drop all stashes in ref/stash?')) {
       const args = ['stash', 'clear'];
-      return gitRun(repository, args);
+      return gitRun(repository.gitRepository, args);
     }
   } else if (selectedView instanceof StashItemView) {
 
@@ -97,7 +97,7 @@ async function discard(repository: MagitRepository, selection: Selection, select
 
     if (await MagitUtils.confirmAction(`Drop stash stash@{${stash.index}}?`)) {
       const args = ['stash', 'drop', `stash@{${stash.index}}`];
-      return gitRun(repository, args);
+      return gitRun(repository.gitRepository, args);
     }
   } else if (selectedView instanceof BranchListingView) {
 
@@ -107,11 +107,11 @@ async function discard(repository: MagitRepository, selection: Selection, select
 
       if (await MagitUtils.confirmAction(`Delete branch ${branch.name}?`)) {
         try {
-          await gitRun(repository, ['branch', '-d', branch.name]);
+          await gitRun(repository.gitRepository, ['branch', '--delete', branch.name]);
         } catch (error) {
           if (error.gitErrorCode === GitErrorCodes.BranchNotFullyMerged) {
             if (await MagitUtils.confirmAction(`Delete unmerged branch ${branch.name}?`)) {
-              return repository.deleteBranch(branch.name, true);
+              return gitRun(repository.gitRepository, ['branch', '--delete', '--force', branch.name]);
             }
           }
         }
@@ -126,11 +126,11 @@ async function discard(repository: MagitRepository, selection: Selection, select
       if (await MagitUtils.confirmAction(`Delete branch ${branch.name}?`)) {
         const [remote, name] = GitTextUtils.remoteBranchFullNameToSegments(branch.name);
         try {
-          await gitRun(repository, ['push', '--delete', remote, name]);
+          await gitRun(repository.gitRepository, ['push', '--delete', remote, name]);
         } catch (error) {
           if (error.gitErrorCode === GitErrorCodes.BranchNotFullyMerged) {
             if (await MagitUtils.confirmAction(`Delete unmerged branch ${branch.name}?`)) {
-              return gitRun(repository, ['push', '--delete', remote, name]);
+              return gitRun(repository.gitRepository, ['push', '--delete', remote, name]);
             }
           }
         }
@@ -142,7 +142,7 @@ async function discard(repository: MagitRepository, selection: Selection, select
 
     if (await MagitUtils.confirmAction(`Delete tag ${tag.name}?`)) {
       const args = ['tag', '--delete', `${tag.name}`];
-      return gitRun(repository, args);
+      return gitRun(repository.gitRepository, args);
     }
   } else {
     window.setStatusBarMessage('There is no thing at point that could be deleted', Constants.StatusMessageDisplayTimeout);
@@ -154,11 +154,11 @@ async function discardHunk(repository: MagitRepository, hunkView: HunkView, sele
   const patch = GitTextUtils.generatePatchFromChangeHunkView(hunkView, selection, true);
 
   if (hunkView.changeHunk.section === Section.Unstaged) {
-    return apply(repository, patch, { reverse: true });
+    return ApplyAtPoint.apply(repository, patch, { reverse: true });
 
   } else if (hunkView.changeHunk.section === Section.Staged) {
-    await apply(repository, patch, { index: true, reverse: true });
-    return apply(repository, patch, { reverse: true });
+    await ApplyAtPoint.apply(repository, patch, { index: true, reverse: true });
+    return ApplyAtPoint.apply(repository, patch, { reverse: true });
   }
 
   return Promise.reject();

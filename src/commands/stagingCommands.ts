@@ -1,4 +1,4 @@
-import { window, commands, Uri, Selection, Position } from 'vscode';
+import { window, commands, Uri, Selection } from 'vscode';
 import { HunkView } from '../views/changes/hunkView';
 import { ChangeView } from '../views/changes/changeView';
 import MagitUtils from '../utils/magitUtils';
@@ -9,7 +9,7 @@ import { MagitRepository } from '../models/magitRepository';
 import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
 import { PickMenuItem, PickMenuUtil } from '../menu/pickMenu';
-import { apply } from './applyAtPointCommands';
+import * as ApplyAtPoint from './applyAtPointCommands';
 import GitTextUtils from '../utils/gitTextUtils';
 import * as Constants from '../common/constants';
 import { View } from '../views/general/view';
@@ -30,7 +30,7 @@ async function stage(repository: MagitRepository, selection: Selection, selected
     if (changeHunk.section !== Section.Staged) {
 
       const patch = GitTextUtils.generatePatchFromChangeHunkView(selectedView, selection);
-      return apply(repository, patch, { index: true });
+      return ApplyAtPoint.apply(repository, patch, { index: true });
 
     } else {
       window.setStatusBarMessage('Already staged', Constants.StatusMessageDisplayTimeout);
@@ -55,13 +55,13 @@ async function stage(repository: MagitRepository, selection: Selection, selected
     }
   } else {
 
-    if (repository.magitState?.workingTreeChanges.length || repository.magitState?.untrackedFiles.length) {
+    if (repository.workingTreeChanges.length || repository.untrackedFiles.length) {
 
       const files: PickMenuItem<Uri>[] = [
-        ...repository.magitState?.workingTreeChanges,
-        ...repository.magitState?.untrackedFiles,
-        // ...currentRepository.magitState?.mergeChanges
-      ].map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri), meta: c.uri }));
+        ...repository.workingTreeChanges,
+        ...repository.untrackedFiles,
+        // ...currentrepository.mergeChanges
+      ].map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.uri), meta: c.uri }));
 
       const chosenFile = await PickMenuUtil.showMenu(files, 'Stage file');
 
@@ -100,7 +100,7 @@ async function unstage(repository: MagitRepository, selection: Selection, select
 
     if (changeHunk.section === Section.Staged) {
       const patch = GitTextUtils.generatePatchFromChangeHunkView(selectedView, selection, true);
-      return apply(repository, patch, { index: true, reverse: true });
+      return ApplyAtPoint.apply(repository, patch, { index: true, reverse: true });
     } else {
       window.setStatusBarMessage('Already unstaged', Constants.StatusMessageDisplayTimeout);
     }
@@ -116,8 +116,8 @@ async function unstage(repository: MagitRepository, selection: Selection, select
     }
   } else {
 
-    const files: PickMenuItem<Uri>[] = repository.magitState!.indexChanges!
-      .map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri), meta: c.uri }));
+    const files: PickMenuItem<Uri>[] = repository.indexChanges!
+      .map(c => ({ label: FilePathUtils.uriPathRelativeTo(c.uri, repository.uri), meta: c.uri }));
 
     const chosenFile = await PickMenuUtil.showMenu<Uri>(files, 'Unstage file');
 
@@ -139,12 +139,20 @@ async function unstageAll(): Promise<void> {
 }
 
 export async function stageFile(repository: MagitRepository, fileUri: Uri, update = false) {
-  return repository
-    ._repository
-    .add([fileUri], { update });
+  let args = ['add'];
+
+  if (update) {
+    args.push('-u');
+  } else {
+    args.push('-A');
+  }
+
+  args.push('--', fileUri.fsPath);
+
+  return gitRun(repository.gitRepository, args);
 }
 
 export async function unstageFile(repository: MagitRepository, fileUri: Uri) {
   const args = ['reset', '--', fileUri.fsPath];
-  return gitRun(repository, args);
+  return gitRun(repository.gitRepository, args);
 }
