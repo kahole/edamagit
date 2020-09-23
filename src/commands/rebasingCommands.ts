@@ -8,7 +8,7 @@ import * as Commit from '../commands/commitCommands';
 const whileRebasingMenu = {
   title: 'Rebasing',
   commands: [
-    { label: 'r', description: 'Continue', action: (state: MenuState) => rebaseControlCommand(state, '--continue') },
+    { label: 'r', description: 'Continue', action: (state: MenuState) => rebaseContinue(state) },
     { label: 's', description: 'Skip', action: (state: MenuState) => rebaseControlCommand(state, '--skip') },
     { label: 'e', description: 'Edit', action: editTodo },
     { label: 'a', description: 'Abort', action: (state: MenuState) => rebaseControlCommand(state, '--abort') }
@@ -91,6 +91,11 @@ async function _rebase(repository: MagitRepository, ref: string, switches: Switc
 async function rebaseControlCommand({ repository }: MenuState, command: string) {
   const args = ['rebase', command];
   return gitRun(repository.gitRepository, args);
+}
+
+async function rebaseContinue({ repository }: MenuState) {
+  const args = ['rebase', '--continue'];
+  return Commit.runCommitLikeCommand(repository, args, { editor: 'GIT_SEQUENCE_EDITOR', propagateErrors: true });
 }
 
 async function editTodo({ repository }: MenuState) {
