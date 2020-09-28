@@ -64,7 +64,7 @@ export function activate(context: ExtensionContext) {
   }));
 
   gitApi = gitExtension.getAPI(1);
-  logPath = context.logPath;
+  logPath = context.logUri.fsPath;
 
   context.subscriptions.push(gitApi.onDidCloseRepository(repository => {
     magitRepositories.delete(repository.rootUri.fsPath);
@@ -100,9 +100,9 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('magit.reset-mixed', CommandPrimer.primeRepo(resetMixed)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.reset-hard', CommandPrimer.primeRepo(resetHard)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.remoting', CommandPrimer.primeRepo(remoting)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.logging', CommandPrimer.primeRepo(logging)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.show-refs', CommandPrimer.primeRepo(showRefs)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.diffing', CommandPrimer.primeRepo(diffing)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.logging', CommandPrimer.primeRepo(logging, false)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.show-refs', CommandPrimer.primeRepo(showRefs, false)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.diffing', CommandPrimer.primeRepo(diffing, false)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.tagging', CommandPrimer.primeRepo(tagging)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.cherry-picking', CommandPrimer.primeRepo(cherryPicking)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.reverting', CommandPrimer.primeRepo(reverting)));
@@ -121,9 +121,9 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('magit.unstage', CommandPrimer.primeRepoAndView(magitUnstage)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.unstage-all', CommandPrimer.primeRepoAndView(magitUnstageAll)));
 
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.file-popup', CommandPrimer.primeFileCommand(filePopup)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.blame-file', CommandPrimer.primeFileCommand(blameFile)));
-  context.subscriptions.push(commands.registerTextEditorCommand('magit.diff-file', CommandPrimer.primeFileCommand(diffFile)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.file-popup', CommandPrimer.primeFileCommand(filePopup, false)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.blame-file', CommandPrimer.primeFileCommand(blameFile, false)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.diff-file', CommandPrimer.primeFileCommand(diffFile, false)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.stage-file', CommandPrimer.primeFileCommand(stageFile)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.unstage-file', CommandPrimer.primeFileCommand(unstageFile)));
 
