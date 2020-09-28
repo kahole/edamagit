@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.4.7] - 2020-09-28
+### Fixed
+- Fixed issue where repos were entangled in multi-repo workspaces
+- Fixed issue where sub-repos were not discovered by edamagit
+
 ## [0.4.6] - 2020-09-23
 ### Fixed
 - Cases where rebase->continue wasn't working

@@ -28,21 +28,20 @@ export async function magitStatus(): Promise<any> {
 
   if (repository) {
 
-    // Checks for existing Magit status view
-    for (const [uri, view] of views ?? []) {
-      if (view instanceof MagitStatusView) {
+    const uri = MagitStatusView.encodeLocation(repository);
 
-        await MagitUtils.magitStatusAndUpdate(repository);
-        if (editor?.document.uri.path === MagitStatusView.UriPath) {
-          return;
-        }
-        return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
+    // Checks for existing Magit status view
+    let view = views.get(uri.toString());
+    if (view) {
+      await MagitUtils.magitStatusAndUpdate(repository);
+      if (editor?.document.uri.path === MagitStatusView.UriPath) {
+        return;
       }
+      return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
     }
 
     repository = await internalMagitStatus(repository.gitRepository);
 
-    const uri = MagitStatusView.encodeLocation(repository);
     views.set(uri.toString(), new MagitStatusView(uri, repository));
 
     return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));

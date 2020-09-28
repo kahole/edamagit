@@ -19,11 +19,13 @@ export default class MagitUtils {
     let reposContainingFile = discoveredRepos
       .filter(([path, repo]) => FilePathUtils.isDescendant(path, uri.fsPath));
 
-    if (reposContainingFile.length === 1) {
-      return reposContainingFile[0][1];
+    if (discoveredRepos.length < gitApi.repositories.length) {
+      return undefined;
     }
 
-    if (reposContainingFile.length > 0 && discoveredRepos.length >= gitApi.repositories.length) {
+    if (reposContainingFile.length === 1) {
+      return reposContainingFile[0][1];
+    } else if (reposContainingFile.length > 0) {
       return reposContainingFile.sort(([pathA, repoA], [pathB, repoB]) => pathB.length - pathA.length)[0][1];
     }
   }
@@ -110,7 +112,7 @@ export default class MagitUtils {
   public static async magitStatusAndUpdate(repository: MagitRepository) {
     let updatedRepository = await Status.internalMagitStatus(repository.gitRepository);
     magitRepositories.set(updatedRepository.uri.fsPath, updatedRepository);
-    views.forEach(view => view.needsUpdate ? view.update(updatedRepository) : undefined);
+    views.forEach(view => view.needsUpdate && view.uri.query === updatedRepository.uri.fsPath ? view.update(updatedRepository) : undefined);
   }
 
   public static magitAnythingModified(repository: MagitRepository): boolean {
