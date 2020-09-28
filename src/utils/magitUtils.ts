@@ -110,7 +110,7 @@ export default class MagitUtils {
   public static async magitStatusAndUpdate(repository: MagitRepository) {
     let updatedRepository = await Status.internalMagitStatus(repository.gitRepository);
     magitRepositories.set(updatedRepository.uri.fsPath, updatedRepository);
-    views.forEach(view => view.needsUpdate ? view.update(updatedRepository) : undefined);
+    views.forEach(view => view.needsUpdate && view.uri.query === updatedRepository.uri.fsPath ? view.update(updatedRepository) : undefined);
   }
 
   public static magitAnythingModified(repository: MagitRepository): boolean {
