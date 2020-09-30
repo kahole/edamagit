@@ -88,7 +88,7 @@ async function diff(repository: MagitRepository, id: string, args: string[] = []
 
 export async function showDiffSection(repository: MagitRepository, section: Section, preserveFocus = false) {
   const uri = SectionDiffView.encodeLocation(repository);
-  return ViewUtils.showView(uri, new SectionDiffView(uri, repository, section));
+  return ViewUtils.showView(uri, new SectionDiffView(uri, repository, section), { preserveFocus });
 }
 
 async function showStash({ repository }: MenuState) {
