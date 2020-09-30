@@ -19,8 +19,14 @@ export default class MagitUtils {
     let reposContainingFile = discoveredRepos
       .filter(([path, repo]) => FilePathUtils.isDescendant(path, uri.fsPath));
 
+    // TODO: refactor, fix
     if (discoveredRepos.length < gitApi.repositories.length) {
-      return undefined;
+      let undiscoveredReposContainingFile = gitApi.repositories
+        .filter((repo) => FilePathUtils.isDescendant(repo.rootUri.fsPath, uri.fsPath));
+
+      if (undiscoveredReposContainingFile.length > 1) {
+        return undefined;
+      }
     }
 
     if (reposContainingFile.length === 1) {
