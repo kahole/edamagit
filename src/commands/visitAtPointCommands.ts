@@ -5,7 +5,6 @@ import { CommitItemView } from '../views/commits/commitSectionView';
 import { DocumentView } from '../views/general/documentView';
 import { gitRun } from '../utils/gitRawRunner';
 import { CommitDetailView } from '../views/commitDetailView';
-import { views } from '../extension';
 import { StashItemView } from '../views/stashes/stashSectionView';
 import { ChangeView } from '../views/changes/changeView';
 import { MagitCommit } from '../models/magitCommit';
@@ -15,6 +14,7 @@ import { RemoteBranchListingView } from '../views/remotes/remoteBranchListingVie
 import { TagListingView } from '../views/tags/tagListingView';
 import * as Diffing from './diffingCommands';
 import * as Constants from '../common/constants';
+import ViewUtils from '../utils/viewUtils';
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 
@@ -113,6 +113,5 @@ export async function visitCommit(repository: MagitRepository, commitHash: strin
   const commit: MagitCommit = { hash: commitHash, message: '', parents: [] };
 
   const uri = CommitDetailView.encodeLocation(repository, commit.hash);
-  views.set(uri.toString(), new CommitDetailView(uri, commit, result.stdout));
-  workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
+  return ViewUtils.showView(uri, new CommitDetailView(uri, commit, result.stdout));
 }

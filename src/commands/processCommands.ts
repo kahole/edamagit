@@ -5,6 +5,7 @@ import MagitUtils from '../utils/magitUtils';
 import { MagitRepository } from '../models/magitRepository';
 
 export async function processView(repository: MagitRepository) {
+
   const uri = ProcessView.encodeLocation(repository);
 
   const existingView = views.get(uri.toString());
