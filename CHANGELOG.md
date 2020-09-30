@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.8] - 2020-09-29
+### Fixed
+- Bugfix
+
 ## [0.4.7] - 2020-09-28
 ### Fixed
 - Fixed issue where repos were entangled in multi-repo workspaces
