@@ -53,7 +53,7 @@ export class CommandPrimer {
     return async (editor: TextEditor) => {
 
       const fileUri = editor.document.uri;
-      const repository = MagitUtils.getMagitRepoThatContainsFile(fileUri);
+      const repository = await MagitUtils.getCurrentMagitRepo(fileUri);
 
       if (repository) {
         try {

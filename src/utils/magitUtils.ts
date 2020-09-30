@@ -37,7 +37,7 @@ export default class MagitUtils {
     if (!magitRepository) {
       let repository = await this.discoverRepo(uri);
       if (repository) {
-        let magitRepository = await Status.internalMagitStatus(repository);
+        magitRepository = await Status.internalMagitStatus(repository);
         magitRepositories.set(magitRepository.uri.fsPath, magitRepository);
       }
     }
