@@ -72,9 +72,11 @@ async function checkoutPullRequest(menuState: MenuState) {
     meta: idx
   }));
   const prIdx = await PickMenuUtil.showMenu(prItems, 'Checkout pull request');
-  const pr = prs[prIdx];
-  await gitRun(state.gitRepository, ['fetch', state.forgeState?.forgeRemote, `${pr.remoteRef}:pr-${pr.id}`]);
-  return gitRun(state.gitRepository, ['checkout', `pr-${pr.id}`]);
+  if (prIdx) {
+    const pr = prs[prIdx];
+    await gitRun(state.gitRepository, ['fetch', state.forgeState?.forgeRemote, `${pr.remoteRef}:pr-${pr.id}`]);
+    return gitRun(state.gitRepository, ['checkout', `pr-${pr.id}`]);
+  }
 }
 
 async function createNewBranch(menuState: MenuState) {
