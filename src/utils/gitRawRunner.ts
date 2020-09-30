@@ -1,6 +1,6 @@
 import { SpawnOptions } from '../common/gitApiExtensions';
 import { Repository } from '../typings/git';
-import MagitLogger from './logger';
+import GitProcessLogger from './gitProcessLogger';
 
 export enum LogLevel {
   None,
@@ -12,7 +12,7 @@ export async function gitRun(repository: Repository, args: string[], spawnOption
 
   let logEntry;
   if (logLevel > LogLevel.None) {
-    logEntry = MagitLogger.logGitCommand(args);
+    logEntry = GitProcessLogger.logGitCommand(args);
   }
 
   try {
@@ -25,13 +25,13 @@ export async function gitRun(repository: Repository, args: string[], spawnOption
     }
 
     if (logLevel === LogLevel.Detailed && logEntry) {
-      MagitLogger.logGitResult(result, logEntry);
+      GitProcessLogger.logGitResult(result, logEntry);
     }
 
     return result;
   } catch (error) {
     if (logLevel > LogLevel.None && logEntry) {
-      MagitLogger.logGitError(error, logEntry);
+      GitProcessLogger.logGitError(error, logEntry);
     }
     throw error;
   }

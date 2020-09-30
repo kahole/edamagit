@@ -2,7 +2,7 @@ import { processLog } from '../extension';
 import { MagitProcessLogEntry } from '../models/magitProcessLogEntry';
 import { IExecutionResult } from '../common/gitApiExtensions';
 
-export default class MagitLogger {
+export default class GitProcessLogger {
 
   public static logGitCommand(args: string[]): MagitProcessLogEntry {
     const logEntry = { command: ['git', ...args], index: processLog.length };
