@@ -42,19 +42,21 @@ export async function magitStatus(): Promise<any> {
       }
       return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
     }
+
+    repository = await internalMagitStatus(repository.gitRepository);
+    magitRepositories.set(repository.uri.fsPath, repository);
+    return ViewUtils.showView(uri, new MagitStatusView(uri, repository));
+
   } else {
 
     let discoveredRepository = await MagitUtils.discoverRepo(editor?.document.uri);
 
     if (discoveredRepository) {
       repository = await internalMagitStatus(discoveredRepository);
+      magitRepositories.set(repository.uri.fsPath, repository);
+      const uri = MagitStatusView.encodeLocation(repository);
+      return ViewUtils.showView(uri, new MagitStatusView(uri, repository));
     }
-  }
-
-  if (repository) {
-    magitRepositories.set(repository.uri.fsPath, repository);
-    const uri = MagitStatusView.encodeLocation(repository);
-    return ViewUtils.showView(uri, new MagitStatusView(uri, repository));
   }
 }
 
