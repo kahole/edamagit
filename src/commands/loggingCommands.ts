@@ -1,12 +1,11 @@
-import { window, workspace } from 'vscode';
+import { window } from 'vscode';
 import { StatusMessageDisplayTimeout } from '../common/constants';
-import { views } from '../extension';
 import { MenuState, MenuUtil, Switch, Option } from '../menu/menu';
 import { MagitBranch } from '../models/magitBranch';
 import { MagitLogEntry } from '../models/magitLogCommit';
 import { MagitRepository } from '../models/magitRepository';
 import { gitRun, LogLevel } from '../utils/gitRawRunner';
-import MagitUtils from '../utils/magitUtils';
+import ViewUtils from '../utils/viewUtils';
 import LogView from '../views/logView';
 
 const loggingMenu = {
@@ -88,9 +87,7 @@ async function log(repository: MagitRepository, args: string[], revs: string[]) 
   const logEntries = parseLog(output.stdout);
   const revName = revs.join(' ');
   const uri = LogView.encodeLocation(repository);
-  views.set(uri.toString(), new LogView(uri, { entries: logEntries, revName }));
-  workspace.openTextDocument(uri)
-    .then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preserveFocus: false, preview: false }));
+  return ViewUtils.showView(uri, new LogView(uri, { entries: logEntries, revName }));
 }
 
 async function getRevs(repository: MagitRepository) {

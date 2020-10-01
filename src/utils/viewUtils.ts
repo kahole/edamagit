@@ -1,12 +1,21 @@
 import { MagitRepository } from '../models/magitRepository';
 import { View } from '../views/general/view';
-import { Selection, Position } from 'vscode';
+import { Selection, Position, Uri, workspace, window, TextDocumentShowOptions } from 'vscode';
 import { Ref, RefType } from '../typings/git';
 import { Token } from '../views/general/semanticTextView';
 import { SemanticTokenTypes } from '../common/constants';
 import GitTextUtils from './gitTextUtils';
+import { DocumentView } from '../views/general/documentView';
+import { views } from '../extension';
+import MagitUtils from './magitUtils';
 
 export default class ViewUtils {
+
+  public static async showView(uri: Uri, view: DocumentView, textDocumentShowOptions: TextDocumentShowOptions = { preview: false, preserveFocus: false }) {
+    views.set(uri.toString(), view);
+    let doc = await workspace.openTextDocument(uri);
+    return window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), ...textDocumentShowOptions });
+  }
 
   public static async applyActionForSelection(repository: MagitRepository, currentView: View, selection: Selection, multiSelectableViewTypes: any[], action: Function): Promise<any> {
 

@@ -1,10 +1,10 @@
-import { window, workspace } from 'vscode';
-import MagitUtils from '../utils/magitUtils';
+import { workspace } from 'vscode';
 import { HelpView } from '../views/helpView';
-import { views, logPath } from '../extension';
 import { MagitRepository } from '../models/magitRepository';
 import * as path from 'path';
 import * as JSONC from 'jsonc-parser';
+import ViewUtils from '../utils/viewUtils';
+import { logPath } from '../extension';
 
 export async function magitHelp(repository: MagitRepository) {
 
@@ -18,6 +18,5 @@ export async function magitHelp(repository: MagitRepository) {
   } catch (e) { console.error(e); }
 
   const uri = HelpView.encodeLocation(repository);
-  views.set(uri.toString(), new HelpView(uri, userKeyBindings));
-  workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preserveFocus: true, preview: false }));
+  return ViewUtils.showView(uri, new HelpView(uri, userKeyBindings), { preserveFocus: true });
 }

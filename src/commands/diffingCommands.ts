@@ -1,7 +1,6 @@
-import { Uri, workspace, window } from 'vscode';
+import { Uri, window } from 'vscode';
 import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
-import { views } from '../extension';
 import { DiffView } from '../views/diffView';
 import { MenuUtil, MenuState } from '../menu/menu';
 import { PickMenuUtil, PickMenuItem } from '../menu/pickMenu';
@@ -14,6 +13,7 @@ import { Section } from '../views/general/sectionHeader';
 import { Status } from '../typings/git';
 import { MagitChange } from '../models/magitChange';
 import { Stash } from '../models/stash';
+import ViewUtils from '../utils/viewUtils';
 
 const diffingMenu = {
   title: 'Diffing',
@@ -83,15 +83,12 @@ async function diff(repository: MagitRepository, id: string, args: string[] = []
   const diffResult = await gitRun(repository.gitRepository, ['diff', ...args]);
 
   const uri = DiffView.encodeLocation(repository, id);
-  views.set(uri.toString(), new DiffView(uri, diffResult.stdout));
-  return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
+  return ViewUtils.showView(uri, new DiffView(uri, diffResult.stdout));
 }
 
 export async function showDiffSection(repository: MagitRepository, section: Section, preserveFocus = false) {
   const uri = SectionDiffView.encodeLocation(repository);
-  views.set(uri.toString(), new SectionDiffView(uri, repository, section));
-  return workspace.openTextDocument(uri)
-    .then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preserveFocus, preview: false }));
+  return ViewUtils.showView(uri, new SectionDiffView(uri, repository, section), { preserveFocus });
 }
 
 async function showStash({ repository }: MenuState) {
@@ -129,8 +126,7 @@ export async function showStashDetail(repository: MagitRepository, stash: Stash)
 
   const stashDiff = (await stashShowTask).stdout;
 
-  views.set(uri.toString(), new StashDetailView(uri, stash, stashDiff, stashUntrackedFiles));
-  return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
+  return ViewUtils.showView(uri, new StashDetailView(uri, stash, stashDiff, stashUntrackedFiles));
 }
 
 async function showCommit({ repository }: MenuState) {
@@ -155,6 +151,5 @@ export async function diffFile(repository: MagitRepository, fileUri: Uri, index 
   const diffResult = await gitRun(repository.gitRepository, args);
 
   const uri = DiffView.encodeLocation(repository, fileUri.path);
-  views.set(uri.toString(), new DiffView(uri, diffResult.stdout));
-  return workspace.openTextDocument(uri).then(doc => window.showTextDocument(doc, { preview: false }));
+  return ViewUtils.showView(uri, new DiffView(uri, diffResult.stdout));
 }
