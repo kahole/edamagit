@@ -5,6 +5,7 @@
     "outDir": "out",
     "lib": [
       "es2018",
+      "ES2019.Array",
       "ES2020.String"
     ],
     "sourceMap": true,
