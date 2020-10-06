@@ -1,4 +1,4 @@
-import { Uri, ViewColumn } from 'vscode';
+import { Uri, ViewColumn, workspace } from 'vscode';
 import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
 import { BlameView } from '../views/blameView';
