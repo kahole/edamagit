@@ -1,10 +1,9 @@
+import { MenuItem, MenuState, MenuUtil } from '../menu/menu';
+import { PickMenuUtil } from '../menu/pickMenu';
 import { MagitRepository } from '../models/magitRepository';
-import { MenuUtil, MenuState, MenuItem } from '../menu/menu';
-import { commands } from 'vscode';
 import { gitRun } from '../utils/gitRawRunner';
 
-export async function pulling(repository: MagitRepository): Promise<any> {
-
+function generatePullingMenu(repository: MagitRepository) {
   const pullingMenuItems: MenuItem[] = [];
 
   if (repository.HEAD?.pushRemote) {
@@ -18,23 +17,45 @@ export async function pulling(repository: MagitRepository): Promise<any> {
   }
 
   pullingMenuItems.push({ label: 'e', description: 'elsewhere', action: pullFromElsewhere });
-
-  return MenuUtil.showMenu({ title: 'Pulling', commands: pullingMenuItems }, { repository });
+  return { title: 'Pulling', commands: pullingMenuItems };
 }
 
-async function pullFromPushRemote({ repository }: MenuState) {
+export async function pulling(repository: MagitRepository): Promise<any> {
+  const switches = [
+    { key: '-r', name: '--rebase', description: 'Rebase local commits' },
+  ];
+
+  return MenuUtil.showMenu(generatePullingMenu(repository), { repository, switches });
+}
+
+async function pullFromPushRemote({ repository, switches }: MenuState) {
   const pushRemote = repository.HEAD?.pushRemote;
   if (pushRemote) {
-    const args = ['pull', pushRemote.remote, pushRemote.name];
+    const args = ['pull', ...MenuUtil.switchesToArgs(switches), pushRemote.remote, pushRemote.name];
     return gitRun(repository.gitRepository, args);
   }
 }
 
-function pullFromUpstream({ repository }: MenuState) {
-  const args = ['pull'];
+function pullFromUpstream({ repository, switches }: MenuState) {
+  const args = ['pull', ...MenuUtil.switchesToArgs(switches)];
   return gitRun(repository.gitRepository, args);
 }
 
-async function pullFromElsewhere() {
-  return commands.executeCommand('git.pullFrom');
+async function pullFromElsewhere({ repository, switches }: MenuState) {
+  const elseWhere = repository.remotes
+    .flatMap(r =>
+      r.branches
+        .map(b => b.name)
+        .filter((n): n is string => !!n)
+    )
+    .map(r => ({ label: r, meta: r }));
+
+  const chosenElse = await PickMenuUtil.showMenu(elseWhere, 'Pull');
+  if (chosenElse) {
+    const idx = chosenElse.indexOf('/');
+    const remote = chosenElse.slice(0, idx);
+    const branch = chosenElse.slice(idx+1);
+    const args = ['pull', ...MenuUtil.switchesToArgs(switches), remote, branch];
+    return gitRun(repository.gitRepository, args);
+  }
 }
