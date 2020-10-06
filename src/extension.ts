@@ -23,8 +23,6 @@ import { magitDiscardAtPoint } from './commands/discardAtPointCommands';
 import { merging } from './commands/mergingCommands';
 import { rebasing } from './commands/rebasingCommands';
 import { filePopup } from './commands/filePopupCommands';
-import { DispatchView } from './views/dispatchView';
-import MagitUtils from './utils/magitUtils';
 import { remoting } from './commands/remotingCommands';
 import { logging } from './commands/loggingCommands';
 import { MagitProcessLogEntry } from './models/magitProcessLogEntry';
@@ -42,7 +40,6 @@ import { blameFile } from './commands/blamingCommands';
 import { copySectionValueCommand } from './commands/copySectionValueCommands';
 import { copyBufferRevisionCommands } from './commands/copyBufferRevisionCommands';
 import { submodules } from './commands/submodulesCommands';
-import ViewUtils from './utils/viewUtils';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
