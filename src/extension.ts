@@ -3,7 +3,7 @@ import ContentProvider from './providers/contentProvider';
 import { GitExtension, API } from './typings/git';
 import { pushing } from './commands/pushingCommands';
 import { branching, showRefs } from './commands/branchingCommands';
-import { magitHelp } from './commands/helpCommands';
+import { magitDispatch, magitHelp } from './commands/helpCommands';
 import { magitStatus, magitRefresh } from './commands/statusCommands';
 import { magitVisitAtPoint } from './commands/visitAtPointCommands';
 import { MagitRepository } from './models/magitRepository';
@@ -88,6 +88,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(
     commands.registerCommand('magit.status', magitStatus),
     commands.registerTextEditorCommand('magit.help', CommandPrimer.primeRepo(magitHelp, false)),
+    commands.registerTextEditorCommand('magit.dispatch', CommandPrimer.primeRepo(magitDispatch, false)),
 
     commands.registerTextEditorCommand('magit.commit', CommandPrimer.primeRepo(magitCommit)),
     commands.registerTextEditorCommand('magit.refresh', CommandPrimer.primeRepo(magitRefresh)),
@@ -132,16 +133,6 @@ export function activate(context: ExtensionContext) {
     commands.registerTextEditorCommand('magit.copy-section-value', CommandPrimer.primeRepoAndView(copySectionValueCommand)),
     commands.registerTextEditorCommand('magit.copy-buffer-revision', CommandPrimer.primeRepoAndView(copyBufferRevisionCommands))
   );
-
-  context.subscriptions.push(commands.registerCommand('magit.dispatch', async () => {
-    const editor = window.activeTextEditor;
-    const repository = await MagitUtils.getCurrentMagitRepo(editor?.document.uri);
-
-    if (repository) {
-      const uri = DispatchView.encodeLocation(repository);
-      return ViewUtils.showView(uri, new DispatchView(uri));
-    }
-  }));
 
   context.subscriptions.push(commands.registerTextEditorCommand('magit.toggle-fold', CommandPrimer.primeRepoAndView(async (repo: MagitRepository, view: DocumentView) => {
     const selectedView = view.click(window.activeTextEditor!.selection.active);
