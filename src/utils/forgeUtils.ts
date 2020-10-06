@@ -2,12 +2,14 @@ import { PullRequest } from '../models/pullRequest';
 import { Octokit } from '@octokit/rest';
 import { URL } from 'url';
 import * as vscode from 'vscode';
+import { ForgeState } from '../models/magitRepository';
+import { MagitRemote } from '../models/magitRemote';
 
 const GITHUB_AUTH_PROVIDER_ID = 'github';
 const SCOPES = ['repos'];
 
 export interface Forge {
-  getPullRequests(): Promise<PullRequest[]>;
+  getForgeState(remote: MagitRemote): Promise<ForgeState>;
 }
 
 class Github implements Forge {
@@ -15,6 +17,13 @@ class Github implements Forge {
     public owner: string,
     public repo: string,
     public octokit: Octokit) { }
+
+  async getForgeState(remote: MagitRemote): Promise<ForgeState> {
+    return {
+      forgeRemote: remote.fetchUrl!,
+      pullRequests: await this.getPullRequests()
+    };
+  }
 
   async getPullRequests(): Promise<PullRequest[]> {
     try {
@@ -34,13 +43,24 @@ class Github implements Forge {
       }));
     } catch (err) {
       // Catch errors like 404, return an empty list instead.
-      console.error(err);
+      //console.error(err);
       return [];
     }
   }
 }
 
-export async function findForge(url: URL): Promise<Forge | null> {
+export async function forgeStatus(remotes: MagitRemote[]): Promise<ForgeState | undefined> {
+
+  // Check remotes, in order: upstream, origin.
+  let forgeRemote = remotes.find(v => v.name === 'upstream') ?? remotes.find(v => v.name === 'origin');
+  if (forgeRemote?.fetchUrl !== undefined) {
+    let forge = await findForge(new URL(forgeRemote?.fetchUrl));
+
+    return forge?.getForgeState(forgeRemote);
+  }
+}
+
+async function findForge(url: URL): Promise<Forge | undefined> {
   if (url.hostname === 'github.com') {
     const session = await vscode.authentication.getSession(GITHUB_AUTH_PROVIDER_ID, SCOPES, { createIfNone: false });
 
@@ -54,5 +74,4 @@ export async function findForge(url: URL): Promise<Forge | null> {
       return new Github(owner, repo, octokit);
     }
   }
-  return null;
 }

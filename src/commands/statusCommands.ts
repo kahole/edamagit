@@ -17,8 +17,7 @@ import { MagitRevertingState } from '../models/magitRevertingState';
 import { Stash } from '../models/stash';
 import { MagitRepository } from '../models/magitRepository';
 import ViewUtils from '../utils/viewUtils';
-import { findForge } from '../utils/forgeUtils';
-import { URL } from 'url';
+import { forgeStatus } from '../utils/forgeUtils';
 
 export async function magitRefresh() { }
 
@@ -166,12 +165,7 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
       remoteBranch.name !== remote.name + '/HEAD') // filter out uninteresting remote/HEAD element
   }));
 
-  // Check remotes, in order: upstream, origin.
-  let forgeRemote = remotes.find(v => v.name === 'upstream');
-  let forge = null;
-  if (forgeRemote?.fetchUrl !== undefined) {
-    forge = await findForge(new URL(forgeRemote?.fetchUrl));
-  }
+  let forgeTask = forgeStatus(remotes);
 
   return {
     uri: repository.rootUri,
@@ -192,11 +186,7 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
     refs: repository.state.refs,
     submodules: repository.state.submodules,
     gitRepository: repository,
-
-    forgeState: forgeRemote ? {
-      forgeRemote: forgeRemote.name,
-      pullRequests: await forge?.getPullRequests() || []
-    } : undefined,
+    forgeState: await forgeTask,
   };
 }
 
