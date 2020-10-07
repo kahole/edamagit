@@ -13,7 +13,7 @@ export class ChangeSectionView extends View {
     super();
     this.subViews = [
       new SectionHeaderView(section, changes.length),
-      ...changes.map(change => new ChangeView(change, context)),
+      ...changes.map(change => new ChangeView(section, change, context)),
       new LineBreakView()
     ];
   }
