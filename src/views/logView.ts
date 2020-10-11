@@ -8,7 +8,7 @@ import GitTextUtils from '../utils/gitTextUtils';
 import { CommitItemView } from './commits/commitSectionView';
 import { DocumentView } from './general/documentView';
 import { TextView } from './general/textView';
-import { Token, SemanticTextView } from './general/semanticTextView';
+import { Token } from './general/semanticTextView';
 import { SemanticTokenTypes } from '../common/constants';
 
 export default class LogView extends DocumentView {

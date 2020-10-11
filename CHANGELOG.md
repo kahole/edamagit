@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.15] - 2020-10-11
+- Adds rebase switch for "Pull" (@stevenguh (Steven Guh)
+- UI Bugfixes
+
 ## [0.4.11] - 2020-10-01
 ## [0.4.9] - 2020-09-29
 ## [0.4.8] - 2020-09-29

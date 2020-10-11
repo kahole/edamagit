@@ -1,13 +1,12 @@
 import { MagitChangeHunk } from '../models/magitChangeHunk';
 import { Uri, Selection } from 'vscode';
-import { Section } from '../views/general/sectionHeader';
 import * as Constants from '../common/constants';
 import { Commit } from '../typings/git';
 import { HunkView } from '../views/changes/hunkView';
 
 export default class GitTextUtils {
 
-  public static diffToHunks(diff: string, uri: Uri, section: Section): MagitChangeHunk[] {
+  public static diffToHunks(diff: string, uri: Uri): MagitChangeHunk[] {
 
     const hunksStart = diff.indexOf('@@');
     const diffHeader = diff.slice(0, hunksStart);
@@ -16,7 +15,7 @@ export default class GitTextUtils {
       .replace(Constants.FinalLineBreakRegex, '') // removes extra line break at the end
       .slice(hunksStart)
       .split(/\n(?=^@@.*@@.*$)/gm)
-      .map(hunkText => ({ diff: hunkText, diffHeader, uri, section }));
+      .map(hunkText => ({ diff: hunkText, diffHeader, uri }));
   }
 
   public static parseMergeStatus(mergeHead: string, mergeMessage: string): [string, string[]] | undefined {

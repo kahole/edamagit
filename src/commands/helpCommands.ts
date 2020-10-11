@@ -7,7 +7,14 @@ import ViewUtils from '../utils/viewUtils';
 import { logPath } from '../extension';
 
 export async function magitHelp(repository: MagitRepository) {
+  return openHelpView(repository);
+}
 
+export async function magitDispatch(repository: MagitRepository) {
+  return openHelpView(repository, false);
+}
+
+async function openHelpView(repository: MagitRepository, preserveFocus = true) {
   let keybindingsPath = path.join(logPath, '..', '..', '..', '..', 'User', 'keybindings.json');
   let userKeyBindings = [];
 
@@ -18,5 +25,5 @@ export async function magitHelp(repository: MagitRepository) {
   } catch (e) { console.error(e); }
 
   const uri = HelpView.encodeLocation(repository);
-  return ViewUtils.showView(uri, new HelpView(uri, userKeyBindings), { preserveFocus: true });
+  return ViewUtils.showView(uri, new HelpView(uri, userKeyBindings), { preserveFocus });
 }

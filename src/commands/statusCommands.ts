@@ -7,7 +7,6 @@ import MagitUtils from '../utils/magitUtils';
 import MagitStatusView from '../views/magitStatusView';
 import { Status, Commit, RefType, Repository, Change } from '../typings/git';
 import { MagitBranch, MagitUpstreamRef } from '../models/magitBranch';
-import { Section } from '../views/general/sectionHeader';
 import { gitRun, LogLevel } from '../utils/gitRawRunner';
 import * as Constants from '../common/constants';
 import { getCommit } from '../utils/commitCache';
@@ -100,27 +99,26 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
             renameUri: uri,
             uri: uri,
             status: Status.UNTRACKED,
-            relativePath: FilePathUtils.uriPathRelativeTo(uri, repository.rootUri),
-            section: Section.Untracked
+            relativePath: FilePathUtils.uriPathRelativeTo(uri, repository.rootUri)
           };
         }) : [];
 
   const workingTreeChangesTasks = Promise.all(workingTreeChanges_NoUntracked
     .map(async change => {
       const diff = await repository.diffWithHEAD(change.uri.fsPath);
-      return toMagitChange(repository, change, Section.Unstaged, diff);
+      return toMagitChange(repository, change, diff);
     }));
 
   const indexChangesTasks = Promise.all(repository.state.indexChanges
     .map(async change => {
       const diff = await repository.diffIndexWithHEAD(change.uri.fsPath);
-      return toMagitChange(repository, change, Section.Staged, diff);
+      return toMagitChange(repository, change, diff);
     }));
 
   const mergeChangesTasks = Promise.all(repository.state.mergeChanges
     .map(async change => {
       const diff = await repository.diffWithHEAD(change.uri.fsPath);
-      return toMagitChange(repository, change, Section.Unstaged, diff);
+      return toMagitChange(repository, change, diff);
     }));
 
   const sequencerTodoPath = Uri.parse(dotGitPath + 'sequencer/todo');
@@ -189,11 +187,10 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
   };
 }
 
-function toMagitChange(repository: Repository, change: Change, section: Section, diff?: string): MagitChange {
+function toMagitChange(repository: Repository, change: Change, diff?: string): MagitChange {
   const magitChange: MagitChange = change;
-  magitChange.section = section;
   magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
-  magitChange.hunks = diff ? GitTextUtils.diffToHunks(diff, change.uri, section) : undefined;
+  magitChange.hunks = diff ? GitTextUtils.diffToHunks(diff, change.uri) : undefined;
   return magitChange;
 }
 

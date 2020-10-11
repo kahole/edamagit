@@ -14,17 +14,8 @@ export class HelpView extends DocumentView {
   constructor(uri: Uri, userKeyBindings: any) {
     super(uri);
 
-    let binds = meta.contributes.keybindings.reduce((prev, bind) => ({
-      ...prev,
-      [bind.command]: HelpView.keybindingToDisplayKey(bind.key)
-    }), {});
-
-    binds = userKeyBindings.reduce((prev: any, bind: any) => ({
-      ...prev,
-      [bind.command]: HelpView.keybindingToDisplayKey(bind.key)
-    }), binds);
-
-    const diffTextView = new TextView(HelpView.createHelpText(binds));
+    let binds = HelpView.generateBindings(userKeyBindings);
+    let diffTextView = new TextView(HelpView.createHelpText(binds));
     diffTextView.isHighlightable = false;
     this.addSubview(diffTextView);
   }
@@ -56,6 +47,20 @@ export class HelpView extends DocumentView {
       return 'TAB';
     }
     return bind;
+  }
+
+  private static generateBindings(userKeyBindings: any) {
+    let binds = meta.contributes.keybindings.reduce((prev, bind) => ({
+      ...prev,
+      [bind.command]: HelpView.keybindingToDisplayKey(bind.key)
+    }), {});
+
+    binds = userKeyBindings.reduce((prev: any, bind: any) => ({
+      ...prev,
+      [bind.command]: HelpView.keybindingToDisplayKey(bind.key)
+    }), binds);
+
+    return binds;
   }
 
   private static createHelpText(c: any) {

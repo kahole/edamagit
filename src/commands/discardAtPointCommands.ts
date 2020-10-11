@@ -37,7 +37,8 @@ async function discard(repository: MagitRepository, selection: Selection, select
 
   } else if (selectedView instanceof ChangeView) {
 
-    const change = (selectedView as ChangeView).change;
+    let changeView = selectedView as ChangeView;
+    let change = changeView.change;
 
     if (change.status === Status.UNTRACKED) {
 
@@ -47,7 +48,7 @@ async function discard(repository: MagitRepository, selection: Selection, select
 
     } else {
 
-      const sectionLabel = change.section === Section.Staged ? 'staged' : 'unstaged';
+      const sectionLabel = changeView.section === Section.Staged ? 'staged' : 'unstaged';
 
       if (await MagitUtils.confirmAction(`Discard ${sectionLabel} ${change.relativePath}?`)) {
 
@@ -153,10 +154,10 @@ async function discardHunk(repository: MagitRepository, hunkView: HunkView, sele
 
   const patch = GitTextUtils.generatePatchFromChangeHunkView(hunkView, selection, true);
 
-  if (hunkView.changeHunk.section === Section.Unstaged) {
+  if (hunkView.section === Section.Unstaged) {
     return ApplyAtPoint.apply(repository, patch, { reverse: true });
 
-  } else if (hunkView.changeHunk.section === Section.Staged) {
+  } else if (hunkView.section === Section.Staged) {
     await ApplyAtPoint.apply(repository, patch, { index: true, reverse: true });
     return ApplyAtPoint.apply(repository, patch, { reverse: true });
   }

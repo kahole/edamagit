@@ -1,4 +1,5 @@
 import { MagitChangeHunk } from '../../models/magitChangeHunk';
+import { Section } from '../general/sectionHeader';
 import { TextView } from '../general/textView';
 
 export class HunkView extends TextView {
@@ -6,7 +7,7 @@ export class HunkView extends TextView {
 
   get id() { return this.changeHunk.diff; }
 
-  constructor(public changeHunk: MagitChangeHunk) {
+  constructor(public section: Section, public changeHunk: MagitChangeHunk) {
     super(changeHunk.diff);
   }
 }

@@ -6,7 +6,7 @@ import { MagitRepository } from '../models/magitRepository';
 
 export class BlameView extends DocumentView {
 
-  static UriPath: string = 'blame.magit';
+  static UriPath: string = 'Blame.magit@';
   isHighlightable = false;
   needsUpdate = false;
 
@@ -22,6 +22,6 @@ export class BlameView extends DocumentView {
 
   static index = 0;
   static encodeLocation(repository: MagitRepository, fileUri: Uri): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${BlameView.UriPath}?${repository.uri.fsPath}#${fileUri.path}#${BlameView.index++}`);
+    return Uri.parse(`${Constants.MagitUriScheme}:${BlameView.UriPath}/${fileUri.path}?${repository.uri.fsPath}#${fileUri.path}#${BlameView.index++}`);
   }
 }

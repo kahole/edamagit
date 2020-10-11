@@ -25,9 +25,9 @@ export async function magitStage(repository: MagitRepository, currentView: Docum
 async function stage(repository: MagitRepository, selection: Selection, selectedView?: View): Promise<any> {
 
   if (selectedView instanceof HunkView) {
-    const changeHunk = (selectedView as HunkView).changeHunk;
+    let hunkView = selectedView as HunkView;
 
-    if (changeHunk.section !== Section.Staged) {
+    if (hunkView.section !== Section.Staged) {
 
       const patch = GitTextUtils.generatePatchFromChangeHunkView(selectedView, selection);
       return ApplyAtPoint.apply(repository, patch, { index: true });
@@ -38,9 +38,10 @@ async function stage(repository: MagitRepository, selection: Selection, selected
 
   } else if (selectedView instanceof ChangeView) {
 
-    const magitChange = (selectedView as ChangeView).change;
+    let changeView = selectedView as ChangeView;
+    let change = changeView.change;
 
-    return stageFile(repository, magitChange.uri, magitChange.section === Section.Unstaged);
+    return stageFile(repository, change.uri, changeView.section === Section.Unstaged);
 
   } else if (selectedView instanceof ChangeSectionView) {
     const section = (selectedView as ChangeSectionView).section;
@@ -96,9 +97,9 @@ export async function magitUnstage(repository: MagitRepository, currentView: Doc
 async function unstage(repository: MagitRepository, selection: Selection, selectedView?: View): Promise<any> {
 
   if (selectedView instanceof HunkView) {
-    const changeHunk = (selectedView as HunkView).changeHunk;
+    let hunkView = selectedView as HunkView;
 
-    if (changeHunk.section === Section.Staged) {
+    if (hunkView.section === Section.Staged) {
       const patch = GitTextUtils.generatePatchFromChangeHunkView(selectedView, selection, true);
       return ApplyAtPoint.apply(repository, patch, { index: true, reverse: true });
     } else {
