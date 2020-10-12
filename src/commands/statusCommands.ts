@@ -380,7 +380,13 @@ async function getStashes(repository: Repository): Promise<Stash[]> {
 
   try {
     let stashesList = await gitRun(repository, args, {}, LogLevel.None);
-    return stashesList.stdout
+    let stashOut = stashesList.stdout;
+
+    if (stashOut.length === 0) {
+      return [];
+    }
+
+    return stashOut
       .replace(Constants.FinalLineBreakRegex, '')
       .split(Constants.LineSplitterRegex)
       .map((stashLine, index) => ({ index, description: stashLine.replace(/stash@{\d+}: /g, '') }));
