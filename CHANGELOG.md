@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.5.1] - 2020-10-14
+
+- Removes default lineHeight setting for magit language.
+
+This because the VSCode default font size is different between Mac and the other platforms.
+
+To get back the old lineHeight,
+add this to your `settings.json`:
+```
+    "[magit]": {
+        "editor.lineHeight": 15
+    },
+```
+
 ## [0.5.0] - 2020-10-12
 - Fixes issue where stash list was showing 1 entry even when there are none.
 
