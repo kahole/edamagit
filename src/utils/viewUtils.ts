@@ -11,6 +11,16 @@ import MagitUtils from './magitUtils';
 
 export default class ViewUtils {
 
+  public static createOrUpdateView(repository: MagitRepository, uri: Uri, viewFactory: () => DocumentView) {
+    const existingView = views.get(uri.toString());
+
+    if (existingView) {
+      existingView.update(repository);
+      return existingView;
+    }
+    return viewFactory();
+  }
+
   public static async showView(uri: Uri, view: DocumentView, textDocumentShowOptions: TextDocumentShowOptions = { preview: false, preserveFocus: false }) {
     views.set(uri.toString(), view);
     let doc = await workspace.openTextDocument(uri);

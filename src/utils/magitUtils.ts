@@ -40,6 +40,11 @@ export default class MagitUtils {
 
     let magitRepository = await this.getCurrentMagitRepoNO_STATUS(uri);
 
+    // TODO: Should maybe call 'internalMagitStatus' here to guarantee updated MagitRepository, but it slows down everything :p
+    // if (magitRepository) {
+    //   magitRepository = await Status.internalMagitStatus(magitRepository.gitRepository);
+    //   magitRepositories.set(magitRepository.uri.fsPath, magitRepository);
+    // }
     if (!magitRepository) {
       let repository = await this.discoverRepo(uri);
       if (repository) {

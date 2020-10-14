@@ -1,10 +1,10 @@
-import { window, workspace } from 'vscode';
-import { views } from '../extension';
+import { ViewColumn, window } from 'vscode';
 import { MenuState, MenuUtil } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
 import { GitErrorCodes, Ref, RefType } from '../typings/git';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
+import ViewUtils from '../utils/viewUtils';
 import ShowRefsView from '../views/showRefsView';
 
 const branchingMenu = {
@@ -33,12 +33,9 @@ export async function branching(repository: MagitRepository) {
 export async function showRefs(repository: MagitRepository) {
   const uri = ShowRefsView.encodeLocation(repository);
 
-  if (!views.has(uri.toString())) {
-    views.set(uri.toString(), new ShowRefsView(uri, repository));
-  }
+  let refsView = ViewUtils.createOrUpdateView(repository, uri, () => new ShowRefsView(uri, repository));
 
-  return workspace.openTextDocument(uri)
-    .then(doc => window.showTextDocument(doc, { preview: false }));
+  return ViewUtils.showView(uri, refsView, { viewColumn: ViewColumn.Active });
 }
 
 async function checkout(menuState: MenuState) {

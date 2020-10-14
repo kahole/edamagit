@@ -1,10 +1,10 @@
 import { MagitRepository } from '../models/magitRepository';
 import { MenuUtil, MenuState } from '../menu/menu';
 import { gitRun } from '../utils/gitRawRunner';
-import { window, workspace } from 'vscode';
+import { window } from 'vscode';
 import * as Fetching from './fetchingCommands';
 import SubmoduleListView from '../views/submoduleListView';
-import { views } from '../extension';
+import ViewUtils from '../utils/viewUtils';
 
 const submodulesMenu = {
   title: 'Submodules',
@@ -114,18 +114,12 @@ async function remove({ repository, switches }: MenuState) {
 }
 
 async function listAll({ repository, switches }: MenuState) {
+
   const uri = SubmoduleListView.encodeLocation(repository);
 
-  const existingView = views.get(uri.toString());
+  let submoduleListView = ViewUtils.createOrUpdateView(repository, uri, () => new SubmoduleListView(uri, repository));
 
-  if (existingView) {
-    existingView.update(repository);
-  } else {
-    views.set(uri.toString(), new SubmoduleListView(uri, repository));
-  }
-
-  return workspace.openTextDocument(uri)
-    .then(doc => window.showTextDocument(doc, { preview: false }));
+  return ViewUtils.showView(uri, submoduleListView);
 }
 
 function fetchAll({ repository, switches }: MenuState) {
