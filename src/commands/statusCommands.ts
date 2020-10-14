@@ -24,10 +24,12 @@ export async function magitStatus(): Promise<any> {
 
   const editor = window.activeTextEditor;
 
-  let repository = await MagitUtils.getCurrentMagitRepoNO_STATUS(editor?.document.uri);
+  let repository = MagitUtils.getCurrentMagitRepoNO_STATUS(editor?.document.uri);
 
-  // TODO: refactor
-  // in sync with magitUtils
+  // TODO: NB: There is special handling of repo and view here for reasons:
+  //        1. The speed cheat in MagitUtils->getCurrentMagitRepo
+  //        2. window->showTextDocument of the current view resulting in duplication of the view
+
   if (repository) {
 
     const uri = MagitStatusView.encodeLocation(repository);
@@ -39,23 +41,19 @@ export async function magitStatus(): Promise<any> {
       if (editor?.document.uri.path === MagitStatusView.UriPath) {
         return;
       }
-      return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
+      return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewUtils.showDocumentColumn(), preview: false }));
     }
 
     repository = await internalMagitStatus(repository.gitRepository);
     magitRepositories.set(repository.uri.fsPath, repository);
-    return ViewUtils.showView(uri, new MagitStatusView(uri, repository));
 
   } else {
+    repository = await MagitUtils.getCurrentMagitRepo(editor?.document.uri);
+  }
 
-    let discoveredRepository = await MagitUtils.discoverRepo(editor?.document.uri);
-
-    if (discoveredRepository) {
-      repository = await internalMagitStatus(discoveredRepository);
-      magitRepositories.set(repository.uri.fsPath, repository);
-      const uri = MagitStatusView.encodeLocation(repository);
-      return ViewUtils.showView(uri, new MagitStatusView(uri, repository));
-    }
+  if (repository) {
+    const uri = MagitStatusView.encodeLocation(repository);
+    return ViewUtils.showView(uri, new MagitStatusView(uri, repository));
   }
 }
 

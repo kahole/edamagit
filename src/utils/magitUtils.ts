@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { MagitRepository } from '../models/magitRepository';
 import { magitRepositories, views, gitApi } from '../extension';
-import { window, ViewColumn, Uri, commands } from 'vscode';
+import { window, Uri, commands } from 'vscode';
 import * as Status from '../commands/statusCommands';
 import { DocumentView } from '../views/general/documentView';
 import FilePathUtils from './filePathUtils';
@@ -38,7 +38,7 @@ export default class MagitUtils {
 
   public static async getCurrentMagitRepo(uri?: Uri): Promise<MagitRepository | undefined> {
 
-    let magitRepository = await this.getCurrentMagitRepoNO_STATUS(uri);
+    let magitRepository = this.getCurrentMagitRepoNO_STATUS(uri);
 
     // TODO: Should maybe call 'internalMagitStatus' here to guarantee updated MagitRepository, but it slows down everything :p
     // if (magitRepository) {
@@ -56,7 +56,7 @@ export default class MagitUtils {
     return magitRepository;
   }
 
-  public static async getCurrentMagitRepoNO_STATUS(uri?: Uri): Promise<MagitRepository | undefined> {
+  public static getCurrentMagitRepoNO_STATUS(uri?: Uri): MagitRepository | undefined {
     let magitRepository: MagitRepository | undefined;
 
     if (uri) {
@@ -197,17 +197,5 @@ export default class MagitUtils {
     window.setStatusBarMessage('Abort', Constants.StatusMessageDisplayTimeout);
     return false;
   }
-
-  public static showDocumentColumn(): ViewColumn {
-    const activeColumn = window.activeTextEditor?.viewColumn ?? 0;
-
-    if (vscode.workspace.getConfiguration('magit').get('display-buffer-function') === 'same-column') {
-      return activeColumn;
-    }
-
-    if (activeColumn > ViewColumn.One) {
-      return ViewColumn.One;
-    }
-    return ViewColumn.Two;
-  }
 }
+

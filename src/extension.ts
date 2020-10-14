@@ -47,6 +47,7 @@ export const processLog: MagitProcessLogEntry[] = [];
 
 export let gitApi: API;
 export let logPath: string;
+export let magitConfig: { displayBufferFunction?: string };
 
 export function activate(context: ExtensionContext) {
 
@@ -54,6 +55,8 @@ export function activate(context: ExtensionContext) {
   if (!gitExtension.enabled) {
     throw new Error('vscode.git Git extension not enabled');
   }
+
+  magitConfig = { displayBufferFunction: workspace.getConfiguration('magit').get('display-buffer-function') };
 
   context.subscriptions.push(gitExtension.onDidChangeEnablement(enabled => {
     if (!enabled) {

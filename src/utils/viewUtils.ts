@@ -1,13 +1,12 @@
 import { MagitRepository } from '../models/magitRepository';
 import { View } from '../views/general/view';
-import { Selection, Position, Uri, workspace, window, TextDocumentShowOptions } from 'vscode';
+import { Selection, Position, Uri, workspace, window, TextDocumentShowOptions, ViewColumn } from 'vscode';
 import { Ref, RefType } from '../typings/git';
 import { Token } from '../views/general/semanticTextView';
 import { SemanticTokenTypes } from '../common/constants';
 import GitTextUtils from './gitTextUtils';
 import { DocumentView } from '../views/general/documentView';
-import { views } from '../extension';
-import MagitUtils from './magitUtils';
+import { magitConfig, views } from '../extension';
 
 export default class ViewUtils {
 
@@ -24,7 +23,20 @@ export default class ViewUtils {
   public static async showView(uri: Uri, view: DocumentView, textDocumentShowOptions: TextDocumentShowOptions = { preview: false, preserveFocus: false }) {
     views.set(uri.toString(), view);
     let doc = await workspace.openTextDocument(uri);
-    return window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), ...textDocumentShowOptions });
+    return window.showTextDocument(doc, { viewColumn: ViewUtils.showDocumentColumn(), ...textDocumentShowOptions });
+  }
+
+  public static showDocumentColumn(): ViewColumn {
+    const activeColumn = window.activeTextEditor?.viewColumn ?? 0;
+
+    if (magitConfig.displayBufferFunction === 'same-column') {
+      return activeColumn;
+    }
+
+    if (activeColumn > ViewColumn.One) {
+      return ViewColumn.One;
+    }
+    return ViewColumn.Two;
   }
 
   public static async applyActionForSelection(repository: MagitRepository, currentView: View, selection: Selection, multiSelectableViewTypes: any[], action: Function): Promise<any> {

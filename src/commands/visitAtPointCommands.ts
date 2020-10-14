@@ -33,7 +33,7 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
     if (change.hunks?.length) {
       return visitHunk(selectedView.subViews.find(v => v instanceof HunkView) as HunkView);
     } else {
-      return workspace.openTextDocument(change.uri).then(doc => window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false }));
+      return workspace.openTextDocument(change.uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewUtils.showDocumentColumn(), preview: false }));
     }
   }
   else if (selectedView instanceof HunkView) {
@@ -66,7 +66,7 @@ async function visitHunk(selectedView: HunkView, activePosition?: Position) {
   const changeHunk = selectedView.changeHunk;
 
   const doc = await workspace.openTextDocument(changeHunk.uri);
-  const editor = await window.showTextDocument(doc, { viewColumn: MagitUtils.showDocumentColumn(), preview: false });
+  const editor = await window.showTextDocument(doc, { viewColumn: ViewUtils.showDocumentColumn(), preview: false });
 
   try {
     const startLineMatches = changeHunk.diff.match(/(?<=\+)\d+(?=,)/g);
