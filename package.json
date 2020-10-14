@@ -391,7 +391,7 @@
             "same-column"
           ],
           "default": "other-column",
-          "description": "Choose where new buffers will be displayed."
+          "description": "Choose where new buffers will be displayed. (reload extension for effect)"
         }
       }
     },
