@@ -82,6 +82,11 @@ Below are bindings providing evil-magit / spacemacs like keybindings.
 
 The negative bindings, e.g. `-magit.discard-at-point` for key `k`,
 remove the default edamagit bindings and the collisions with the Vim extension.
+
+[Open your `keybindings.json`][kse] and paste the following JSON snippet.
+
+[kse]: https://code.visualstudio.com/docs/getstarted/keybindings#_advanced-customization
+
 <details>
   <summary>Bindings - keybindings.json</summary>
   
