@@ -230,7 +230,7 @@ async function mergingStatus(repository: Repository, dotGitPath: string): Promis
       if (parsedMergeState) {
         const [mergeHeadCommit, mergingBranches] = parsedMergeState;
 
-        const mergeCommitsText = (await gitRun(repository, ['rev-list', `HEAD..${mergeHeadCommit}`])).stdout;
+        const mergeCommitsText = (await gitRun(repository, ['rev-list', `HEAD..${mergeHeadCommit}`], {}, LogLevel.None)).stdout;
         const mergeCommits = mergeCommitsText
           .replace(Constants.FinalLineBreakRegex, '')
           .split(Constants.LineSplitterRegex);
