@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.5.2] - 2020-11-05
+- Fixes issue with untracked files on Windows
+- other small fixes
+
 ## [0.5.1] - 2020-10-14
 
 - Removes default lineHeight setting for magit language.
