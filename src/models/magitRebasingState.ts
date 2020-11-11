@@ -3,7 +3,7 @@ import { MagitBranch } from './magitBranch';
 
 export interface MagitRebasingState {
   origBranchName: string;
-  ontoBranch: MagitBranch;
+  onto: { name: string, commitDetails: Commit };
   doneCommits: Commit[];
   currentCommit: Commit;
   upcomingCommits: Commit[];
