@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.5.3] - 2020-11-05
+- Fixes issue with rebasing-status failing when rebasing onto detached state.
+
 ## [0.5.2] - 2020-11-05
 - Fixes issue with untracked files on Windows
 - other small fixes
