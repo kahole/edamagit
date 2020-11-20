@@ -116,7 +116,7 @@ export default class MagitUtils {
 
   public static getCurrentMagitRepoAndView(uri: Uri): [MagitRepository | undefined, DocumentView | undefined] {
     const repository = magitRepositories.get(uri.query);
-    const currentView = views.get(uri.toString() ?? '') as DocumentView;
+    const currentView = views.get(uri.toString());
     return [repository, currentView];
   }
 

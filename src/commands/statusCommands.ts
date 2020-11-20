@@ -48,12 +48,13 @@ export async function magitStatus(): Promise<any> {
     magitRepositories.set(repository.uri.fsPath, repository);
 
   } else {
+    // TODO: Maybe call new func MagitUtils.discoverRepo_Status instead to avoid double tapping "getCurrentMagitRepoNO_STATUS"
     repository = await MagitUtils.getCurrentMagitRepo(editor?.document.uri);
   }
 
   if (repository) {
     const uri = MagitStatusView.encodeLocation(repository);
-    return ViewUtils.showView(uri, new MagitStatusView(uri, repository));
+    return ViewUtils.showView(uri, ViewUtils.createOrUpdateView(repository, uri, () => new MagitStatusView(uri, repository!)));
   }
 }
 

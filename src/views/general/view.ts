@@ -24,7 +24,7 @@ export abstract class View {
 
   get range(): Range {
     if (this.folded) {
-      return new Range(this._range.start, new Position(this._range.start.line, 300));
+      return new Range(new Position(this._range.start.line, this._range.start.character), new Position(this._range.start.line, 300));
     }
     return this._range;
   }
