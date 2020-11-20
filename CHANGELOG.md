@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.5.4] - 2020-11-21
+- Fixes critical issue with status view when called from files outside repo.
+
 ## [0.5.3] - 2020-11-05
 - Fixes issue with rebasing-status failing when rebasing onto detached state.
 
