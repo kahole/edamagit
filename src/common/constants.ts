@@ -16,3 +16,7 @@ export enum SemanticTokenTypes {
   RemoteRefName = 'magit-remote-ref-name',
   TagName = 'magit-tag-name',
 }
+
+// Colors
+// Maybe dont use custom color
+// export const lineAddedBackground = registerColor('magit.lineAdded', { dark: transparent(mergeCurrentHeaderBackground, contentTransparency), light: transparent(mergeCurrentHeaderBackground, contentTransparency), hc: transparent(mergeCurrentHeaderBackground, contentTransparency) }, nls.localize('mergeCurrentContentBackground', 'Current content background in inline merge-conflicts. The color must not be opaque so as not to hide underlying decorations.'), true);

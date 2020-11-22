@@ -40,6 +40,7 @@ import { blameFile } from './commands/blamingCommands';
 import { copySectionValueCommand } from './commands/copySectionValueCommands';
 import { copyBufferRevisionCommands } from './commands/copyBufferRevisionCommands';
 import { submodules } from './commands/submodulesCommands';
+import HighlightDecorator from './providers/highlightDecorator';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
@@ -74,6 +75,8 @@ export function activate(context: ExtensionContext) {
   const contentProvider = new ContentProvider();
   const highlightProvider = new HighlightProvider();
   const semanticTokensProvider = new SemanticTokensProvider();
+
+  HighlightDecorator.begin(context);
 
   const providerRegistrations = Disposable.from(
     workspace.registerTextDocumentContentProvider(Constants.MagitUriScheme, contentProvider),

@@ -65,15 +65,6 @@
       "match": "^(modified|new file|deleted|renamed|copied|unmerged)   .*$",
       "name": "strong magit.subheader"
     },
-    "diff": { 
-      "begin": "(?=^@@)",
-      "end": "(?=^(modified|new file|deleted|renamed|copied|unmerged))|(?=$^)",
-      "patterns": [
-        {
-          "include": "source.diff"
-        }
-      ]
-    },
     "helpKey": {
       "match": "  ([^\\s]|!|\\$|\\%|TAB|RET|\\_|-|(shift(\\+|-)[^a-zA-Z])) ",
       "name": "strong keyword.operator.new"
