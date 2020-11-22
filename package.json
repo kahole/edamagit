@@ -653,7 +653,7 @@
   "scripts": {
     "vscode:prepublish": "webpack --mode production",
     "compile": "webpack --mode development",
-    "watch": "webpack --mode development --watch --info-verbosity verbose",
+    "watch": "webpack --mode development --watch",
     "test-compile": "tsc -p ./"
   },
   "devDependencies": {
