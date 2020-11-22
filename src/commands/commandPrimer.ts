@@ -23,7 +23,7 @@ export class CommandPrimer {
           this.handleError(repository, error);
         } finally {
           if (triggersUpdate) {
-            MagitUtils.magitStatusAndUpdate(repository);
+            await MagitUtils.magitStatusAndUpdate(repository);
           }
         }
       }
@@ -42,7 +42,7 @@ export class CommandPrimer {
           this.handleError(repository, error);
         } finally {
           if (triggersUpdate) {
-            MagitUtils.magitStatusAndUpdate(repository);
+            await MagitUtils.magitStatusAndUpdate(repository);
           }
         }
       }
@@ -62,7 +62,7 @@ export class CommandPrimer {
           this.handleError(repository, error);
         } finally {
           if (triggersUpdate) {
-            MagitUtils.magitStatusAndUpdate(repository);
+            await MagitUtils.magitStatusAndUpdate(repository);
           }
         }
       }
