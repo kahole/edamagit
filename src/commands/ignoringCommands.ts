@@ -47,7 +47,7 @@ async function ignore(repository: MagitRepository, globally = false) {
       gitIgnoreFilePath = repository.uri.fsPath + '/.git/info/exclude';
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       fs.appendFile(gitIgnoreFilePath, EOL + ignorePattern, (err) => {
         if (err) {
           reject(err);

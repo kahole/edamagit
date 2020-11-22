@@ -100,7 +100,7 @@ async function visitHunk(selectedView: HunkView, activePosition?: Position) {
       const numDeletedLinesAboveActiveLine = changeHunk.diff.split(Constants.LineSplitterRegex).slice(0, activeLineRelativeToDiff + 1).filter(line => line.charAt(0) === '-').length;
       const relevantPositionInFile = new Position(diffStartLineInFile + activeLineRelativeToDiff - numDeletedLinesAboveActiveLine, relevantCharacterSelection);
 
-      var relevantSelection = new Selection(relevantPositionInFile, relevantPositionInFile);
+      let relevantSelection = new Selection(relevantPositionInFile, relevantPositionInFile);
 
       editor.revealRange(new Range(relevantPositionInFile, relevantPositionInFile), TextEditorRevealType.InCenterIfOutsideViewport);
       editor.selection = relevantSelection;

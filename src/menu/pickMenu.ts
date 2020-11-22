@@ -37,7 +37,7 @@ export class PickMenuUtil {
         eventListenerDisposable.dispose();
         didHideDisposable.dispose();
         if (resolveOnHide) {
-          resolve();
+          resolve(undefined!);
         }
       });
 
