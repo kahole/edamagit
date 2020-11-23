@@ -4,12 +4,9 @@ import { views } from '../extension';
 
 export default class HighlightDecorator {
 
-  dispose() { }
+  private static decorationTypes: { [key: string]: vscode.TextEditorDecorationType } = {};
 
-  static decorations: { [key: string]: vscode.TextEditorDecorationType } = {};
-
-  static updating = new Map<vscode.TextEditor, boolean>();
-
+  private static updating = new Map<vscode.TextEditor, boolean>();
 
   public static begin(context: vscode.ExtensionContext) {
 
@@ -19,56 +16,51 @@ export default class HighlightDecorator {
     // vscode.window.visibleTextEditors.forEach(e => this.applyDecorations(e));
 
     vscode.workspace.onDidOpenTextDocument(event => {
-      this.applyDecorationsFromEvent(event);
+      this.applyDecorationsForDocument(event);
     }, null, context.subscriptions);
 
     vscode.workspace.onDidChangeTextDocument(event => {
-      this.applyDecorationsFromEvent(event.document);
+      this.applyDecorationsForDocument(event.document);
     }, null, context.subscriptions);
 
-    vscode.window.onDidChangeVisibleTextEditors((e) => {
-      // Any of which could be new (not just the active one).
-      e.forEach(e => this.applyDecorations(e));
+    // vscode.window.onDidChangeVisibleTextEditors((e) => {
+    //   // Any of which could be new (not just the active one).
+    //   e.forEach(e => this.applyDecorations(e));
+
+    // }, null, context.subscriptions);
+
+    vscode.window.onDidChangeTextEditorSelection((e) => {
+
+      this.applyDecorations(e.textEditor);
+
     }, null, context.subscriptions);
   }
 
-  public static removeDecorations(editor: vscode.TextEditor) {
-    editor.setDecorations(HighlightDecorator.decorations['added.line'], []);
-    editor.setDecorations(HighlightDecorator.decorations['deleted.line'], []);
-  }
+  // public static removeDecorations(editor: vscode.TextEditor) {
+  //   editor.setDecorations(HighlightDecorator.decorations['added.line'], []);
+  //   editor.setDecorations(HighlightDecorator.decorations['deleted.line'], []);
+  // }
 
-  public static removeHoverDecorations(editor: vscode.TextEditor) {
-    editor.setDecorations(HighlightDecorator.decorations['hover'], []);
-  }
+  // public static removeHoverDecorations(editor: vscode.TextEditor) {
+  //   editor.setDecorations(HighlightDecorator.decorations['selected.line'], []);
+  // }
 
-  private static applyDecorationsFromEvent(eventDocument: vscode.TextDocument) {
+  private static applyDecorationsForDocument(document: vscode.TextDocument) {
 
-    if (eventDocument.uri.scheme !== Constants.MagitUriScheme) {
+    if (document.uri.scheme !== Constants.MagitUriScheme) {
       return;
     }
 
     for (const editor of vscode.window.visibleTextEditors) {
-      if (editor.document === eventDocument) {
-        // Attempt to apply
+      if (editor.document === document) {
         this.applyDecorations(editor);
       }
     }
   }
 
-  private static registerDecorationTypes() {
-    HighlightDecorator.decorations['added.line'] = vscode.window.createTextEditorDecorationType(
-      HighlightDecorator.generateAddedBlock()
-    );
-    HighlightDecorator.decorations['deleted.line'] = vscode.window.createTextEditorDecorationType(
-      HighlightDecorator.generateDeletedBlock()
-    );
+  private static applyDecorations(editor: vscode.TextEditor) {
 
-    HighlightDecorator.decorations['hover'] = vscode.window.createTextEditorDecorationType(
-      HighlightDecorator.generateHoverBlock()
-    );
-  }
-
-  public static applyDecorations(editor: vscode.TextEditor) {
+    // TODO: make it so dont need these checks
 
     if (!editor || !editor.document) { return; }
 
@@ -76,11 +68,14 @@ export default class HighlightDecorator {
       return;
     }
 
+    // TODO: check if this makes it jittery
     if (HighlightDecorator.updating.get(editor)) {
       return;
     }
 
     HighlightDecorator.updating.set(editor, true);
+
+    // Diff
 
     let addedRanges: vscode.Range[] = [];
     let deletedRanges: vscode.Range[] = [];
@@ -117,15 +112,81 @@ export default class HighlightDecorator {
       }
     }
 
-    editor.setDecorations(HighlightDecorator.decorations['added.line'], addedRanges);
-    editor.setDecorations(HighlightDecorator.decorations['deleted.line'], deletedRanges);
+    // Hover / Selection
+
+    let selectedRanges: vscode.Range[] = [];
+
+    const currentView = views.get(editor.document.uri.toString());
+    if (currentView) {
+
+      // Hover
+
+      const clickedView = currentView.click(editor.selection.active);
+      if (clickedView?.isHighlightable) {
+
+        // clickedView.range.intersection();
+
+        selectedRanges.push(clickedView.range);
+      }
+
+
+      // Selection 
+      if (selectedRanges.length && (addedRanges.length || deletedRanges.length)) {
+        selectedRanges = this.disjunctiveUnionsSplit(selectedRanges[0], addedRanges.concat(deletedRanges));
+
+        if (!editor.selection.start.isEqual(editor.selection.end)) {
+          // TODO: prune added/deleted that DONT intersect with editor-selection
+
+          addedRanges = addedRanges.map(added => added.intersection(editor.selection)).filter(e => e) as vscode.Range[];
+          deletedRanges = deletedRanges.map(added => added.intersection(editor.selection)).filter(e => e) as vscode.Range[];
+        }
+      }
+    }
+
+    editor.setDecorations(HighlightDecorator.decorationTypes['added.line'], addedRanges);
+    editor.setDecorations(HighlightDecorator.decorationTypes['deleted.line'], deletedRanges);
+    editor.setDecorations(HighlightDecorator.decorationTypes['selected.line'], selectedRanges);
 
     HighlightDecorator.updating.set(editor, false);
   }
 
-  public static applyHoverDecorations(editor: vscode.TextEditor, range: vscode.Range) {
+  //
 
-    editor.setDecorations(HighlightDecorator.decorations['hover'], [range]);
+  private static disjunctiveUnionsSplit(range: vscode.Range, excludeRanges: vscode.Range[]): vscode.Range[] {
+
+    let intersections = excludeRanges.map(e => range.intersection(e)).filter(i => i !== undefined) as vscode.Range[];
+
+    let ranges = [];
+
+    let current = new vscode.Range(range.start, range.start);
+    for (let i = range.start.line; i <= range.end.line; i++) {
+      let potential = current.with({ end: new vscode.Position(current.end.line + 1, 0) });
+
+      let currentIntersection = intersections.find(intersection => potential.intersection(intersection));
+      if (currentIntersection) {
+        ranges.push(current);
+        let endPlusOne = currentIntersection.end.with({ line: currentIntersection.end.line + 1 });
+        current = new vscode.Range(endPlusOne, endPlusOne);
+
+      } else {
+        current = potential;
+      }
+    }
+
+    return ranges;
+  }
+
+  private static registerDecorationTypes() {
+    HighlightDecorator.decorationTypes['added.line'] = vscode.window.createTextEditorDecorationType(
+      HighlightDecorator.generateAddedBlock()
+    );
+    HighlightDecorator.decorationTypes['deleted.line'] = vscode.window.createTextEditorDecorationType(
+      HighlightDecorator.generateDeletedBlock()
+    );
+
+    HighlightDecorator.decorationTypes['selected.line'] = vscode.window.createTextEditorDecorationType(
+      HighlightDecorator.generateHoverBlock()
+    );
   }
 
   private static generateAddedBlock(): vscode.DecorationRenderOptions {
@@ -152,6 +213,7 @@ export default class HighlightDecorator {
     return {
       // backgroundColor: new vscode.ThemeColor('merge.incomingContentBackground'),
       backgroundColor: new vscode.ThemeColor('editor.hoverHighlightBackground'),
+      // backgroundColor: new vscode.ThemeColor('editor.selectionBackground'),
       isWholeLine: true,
       rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed
       // gutterIconPath: 
