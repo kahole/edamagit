@@ -3,9 +3,6 @@
   "patterns": [
     {
       "include": "#expression"
-    },
-    {
-      "include": "#diff"
     }
   ],
   "repository": {
@@ -34,6 +31,9 @@
         },
         {
           "include": "#helpKey"
+        },
+        {
+          "include": "#diffMarker"
         }
       ]
     },
@@ -68,6 +68,10 @@
     "helpKey": {
       "match": "  ([^\\s]|!|\\$|\\%|TAB|RET|\\_|-|(shift(\\+|-)[^a-zA-Z])) ",
       "name": "strong keyword.operator.new"
+    },
+    "diffMarker": {
+      "match": "(^@@).*",
+      "name":"meta.diff.range.unified"
     }
   }
 }

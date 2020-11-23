@@ -4,6 +4,7 @@ import { TextEditor, window, Uri } from 'vscode';
 import { DocumentView } from '../views/general/documentView';
 import GitTextUtils from '../utils/gitTextUtils';
 import { MagitError } from '../models/magitError';
+import HighlightDecorator from '../providers/highlightDecorator';
 
 type Command = (repository: MagitRepository) => Promise<any>;
 type ViewCommand = (repository: MagitRepository, view: DocumentView) => Promise<any>;
@@ -33,6 +34,9 @@ export class CommandPrimer {
   static primeRepoAndView(command: ViewCommand, triggersUpdate: boolean = true): (editor: TextEditor) => Promise<any> {
 
     return async (editor: TextEditor) => {
+
+      //HighlightDecorator.removeDecorations(editor);
+
       const [repository, currentView] = MagitUtils.getCurrentMagitRepoAndView(editor.document.uri);
 
       if (repository && currentView) {
