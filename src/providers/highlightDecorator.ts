@@ -17,6 +17,7 @@ export default class HighlightDecorator {
 
     // Check if we already have a set of active windows, attempt to track these.
     // vscode.window.visibleTextEditors.forEach(e => this.applyDecorations(e));
+
     vscode.workspace.onDidOpenTextDocument(event => {
       this.applyDecorationsFromEvent(event);
     }, null, context.subscriptions);
@@ -29,6 +30,15 @@ export default class HighlightDecorator {
       // Any of which could be new (not just the active one).
       e.forEach(e => this.applyDecorations(e));
     }, null, context.subscriptions);
+  }
+
+  public static removeDecorations(editor: vscode.TextEditor) {
+    editor.setDecorations(HighlightDecorator.decorations['added.line'], []);
+    editor.setDecorations(HighlightDecorator.decorations['deleted.line'], []);
+  }
+
+  public static removeHoverDecorations(editor: vscode.TextEditor) {
+    editor.setDecorations(HighlightDecorator.decorations['hover'], []);
   }
 
   private static applyDecorationsFromEvent(eventDocument: vscode.TextDocument) {
@@ -52,9 +62,13 @@ export default class HighlightDecorator {
     HighlightDecorator.decorations['deleted.line'] = vscode.window.createTextEditorDecorationType(
       HighlightDecorator.generateDeletedBlock()
     );
+
+    HighlightDecorator.decorations['hover'] = vscode.window.createTextEditorDecorationType(
+      HighlightDecorator.generateHoverBlock()
+    );
   }
 
-  private static applyDecorations(editor: vscode.TextEditor) {
+  public static applyDecorations(editor: vscode.TextEditor) {
 
     if (!editor || !editor.document) { return; }
 
@@ -71,25 +85,37 @@ export default class HighlightDecorator {
     let addedRanges: vscode.Range[] = [];
     let deletedRanges: vscode.Range[] = [];
 
-    editor.document.getText()
-      .split(Constants.LineSplitterRegex)
-      .forEach((text, line) => {
-        if (text.length) {
-          if (text[0] === '+') {
-            addedRanges.push(new vscode.Range(line, 0, line, 0));
-          } else if (text[0] === '-') {
-            deletedRanges.push(new vscode.Range(line, 0, line, 0));
-          }
-        }
-      });
+    let lines = editor.document.getText()
+      .split(Constants.LineSplitterRegex);
 
-    // let currentView = views.get(editor.document.uri.toString());
-    // if (currentView) {
-    //   let highlightRange = currentView.click(editor.selection!.active)?.range;
-    //   if (highlightRange) {
-    //     ranges.push(highlightRange);
-    //   }
-    // }
+    for (let i = 0; i < lines.length; i++) {
+      let line = lines[i];
+
+      if (line.length) {
+        // TODO: clean up
+        if (line[0] === '+') {
+
+          let ogI = i;
+          let endOfRange = i;
+          while (i + 1 < lines.length && lines[i + 1].length && lines[i + 1][0] === '+') {
+            endOfRange++;
+            i++;
+          }
+
+          addedRanges.push(new vscode.Range(ogI, 0, endOfRange, 0));
+
+        } else if (line[0] === '-') {
+
+          let ogI = i;
+          let endOfRange = i;
+          while (i + 1 < lines.length && lines[i + 1].length && lines[i + 1][0] === '-') {
+            endOfRange++;
+            i++;
+          }
+          deletedRanges.push(new vscode.Range(ogI, 0, endOfRange, 0));
+        }
+      }
+    }
 
     editor.setDecorations(HighlightDecorator.decorations['added.line'], addedRanges);
     editor.setDecorations(HighlightDecorator.decorations['deleted.line'], deletedRanges);
@@ -97,11 +123,17 @@ export default class HighlightDecorator {
     HighlightDecorator.updating.set(editor, false);
   }
 
+  public static applyHoverDecorations(editor: vscode.TextEditor, range: vscode.Range) {
+
+    editor.setDecorations(HighlightDecorator.decorations['hover'], [range]);
+  }
+
   private static generateAddedBlock(): vscode.DecorationRenderOptions {
     return {
       // backgroundColor: new vscode.ThemeColor('merge.currentContentBackground'),
       backgroundColor: new vscode.ThemeColor('diffEditor.insertedTextBackground'),
       isWholeLine: true,
+      rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed
       // gutterIconPath: 
     };
   }
@@ -111,6 +143,17 @@ export default class HighlightDecorator {
       // backgroundColor: new vscode.ThemeColor('merge.incomingContentBackground'),
       backgroundColor: new vscode.ThemeColor('diffEditor.removedTextBackground'),
       isWholeLine: true,
+      rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed
+      // gutterIconPath: 
+    };
+  }
+
+  private static generateHoverBlock(): vscode.DecorationRenderOptions {
+    return {
+      // backgroundColor: new vscode.ThemeColor('merge.incomingContentBackground'),
+      backgroundColor: new vscode.ThemeColor('editor.hoverHighlightBackground'),
+      isWholeLine: true,
+      rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed
       // gutterIconPath: 
     };
   }
