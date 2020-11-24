@@ -16,23 +16,24 @@ export default class MagitUtils {
 
     let discoveredRepos = Array.from(magitRepositories.entries());
 
-    let reposContainingFile = discoveredRepos
+    let discoveredReposContainingFile = discoveredRepos
       .filter(([path, repo]) => FilePathUtils.isDescendant(path, uri.fsPath));
 
-    // TODO: refactor, fix
+    // TODO: refactor
     if (discoveredRepos.length < gitApi.repositories.length) {
-      let undiscoveredReposContainingFile = gitApi.repositories
+      let gitExtensionReposContainingFile = gitApi.repositories
         .filter((repo) => FilePathUtils.isDescendant(repo.rootUri.fsPath, uri.fsPath));
 
-      if (undiscoveredReposContainingFile.length > 1) {
+      // If repos in total containing file outnumbers discovered repos containing file, return undefined
+      if (gitExtensionReposContainingFile.length > discoveredReposContainingFile.length) {
         return undefined;
       }
     }
 
-    if (reposContainingFile.length === 1) {
-      return reposContainingFile[0][1];
-    } else if (reposContainingFile.length > 0) {
-      return reposContainingFile.sort(([pathA, repoA], [pathB, repoB]) => pathB.length - pathA.length)[0][1];
+    if (discoveredReposContainingFile.length === 1) {
+      return discoveredReposContainingFile[0][1];
+    } else if (discoveredReposContainingFile.length > 0) {
+      return discoveredReposContainingFile.sort(([pathA, repoA], [pathB, repoB]) => pathB.length - pathA.length)[0][1];
     }
   }
 
@@ -90,25 +91,35 @@ export default class MagitUtils {
     }
     else if (gitApi.repositories.length) {
 
-      if (vscode.workspace.workspaceFolders?.length) {
-        repository = this.discoverRepoThatContainsFile(uri ?? vscode.workspace.workspaceFolders[0].uri);
+      if (uri) {
+        repository = this.discoverRepoThatContainsFile(uri);
+      }
+
+      if (!repository && vscode.workspace.workspaceFolders?.length === 1) {
+        repository = this.discoverRepoThatContainsFile(vscode.workspace.workspaceFolders[0].uri);
       }
 
       if (!repository) {
-        const repoPicker: PickMenuItem<Repository | undefined>[] = gitApi.repositories.map(repo => ({ label: repo.rootUri.fsPath, meta: repo }));
-        repoPicker.push({ label: 'Init repo', meta: undefined });
-        repository = await PickMenuUtil.showMenu(repoPicker, 'Which repository?');
+        type RepoPickResult = { repository?: Repository, initRepo?: Boolean };
+
+        const repoPicker: PickMenuItem<RepoPickResult | undefined>[] = gitApi.repositories.map(repo => ({ label: repo.rootUri.fsPath, meta: { repository: repo } }));
+
+        repoPicker.push({ label: 'Init repo', meta: { initRepo: true } });
+        let result = await PickMenuUtil.showMenu(repoPicker, 'Which repository?');
+
+        if (result?.initRepo) {
+          commands.executeCommand('git.init');
+          return undefined;
+        } else if (result?.repository) {
+          repository = result.repository;
+        } else {
+          return undefined;
+        }
       }
     }
 
     if (!repository) {
       await commands.executeCommand('git.init');
-
-      await new Promise(r => setTimeout(r, 1000));
-
-      if (gitApi.repositories.length) {
-        repository = gitApi.repositories[0];
-      }
     }
 
     return repository;
