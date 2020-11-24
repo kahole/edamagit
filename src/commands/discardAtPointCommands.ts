@@ -124,8 +124,8 @@ async function discard(repository: MagitRepository, selection: Selection, select
 
     if (branch.name) {
 
-      if (await MagitUtils.confirmAction(`Delete branch ${branch.name}?`)) {
-        const [remote, name] = GitTextUtils.remoteBranchFullNameToSegments(branch.name);
+      const [remote, name] = GitTextUtils.remoteBranchFullNameToSegments(branch.name);
+      if (await MagitUtils.confirmAction(`Delete branch ${branch.name} at REMOTE ${remote} (push --delete)?`)) {
         try {
           await gitRun(repository.gitRepository, ['push', '--delete', remote, name]);
         } catch (error) {

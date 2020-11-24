@@ -197,15 +197,38 @@ export default class MagitUtils {
     return window.showQuickPick(refs, { placeHolder: prompt });
   }
 
-  public static async confirmAction(prompt: string, hardConfirm: boolean = false) {
+  public static async confirmAction(prompt: string) {
 
-    const yesNo = hardConfirm ? 'yes or no' : 'y or n';
-    const confirmed = await window.showInputBox({ prompt: `${prompt} (${yesNo})` });
-    if ((hardConfirm && confirmed?.toLowerCase() === 'yes') || (!hardConfirm && confirmed?.toLowerCase().charAt(0) === 'y')) {
-      return true;
-    }
-    window.setStatusBarMessage('Abort', Constants.StatusMessageDisplayTimeout);
-    return false;
+    let renderedPrompt = `${prompt} (y or n)`;
+
+    return new Promise(resolve => {
+
+      let resolveOnHide = true;
+
+      const _inputBox = window.createInputBox();
+      _inputBox.validationMessage = renderedPrompt;
+      _inputBox.show();
+
+      let changeListener = _inputBox.onDidChangeValue(e => {
+        if (e.toLowerCase().includes('y')) {
+          resolveOnHide = false;
+          _inputBox.hide();
+          resolve(true);
+        } else if (e.toLowerCase().includes('n') || e.toLowerCase().includes('q')) {
+          _inputBox.hide();
+        }
+      });
+
+      let onHideListener = _inputBox.onDidHide(() => {
+        _inputBox.dispose();
+        changeListener.dispose();
+        onHideListener.dispose();
+        if (resolveOnHide) {
+          window.setStatusBarMessage('Abort', Constants.StatusMessageDisplayTimeout);
+          resolve(false);
+        }
+      });
+    });
   }
 }
 
