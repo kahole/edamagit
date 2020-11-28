@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.6] - 2020-11-28
+- Makes Y or N confirmation dialog single key press to complete (No 'Enter' key press required, only Y or N).
+- Fixes issue with Magit status in multi-root workspaces opening wrong repo.
+- Other small fixes
+
 ## [0.5.4] - 2020-11-21
 - Fixes critical issue with status view when called from files outside repo.
 
