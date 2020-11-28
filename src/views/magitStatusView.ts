@@ -72,7 +72,7 @@ export default class MagitStatusView extends DocumentView {
       this.addSubview(new StashSectionView(magitState.stashes));
     }
 
-    const refs = magitState.remotes.reduce((prev, remote) => remote.branches.concat(prev), magitState.branches);
+    const refs = magitState.remotes.reduce((prev, remote) => remote.branches.concat(prev), magitState.branches.concat(magitState.tags));
 
     if (magitState.HEAD?.upstreamRemote?.commitsAhead?.length) {
       this.addSubview(new UnsourcedCommitSectionView(Section.UnmergedInto, magitState.HEAD.upstreamRemote, magitState.HEAD.upstreamRemote.commitsAhead, refs));

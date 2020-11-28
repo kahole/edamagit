@@ -7,6 +7,7 @@ import { SemanticTokenTypes } from '../common/constants';
 import GitTextUtils from './gitTextUtils';
 import { DocumentView } from '../views/general/documentView';
 import { magitConfig, views } from '../extension';
+import { readFile } from 'fs';
 
 export default class ViewUtils {
 
@@ -87,7 +88,7 @@ export default class ViewUtils {
       .filter(ref => ref.commit === commitHash)
       .sort(ref => ref.type.valueOf());
 
-    let hasMatchingRemoteDict: { [name: string]: boolean } = {};
+    let hasMatchingRemoteBranch: { [name: string]: boolean } = {};
 
     let refsContent: (string | Token)[] = [];
     matchingRefs.forEach(ref => {
@@ -102,16 +103,25 @@ export default class ViewUtils {
 
         let m = matchingRefs.find(other => other.name === namePart && other.type === RefType.Head);
         if (m && m.name) {
-          hasMatchingRemoteDict[m.name!] = true;
+          hasMatchingRemoteBranch[m.name!] = true;
           refsContent.push(new Token(remotePart + '/', SemanticTokenTypes.RemoteRefName), new Token(m.name ?? '', SemanticTokenTypes.RefName));
           refsContent.push(' ');
           return;
         }
       }
-      if (hasMatchingRemoteDict[ref.name]) {
+      if (hasMatchingRemoteBranch[ref.name]) {
         return;
       }
-      refsContent.push(new Token(ref.name, ref.remote ? SemanticTokenTypes.RemoteRefName : SemanticTokenTypes.RefName));
+
+      let refTokenType = SemanticTokenTypes.RefName;
+
+      if (ref.remote) {
+        refTokenType = SemanticTokenTypes.RemoteRefName;
+      } else if (ref.type === RefType.Tag) {
+        refTokenType = SemanticTokenTypes.TagName;
+      }
+
+      refsContent.push(new Token(ref.name, refTokenType));
       refsContent.push(' ');
     });
 
