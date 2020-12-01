@@ -67,6 +67,9 @@ Essential commands
   RET      visit thing at point
   shift+4  show git process view
   q        exit / close magit view
+
+  ctrl+j Move cursor to next entity
+  ctrl+k Move cursor to previous entity
 ```
 
 ## Troubleshooting

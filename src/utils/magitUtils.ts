@@ -207,7 +207,6 @@ export default class MagitUtils {
 
       const _inputBox = window.createInputBox();
       _inputBox.validationMessage = renderedPrompt;
-      _inputBox.show();
 
       let changeListener = _inputBox.onDidChangeValue(e => {
         if (e.toLowerCase().includes('y')) {
@@ -228,6 +227,8 @@ export default class MagitUtils {
           resolve(false);
         }
       });
+
+      _inputBox.show();
     });
   }
 }

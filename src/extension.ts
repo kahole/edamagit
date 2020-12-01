@@ -9,7 +9,7 @@ import { magitVisitAtPoint } from './commands/visitAtPointCommands';
 import { MagitRepository } from './models/magitRepository';
 import { magitCommit } from './commands/commitCommands';
 import { magitStage, magitStageAll, magitUnstageAll, magitUnstage, stageFile, unstageFile } from './commands/stagingCommands';
-import { saveClose, clearSaveClose, quitMagitView } from './commands/macros';
+import { saveClose, clearSaveClose, quitMagitView, moveToPreviousEntity, moveToNextEntity } from './commands/macros';
 import HighlightProvider from './providers/highlightProvider';
 import SemanticTokensProvider from './providers/semanticTokensProvider';
 import { CommandPrimer } from './commands/commandPrimer';
@@ -144,6 +144,10 @@ export function activate(context: ExtensionContext) {
   }, false)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('magit.quit', quitMagitView));
+
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.move-next-entity', CommandPrimer.primeRepoAndView(moveToNextEntity, false)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.move-previous-entity', CommandPrimer.primeRepoAndView(moveToPreviousEntity, false)));
+
   context.subscriptions.push(commands.registerTextEditorCommand('magit.save-and-close-editor', saveClose));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.clear-and-abort-editor', clearSaveClose));
 }

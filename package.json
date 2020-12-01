@@ -629,6 +629,16 @@
         "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
       },
       {
+        "command": "magit.move-next-entity",
+        "key": "ctrl+j",
+        "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
+      },
+      {
+        "command": "magit.move-previous-entity",
+        "key": "ctrl+k",
+        "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
+      },
+      {
         "command": "magit.save-and-close-editor",
         "key": "ctrl+c ctrl+c",
         "when": "editorTextFocus && editorLangId == git-commit"

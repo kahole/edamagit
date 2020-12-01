@@ -83,6 +83,9 @@ Essential commands
   ${HelpView.joinTexts(9, [c['magit.toggle-fold'], 'toggle section at point'])}
   ${HelpView.joinTexts(9, [c['magit.visit-at-point'], 'visit thing at point'])}
   ${HelpView.joinTexts(9, [c['magit.process-log'], 'show git process view'])}
-  ${HelpView.joinTexts(9, [c['magit.quit'], 'exit / close magit view'])}`;
+  ${HelpView.joinTexts(9, [c['magit.quit'], 'exit / close magit view'])}
+
+  ${HelpView.joinTexts(9, [c['magit.move-next-entity'], 'Move cursor to next entity'])}
+  ${HelpView.joinTexts(9, [c['magit.move-previous-entity'], 'Move cursor to previous entity'])}`;
   }
 }
