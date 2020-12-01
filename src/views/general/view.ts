@@ -70,11 +70,15 @@ export abstract class View {
         return result;
       }
 
-      const subResults = this.subViews
-        .map(subView => subView.click(position))
-        .filter(r => r);
+      let subResult: View | undefined = undefined;
+      for (const subView of this.subViews) {
+        subResult = subView.click(position);
+        if (subResult) {
+          break;
+        }
+      }
 
-      return subResults.length > 0 ? subResults[0] : result;
+      return subResult ?? result;
     }
   }
 
