@@ -1,4 +1,4 @@
-import { commands, TextEditor, Range, window, Selection } from 'vscode';
+import { commands, TextEditor, Range, window, Selection, TextEditorRevealType, Position } from 'vscode';
 import { MagitRepository } from '../models/magitRepository';
 import { DocumentView } from '../views/general/documentView';
 import { View } from '../views/general/view';
@@ -37,6 +37,11 @@ export async function moveToPreviousEntity(repo: MagitRepository, view: Document
   moveToEntity(view, 'previous');
 }
 
+function moveCursorAndReveal(position: Position) {
+  window.activeTextEditor!.selection = new Selection(position, position);
+  window.activeTextEditor!.revealRange(new Selection(position, position), TextEditorRevealType.Default);
+}
+
 function moveToEntity(view: View, direction: 'next' | 'previous') {
   const selectedView = view.click(window.activeTextEditor!.selection.active);
 
@@ -56,7 +61,7 @@ function moveToEntity(view: View, direction: 'next' | 'previous') {
 
       if (nextView) {
         let nextLocation = nextView.range.start;
-        window.activeTextEditor!.selection = new Selection(nextLocation, nextLocation);
+        moveCursorAndReveal(nextLocation);
         return;
       }
     }
@@ -64,11 +69,12 @@ function moveToEntity(view: View, direction: 'next' | 'previous') {
     // Avoid standing still and getting stuck
     if (direction === 'next') {
       let newPos = selectedView.range.end.with({ line: selectedView.range.end.line });
-      window.activeTextEditor!.selection = new Selection(newPos, newPos);
+      moveCursorAndReveal(newPos);
     } else if (direction === 'previous') {
       if (selectedView.range.start.line > 0) {
         let newPos = selectedView.range.start.with({ line: selectedView.range.start.line - 1 });
-        window.activeTextEditor!.selection = new Selection(newPos, newPos);
+        moveCursorAndReveal(newPos);
+
       }
     }
   }
