@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.5.8] - 2020-12-08
+- Reveal cursor when jumping out of the viewport with `ctrl+j` and `ctrl+k`
+
 ## [0.5.7] - 2020-12-02
 - Use `ctrl+j` and `ctrl+k` to jump between entities in e.g. Status view.
 - Small improvements
