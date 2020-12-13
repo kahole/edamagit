@@ -40,6 +40,7 @@ import { blameFile } from './commands/blamingCommands';
 import { copySectionValueCommand } from './commands/copySectionValueCommands';
 import { copyBufferRevisionCommands } from './commands/copyBufferRevisionCommands';
 import { submodules } from './commands/submodulesCommands';
+import { forgeRefreshInterval } from './forge';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
@@ -47,7 +48,16 @@ export const processLog: MagitProcessLogEntry[] = [];
 
 export let gitApi: API;
 export let logPath: string;
-export let magitConfig: { displayBufferFunction?: string };
+export let magitConfig: { displayBufferFunction?: string, forgeEnabled?: boolean };
+
+function loadConfig() {
+  let workspaceConfig = workspace.getConfiguration('magit');
+
+  magitConfig = {
+    displayBufferFunction: workspaceConfig.get('display-buffer-function'),
+    forgeEnabled: workspaceConfig.get('forge-enabled')
+  };
+}
 
 export function activate(context: ExtensionContext) {
 
@@ -56,7 +66,12 @@ export function activate(context: ExtensionContext) {
     throw new Error('vscode.git Git extension not enabled');
   }
 
-  magitConfig = { displayBufferFunction: workspace.getConfiguration('magit').get('display-buffer-function') };
+  loadConfig();
+  workspace.onDidChangeConfiguration(configChangedEvent => {
+    if (configChangedEvent.affectsConfiguration('magit')) {
+      loadConfig();
+    }
+  });
 
   context.subscriptions.push(gitExtension.onDidChangeEnablement(enabled => {
     if (!enabled) {
@@ -153,4 +168,8 @@ export function activate(context: ExtensionContext) {
 }
 
 export function deactivate() {
+
+  if (forgeRefreshInterval) {
+    clearInterval(forgeRefreshInterval);
+  }
 }

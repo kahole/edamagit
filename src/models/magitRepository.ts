@@ -8,7 +8,9 @@ import { MagitRemote } from './magitRemote';
 import { MagitCherryPickingState } from './magitCherryPickingState';
 import { MagitRevertingState } from './magitRevertingState';
 import { Stash } from './stash';
+import { PullRequest } from '../forge/model/pullRequest';
 import { Uri } from 'vscode';
+import { ForgeState } from '../forge/model/forgeState';
 
 export interface MagitRepository {
   readonly uri: Uri;
@@ -29,4 +31,6 @@ export interface MagitRepository {
   readonly refs: Ref[];
   readonly submodules: Submodule[];
   readonly gitRepository: Repository;
+
+  readonly forgeState?: ForgeState;
 }

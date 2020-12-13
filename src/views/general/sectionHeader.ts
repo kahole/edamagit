@@ -15,7 +15,8 @@ export enum Section {
   HEAD = 'HEAD',
   Branches = 'Branches',
   Remote = 'Remote',
-  Tags = 'Tags'
+  Tags = 'Tags',
+  PullRequests = 'Pull Requests',
 }
 
 export class SectionHeaderView extends TextView {

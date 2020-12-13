@@ -16,6 +16,7 @@ import { CherryPickingSectionView } from './cherryPicking/cherryPickingSectionVi
 import { RevertingSectionView } from './reverting/revertingSectionView';
 import { MagitBranch } from '../models/magitBranch';
 import { getLatestGitError } from '../commands/commandPrimer';
+import { PullRequestSectionView } from './forge/pullRequestView';
 
 export default class MagitStatusView extends DocumentView {
 
@@ -88,6 +89,10 @@ export default class MagitStatusView extends DocumentView {
       this.addSubview(new UnsourcedCommitSectionView(Section.UnpulledFrom, magitState.HEAD.upstreamRemote, magitState.HEAD.upstreamRemote.commitsBehind, refs));
     } else if (magitState.HEAD?.pushRemote?.commitsBehind?.length) {
       this.addSubview(new UnsourcedCommitSectionView(Section.UnpulledFrom, magitState.HEAD.pushRemote, magitState.HEAD.pushRemote.commitsBehind, refs));
+    }
+
+    if (magitState.forgeState?.pullRequests?.length) {
+      this.addSubview(new PullRequestSectionView(magitState.forgeState?.pullRequests));
     }
   }
 

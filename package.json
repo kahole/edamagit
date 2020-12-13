@@ -7,7 +7,7 @@
   "author": {
     "name": "Kristian Andersen Hole"
   },
-  "version": "0.5.8",
+  "version": "0.6.0",
   "engines": {
     "vscode": "^1.50.0"
   },
@@ -392,6 +392,11 @@
           ],
           "default": "other-column",
           "description": "Choose where new buffers will be displayed. (reload extension for effect)"
+        },
+        "magit.forge-enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable Forge functionality (show pull requests, issues, etc from e.g. Github)"
         }
       }
     },
@@ -684,7 +689,9 @@
     "webpack-cli": "^4.2.0"
   },
   "dependencies": {
+    "@types/superagent": "^4.1.10",
     "date-fns": "^2.16.1",
-    "jsonc-parser": "^3.0.0"
+    "jsonc-parser": "^3.0.0",
+    "superagent": "^6.1.0"
   }
 }
