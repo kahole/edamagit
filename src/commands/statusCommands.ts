@@ -17,7 +17,7 @@ import { MagitRevertingState } from '../models/magitRevertingState';
 import { Stash } from '../models/stash';
 import { MagitRepository } from '../models/magitRepository';
 import ViewUtils from '../utils/viewUtils';
-import { forgeStatus } from '../utils/forgeUtils';
+import { forgeStatus } from '../forge';
 
 export async function magitRefresh() { }
 

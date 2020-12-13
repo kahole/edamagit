@@ -68,7 +68,7 @@ async function checkoutPullRequest(menuState: MenuState) {
   }
   const prItems = prs.map((v, idx) => ({
     label: v.id.toString(),
-    description: v.name,
+    description: v.title,
     meta: idx
   }));
   const prIdx = await PickMenuUtil.showMenu(prItems, 'Checkout pull request');

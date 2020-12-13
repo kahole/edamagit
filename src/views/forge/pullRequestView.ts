@@ -1,7 +1,7 @@
 import { View } from '../general/view';
 import { Section, SectionHeaderView } from '../general/sectionHeader';
 import { LineBreakView } from '../general/lineBreakView';
-import { PullRequest } from '../../models/pullRequest';
+import { PullRequest } from '../../forge/model/pullRequest';
 import { TextView } from '../general/textView';
 
 export class PullRequestSectionView extends View {
@@ -29,6 +29,6 @@ export class PullRequestItemView extends TextView {
   }
 
   constructor(public pr: PullRequest) {
-    super(`${PullRequestItemView.getSection(pr)} ${pr.name}`);
+    super(`${PullRequestItemView.getSection(pr)} ${pr.title}`);
   }
 }

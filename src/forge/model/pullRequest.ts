@@ -1,6 +1,6 @@
 export interface PullRequest {
   id: number;
-  name: string;
+  title: string;
   labels: Label[];
   remoteRef: string;
 }
