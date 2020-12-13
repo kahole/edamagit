@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.0] - 2020-12-13
+
+### Forge basic PR functionality
+- Enable it in vscode settings: `magit.forge-enabled`
+
+Functionality:
+- See Pull requests list in status view
+- Checkout from 'Branching' menu: `Check out pull request`
+- Only github.com currently supported.
+
+Thanks, @roblabla - Robin Lambertz for help with implementation.
+
 ## [0.5.8] - 2020-12-08
 - Reveal cursor when jumping out of the viewport with `ctrl+j` and `ctrl+k`
 

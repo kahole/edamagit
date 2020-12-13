@@ -165,3 +165,7 @@ _Feature requests as well as issues are welcome_
   - Bisecting
   - Patches
   - Subtrees
+
+### Missing Forge features
+  - Issues
+  - PR commits and detail view
