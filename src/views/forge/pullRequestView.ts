@@ -29,6 +29,9 @@ export class PullRequestItemView extends TextView {
   }
 
   constructor(public pr: PullRequest) {
-    super(`${PullRequestItemView.getSection(pr)} ${pr.title}`);
+    super();
+    let labels = pr.labels.map(label => `[${label.name}]`).join(' ');
+
+    this.textContent = `${PullRequestItemView.getSection(pr)} ${pr.title}${labels.length ? ' ' + labels : ''}`;
   }
 }

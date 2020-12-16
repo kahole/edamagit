@@ -1,8 +1,7 @@
 import { Label } from './label';
 
-export interface PullRequest {
+export interface Issue {
   id: number;
   title: string;
   labels: Label[];
-  remoteRef: string;
 }

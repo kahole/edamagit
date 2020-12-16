@@ -17,6 +17,7 @@ export enum Section {
   Remote = 'Remote',
   Tags = 'Tags',
   PullRequests = 'Pull Requests',
+  Issues = 'Issues',
 }
 
 export class SectionHeaderView extends TextView {

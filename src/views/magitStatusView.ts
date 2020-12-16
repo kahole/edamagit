@@ -17,6 +17,7 @@ import { RevertingSectionView } from './reverting/revertingSectionView';
 import { MagitBranch } from '../models/magitBranch';
 import { getLatestGitError } from '../commands/commandPrimer';
 import { PullRequestSectionView } from './forge/pullRequestView';
+import { IssuesSectionView } from './forge/issuesView';
 
 export default class MagitStatusView extends DocumentView {
 
@@ -93,6 +94,10 @@ export default class MagitStatusView extends DocumentView {
 
     if (magitState.forgeState?.pullRequests?.length) {
       this.addSubview(new PullRequestSectionView(magitState.forgeState?.pullRequests));
+    }
+
+    if (magitState.forgeState?.issues?.length) {
+      this.addSubview(new IssuesSectionView(magitState.forgeState?.issues));
     }
   }
 
