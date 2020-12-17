@@ -1,37 +1,56 @@
-import { View } from '../general/view';
-import { Section, SectionHeaderView } from '../general/sectionHeader';
-import { LineBreakView } from '../general/lineBreakView';
+import { DocumentView } from '../general/documentView';
+import { Uri } from 'vscode';
+import * as Constants from '../../common/constants';
+import { TextView, UnclickableTextView } from '../general/textView';
 import { PullRequest } from '../../forge/model/pullRequest';
-import { TextView } from '../general/textView';
+import { MagitRepository } from '../../models/magitRepository';
+import { View } from '../general/view';
+import { LineBreakView } from '../general/lineBreakView';
+import { IssueCommentSection, IssueCommentView } from './issueView';
 
-export class PullRequestSectionView extends View {
-  isFoldable = true;
+export class PullRequestView extends DocumentView {
 
-  get id() { return Section.PullRequests.toString(); }
+  static UriPath: string = 'pr.magit';
 
-  constructor(prs: PullRequest[]) {
-    super();
+  constructor(uri: Uri, public pullRequest: PullRequest) {
+    super(uri);
+    this.provideContent(pullRequest);
+  }
+
+  provideContent(pullRequest: PullRequest) {
     this.subViews = [
-      new SectionHeaderView(Section.PullRequests, prs.length),
-      ...prs.map(pr => new PullRequestItemView(pr)),
-      new LineBreakView()
+      new PullRequestHeader(pullRequest),
+      new LineBreakView(),
+      new IssueCommentView({ author: pullRequest.author, bodyText: pullRequest.bodyText, createdAt: pullRequest.createdAt }),
+      new IssueCommentSection(pullRequest.comments)
     ];
+  }
+
+  public update(state: MagitRepository): void {
+    let updatedPullRequest = state.forgeState?.pullRequests.find(i => i.number === this.pullRequest.number);
+
+    if (updatedPullRequest) {
+      this.pullRequest = updatedPullRequest;
+      this.provideContent(this.pullRequest);
+      this.triggerUpdate();
+    }
+  }
+
+  static encodeLocation(repository: MagitRepository, pullRequest: PullRequest): Uri {
+    return Uri.parse(`${Constants.MagitUriScheme}:${PullRequestView.UriPath}?${repository.uri.fsPath}#${pullRequest.number}`);
   }
 }
 
-export class PullRequestItemView extends TextView {
-  public get section() {
-    return PullRequestItemView.getSection(this.pr);
-  }
+class PullRequestHeader extends View {
+  isFoldable = true;
 
-  private static getSection(pr: PullRequest) {
-    return `#${pr.id}`;
-  }
+  get id() { return `pullRequestHeader#${this.pullRequest.number}`; }
 
-  constructor(public pr: PullRequest) {
+  constructor(private pullRequest: PullRequest) {
     super();
-    let labels = pr.labels.map(label => `[${label.name}]`).join(' ');
-
-    this.textContent = `${PullRequestItemView.getSection(pr)} ${pr.title}${labels.length ? ' ' + labels : ''}`;
+    this.addSubview(new UnclickableTextView(`#${pullRequest.number}: ${pullRequest.title}`));
+    this.addSubview(new TextView(`Title: ${pullRequest.title}`));
+    this.addSubview(new TextView(`State: open`));
+    this.addSubview(new TextView(`Labels: ${pullRequest.labels.map(l => `[${l.name}]`).join(' ')}`));
   }
 }

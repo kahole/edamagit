@@ -1,8 +1,14 @@
+import { ForgeUser, IssueComment } from './issue';
 import { Label } from './label';
 
 export interface PullRequest {
-  id: number;
+  number: number;
   title: string;
-  labels: Label[];
   remoteRef: string;
+  author: string;
+  createdAt: string;
+  bodyText: string;
+  comments: IssueComment[];
+  assignees: ForgeUser[],
+  labels: Label[];
 }

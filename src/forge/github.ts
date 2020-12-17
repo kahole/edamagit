@@ -18,14 +18,12 @@ export async function getGithubForgeState(remoteUrl: string): Promise<ForgeState
 
   let accessToken = await authenticate();
 
-  let pullRequestsTask = getPullRequests(accessToken, owner, repo);
-
-  let issuesTask = getIssues(accessToken, owner, repo);
+  let [pullRequests, issues] = await getPullRequestsAndIssues(accessToken, owner, repo);
 
   return {
     forgeRemote: remoteUrl.toString(),
-    pullRequests: await pullRequestsTask,
-    issues: await issuesTask
+    pullRequests,
+    issues
   };
 }
 
@@ -35,22 +33,60 @@ async function authenticate(): Promise<string> {
   return session.accessToken;
 }
 
-async function getPullRequests(accessToken: string, owner: string, repo: string): Promise<PullRequest[]> {
+async function getPullRequestsAndIssues(accessToken: string, owner: string, repo: string): Promise<[PullRequest[], Issue[]]> {
 
   let res = await queryGithub(accessToken,
     {
       query:
         `query GetOpenPullRequests($owner: String!, $repo: String!) {
             repository(owner: $owner, name: $repo) {
-              pullRequests(last:10, states: OPEN) {
+              pullRequests(last:20, states: OPEN) {
                 edges { node {
                   number
                   title
+                  author {
+                    login
+                  }
+                  createdAt
+                  bodyText
+                  comments(first: 50) {
+                    edges { node {
+                      author { login }
+                      createdAt
+                      bodyText
+                    }}
+                  }
                   labels(last: 10) {
                     edges { node {
                       name
                       color
-            }}}}}}}}`,
+                    }}
+                  }
+              }}}
+              issues(last:50, states: OPEN) {
+                edges { node {
+                  number
+                  title
+                  author {
+                    login
+                  }
+                  createdAt
+                  bodyText
+                  comments(first: 50) {
+                    edges { node {
+                      author { login }
+                      createdAt
+                      bodyText
+                    }}
+                  }
+                  labels(last: 10) {
+                    edges { node {
+                      name
+                      color
+                    }}
+                  }
+              }}}
+          }}`,
       variables: {
         owner,
         repo
@@ -58,51 +94,63 @@ async function getPullRequests(accessToken: string, owner: string, repo: string)
     }
   );
 
-  return res.data.repository.pullRequests.edges.map((e: any) => ({
-    id: e.node.number,
-    title: e.node.title,
-    labels: e.node.labels.edges.map((labelEdge: any) => ({
-      name: labelEdge.node.name,
-      color: labelEdge.node.color
-    })
-    ),
-    remoteRef: `pull/${e.node.number}/head`
-  }));
+  if (res.errors) {
+    throw new Error(res.errors);
+  }
+
+  // assignees(last: 10) {
+  //   edges { node {
+  //     name
+  //     login
+  //     email
+  //   }}
+  // }
+
+  return [
+
+    res.data.repository.pullRequests.edges.map(({ node }: any) => ({
+      number: node.number,
+      title: node.title,
+      remoteRef: `pull/${node.number}/head`,
+      author: node.author.login,
+      createdAt: node.createdAt,
+      bodyText: node.bodyText,
+      comments: node.comments.edges.map(mapComment),
+      assignees: [],
+      // assignees: node.assignees.edges.map(mapUser),
+      labels: node.labels.edges.map(mapLabel)
+    })).reverse(),
+
+    res.data.repository.issues.edges.map(({ node }: any) => ({
+      number: node.number,
+      title: node.title,
+      author: node.author.login,
+      createdAt: node.createdAt,
+      bodyText: node.bodyText,
+      comments: node.comments.edges.map(mapComment),
+      assignees: [],
+      // assignees: node.assignees.edges.map(mapUser),
+      labels: node.labels.edges.map(mapLabel)
+    })).reverse()
+  ];
 }
 
-async function getIssues(accessToken: string, owner: string, repo: string): Promise<Issue[]> {
+const mapComment = ({ node }: any) => ({
+  author: node.author.login,
+  createdAt: node.createdAt,
+  bodyText: node.bodyText
+});
 
-  let res = await queryGithub(accessToken,
-    {
-      query:
-        `query GetOpenIssues($owner: String!, $repo: String!) {
-            repository(owner: $owner, name: $repo) {
-              issues(last:10, states: OPEN) {
-                edges { node {
-                  number
-                  title
-                  labels(last: 10) {
-                    edges { node {
-                      name
-                      color
-            }}}}}}}}`,
-      variables: {
-        owner,
-        repo
-      }
-    }
-  );
+const mapUser = ({ node }: any) => ({
+  displayName: node.name,
+  username: node.login,
+  email: node.email
+});
 
-  return res.data.repository.issues.edges.map((e: any) => ({
-    id: e.node.number,
-    title: e.node.title,
-    labels: e.node.labels.edges.map((labelEdge: any) => ({
-      name: labelEdge.node.name,
-      color: labelEdge.node.color
-    })
-    )
-  }));
-}
+const mapLabel = ({ node }: any) => ({
+  name: node.name,
+  color: node.color
+});
 
 async function queryGithub(accessToken: string, ql: object) {
   let res = await request

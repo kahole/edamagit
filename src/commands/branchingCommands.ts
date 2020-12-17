@@ -67,15 +67,15 @@ async function checkoutPullRequest(menuState: MenuState) {
     return;
   }
   const prItems = prs.map((v, idx) => ({
-    label: v.id.toString(),
+    label: v.number.toString(),
     description: v.title,
     meta: idx
   }));
   const prIdx = await PickMenuUtil.showMenu(prItems, 'Checkout pull request');
   if (prIdx) {
     const pr = prs[prIdx];
-    await gitRun(state.gitRepository, ['fetch', state.forgeState?.forgeRemote, `${pr.remoteRef}:pr-${pr.id}`]);
-    return gitRun(state.gitRepository, ['checkout', `pr-${pr.id}`]);
+    await gitRun(state.gitRepository, ['fetch', state.forgeState?.forgeRemote, `${pr.remoteRef}:pr-${pr.number}`]);
+    return gitRun(state.gitRepository, ['checkout', `pr-${pr.number}`]);
   }
 }
 

@@ -1,8 +1,8 @@
-import { TextView } from '../general/textView';
+import { UnclickableTextView } from '../general/textView';
 import { MagitChange } from '../../models/magitChange';
 import { Status } from '../../typings/git';
 
-export class ChangeHeaderView extends TextView {
+export class ChangeHeaderView extends UnclickableTextView {
 
   constructor(public change: MagitChange) {
     super();
@@ -10,8 +10,6 @@ export class ChangeHeaderView extends TextView {
     const mergingStatusLabel = mapFileStatusToMergingLabel(this.change.status);
     this.textContent = `${statusLabel ? statusLabel.padEnd(11) : ''}${this.change.relativePath}${mergingStatusLabel ? ` (${mergingStatusLabel})` : ''}`;
   }
-
-  onClicked() { return undefined; }
 }
 
 function mapFileStatusToLabel(status: Status): string {

@@ -18,3 +18,7 @@ export class TextView extends View {
     return [this.folded ? lines[0] : this.textContent];
   }
 }
+
+export class UnclickableTextView extends TextView {
+  onClicked() { return undefined; }
+}

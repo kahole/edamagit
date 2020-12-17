@@ -1,4 +1,4 @@
-import { TextView } from './textView';
+import { UnclickableTextView } from './textView';
 
 export enum Section {
   Untracked = 'Untracked files',
@@ -20,11 +20,9 @@ export enum Section {
   Issues = 'Issues',
 }
 
-export class SectionHeaderView extends TextView {
+export class SectionHeaderView extends UnclickableTextView {
 
   constructor(section: Section, count?: number, extraText?: string) {
     super(`${section.valueOf()}${extraText ? ' ' + extraText + '' : ''}${count ? ' (' + count + ')' : ''}`);
   }
-
-  onClicked() { return undefined; }
 }

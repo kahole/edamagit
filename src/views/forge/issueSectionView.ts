@@ -4,7 +4,7 @@ import { LineBreakView } from '../general/lineBreakView';
 import { TextView } from '../general/textView';
 import { Issue } from '../../forge/model/issue';
 
-export class IssuesSectionView extends View {
+export class IssueSectionView extends View {
   isFoldable = true;
 
   get id() { return Section.Issues.toString(); }
@@ -25,13 +25,13 @@ export class IssueItemView extends TextView {
   }
 
   private static getSection(issue: Issue) {
-    return `#${issue.id}`;
+    return `#${issue.number}`;
   }
 
   constructor(public issue: Issue) {
     super();
     let labels = issue.labels.map(label => `[${label.name}]`).join(' ');
 
-    this.textContent = `${IssueItemView.getSection(issue)} ${issue.title}${labels.length && ' ' + labels}`;
+    this.textContent = `${IssueItemView.getSection(issue)} ${issue.title}${labels.length ? ' ' + labels : ''}`;
   }
 }
