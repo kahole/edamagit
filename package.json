@@ -42,7 +42,9 @@
     "onCommand:magit.blame-file",
     "onCommand:magit.stage-file",
     "onCommand:magit.unstage-file",
-    "onCommand:magit.diff-file"
+    "onCommand:magit.diff-file",
+    "onCommand:magit.save-and-close-editor",
+    "onCommand:magit.clear-and-abort-editor"
   ],
   "main": "./dist/extension",
   "contributes": {
