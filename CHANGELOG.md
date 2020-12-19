@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.1] - 2020-12-19
+### Forge
+- Adds detail views to Issues and PullRequests (visit by pressing enter on them)
+
 ## [0.6.0] - 2020-12-13
 
 ### Forge basic PR functionality
