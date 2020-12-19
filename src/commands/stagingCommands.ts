@@ -48,9 +48,9 @@ async function stage(repository: MagitRepository, selection: Selection, selected
 
     switch (section) {
       case Section.Untracked:
-        return stageAll(StageAllKind.AllUntracked);
+        return stageAllUntracked(repository);
       case Section.Unstaged:
-        return stageAll(StageAllKind.AllTracked);
+        return stageAllTracked(repository);
       default:
         break;
     }
@@ -74,18 +74,16 @@ async function stage(repository: MagitRepository, selection: Selection, selected
   }
 }
 
-export async function magitStageAll(repository: MagitRepository, currentView: DocumentView): Promise<void> {
-  return stageAll();
+export async function magitStageAll(repository: MagitRepository, currentView: DocumentView) {
+  return stageAllTracked(repository);
 }
 
-export enum StageAllKind {
-  All = 'stageAll',
-  AllTracked = 'stageAllTracked',
-  AllUntracked = 'stageAllUntracked'
+async function stageAllUntracked(repository: MagitRepository) {
+  return gitRun(repository.gitRepository, ['add', ...repository.untrackedFiles.map(f => f.relativePath ?? '')]);
 }
 
-async function stageAll(kind: StageAllKind = StageAllKind.AllTracked): Promise<void> {
-  return commands.executeCommand('git.' + kind.valueOf());
+async function stageAllTracked(repository: MagitRepository) {
+  return gitRun(repository.gitRepository, ['add', '-u']);
 }
 
 export async function magitUnstage(repository: MagitRepository, currentView: DocumentView): Promise<any> {
@@ -111,7 +109,7 @@ async function unstage(repository: MagitRepository, selection: Selection, select
 
   } else if (selectedView instanceof ChangeSectionView) {
     if (selectedView.section === Section.Staged) {
-      return unstageAll();
+      return unstageAll(repository);
     } else {
       window.setStatusBarMessage('Already unstaged', Constants.StatusMessageDisplayTimeout);
     }
@@ -128,15 +126,16 @@ async function unstage(repository: MagitRepository, selection: Selection, select
   }
 }
 
-export async function magitUnstageAll(repository: MagitRepository, currentView: DocumentView): Promise<void> {
+export async function magitUnstageAll(repository: MagitRepository, currentView: DocumentView) {
 
   if (await MagitUtils.confirmAction('Unstage all changes?')) {
-    return unstageAll();
+
+    return unstageAll(repository);
   }
 }
 
-async function unstageAll(): Promise<void> {
-  return commands.executeCommand('git.unstageAll');
+async function unstageAll(repository: MagitRepository) {
+  return gitRun(repository.gitRepository, ['reset']);
 }
 
 export async function stageFile(repository: MagitRepository, fileUri: Uri, update = false) {
