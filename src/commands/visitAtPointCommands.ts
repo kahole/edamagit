@@ -15,6 +15,10 @@ import { TagListingView } from '../views/tags/tagListingView';
 import * as Diffing from './diffingCommands';
 import * as Constants from '../common/constants';
 import ViewUtils from '../utils/viewUtils';
+import { IssueItemView } from '../views/forge/issueSectionView';
+import { IssueView } from '../views/forge/issueView';
+import { PullRequestItemView } from '../views/forge/pullRequestSectionView';
+import { PullRequestView } from '../views/forge/pullRequestView';
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 
@@ -56,6 +60,24 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
 
     const stash = (selectedView as StashItemView).stash;
     return Diffing.showStashDetail(repository, stash);
+
+
+  } else if (selectedView instanceof IssueItemView) {
+
+    const issue = (selectedView as IssueItemView).issue;
+    const uri = IssueView.encodeLocation(repository, issue);
+    let issueView = ViewUtils.createOrUpdateView(repository, uri, () => new IssueView(uri, issue));
+
+    return ViewUtils.showView(uri, issueView);
+
+  } else if (selectedView instanceof PullRequestItemView) {
+
+    const pullRequest = (selectedView as PullRequestItemView).pullRequest;
+    const uri = PullRequestView.encodeLocation(repository, pullRequest);
+    let pullRequestView = ViewUtils.createOrUpdateView(repository, uri, () => new PullRequestView(uri, pullRequest));
+
+    return ViewUtils.showView(uri, pullRequestView);
+
   } else {
     window.setStatusBarMessage('There is no thing at point that could be visited', Constants.StatusMessageDisplayTimeout);
   }

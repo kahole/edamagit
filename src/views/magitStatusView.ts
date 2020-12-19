@@ -16,8 +16,8 @@ import { CherryPickingSectionView } from './cherryPicking/cherryPickingSectionVi
 import { RevertingSectionView } from './reverting/revertingSectionView';
 import { MagitBranch } from '../models/magitBranch';
 import { getLatestGitError } from '../commands/commandPrimer';
-import { PullRequestSectionView } from './forge/pullRequestView';
-import { IssuesSectionView } from './forge/issuesView';
+import { PullRequestSectionView } from './forge/pullRequestSectionView';
+import { IssueSectionView } from './forge/issueSectionView';
 
 export default class MagitStatusView extends DocumentView {
 
@@ -97,7 +97,7 @@ export default class MagitStatusView extends DocumentView {
     }
 
     if (magitState.forgeState?.issues?.length) {
-      this.addSubview(new IssuesSectionView(magitState.forgeState?.issues));
+      this.addSubview(new IssueSectionView(magitState.forgeState?.issues));
     }
   }
 
