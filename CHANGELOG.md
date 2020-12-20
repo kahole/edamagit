@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.2] - 2020-12-20
+- Bug fix with forge cache
+
 ## [0.6.1] - 2020-12-19
 ### Forge
 - Adds detail views to Issues and PullRequests (visit by pressing enter on them)
