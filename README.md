@@ -167,5 +167,4 @@ _Feature requests as well as issues are welcome_
   - Subtrees
 
 ### Missing Forge features
-  - Issues
-  - PR commits and detail view
+  - Expandable list of PR commits in PR listing section

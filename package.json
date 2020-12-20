@@ -12,10 +12,6 @@
     "vscode": "^1.50.0"
   },
   "icon": "images/edamagit_logo.png",
-  "galleryBanner": {
-    "color": "#000000",
-    "theme": "dark"
-  },
   "categories": [
     "Other"
   ],

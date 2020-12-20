@@ -11,10 +11,11 @@ export async function getGithubForgeState(remoteUrl: string): Promise<ForgeState
 
   let cleaned = remoteUrl
     .replace(/.*github.com(\/|:)/, '')
-    .replace('.git', '');
+    .replace('.git', '')
+    .split('/').filter(Boolean);
 
-  const owner = cleaned.split('/').filter(Boolean)[0];
-  const repo = cleaned.split('/').filter(Boolean)[1];
+  const owner = cleaned[0];
+  const repo = cleaned[1];
 
   let accessToken = await authenticate();
 
