@@ -32,7 +32,7 @@ function setSelfHydratingCacheEntry(remoteUrl: string, state: ForgeState, factor
 
       cached.forEach(async (entry, remoteUrl) => {
 
-        if (entry.lastAccessed > Date.now() - INACTIVITY_TRESHOLD_DURATION_MS) {
+        if (entry.lastAccessed < Date.now() - INACTIVITY_TRESHOLD_DURATION_MS) {
           cached.delete(remoteUrl);
           return;
         }
