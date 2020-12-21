@@ -17,12 +17,13 @@
   <a href="https://open-vsx.org/extension/kahole/magit">
     <img src="https://img.shields.io/open-vsx/v/kahole/magit?color=blue" />
   </a>
-  <a href="https://www.buymeacoffee.com/kahole" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" height="28"></a>
+  <a href="https://www.buymeacoffee.com/kahole" target="_blank"><img src="https://img.shields.io/badge/buy%20me%20a-coffee-yellow"a>
+  <a href="https://github.com/sponsors/kahole" target="_blank"><img src="https://img.shields.io/github/sponsors/kahole"></a>
 </p>
 
 <h3 align="center">
   <a href="#usage">Usage</a> •
-  <a href="#troubleshooting">Troubleshooting</a> •
+  <a href="#settings">Settings</a> •
   <a href="#vim-support-vscodevim">Vim Bindings</a> •
   <a href="#roadmap">Roadmap</a>
 </h3>
@@ -38,12 +39,12 @@
 
 ## Usage
 
-| VSCode Command      | Default shortcut |
-|---------------------|------------------|
-| Magit Status        |   `alt+x g`      |
-| Magit File Popup    |   `alt+x alt+g`    |
-| Magit Dispatch      |   `alt+x ctrl+g`    |
-| Help                | `?` |
+| VSCode Command   | Default shortcut |
+|------------------|------------------|
+| Magit Status     | `alt+x g`        |
+| Magit File Popup | `alt+x alt+g`    |
+| Magit Dispatch   | `alt+x ctrl+g`   |
+| Help             | `?`              |
 
 `> Magit ` in VSCode Command palette will show you all available Magit actions from where you are.
 
@@ -75,10 +76,10 @@ Essential commands
   ctrl+k Move cursor to previous entity
 ```
 
-## Troubleshooting
-### I can't commit
-- git config needs to be set, for repo or global  
-`user.name` and `user.email`
+## Settings
+
+- `Forge-enabled`: Enable Forge functionality (show pull requests, issues, etc from e.g. Github)
+- `Display-buffer-function`: choose which side for magit windows to open on.
 
 ## Vim support (VSCodeVim)
 
@@ -170,4 +171,3 @@ _Feature requests as well as issues are welcome_
   - Subtrees
 
 ### Missing Forge features
-  - Expandable list of PR commits in PR listing section
