@@ -58,7 +58,7 @@
       "name": "invalid.deprecated"
     },
     "entity": {
-      "match": "(^stash@{\\d+}|((^)(?=.*[0-9])(?=.*[a-z])([a-z0-9]{7}) ))",
+      "match": "(^stash@{\\d+}|((^)(?=.*[0-9])(?=.*[a-z])([a-z0-9]{7}) ))|(^#\\d+)",
       "name": "variable.object.property"
     },
     "modified": {
