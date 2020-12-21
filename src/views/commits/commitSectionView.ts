@@ -28,7 +28,7 @@ export class CommitItemView extends SemanticTextView {
     super();
 
     this.content = [
-      `${qualifier ? qualifier + ' ' : ''}${GitTextUtils.shortHash(commit.hash)} `,
+      `${qualifier !== undefined ? qualifier + ' ' : ''}${GitTextUtils.shortHash(commit.hash)} `,
       ...ViewUtils.generateRefTokensLine(commit.hash, refs),
       `${GitTextUtils.shortCommitMessage(commit.message)}`];
   }

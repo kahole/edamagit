@@ -63,6 +63,22 @@ async function getPullRequestsAndIssues(accessToken: string, owner: string, repo
                       color
                     }}
                   }
+                  commits(last: 100) {
+                    edges { node {
+                      commit {
+                        oid
+                        message
+                        author { name email }
+                        authoredDate
+                        committedDate
+                        parents(last: 5) {
+                          edges { node {
+                            oid
+                          }}
+                        }
+                      }
+                    }}
+                  }
               }}}
               issues(last:50, states: OPEN) {
                 edges { node {
@@ -119,7 +135,8 @@ async function getPullRequestsAndIssues(accessToken: string, owner: string, repo
       comments: node.comments.edges.map(mapComment),
       assignees: [],
       // assignees: node.assignees.edges.map(mapUser),
-      labels: node.labels.edges.map(mapLabel)
+      labels: node.labels.edges.map(mapLabel),
+      commits: node.commits.edges.map(mapCommit)
     })).reverse(),
 
     res.data.repository.issues.edges.map(({ node }: any) => ({
@@ -151,6 +168,16 @@ const mapUser = ({ node }: any) => ({
 const mapLabel = ({ node }: any) => ({
   name: node.name,
   color: node.color
+});
+
+const mapCommit = ({ node: { commit } }: any) => ({
+  hash: commit.oid,
+  message: commit.message,
+  parents: commit.parents.edges.map((node: any) => node.oid),
+  authorDate: commit.authoredDate,
+  authorName: commit.author.name,
+  authorEmail: commit.author.email,
+  commitDate: commit.committedDate
 });
 
 async function queryGithub(accessToken: string, ql: object) {

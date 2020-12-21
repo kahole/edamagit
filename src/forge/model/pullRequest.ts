@@ -1,3 +1,4 @@
+import { Commit } from '../../typings/git';
 import { ForgeUser, IssueComment } from './issue';
 import { Label } from './label';
 
@@ -11,4 +12,5 @@ export interface PullRequest {
   comments: IssueComment[];
   assignees: ForgeUser[],
   labels: Label[];
+  commits: Commit[];
 }

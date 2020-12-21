@@ -2,7 +2,8 @@ import { View } from '../general/view';
 import { Section, SectionHeaderView } from '../general/sectionHeader';
 import { LineBreakView } from '../general/lineBreakView';
 import { PullRequest } from '../../forge/model/pullRequest';
-import { TextView } from '../general/textView';
+import { TextView, UnclickableTextView } from '../general/textView';
+import { CommitItemView } from '../commits/commitSectionView';
 
 export class PullRequestSectionView extends View {
   isFoldable = true;
@@ -19,7 +20,12 @@ export class PullRequestSectionView extends View {
   }
 }
 
-export class PullRequestItemView extends TextView {
+export class PullRequestItemView extends View {
+  isFoldable = true;
+  foldedByDefault = true;
+
+  get id() { return `pullRequestItem#${this.pullRequest.number}`; }
+
   public get section() {
     return PullRequestItemView.getSection(this.pullRequest);
   }
@@ -32,6 +38,9 @@ export class PullRequestItemView extends TextView {
     super();
     let labels = pullRequest.labels.map(label => `[${label.name}]`).join(' ');
 
-    this.textContent = `${PullRequestItemView.getSection(pullRequest)} ${pullRequest.title}${labels.length ? ' ' + labels : ''}`;
+    this.addSubview(
+      new UnclickableTextView(`${PullRequestItemView.getSection(pullRequest)} ${pullRequest.title}${labels.length ? ' ' + labels : ''}`),
+      ...pullRequest.commits.map(c => new CommitItemView(c))
+    );
   }
 }
