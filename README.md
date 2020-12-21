@@ -12,7 +12,10 @@
 
 <p align="center">
   <a href="https://marketplace.visualstudio.com/items?itemName=kahole.magit">
-      <img src="https://vsmarketplacebadge.apphb.com/version-short/kahole.magit.svg" >
+      <img src="https://img.shields.io/visual-studio-marketplace/v/kahole.magit?color=green&label=VS%20Marketplace" />
+  </a>
+  <a href="https://open-vsx.org/extension/kahole/magit">
+    <img src="https://img.shields.io/open-vsx/v/kahole/magit?color=blue" />
   </a>
   <a href="https://www.buymeacoffee.com/kahole" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" height="28"></a>
 </p>
