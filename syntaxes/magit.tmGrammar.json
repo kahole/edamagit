@@ -59,7 +59,7 @@
     },
     "entity": {
       "match": "(^stash@{\\d+}|((^)(?=.*[0-9])(?=.*[a-z])([a-z0-9]{7}) ))|(^#\\d+)",
-      "name": "variable.object.property"
+      "name": "variable.object.property magit.entity"
     },
     "modified": {
       "match": "^(modified|new file|deleted|renamed|copied|unmerged)   .*$",
