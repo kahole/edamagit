@@ -17,7 +17,8 @@
   <a href="https://open-vsx.org/extension/kahole/magit">
     <img src="https://img.shields.io/open-vsx/v/kahole/magit?color=blue" />
   </a>
-  <a href="https://www.buymeacoffee.com/kahole" target="_blank"><img src="https://img.shields.io/badge/buy%20me%20a-coffee-yellow"a>
+  <a href="https://www.buymeacoffee.com/kahole" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" height="28">
+  </a>
   <a href="https://github.com/sponsors/kahole" target="_blank"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=pink"></a>
 </p>
 
