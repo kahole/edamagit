@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.3] - 2021-01-27
+- Includes exit codes of git commands in the process log so it's possible to tell wether or not they've completed successfully.
+
 ## [0.6.2] - 2020-12-20
 - Bug fix with forge cache
 
