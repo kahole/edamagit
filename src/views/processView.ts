@@ -15,7 +15,7 @@ class ProcessLogEntryView extends View {
   constructor(private entry: MagitProcessLogEntry) {
     super();
     this.addSubview(
-      new TextView(entry.command.join(' '))
+      new TextView(this.renderCommandStatus(entry) + entry.command.join(' '))
     );
     if (entry.stdout) {
       this.addSubview(new TextView(entry.stdout));
@@ -23,6 +23,15 @@ class ProcessLogEntryView extends View {
     if (entry.stderr) {
       this.addSubview(new TextView(entry.stderr));
     }
+  }
+
+  private renderCommandStatus(entry: MagitProcessLogEntry) {
+    let statusChar = 'run';
+
+    if (entry.exitCode !== undefined) {
+      statusChar = entry.exitCode.toString();
+    }
+    return `[${statusChar}] `;
   }
 }
 

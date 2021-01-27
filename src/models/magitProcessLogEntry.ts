@@ -4,4 +4,5 @@ export interface MagitProcessLogEntry {
   command: string[];
   stdout?: string;
   stderr?: string;
+  exitCode?: number;
 }
