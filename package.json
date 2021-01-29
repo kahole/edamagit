@@ -463,6 +463,11 @@
       },
       {
         "command": "magit.help",
+        "key": "shift+-",
+        "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
+      },
+      {
+        "command": "magit.help",
         "key": "shift+/",
         "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
       },
