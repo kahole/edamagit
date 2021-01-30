@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.4] - 2021-01-27
+- Fixes issue with some international keyboard layouts
+
 ## [0.6.3] - 2021-01-27
 - Includes exit codes of git commands in the process log so it's possible to tell wether or not they've completed successfully.
 
