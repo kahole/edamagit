@@ -59,7 +59,7 @@ Popup and dwim commands
   M Remote           P Push             r Rebase
   t Tag              V Revert           X Reset
   y Show Refs        z Stash            shift+1 Run
-  shift+5 Worktree
+  shift+5 Worktree   o Submodules       shift+4 Process Log
 
 Applying changes
   a Apply          s Stage          u Unstage

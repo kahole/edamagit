@@ -71,7 +71,7 @@ export class HelpView extends DocumentView {
   ${HelpView.joinTexts(19, [`${c['magit.remoting']} Remote`, `${c['magit.pushing']} Push`, `${c['magit.rebasing']} Rebase`])}
   ${HelpView.joinTexts(19, [`${c['magit.tagging']} Tag`, `${c['magit.reverting']} Revert`, `${c['magit.resetting']} Reset`])}
   ${HelpView.joinTexts(19, [`${c['magit.show-refs']} Show Refs`, `${c['magit.stashing']} Stash`, `${c['magit.running']} Run`])}
-  ${HelpView.joinTexts(19, [`${c['magit.worktree']} Worktree`, `${c['magit.submodules']} Submodules`])}
+  ${HelpView.joinTexts(19, [`${c['magit.worktree']} Worktree`, `${c['magit.submodules']} Submodules`, `${c['magit.process-log']} Process Log`])}
 
 Applying changes
   ${HelpView.joinTexts(17, [`${c['magit.apply-at-point']} Apply`, `${c['magit.stage']} Stage`, `${c['magit.unstage']} Unstage`])}
