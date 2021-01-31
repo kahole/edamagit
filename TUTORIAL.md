@@ -1,6 +1,6 @@
 ## Introduction to edamagit
 
-[edamagit](https://marketplace.visualstudio.com/items?itemName=kahole.magit) is a keyboard driven git interface for VSCode. It's made in the style of the emacs extension [magit](https://magit.vc/).
+[edamagit](https://marketplace.visualstudio.com/items?itemName=kahole.magit) is a keyboard-driven git interface for VSCode. It's made in the style of the emacs extension [magit](https://magit.vc/).
 
 Git commands are mapped to keypresses for efficient use. E.g. pressing `b c` will allow you to checkout a new branch.
 
@@ -49,7 +49,7 @@ pressing `s` will stage the file:
 From the status view press `?` to bring up the help view.
 
 This shows you the available edamagit menus and which key to press to invoke them.
-For example, pressing ` b Branch` brings up the `Branching`-menu.
+For example, pressing `b` brings up the `Branching`-menu.
 
 ![](https://hole.dev/images/edamagit_introduction/help_view.jpg)
 
@@ -61,7 +61,7 @@ From here, a single press of `c` invokes the action `Checkout new branch`.
 
 ![](https://hole.dev/images/edamagit_introduction/branching_menu_1.jpg)
 
-Choose a branch to base the new branch on. Search and/or select with arrow keys. Confirm choice with choice with `Enter`.
+Choose a branch to base the new branch on. Search and/or select with arrow keys. Confirm choice with `Enter`.
 
 ![](https://hole.dev/images/edamagit_introduction/branching_menu_2.jpg)
 
@@ -81,11 +81,11 @@ This brings up the commit view where you will write a commit message. Next to an
 Once you have written a commit-message press `ctrl+c ctrl+c` to finish the commit.
 Or manually save and close the commit-message editor, this has the same effect.
 
-`ctrl+c ctrl+k` wil abort the commit. (Saving and closing with the message empty is the same.)
+`ctrl+c ctrl+k` will abort the commit. (Saving and closing with the message empty is the same.)
 
 ### Switches
 
-Some git commands are frequently used with switches or flags to enable some behaviours.
+Some git commands are frequently used with switches or flags to enable some behaviors.
 E.g. `push --force`
 
 Many of the edamagit command menus have a switches menu which can be activated by pressing `-`.

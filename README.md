@@ -41,12 +41,12 @@
 
 ## Usage
 
-| VSCode Command   | Default shortcut |
-|------------------|------------------|
-| Magit Status     | `alt+x g`        |
-| Magit File Popup | `alt+x alt+g`    |
-| Magit Dispatch   | `alt+x ctrl+g`   |
-| Help             | `?`              |
+| VSCode Command                   | Default shortcut |
+|----------------------------------|------------------|
+| Magit Status                     | `alt+x g`        |
+| Magit File Popup                 | `alt+x alt+g`    |
+| Magit Dispatch                   | `alt+x ctrl+g`   |
+| Magit Help (when in status view) | `?`              |
 
 `> Magit ` in VSCode Command palette will show you all available Magit actions from where you are.
 
