@@ -11,10 +11,10 @@ export async function magitHelp(repository: MagitRepository) {
 }
 
 export async function magitDispatch(repository: MagitRepository) {
-  return openHelpView(repository, false);
+  return openHelpView(repository);
 }
 
-async function openHelpView(repository: MagitRepository, preserveFocus = true) {
+async function openHelpView(repository: MagitRepository) {
   let keybindingsPath = path.join(logPath, '..', '..', '..', '..', 'User', 'keybindings.json');
   let userKeyBindings = [];
 
@@ -25,5 +25,5 @@ async function openHelpView(repository: MagitRepository, preserveFocus = true) {
   } catch (e) { console.error(e); }
 
   const uri = HelpView.encodeLocation(repository);
-  return ViewUtils.showView(uri, new HelpView(uri, userKeyBindings), { preserveFocus });
+  return ViewUtils.showView(uri, new HelpView(uri, userKeyBindings));
 }

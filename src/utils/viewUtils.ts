@@ -7,7 +7,6 @@ import { SemanticTokenTypes } from '../common/constants';
 import GitTextUtils from './gitTextUtils';
 import { DocumentView } from '../views/general/documentView';
 import { magitConfig, views } from '../extension';
-import { readFile } from 'fs';
 
 export default class ViewUtils {
 
