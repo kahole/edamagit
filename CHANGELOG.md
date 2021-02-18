@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.5] - 2021-02-18
+- Adds 'push other' command to push any ref to remote branch
+
 ## [0.6.4] - 2021-01-27
 - Fixes issue with some international keyboard layouts
 
