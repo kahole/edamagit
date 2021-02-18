@@ -26,6 +26,7 @@ function generatePushingMenu(repository: MagitRepository) {
   }
 
   pushingMenuItems.push({ label: 'e', description: 'elsewhere', action: pushElsewhere });
+  pushingMenuItems.push({ label: 'o', description: 'another branch/commit', action: pushOther });
   pushingMenuItems.push({ label: 'T', description: 'a tag', action: pushTag });
   pushingMenuItems.push({ label: 't', description: 'all tags', action: pushAllTags });
 
@@ -129,6 +130,20 @@ async function pushSetUpstream({ repository, ...rest }: MenuState) {
 
 async function pushElsewhere() {
   return commands.executeCommand('git.pushTo');
+}
+
+async function pushOther({ repository, switches }: MenuState) {
+
+  const ref = await MagitUtils.chooseRef(repository, 'Push', false, false, true);
+  const remote = await MagitUtils.chooseRef(repository, `Push ${ref} to`, false, false, true, true);
+
+  const [remoteName, ...remoteBranchNameParts] = remote.split('/');
+  const remoteBranchName = remoteBranchNameParts.join('/');
+
+  if (remote && ref) {
+    const args = ['push', ...MenuUtil.switchesToArgs(switches), remoteName, `${ref}:${remoteBranchName}`];
+    return gitRun(repository.gitRepository, args);
+  }
 }
 
 async function pushTag({ repository, switches }: MenuState) {

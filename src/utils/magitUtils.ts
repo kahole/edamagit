@@ -143,7 +143,7 @@ export default class MagitUtils {
       (repository.mergeChanges?.length ?? 0) > 0);
   }
 
-  public static async chooseRef(repository: MagitRepository, prompt: string, showCurrent = false, showHEAD = false, allowFreeform = true): Promise<string> {
+  public static async chooseRef(repository: MagitRepository, prompt: string, showCurrent = false, showHEAD = false, allowFreeform = true, remoteOnly = false): Promise<string> {
 
     const refs: PickMenuItem<string>[] = [];
 
@@ -164,7 +164,7 @@ export default class MagitUtils {
     }
 
     refs.push(...repository.refs
-      .filter(ref => ref.name !== repository.HEAD?.name)
+      .filter(ref => ref.name !== repository.HEAD?.name && (!remoteOnly || ref.type === RefType.RemoteHead))
       .sort((refA, refB) => refA.type - refB.type).map(r => ({
         label: r.name!,
         description: GitTextUtils.shortHash(r.commit),
