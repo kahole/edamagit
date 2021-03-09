@@ -11,6 +11,7 @@ import * as path from 'path';
 import FilePathUtils from '../utils/filePathUtils';
 import * as fs from 'fs';
 import ViewUtils from '../utils/viewUtils';
+import GitTextUtils from '../utils/gitTextUtils';
 
 const commitMenu = {
   title: 'Committing',
@@ -20,6 +21,7 @@ const commitMenu = {
     { label: 'e', description: 'Extend', action: (menuState: MenuState) => commit(menuState, ['--amend', '--no-edit']) },
     { label: 'w', description: 'Reword', action: (menuState: MenuState) => commit(menuState, ['--amend', '--only']) },
     { label: 'f', description: 'Fixup', action: (menuState: MenuState) => fixup(menuState) },
+    { label: 'F', description: 'Instant Fixup', action: (menuState: MenuState) => instantFixup(menuState) },
   ]
 };
 
@@ -41,13 +43,29 @@ export async function commit({ repository, switches }: MenuState, commitArgs: st
   return runCommitLikeCommand(repository, args);
 }
 
-export async function fixup({ repository, switches }: MenuState) {
+async function fixup({ repository, switches }: MenuState) {
   const sha = await MagitUtils.chooseCommit(repository, 'Fixup commit');
 
   if (sha) {
     const args = ['commit', ...MenuUtil.switchesToArgs(switches), '--fixup', sha];
 
     return await gitRun(repository.gitRepository, args);
+  } else {
+    throw new Error('No commit chosen to fixup');
+  }
+}
+
+async function instantFixup({ repository, switches = [] }: MenuState) {
+  const sha = await MagitUtils.chooseCommit(repository, 'Instantly Fixup commit');
+
+  if (sha) {
+    let shortHash = GitTextUtils.shortHash(sha);
+
+    await gitRun(repository.gitRepository, ['commit', '--no-gpg-sign', '--no-edit', `--fixup=${shortHash}`, '--']);
+
+    const args = ['rebase', '-i', '--autosquash', '--autostash', shortHash + '~'];
+
+    return await gitRun(repository.gitRepository, args, { env: { 'GIT_SEQUENCE_EDITOR': 'true' } });
   } else {
     throw new Error('No commit chosen to fixup');
   }
