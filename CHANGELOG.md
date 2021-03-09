@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.6] - 2021-03-10
+- Adds 'instant fixup' command (#110)
+
 ## [0.6.5] - 2021-02-18
 - Adds 'push other' command to push any ref to remote branch
 
