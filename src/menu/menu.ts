@@ -1,4 +1,5 @@
 import { window, QuickPickItem, QuickPick } from 'vscode';
+import { magitConfig } from '../extension';
 import { MagitRepository } from '../models/magitRepository';
 
 export interface Menu {
@@ -232,6 +233,9 @@ export class MenuUtil {
         for (let item of _quickPick.items) {
           if (MenuUtil.matchesSwitchOrOption(quickPickValue, item.label)) {
             updated.push(await processItemSelection(item));
+            if (magitConfig.quickSwitchEnabled) {
+              _quickPick.hide();
+            }
           } else {
             updated.push({ ...item });
           }
