@@ -48,14 +48,15 @@ export const processLog: MagitProcessLogEntry[] = [];
 
 export let gitApi: API;
 export let logPath: string;
-export let magitConfig: { displayBufferFunction?: string, forgeEnabled?: boolean };
+export let magitConfig: { displayBufferFunction?: string, forgeEnabled?: boolean, quickSwitchEnabled?: boolean };
 
 function loadConfig() {
   let workspaceConfig = workspace.getConfiguration('magit');
 
   magitConfig = {
     displayBufferFunction: workspaceConfig.get('display-buffer-function'),
-    forgeEnabled: workspaceConfig.get('forge-enabled')
+    forgeEnabled: workspaceConfig.get('forge-enabled'),
+    quickSwitchEnabled: workspaceConfig.get('quick-switch-enabled')
   };
 }
 

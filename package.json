@@ -395,6 +395,11 @@
           "type": "boolean",
           "default": false,
           "description": "Enable Forge functionality (show pull requests, issues, etc from e.g. Github)"
+        },
+        "magit.quick-switch-enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable quick switch where the switch menu will exit on selection"
         }
       }
     },
