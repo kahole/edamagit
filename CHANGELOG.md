@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.7] - 2021-03-15
+- Adds setting for enabling quick switch selection (@stevenguh (Steven Guh)
+
 ## [0.6.6] - 2021-03-10
 - Adds 'instant fixup' command (#110)
 
@@ -65,13 +68,13 @@ add this to your `settings.json`:
     "[magit]": {
         "editor.lineHeight": 15
     },
-```
+```(@stevenguh (Steven Guh)
 
 ## [0.5.0] - 2020-10-12
 - Fixes issue where stash list was showing 1 entry even when there are none.
 
 ## [0.4.15] - 2020-10-11
-- Adds rebase switch for "Pull" (@stevenguh (Steven Guh)
+- Adds rebase switch for "Pull" 
 - UI Bugfixes
 
 ## [0.4.11] - 2020-10-01
