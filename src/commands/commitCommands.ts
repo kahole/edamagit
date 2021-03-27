@@ -157,6 +157,7 @@ function findCodePath(): string {
   let isInsiders = vscode.env.appName.includes('Insider');
   let isCodium = vscode.env.appName.includes('Codium');
   let isDarwin = process.platform === 'darwin';
+  let isWindows = process.platform === 'win32';
 
   let codePath = 'code';
   if (isCodium && !isDarwin) {
@@ -165,6 +166,10 @@ function findCodePath(): string {
   if (isInsiders && !isDarwin) {
     // On Mac the binary for the Insiders build is still called `code`
     codePath += '-insiders';
+  }
+  if (isWindows) {
+    // On window remote server, 'code' alias doesn't exist
+    codePath += '.cmd';
   }
 
   // Find the code binary on different platforms.
