@@ -16,13 +16,7 @@ export async function gitRun(repository: Repository, args: string[], spawnOption
   }
 
   try {
-    let result;
-    // Protects against projected change in internal api in vscode git extension
-    if (repository._repository.repository.run) {
-      result = await repository._repository.repository.run(args, spawnOptions);
-    } else {
-      result = await repository._repository.repository.exec!(args, spawnOptions);
-    }
+    let result = await repository._repository.repository.exec!(args, spawnOptions);
 
     if (logLevel === LogLevel.Detailed && logEntry) {
       GitProcessLogger.logGitResult(result, logEntry);

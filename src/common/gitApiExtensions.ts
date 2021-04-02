@@ -3,8 +3,6 @@ import * as cp from 'child_process';
 // This refers to Repository in
 // vscode/extension/git/src/git.ts
 interface BaseGitRepository {
-  run?(args: string[], options?: SpawnOptions): Promise<IExecutionResult<string>>;
-  // run might become exec, included for future-proofing:
   exec?(args: string[], options?: SpawnOptions): Promise<IExecutionResult<string>>;
 }
 
