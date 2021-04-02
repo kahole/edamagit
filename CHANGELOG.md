@@ -1,7 +1,10 @@
 # Changelog
 
+## [0.6.8] - 2021-04-02
+- Fixed issue with commiting on remote windows @stevenguh (Steven Guh)
+
 ## [0.6.7] - 2021-03-15
-- Adds setting for enabling quick switch selection (@stevenguh (Steven Guh)
+- Adds setting for enabling quick switch selection @stevenguh (Steven Guh)
 
 ## [0.6.6] - 2021-03-10
 - Adds 'instant fixup' command (#110)
