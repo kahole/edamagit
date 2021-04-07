@@ -400,6 +400,11 @@
           "default": false,
           "description": "Enable Forge functionality (show pull requests, issues, etc from e.g. Github)"
         },
+        "magit.hide-status-sections": {
+          "type": "array",
+          "default": [],
+          "description": "Array of section names to be hidden in status view. The section names that may be hidden are: 'issues', 'pull requests', 'recent commits', 'staged', 'stashes', 'unmerged', 'unpulled', 'unpushed', 'unstaged', 'untracked'."
+        },
         "magit.quick-switch-enabled": {
           "type": "boolean",
           "default": false,
