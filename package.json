@@ -388,8 +388,12 @@
             "other-column",
             "same-column"
           ],
+          "enumDescriptions": [
+            "Open Edamagit views to the side of the current editor group.",
+            "Open Edamagit views in the current editor group."
+          ],
           "default": "other-column",
-          "description": "Choose where new buffers will be displayed. (reload extension for effect)"
+          "description": "Choose where new buffers will be displayed."
         },
         "magit.forge-enabled": {
           "type": "boolean",

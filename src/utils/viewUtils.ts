@@ -29,7 +29,7 @@ export default class ViewUtils {
   public static showDocumentColumn(): ViewColumn {
     const activeColumn = window.activeTextEditor?.viewColumn ?? 0;
 
-    if (magitConfig.displayBufferFunction === 'same-column') {
+    if (magitConfig.displayBufferSameColumn) {
       return activeColumn;
     }
 
