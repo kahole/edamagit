@@ -85,7 +85,9 @@ Essential commands
 ## Settings
 
 - `Forge-enabled`: Enable Forge functionality (show pull requests, issues, etc from e.g. Github)
-- `Display-buffer-function`: choose which side for magit windows to open on.
+- `Display-buffer-function`: Choose which side for magit windows to open on.
+- `Hide-status-sections`: Hide listed sections from status view.
+- `Quick-switch-enabled`: Automatically confirm switch menu after enabling a switch (e.g. --force)
 
 ## Vim support (VSCodeVim)
 

@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.9] - 2021-04-08
+- Adds setting `magit.hide-status-sections` to hide listed sections from status view. @dandavison (Dan Davison)
+
 ## [0.6.8] - 2021-04-02
 - Fixed issue with commiting on remote windows @stevenguh (Steven Guh)
 
