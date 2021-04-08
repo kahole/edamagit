@@ -48,7 +48,7 @@ export const processLog: MagitProcessLogEntry[] = [];
 
 export let gitApi: API;
 export let logPath: string;
-export let magitConfig: { displayBufferSameColumn?: boolean, forgeEnabled?: boolean, quickSwitchEnabled?: boolean };
+export let magitConfig: { displayBufferSameColumn?: boolean, forgeEnabled?: boolean, hiddenStatusSections: Set<string>, quickSwitchEnabled?: boolean };
 
 function loadConfig() {
   let workspaceConfig = workspace.getConfiguration('magit');
@@ -56,8 +56,17 @@ function loadConfig() {
   magitConfig = {
     displayBufferSameColumn: workspaceConfig.get('display-buffer-function') === 'same-column',
     forgeEnabled: workspaceConfig.get('forge-enabled'),
+    hiddenStatusSections: readHiddenStatusSections(workspaceConfig.get('hide-status-sections')),
     quickSwitchEnabled: workspaceConfig.get('quick-switch-enabled')
   };
+}
+
+function readHiddenStatusSections(configEntry: any): Set<string> {
+  if (Array.isArray(configEntry)) {
+    return new Set(configEntry);
+  } else {
+    return new Set();
+  }
 }
 
 export function activate(context: ExtensionContext) {
