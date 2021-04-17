@@ -11,6 +11,10 @@ export default class GitTextUtils {
     const hunksStart = diff.indexOf('@@');
     const diffHeader = diff.slice(0, hunksStart);
 
+    if (hunksStart === -1) {
+      return [];
+    }
+
     return diff
       .replace(Constants.FinalLineBreakRegex, '') // removes extra line break at the end
       .slice(hunksStart)
