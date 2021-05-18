@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.12] - 2021-04-08
+- cherry-pick: Add -x switch (Florian Bruhin)
+- Fix issue with commiting in Codium (Eddy Ernesto del Valle Pino)
+
 ## [0.6.9] - 2021-04-08
 - Adds setting `magit.hide-status-sections` to hide listed sections from status view. @dandavison (Dan Davison)
 
