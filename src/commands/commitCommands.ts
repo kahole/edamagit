@@ -155,7 +155,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 function findCodePath(): string {
   // Check if we are currently running a Code Insiders or Codium build
   let isInsiders = vscode.env.appName.includes('Insider');
-  let isCodium = vscode.env.appName.includes('Codium');
+  let isCodium = vscode.env.appRoot.includes('codium');
   let isDarwin = process.platform === 'darwin';
   let isWindows = process.platform === 'win32';
   let isRemote = !!vscode.env.remoteName;
