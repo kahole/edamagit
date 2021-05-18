@@ -32,6 +32,7 @@ export async function cherryPicking(repository: MagitRepository) {
   } else {
     const switches = [
       { key: '-e', name: '--edit', description: 'Edit commit messages' },
+      { key: '-x', name: '-x', description: 'Reference cherry in commit message' },
     ];
 
     return MenuUtil.showMenu(cherryPickingMenu, { repository, switches });
