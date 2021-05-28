@@ -3,6 +3,7 @@ import { MenuUtil, MenuState } from '../menu/menu';
 import { gitRun } from '../utils/gitRawRunner';
 import MagitUtils from '../utils/magitUtils';
 import { window } from 'vscode';
+import * as Commit from '../commands/commitCommands';
 
 const taggingMenu = {
   title: 'Tagging',
@@ -16,7 +17,7 @@ const taggingMenu = {
 export async function tagging(repository: MagitRepository) {
 
   const switches = [
-    // { key: '-a', name: '--annotate', description: 'Annotate' },
+    { key: '-a', name: '--annotate', description: 'Annotate' },
     { key: '-f', name: '--force', description: 'Force' },
     // { key: '-s', name: '--sign', description: 'Sign' }
   ];
@@ -35,6 +36,17 @@ async function createTag({ repository, switches }: MenuState) {
     if (ref) {
 
       const args = ['tag', ...MenuUtil.switchesToArgs(switches), tagName, ref];
+
+      if (
+        switches?.find(({ key, activated }) => {
+          console.log('key', key, activated);
+          return key === '-a' && activated;
+        })
+      ) {
+        return Commit.runCommitLikeCommand(repository, args, {
+          updatePostCommitTask: true,
+        });
+      }
 
       return await gitRun(repository.gitRepository, args);
     }
