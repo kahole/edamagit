@@ -38,11 +38,19 @@ export async function magitCommit(repository: MagitRepository) {
 
 export async function commit({ repository, switches }: MenuState, commitArgs: string[] = []) {
 
+  let stageAllSwitch = switches?.find(({ key }) => key === '-a');
+
+  if (repository.indexChanges.length === 0 && !stageAllSwitch?.activated && stageAllSwitch) {
+    if (await MagitUtils.confirmAction('Nothing staged. Stage and commit all unstaged changes?')) {
+      stageAllSwitch.activated = true;
+    } else {
+      return;
+    }
+  }
+
   const args = ['commit', ...MenuUtil.switchesToArgs(switches), ...commitArgs];
 
-  let stagingSwitchesActive = switches?.find(({ key, activated }) => key === '-a' && activated) !== undefined;
-
-  return runCommitLikeCommand(repository, args, { showStagedChanges: !stagingSwitchesActive });
+  return runCommitLikeCommand(repository, args, { showStagedChanges: !stageAllSwitch?.activated });
 }
 
 async function fixup({ repository, switches }: MenuState) {
