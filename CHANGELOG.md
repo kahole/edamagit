@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.13] - 2021-05-30
+- Add --annotate switch to tag command
+- Add --no-ff and --ff-only switches to merge command
+- Ask if should stage all when committing with no staged changes (fixes #140)
+- Hide staged changes for switch -a (#141)
+
 ## [0.6.12] - 2021-04-08
 - cherry-pick: Add -x switch (Florian Bruhin)
 - Fix issue with commiting in Codium (Eddy Ernesto del Valle Pino)
