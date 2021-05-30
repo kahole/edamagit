@@ -1,4 +1,4 @@
-import { MenuState, MenuUtil } from '../menu/menu';
+import { MenuState, MenuUtil, Switch } from '../menu/menu';
 import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
 import * as Commit from '../commands/commitCommands';
@@ -26,19 +26,35 @@ const whileMergingMenu = {
 };
 
 export async function merging(repository: MagitRepository) {
+  const switches = [
+    { key: '-f', name: '--ff-only', description: 'Fast-forward only' },
+    { key: '-n', name: '--no-ff', description: 'No fast-forward' },
+  ];
 
   if (repository.mergingState) {
     return MenuUtil.showMenu(whileMergingMenu, { repository });
   } else {
-    return MenuUtil.showMenu(mergingMenu, { repository });
+    return MenuUtil.showMenu(mergingMenu, { repository, switches });
   }
 }
 
-async function merge({ repository }: MenuState, noCommit = false, squashMerge = false, editMessage = false) {
+async function merge(
+  { repository, switches }: MenuState,
+  noCommit = false,
+  squashMerge = false,
+  editMessage = false
+) {
   const ref = await MagitUtils.chooseRef(repository, 'Merge');
 
   if (ref) {
-    return _merge(repository, ref, noCommit, squashMerge, editMessage);
+    return _merge(
+      repository,
+      ref,
+      noCommit,
+      squashMerge,
+      editMessage,
+      switches
+    );
   }
 }
 
@@ -62,9 +78,15 @@ async function absorb({ repository }: MenuState) {
 //   // https://stackoverflow.com/questions/501407/is-there-a-git-merge-dry-run-option/6283843#6283843
 // }
 
-async function _merge(repository: MagitRepository, ref: string, noCommit = false, squashMerge = false, editMessage = false) {
-
-  const args = ['merge', ref];
+async function _merge(
+  repository: MagitRepository,
+  ref: string,
+  noCommit = false,
+  squashMerge = false,
+  editMessage = false,
+  switches: Switch[] = []
+) {
+  const args = ['merge', ...MenuUtil.switchesToArgs(switches), ref];
 
   if (noCommit) {
     args.push(...['--no-commit', '--no-ff']);
