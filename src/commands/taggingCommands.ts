@@ -38,10 +38,7 @@ async function createTag({ repository, switches }: MenuState) {
       const args = ['tag', ...MenuUtil.switchesToArgs(switches), tagName, ref];
 
       if (
-        switches?.find(({ key, activated }) => {
-          console.log('key', key, activated);
-          return key === '-a' && activated;
-        })
+        switches?.find(({ key, activated }) => key === '-a' && activated)
       ) {
         return Commit.runCommitLikeCommand(repository, args, {
           updatePostCommitTask: true,

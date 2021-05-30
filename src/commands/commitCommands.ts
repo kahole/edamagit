@@ -40,7 +40,9 @@ export async function commit({ repository, switches }: MenuState, commitArgs: st
 
   const args = ['commit', ...MenuUtil.switchesToArgs(switches), ...commitArgs];
 
-  return runCommitLikeCommand(repository, args);
+  let stagingSwitchesActive = switches?.find(({ key, activated }) => key === '-a' && activated) !== undefined;
+
+  return runCommitLikeCommand(repository, args, { showStagedChanges: !stagingSwitchesActive });
 }
 
 async function fixup({ repository, switches }: MenuState) {
