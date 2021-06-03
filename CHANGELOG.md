@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.14] - 2021-05-30
+- Fixes issue with empty amends asking you to stage changes
+
 ## [0.6.13] - 2021-05-30
 - Add --annotate switch to tag command
 - Add --no-ff and --ff-only switches to merge command
