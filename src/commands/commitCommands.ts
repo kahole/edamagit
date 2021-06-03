@@ -17,9 +17,9 @@ const commitMenu = {
   title: 'Committing',
   commands: [
     { label: 'c', description: 'Commit', action: commit },
-    { label: 'a', description: 'Amend', action: (menuState: MenuState) => commit(menuState, ['--amend']) },
-    { label: 'e', description: 'Extend', action: (menuState: MenuState) => commit(menuState, ['--amend', '--no-edit']) },
-    { label: 'w', description: 'Reword', action: (menuState: MenuState) => commit(menuState, ['--amend', '--only']) },
+    { label: 'a', description: 'Amend', action: (menuState: MenuState) => ammendCommit(menuState, ['--amend']) },
+    { label: 'e', description: 'Extend', action: (menuState: MenuState) => ammendCommit(menuState, ['--amend', '--no-edit']) },
+    { label: 'w', description: 'Reword', action: (menuState: MenuState) => rewordCommit(menuState, ['--amend', '--only']) },
     { label: 'f', description: 'Fixup', action: (menuState: MenuState) => fixup(menuState) },
     { label: 'F', description: 'Instant Fixup', action: (menuState: MenuState) => instantFixup(menuState) },
   ]
@@ -51,6 +51,16 @@ export async function commit({ repository, switches }: MenuState, commitArgs: st
   const args = ['commit', ...MenuUtil.switchesToArgs(switches), ...commitArgs];
 
   return runCommitLikeCommand(repository, args, { showStagedChanges: !stageAllSwitch?.activated });
+}
+
+export async function ammendCommit({ repository, switches }: MenuState, commitArgs: string[] = []) {
+  const args = ['commit', ...MenuUtil.switchesToArgs(switches), ...commitArgs];
+  return runCommitLikeCommand(repository, args);
+}
+
+export async function rewordCommit({ repository, switches }: MenuState, commitArgs: string[] = []) {
+  const args = ['commit', ...MenuUtil.switchesToArgs(switches), ...commitArgs];
+  return runCommitLikeCommand(repository, args, { showStagedChanges: false });
 }
 
 async function fixup({ repository, switches }: MenuState) {
