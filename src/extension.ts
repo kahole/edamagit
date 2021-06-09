@@ -57,7 +57,8 @@ function loadConfig() {
     displayBufferSameColumn: workspaceConfig.get('display-buffer-function') === 'same-column',
     forgeEnabled: workspaceConfig.get('forge-enabled'),
     hiddenStatusSections: readHiddenStatusSections(workspaceConfig.get('hide-status-sections')),
-    quickSwitchEnabled: workspaceConfig.get('quick-switch-enabled')
+    quickSwitchEnabled: workspaceConfig.get('quick-switch-enabled'),
+    codePath: workspaceConfig.get('code-path')
   };
 }
 
