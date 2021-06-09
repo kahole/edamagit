@@ -146,7 +146,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 
   } catch (e) {
     vscode.window.setStatusBarMessage(`Commit canceled.`, Constants.StatusMessageDisplayTimeout);
-    if (propagateErrors) {
+    if (propagateErrors || !GitTextUtils.formatError(e).includes('Aborting commit due to empty commit message.')) {
       throw e;
     }
   } finally {
