@@ -7,7 +7,7 @@ import { magitDispatch, magitHelp } from './commands/helpCommands';
 import { magitStatus, magitRefresh } from './commands/statusCommands';
 import { magitVisitAtPoint } from './commands/visitAtPointCommands';
 import { MagitRepository } from './models/magitRepository';
-import { magitCommit } from './commands/commitCommands';
+import { magitCommit, setCodePath } from './commands/commitCommands';
 import { magitStage, magitStageAll, magitUnstageAll, magitUnstage, stageFile, unstageFile } from './commands/stagingCommands';
 import { saveClose, clearSaveClose, quitMagitView, moveToPreviousEntity, moveToNextEntity } from './commands/macros';
 import HighlightProvider from './providers/highlightProvider';
@@ -57,9 +57,11 @@ function loadConfig() {
     displayBufferSameColumn: workspaceConfig.get('display-buffer-function') === 'same-column',
     forgeEnabled: workspaceConfig.get('forge-enabled'),
     hiddenStatusSections: readHiddenStatusSections(workspaceConfig.get('hide-status-sections')),
-    quickSwitchEnabled: workspaceConfig.get('quick-switch-enabled'),
-    codePath: workspaceConfig.get('code-path')
+    quickSwitchEnabled: workspaceConfig.get('quick-switch-enabled')
   };
+
+  let configCodePath: string | undefined = workspaceConfig.get('code-path');
+  setCodePath(configCodePath);
 }
 
 function readHiddenStatusSections(configEntry: any): Set<string> {

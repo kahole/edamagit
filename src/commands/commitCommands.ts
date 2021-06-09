@@ -99,7 +99,15 @@ interface CommitEditorOptions {
   propagateErrors?: boolean;
 }
 
-const codePath: string = findCodePath();
+let codePath: string = findCodePath();
+
+export function setCodePath(path?: string) {
+  if (path && path !== '') {
+    codePath = path;
+  } else {
+    codePath = findCodePath();
+  }
+}
 
 export async function runCommitLikeCommand(repository: MagitRepository, args: string[], { showStagedChanges, updatePostCommitTask, editor, propagateErrors }: CommitEditorOptions = { showStagedChanges: true }) {
 
@@ -181,9 +189,6 @@ function findCodePath(): string {
   let isWindows = process.platform === 'win32';
   let isRemote = !!vscode.env.remoteName;
 
-  if (magitConfig.codePath !== "") {
-    return magitConfig.codePath
-  }
   let codePath = 'code';
   if (isCodium && !isDarwin) {
     codePath = 'codium';

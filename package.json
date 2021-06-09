@@ -397,7 +397,6 @@
         },
         "magit.code-path": {
           "type": "string",
-          "default": "code",
           "description": "Choose specific path to execude vscode. code or codium for example. Can also be a specific path like /Users/me/.nix-profile/bin/codium/"
         },
         "magit.forge-enabled": {
