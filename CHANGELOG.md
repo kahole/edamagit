@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.15] - 2021-05-30
+- Now shows errors during commit in the short error log header
+- Path of vscode is now configurable to remedy issues where edamagit can't find vscode
+
 ## [0.6.14] - 2021-05-30
 - Fixes issue with empty amends asking you to stage changes
 
