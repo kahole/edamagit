@@ -12,6 +12,7 @@ import FilePathUtils from '../utils/filePathUtils';
 import * as fs from 'fs';
 import ViewUtils from '../utils/viewUtils';
 import GitTextUtils from '../utils/gitTextUtils';
+import { magitConfig } from '../extension';
 
 const commitMenu = {
   title: 'Committing',
@@ -180,6 +181,9 @@ function findCodePath(): string {
   let isWindows = process.platform === 'win32';
   let isRemote = !!vscode.env.remoteName;
 
+  if (magitConfig.codePath !== "") {
+    return magitConfig.codePath
+  }
   let codePath = 'code';
   if (isCodium && !isDarwin) {
     codePath = 'codium';
