@@ -142,15 +142,15 @@ export function activate(context: ExtensionContext) {
     commands.registerTextEditorCommand('magit.worktree', CommandPrimer.primeRepo(worktree)),
     commands.registerTextEditorCommand('magit.submodules', CommandPrimer.primeRepo(submodules)),
     commands.registerTextEditorCommand('magit.process-log', CommandPrimer.primeRepo(processView, false)),
+    commands.registerTextEditorCommand('magit.stage-all', CommandPrimer.primeRepo(magitStageAll)),
+    commands.registerTextEditorCommand('magit.unstage-all', CommandPrimer.primeRepo(magitUnstageAll)),
 
     commands.registerTextEditorCommand('magit.visit-at-point', CommandPrimer.primeRepoAndView(magitVisitAtPoint, false)),
     commands.registerTextEditorCommand('magit.apply-at-point', CommandPrimer.primeRepoAndView(magitApplyEntityAtPoint)),
     commands.registerTextEditorCommand('magit.discard-at-point', CommandPrimer.primeRepoAndView(magitDiscardAtPoint)),
     commands.registerTextEditorCommand('magit.reverse-at-point', CommandPrimer.primeRepoAndView(reverseAtPoint)),
     commands.registerTextEditorCommand('magit.stage', CommandPrimer.primeRepoAndView(magitStage)),
-    commands.registerTextEditorCommand('magit.stage-all', CommandPrimer.primeRepoAndView(magitStageAll)),
     commands.registerTextEditorCommand('magit.unstage', CommandPrimer.primeRepoAndView(magitUnstage)),
-    commands.registerTextEditorCommand('magit.unstage-all', CommandPrimer.primeRepoAndView(magitUnstageAll)),
 
     commands.registerTextEditorCommand('magit.file-popup', CommandPrimer.primeFileCommand(filePopup, false)),
     commands.registerTextEditorCommand('magit.blame-file', CommandPrimer.primeFileCommand(blameFile, false)),
