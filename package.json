@@ -34,6 +34,27 @@
     "onCommand:magit.status",
     "onCommand:magit.dispatch",
     "onCommand:magit.commit",
+    "onCommand:magit.branching",
+    "onCommand:magit.merging",
+    "onCommand:magit.rebasing",
+    "onCommand:magit.resetting",
+    "onCommand:magit.pushing",
+    "onCommand:magit.pulling",
+    "onCommand:magit.remoting",
+    "onCommand:magit.logging",
+    "onCommand:magit.show-refs",
+    "onCommand:magit.diffing",
+    "onCommand:magit.tagging",
+    "onCommand:magit.cherry-picking",
+    "onCommand:magit.reverting",
+    "onCommand:magit.ignoring",
+    "onCommand:magit.running",
+    "onCommand:magit.worktree",
+    "onCommand:magit.help",
+    "onCommand:magit.stashing",
+    "onCommand:magit.submodules",
+    "onCommand:magit.fetching",
+    "onCommand:magit.process-log",
     "onCommand:magit.file-popup",
     "onCommand:magit.blame-file",
     "onCommand:magit.stage-file",
@@ -216,59 +237,59 @@
         },
         {
           "command": "magit.branching",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.merging",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.rebasing",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.resetting",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.remoting",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.logging",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.show-refs",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.diffing",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.tagging",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.cherry-picking",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.reverting",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.ignoring",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.running",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.worktree",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.visit-at-point",
@@ -308,27 +329,27 @@
         },
         {
           "command": "magit.pushing",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.pulling",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.stashing",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.submodules",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.fetching",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.process-log",
-          "when": "editorLangId == magit"
+          "when": "activeEditor"
         },
         {
           "command": "magit.file-popup",
