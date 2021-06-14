@@ -74,7 +74,7 @@ async function stage(repository: MagitRepository, selection: Selection, selected
   }
 }
 
-export async function magitStageAll(repository: MagitRepository, currentView: DocumentView) {
+export async function magitStageAll(repository: MagitRepository) {
   return stageAllTracked(repository);
 }
 
@@ -126,7 +126,7 @@ async function unstage(repository: MagitRepository, selection: Selection, select
   }
 }
 
-export async function magitUnstageAll(repository: MagitRepository, currentView: DocumentView) {
+export async function magitUnstageAll(repository: MagitRepository) {
 
   if (await MagitUtils.confirmAction('Unstage all changes?')) {
 
