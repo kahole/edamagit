@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.17]
+- Support untrusted workspaces
+- Adds command for toggling folding of all changes in a change section. (magit.toggle-all-folds-in-change-section-at-point)
+
 ## [0.6.16]
 - Makes all commands callable outside of magit buffer (Florian Bruhin @The-Compiler)
 - Fixes issue where discarding changes of a staged file also discared the unstaged changes of that same file.
