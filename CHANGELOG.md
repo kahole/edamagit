@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.16]
+- Makes all commands callable outside of magit buffer (Florian Bruhin @The-Compiler)
+- Fixes issue where discarding changes of a staged file also discared the unstaged changes of that same file.
+
 ## [0.6.15] - 2021-05-30
 - Now shows errors during commit in the short error log header
 - Path of vscode is now configurable to remedy issues where edamagit can't find vscode
