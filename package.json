@@ -30,6 +30,12 @@
   "bugs": {
     "url": "https://github.com/kahole/edamagit/issues"
   },
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true,
+      "description": "Uses git on the files in the workspace"
+    }
+  },
   "activationEvents": [
     "onCommand:magit.status",
     "onCommand:magit.dispatch",
