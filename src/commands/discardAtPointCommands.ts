@@ -52,8 +52,17 @@ async function discard(repository: MagitRepository, selection: Selection, select
 
       if (await MagitUtils.confirmAction(`Discard ${sectionLabel} ${change.relativePath}?`)) {
 
-        const args = ['checkout', 'HEAD', '--', change.uri.fsPath];
-        return gitRun(repository.gitRepository, args);
+        if (changeView.section === Section.Unstaged) {
+          const args = ['checkout', '--', change.uri.fsPath];
+          return gitRun(repository.gitRepository, args);
+        } else {
+          if (!changeView.change.diff) {
+            return;
+          }
+          await ApplyAtPoint.apply(repository, changeView.change.diff, { index: true, reverse: true });
+          return ApplyAtPoint.apply(repository, changeView.change.diff, { index: false, reverse: true });
+        }
+
       }
     }
 

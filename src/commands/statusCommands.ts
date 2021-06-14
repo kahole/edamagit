@@ -193,6 +193,7 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
 function toMagitChange(repository: Repository, change: Change, diff?: string): MagitChange {
   const magitChange: MagitChange = change;
   magitChange.relativePath = FilePathUtils.uriPathRelativeTo(change.uri, repository.rootUri);
+  magitChange.diff = diff;
   magitChange.hunks = diff ? GitTextUtils.diffToHunks(diff, change.uri) : undefined;
   return magitChange;
 }
