@@ -9,23 +9,23 @@ import ViewUtils from '../utils/viewUtils';
 import ShowRefsView from '../views/showRefsView';
 
 const branchingCommands = [
-  { label: 'b', description: 'Checkout', action: checkout },
-  { label: 'l', description: 'Checkout local branch', action: checkoutLocal },
-  { label: 'c', description: 'Checkout new branch', action: checkoutNewBranch },
+  { label: 'b', icon: 'git-branch', description: 'Checkout', action: checkout },
+  { label: 'l', icon: 'device-desktop', description: 'Checkout local branch', action: checkoutLocal },
+  { label: 'c', icon: 'git-branch-create', description: 'Checkout new branch', action: checkoutNewBranch },
   // { label: "w", description: "Checkout new worktree", action: checkout },
   // { label: "y", description: "Checkout pull-request", action: checkout },
   // { label: "s", description: "Create new spin-off", action: createNewSpinoff },
-  { label: 'n', description: 'Create new branch', action: createNewBranch },
+  { label: 'n', icon: 'git-branch-create', description: 'Create new branch', action: createNewBranch },
   // { label: "W", description: "Create new worktree", action: checkout },
   // { label: "Y", description: "Create from pull-request", action: checkout },
   // { label: 'C', description: 'Configure', action: configureBranch },
-  { label: 'm', description: 'Rename', action: renameBranch },
-  { label: 'x', description: 'Reset', action: resetBranch },
-  { label: 'k', description: 'Delete', action: deleteBranch },
+  { label: 'm', icon: 'edit', description: 'Rename', action: renameBranch },
+  { label: 'x', icon: 'discard', description: 'Reset', action: resetBranch },
+  { label: 'k', icon: 'trash', description: 'Delete', action: deleteBranch },
 ];
 
 const forgeBranchingCommands = [
-  { label: 'y', description: 'Checkout pull request', action: checkoutPullRequest },
+  { label: 'y', icon: 'git-pull-request', description: 'Checkout pull request', action: checkoutPullRequest },
 ];
 
 export async function branching(repository: MagitRepository) {

@@ -13,22 +13,22 @@ function generatePushingMenu(repository: MagitRepository) {
 
   if (repository.HEAD?.pushRemote) {
     const pushRemote = repository.HEAD?.pushRemote;
-    pushingMenuItems.push({ label: 'p', description: `${pushRemote.remote}/${pushRemote.name}`, action: pushToPushRemote });
+    pushingMenuItems.push({ label: 'p', icon: 'repo', description: `${pushRemote.remote}/${pushRemote.name}`, action: pushToPushRemote });
   } else {
-    pushingMenuItems.push({ label: 'p', description: `pushRemote, after setting that`, action: pushSetPushRemote });
+    pushingMenuItems.push({ label: 'p', icon: 'repo', description: `pushRemote, after setting that`, action: pushSetPushRemote });
   }
 
   if (repository.HEAD?.upstream) {
     const upstream = repository.HEAD?.upstream;
-    pushingMenuItems.push({ label: 'u', description: `${upstream.remote}/${upstream.name}`, action: pushUpstream });
+    pushingMenuItems.push({ label: 'u', icon: 'repo-pull', description: `${upstream.remote}/${upstream.name}`, action: pushUpstream });
   } else {
-    pushingMenuItems.push({ label: 'u', description: `@{upstream}, after setting that`, action: pushSetUpstream });
+    pushingMenuItems.push({ label: 'u', icon: 'repo-pull', description: `@{upstream}, after setting that`, action: pushSetUpstream });
   }
 
-  pushingMenuItems.push({ label: 'e', description: 'elsewhere', action: pushElsewhere });
-  pushingMenuItems.push({ label: 'o', description: 'another branch/commit', action: pushOther });
-  pushingMenuItems.push({ label: 'T', description: 'a tag', action: pushTag });
-  pushingMenuItems.push({ label: 't', description: 'all tags', action: pushAllTags });
+  pushingMenuItems.push({ label: 'e', description: 'elsewhere', icon: 'repo-clone', action: pushElsewhere });
+  pushingMenuItems.push({ label: 'o', description: 'another branch/commit', icon: 'git-commit', action: pushOther });
+  pushingMenuItems.push({ label: 'T', description: 'a tag', icon: 'tag', action: pushTag });
+  pushingMenuItems.push({ label: 't', description: 'all tags', icon: 'tag', action: pushAllTags });
 
   return { title: 'Pushing', commands: pushingMenuItems };
 }
@@ -36,10 +36,10 @@ function generatePushingMenu(repository: MagitRepository) {
 export async function pushing(repository: MagitRepository) {
 
   const switches = [
-    { key: '-f', name: '--force-with-lease', description: 'Force with lease' },
-    { key: '-F', name: '--force', description: 'Force' },
-    { key: '-h', name: '--no-verify', description: 'Disable hooks' },
-    { key: '-d', name: '--dry-run', description: 'Dry run' }
+    { key: '-f', name: '--force-with-lease', description: 'Force with lease', 'icon': 'repo-force-push' },
+    { key: '-F', name: '--force', description: 'Force', 'icon': 'repo-force-push' },
+    { key: '-h', name: '--no-verify', description: 'Disable hooks', 'icon': 'eye-closed' },
+    { key: '-d', name: '--dry-run', description: 'Dry run', 'icon': 'discard' }
   ];
 
   return MenuUtil.showMenu(generatePushingMenu(repository), { repository, switches });

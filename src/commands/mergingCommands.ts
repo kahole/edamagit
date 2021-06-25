@@ -7,12 +7,12 @@ import MagitUtils from '../utils/magitUtils';
 const mergingMenu = {
   title: 'Merging',
   commands: [
-    { label: 'm', description: 'Merge', action: merge },
-    { label: 'e', description: 'Merge and edit message', action: (state: MenuState) => merge(state, false, false, true) },
-    { label: 'n', description: 'Merge, don\'t commit', action: (state: MenuState) => merge(state, true, false, false) },
-    { label: 'a', description: 'Absorb', action: absorb },
+    { label: 'm', icon: 'git-merge', description: 'Merge', action: merge },
+    { label: 'e', icon: 'edit', description: 'Merge and edit message', action: (state: MenuState) => merge(state, false, false, true) },
+    { label: 'n', icon: 'git-pull-request', description: 'Merge, don\'t commit', action: (state: MenuState) => merge(state, true, false, false) },
+    { label: 'a', icon: 'filter', description: 'Absorb', action: absorb },
     // { label: 'p', description: 'Preview Merge', action: mergePreview },
-    { label: 's', description: 'Squash Merge', action: (state: MenuState) => merge(state, false, true, false) },
+    { label: 's', icon: 'gather', description: 'Squash Merge', action: (state: MenuState) => merge(state, false, true, false) },
     // { label: 'i', description: 'Merge into', action: mergeInto },
   ]
 };

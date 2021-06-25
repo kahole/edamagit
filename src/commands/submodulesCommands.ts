@@ -9,21 +9,22 @@ import ViewUtils from '../utils/viewUtils';
 const submodulesMenu = {
   title: 'Submodules',
   commands: [
-    { label: 'a', description: 'Add', action: add },
-    { label: 'r', description: 'Register', action: init },
-    { label: 'p', description: 'Populate', action: populate },
-    { label: 'u', description: 'Update', action: update },
-    { label: 's', description: 'Synchronize', action: sync },
-    { label: 'd', description: 'Unpopulate', action: unpopulate },
-    { label: 'k', description: 'Remove', action: remove },
-    { label: 'l', description: 'List all modules', action: listAll },
-    { label: 'f', description: 'Fetch all modules', action: fetchAll },
+    { label: 'a', description: 'Add', icon: 'add', action: add },
+    { label: 'r', description: 'Register', icon: 'list-flat', action: init },
+    { label: 'p', description: 'Populate', icon: 'file-submodule', action: populate },
+    { label: 'u', description: 'Update', icon: 'refresh', action: update },
+    { label: 's', description: 'Synchronize', icon: 'link', action: sync },
+    { label: 'd', description: 'Unpopulate', icon: 'trash', action: unpopulate },
+    { label: 'k', description: 'Remove', icon: 'remove', action: remove },
+    { label: 'l', description: 'List all modules', icon: 'list-flat', action: listAll },
+    { label: 'f', description: 'Fetch all modules', icon: 'repo-pull', action: fetchAll },
   ]
 };
 
 export async function submodules(repository: MagitRepository) {
 
   const switches = [
+    // FIXME icons?
     { key: '-f', name: '--force', description: 'Force' },
     { key: '-r', name: '--recursive', description: 'Recursive' },
     { key: '-N', name: '--no-fetch', description: 'Do not fetch' },

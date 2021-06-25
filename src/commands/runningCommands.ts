@@ -8,8 +8,8 @@ import { SpawnOptions } from 'child_process';
 const runningMenu = {
   title: 'Running',
   commands: [
-    { label: '!', description: 'Git subcommand (in topdir)', action: ({ repository }: MenuState) => run(repository) },
-    { label: 'p', description: 'Git subcommand (in pwd)', action: ({ repository }: MenuState) => run(repository, workspace.getWorkspaceFolder(repository.uri)?.uri) }
+    { label: '!', description: 'Git subcommand (in topdir)', icon: 'file-directory', action: ({ repository }: MenuState) => run(repository) },
+    { label: 'p', description: 'Git subcommand (in pwd)', icon: 'file-submodule', action: ({ repository }: MenuState) => run(repository, workspace.getWorkspaceFolder(repository.uri)?.uri) }
   ]
 };
 

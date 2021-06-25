@@ -7,6 +7,7 @@ import { window } from 'vscode';
 const resettingMenu = {
   title: 'Resetting',
   commands: [
+    // FIXME find icons?
     { label: 'm', description: 'reset mixed (HEAD and index)', action: ({ repository }: MenuState) => resetMixed(repository) },
     { label: 's', description: 'reset soft (HEAD only)', action: ({ repository }: MenuState) => _reset(repository, ['--soft'], `Soft reset ${repository.HEAD?.name} to`) },
     { label: 'h', description: 'reset hard (HEAD, index and files)', action: ({ repository }: MenuState) => resetHard(repository) },

@@ -10,8 +10,8 @@ import * as Constants from '../common/constants';
 const ignoringMenu = {
   title: 'Ignoring',
   commands: [
-    { label: 'l', description: 'Ignore locally', action: ({ repository }: MenuState) => ignore(repository) },
-    { label: 'g', description: 'Ignore globally (add to .gitignore)', action: ({ repository }: MenuState) => ignore(repository, true) }
+    { label: 'l', description: 'Ignore locally', icon: 'device-desktop', action: ({ repository }: MenuState) => ignore(repository) },
+    { label: 'g', description: 'Ignore globally (add to .gitignore)', icon: 'repo', action: ({ repository }: MenuState) => ignore(repository, true) }
   ]
 };
 

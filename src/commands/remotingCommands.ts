@@ -6,9 +6,9 @@ import { gitRun } from '../utils/gitRawRunner';
 const remotingMenu = {
   title: 'Remoting',
   commands: [
-    { label: 'a', description: 'Add', action: addRemote },
-    { label: 'r', description: 'Rename', action: renameRemote },
-    { label: 'k', description: 'Remove', action: removeRemote }
+    { label: 'a', description: 'Add', icon: 'add', action: addRemote },
+    { label: 'r', description: 'Rename', icon: 'edit', action: renameRemote },
+    { label: 'k', description: 'Remove', icon: 'trash', action: removeRemote }
   ]
 };
 

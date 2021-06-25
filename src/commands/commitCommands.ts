@@ -17,21 +17,21 @@ import { magitConfig } from '../extension';
 const commitMenu = {
   title: 'Committing',
   commands: [
-    { label: 'c', description: 'Commit', action: commit },
-    { label: 'a', description: 'Amend', action: (menuState: MenuState) => ammendCommit(menuState, ['--amend']) },
-    { label: 'e', description: 'Extend', action: (menuState: MenuState) => ammendCommit(menuState, ['--amend', '--no-edit']) },
-    { label: 'w', description: 'Reword', action: (menuState: MenuState) => rewordCommit(menuState, ['--amend', '--only']) },
-    { label: 'f', description: 'Fixup', action: (menuState: MenuState) => fixup(menuState) },
-    { label: 'F', description: 'Instant Fixup', action: (menuState: MenuState) => instantFixup(menuState) },
+    { label: 'c', description: 'Commit', icon: 'git-commit', action: commit },
+    { label: 'a', description: 'Amend', icon: 'discard', action: (menuState: MenuState) => ammendCommit(menuState, ['--amend']) },
+    { label: 'e', description: 'Extend', icon: 'zap', action: (menuState: MenuState) => ammendCommit(menuState, ['--amend', '--no-edit']) },
+    { label: 'w', description: 'Reword', icon: 'edit', action: (menuState: MenuState) => rewordCommit(menuState, ['--amend', '--only']) },
+    { label: 'f', description: 'Fixup', icon: 'fold-up', action: (menuState: MenuState) => fixup(menuState) },
+    { label: 'F', description: 'Instant Fixup', icon: 'rocket', action: (menuState: MenuState) => instantFixup(menuState) },
   ]
 };
 
 export async function magitCommit(repository: MagitRepository) {
 
   const switches = [
-    { key: '-a', name: '--all', description: 'Stage all modified and deleted files' },
-    { key: '-e', name: '--allow-empty', description: 'Allow empty commit' },
-    { key: '-s', name: '--signoff', description: 'Add Signed-off-by line' },
+    { key: '-a', name: '--all', icon: 'files', description: 'Stage all modified and deleted files' },
+    { key: '-e', name: '--allow-empty', icon: 'circle-large-outline', description: 'Allow empty commit' },
+    { key: '-s', name: '--signoff', icon: 'law', description: 'Add Signed-off-by line' },
   ];
 
   return MenuUtil.showMenu(commitMenu, { repository, switches });

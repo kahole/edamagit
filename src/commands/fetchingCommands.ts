@@ -10,26 +10,26 @@ export async function fetching(repository: MagitRepository): Promise<any> {
 
   if (repository.HEAD?.pushRemote) {
     const pushRemote = repository.HEAD?.pushRemote;
-    fetchingMenuItems.push({ label: 'p', description: pushRemote.remote, action: fetchFromPushRemote });
+    fetchingMenuItems.push({ label: 'p', description: pushRemote.remote, icon: 'repo', action: fetchFromPushRemote });
   }
 
   if (repository.HEAD?.upstream) {
     const upstream = repository.HEAD?.upstream;
-    fetchingMenuItems.push({ label: 'u', description: upstream.remote, action: fetchFromUpstream });
+    fetchingMenuItems.push({ label: 'u', description: upstream.remote, icon: 'repo-pull', action: fetchFromUpstream });
   }
 
-  fetchingMenuItems.push({ label: 'e', description: 'elsewhere', action: fetchFromElsewhere });
+  fetchingMenuItems.push({ label: 'e', description: 'elsewhere', icon: 'repo-clone', action: fetchFromElsewhere });
 
-  fetchingMenuItems.push({ label: 'a', description: 'all remotes', action: fetchAll });
+  fetchingMenuItems.push({ label: 'a', description: 'all remotes', icon: 'list-flat', action: fetchAll });
 
-  fetchingMenuItems.push({ label: 'o', description: 'another branch', action: fetchAnotherBranch });
+  fetchingMenuItems.push({ label: 'o', description: 'another branch', icon: 'git-branch', action: fetchAnotherBranch });
 
   if (repository.submodules.length) {
-    fetchingMenuItems.push({ label: 's', description: 'submodules', action: fetchSubmodules });
+    fetchingMenuItems.push({ label: 's', description: 'submodules', icon: 'file-submodule', action: fetchSubmodules });
   }
 
   const switches: Switch[] = [
-    { key: '-p', name: '--prune', description: 'Prune deleted branches' }
+    { key: '-p', name: '--prune', description: 'Prune deleted branches', icon: 'trash' }
   ];
 
   return MenuUtil.showMenu({ title: 'Fetching', commands: fetchingMenuItems }, { repository, switches });

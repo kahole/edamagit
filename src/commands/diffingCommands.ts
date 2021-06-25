@@ -18,13 +18,13 @@ import ViewUtils from '../utils/viewUtils';
 const diffingMenu = {
   title: 'Diffing',
   commands: [
-    { label: 'r', description: 'Diff range', action: diffRange },
-    { label: 'p', description: 'Diff paths', action: diffPaths },
-    { label: 'u', description: 'Diff unstaged', action: diffUnstaged },
-    { label: 's', description: 'Diff staged', action: diffStaged },
-    { label: 'w', description: 'Diff worktree', action: diffWorktree },
-    { label: 'c', description: 'Show commit', action: showCommit },
-    { label: 't', description: 'Show stash', action: showStash },
+    { label: 'r', description: 'Diff range', icon: 'git-commit', action: diffRange },
+    { label: 'p', description: 'Diff paths', icon: 'file', action: diffPaths },
+    { label: 'u', description: 'Diff unstaged', icon: 'remove', action: diffUnstaged },
+    { label: 's', description: 'Diff staged', icon: 'add', action: diffStaged },
+    { label: 'w', description: 'Diff worktree', icon: 'list-tree', action: diffWorktree },
+    { label: 'c', description: 'Show commit', icon: 'eye', action: showCommit },
+    { label: 't', description: 'Show stash', icon: 'package', action: showStash },
   ]
 };
 

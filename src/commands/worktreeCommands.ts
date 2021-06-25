@@ -7,8 +7,8 @@ import { window } from 'vscode';
 const worktreeMenu = {
   title: 'Worktree',
   commands: [
-    { label: 'b', description: 'Create new worktree', action: createWorktree },
-    { label: 'c', description: 'Create new branch and worktree', action: createWorktreeAndBranch },
+    { label: 'b', description: 'Create new worktree', icon: 'add', action: createWorktree },
+    { label: 'c', description: 'Create new branch and worktree', icon: 'git-branch', action: createWorktreeAndBranch },
     // { label: 'k', description: 'Delete worktree', action: deleteWorktree }
   ]
 };
