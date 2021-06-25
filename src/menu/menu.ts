@@ -8,6 +8,7 @@ export interface Menu {
 }
 
 export interface MenuItem extends QuickPickItem {
+  icon?: string;
   action: (menuState: MenuState) => Promise<any>;
 }
 
@@ -23,6 +24,7 @@ export interface Switch {
   name: string;
   description: string;
   activated?: boolean;
+  icon?: string;
 }
 
 export interface Option extends Switch {
@@ -33,7 +35,7 @@ export class MenuUtil {
 
   static showMenu(menu: Menu, menuState: MenuState): Promise<void> {
 
-    let menuItems: MenuItem[] = menu.commands.map(item => ({ ...item, description: `\t${item.description}` }));
+    let menuItems: MenuItem[] = menu.commands.map(item => ({ ...item, description: MenuUtil.description(item) }));
 
     if (menuState.switches) {
 
@@ -42,7 +44,8 @@ export class MenuUtil {
 
       menuItems.push({
         label: '-',
-        description: `\tSwitches ${activeSwitches.length > 0 ? activeSwitchesPresentation : ''}`,
+        // FIXME make sure this is configurable if we add a setting
+        description: `\t$(settings)   Switches ${activeSwitches.length > 0 ? activeSwitchesPresentation : ''}`,
         action: async (menuState: MenuState) => {
 
           const updatedSwitches = await MenuUtil.showSwitchesMenu(menuState);
@@ -58,7 +61,8 @@ export class MenuUtil {
 
       menuItems.push({
         label: '=',
-        description: `\tOptions ${activeOptions.length > 0 ? activeOptionsPresentation : ''}`,
+        // FIXME make sure this is configurable if we add a setting
+        description: `\t$(gear)   Options ${activeOptions.length > 0 ? activeOptionsPresentation : ''}`,
         action: async (menuState: MenuState) => {
 
           const updatedOptions = await MenuUtil.showOptionsMenu(menuState);
@@ -68,6 +72,10 @@ export class MenuUtil {
     }
 
     return MenuUtil.runMenu({ ...menu, commands: menuItems }, menuState);
+  }
+
+  private static description(item: MenuItem | Switch) {
+    return item.icon ? `\t\$(${item.icon})   ${item.description}` : `\t${item.description}`;
   }
 
   static switchesToArgs(switches?: Switch[]): string[] {
@@ -148,7 +156,7 @@ export class MenuUtil {
       })
     );
 
-    let items = menuState.switches!.map(s => ({ label: s.key, detail: s.name, description: `\t${s.description}`, picked: s.activated }));
+    let items = menuState.switches!.map(s => ({ label: s.key, detail: s.name, description: MenuUtil.description(s), picked: s.activated }));
 
     return MenuUtil.showSwitchLikeMenu<Switch[]>(items, menuState,
       async (item) => {
@@ -163,7 +171,7 @@ export class MenuUtil {
 
   private static showOptionsMenu(menuState: MenuState): Promise<Option[]> {
 
-    let items = menuState.options!.map(s => ({ label: s.key, detail: s.activated ? `${s.name}"${s.value}"` : s.name, description: `\t${s.description}`, picked: s.activated }));
+    let items = menuState.options!.map(s => ({ label: s.key, detail: s.activated ? `${s.name}"${s.value}"` : s.name, description: MenuUtil.description(s), picked: s.activated }));
 
     let getUpdatedOptions = (quickPick: QuickPick<QuickPickItem>, { options }: MenuState) => options!.map(s => {
       let selectedItem = quickPick.selectedItems.find(item => item.label === s.key);

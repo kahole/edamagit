@@ -8,15 +8,15 @@ function generatePullingMenu(repository: MagitRepository) {
 
   if (repository.HEAD?.pushRemote) {
     const pushRemote = repository.HEAD?.pushRemote;
-    pullingMenuItems.push({ label: 'p', description: `${pushRemote.remote}/${pushRemote.name}`, action: pullFromPushRemote });
+    pullingMenuItems.push({ label: 'p', description: `${pushRemote.remote}/${pushRemote.name}`, icon: 'repo', action: pullFromPushRemote });
   }
 
   if (repository.HEAD?.upstream) {
     const upstream = repository.HEAD?.upstream;
-    pullingMenuItems.push({ label: 'u', description: `${upstream.remote}/${upstream.name}`, action: pullFromUpstream });
+    pullingMenuItems.push({ label: 'u', description: `${upstream.remote}/${upstream.name}`, icon: 'repo-pull', action: pullFromUpstream });
   }
 
-  pullingMenuItems.push({ label: 'e', description: 'elsewhere', action: pullFromElsewhere });
+  pullingMenuItems.push({ label: 'e', description: 'elsewhere', icon: 'repo-clone', action: pullFromElsewhere });
   return { title: 'Pulling', commands: pullingMenuItems };
 }
 

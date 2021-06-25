@@ -7,6 +7,7 @@ import GitTextUtils from '../utils/gitTextUtils';
 const stashingMenu = {
   title: 'Stashing',
   commands: [
+    // FIXME find icons?
     { label: 'z', description: 'Save', action: stash },
     { label: 'p', description: 'Pop', action: popStash },
     { label: 'a', description: 'Apply', action: applyStash },

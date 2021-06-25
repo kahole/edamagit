@@ -7,13 +7,14 @@ import * as CommitCommands from '../commands/commitCommands';
 const whileCherryPickingMenu = {
   title: 'Cherry-picking',
   commands: [
-    { label: 'A', description: 'Continue', action: continueCherryPick },
-    { label: 's', description: 'Skip', action: (state: MenuState) => cherryPickControlCommand(state, '--skip') },
-    { label: 'a', description: 'Abort', action: (state: MenuState) => cherryPickControlCommand(state, '--abort') }
+    { label: 'A', icon: 'debug-continue', description: 'Continue', action: continueCherryPick },
+    { label: 's', icon: 'debug-step-over', description: 'Skip', action: (state: MenuState) => cherryPickControlCommand(state, '--skip') },
+    { label: 'a', icon: 'debug-stop', description: 'Abort', action: (state: MenuState) => cherryPickControlCommand(state, '--abort') }
   ]
 };
 
 const cherryPickingMenu = {
+  // FIXME find icons?
   title: 'Cherry-picking',
   commands: [
     { label: 'A', description: 'Pick', action: pick },

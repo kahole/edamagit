@@ -8,10 +8,10 @@ import * as Commit from '../commands/commitCommands';
 const whileRebasingMenu = {
   title: 'Rebasing',
   commands: [
-    { label: 'r', description: 'Continue', action: (state: MenuState) => rebaseContinue(state) },
-    { label: 's', description: 'Skip', action: (state: MenuState) => rebaseControlCommand(state, '--skip') },
-    { label: 'e', description: 'Edit', action: editTodo },
-    { label: 'a', description: 'Abort', action: (state: MenuState) => rebaseControlCommand(state, '--abort') }
+    { label: 'r', description: 'Continue', icon: 'debug-continue', action: (state: MenuState) => rebaseContinue(state) },
+    { label: 's', description: 'Skip', icon: 'debug-step-over', action: (state: MenuState) => rebaseControlCommand(state, '--skip') },
+    { label: 'e', description: 'Edit', icon: 'edit', action: editTodo },
+    { label: 'a', description: 'Abort', icon: 'debug-stop', action: (state: MenuState) => rebaseControlCommand(state, '--abort') }
   ]
 };
 
@@ -22,13 +22,13 @@ export async function rebasing(repository: MagitRepository) {
   } else {
 
     const switches = [
-      { key: '-k', name: '--keep-empty', description: 'Keep empty commits' },
-      { key: '-p', name: '--preserve-merges', description: 'Preserve merges' },
-      { key: '-c', name: '--committer-date-is-author-date', description: 'Lie about committer date' },
-      { key: '-a', name: '--autosquash', description: 'Autosquash' },
-      { key: '-A', name: '--autostash', description: 'Autostash' },
-      { key: '-i', name: '--interactive', description: 'Interactive' },
-      { key: '-h', name: '--no-verify', description: 'Disable hooks' },
+      { key: '-k', name: '--keep-empty', description: 'Keep empty commits', icon: 'circle-large-outline' },
+      { key: '-p', name: '--preserve-merges', description: 'Preserve merges', icon: 'git-merge' },
+      { key: '-c', name: '--committer-date-is-author-date', description: 'Lie about committer date', icon: 'calendar' },
+      { key: '-a', name: '--autosquash', description: 'Autosquash', icon: 'gather' },
+      { key: '-A', name: '--autostash', description: 'Autostash', icon: 'package' },
+      { key: '-i', name: '--interactive', description: 'Interactive', icon: 'edit' },
+      { key: '-h', name: '--no-verify', description: 'Disable hooks', icon: 'eye-closed' },
     ];
 
     const HEAD = repository.HEAD;

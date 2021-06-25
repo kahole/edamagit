@@ -11,12 +11,12 @@ import LogView from '../views/logView';
 const loggingMenu = {
   title: 'Logging',
   commands: [
-    { label: 'l', description: 'Log current', action: wrap(logCurrent) },
-    { label: 'o', description: 'Log other', action: wrap(logOther) },
-    { label: 'h', description: 'Log HEAD', action: wrap(logHead) },
-    { label: 'L', description: 'Log local branches', action: wrap(logLocalBranches) },
-    { label: 'b', description: 'Log branches', action: wrap(logBranches) },
-    { label: 'a', description: 'Log references', action: wrap(logReferences) },
+    { label: 'l', description: 'Log current', icon: 'git-commit', action: wrap(logCurrent) },
+    { label: 'o', description: 'Log other', icon: 'git-branch', action: wrap(logOther) },
+    { label: 'h', description: 'Log HEAD', icon: 'git-compare', action: wrap(logHead) },
+    { label: 'L', description: 'Log local branches', icon: 'device-desktop', action: wrap(logLocalBranches) },
+    { label: 'b', description: 'Log branches', icon: 'repo-forked', action: wrap(logBranches) },
+    { label: 'a', description: 'Log references', icon: 'references', action: wrap(logReferences) },
   ]
 };
 

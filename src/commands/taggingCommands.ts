@@ -8,18 +8,18 @@ import * as Commit from '../commands/commitCommands';
 const taggingMenu = {
   title: 'Tagging',
   commands: [
-    { label: 't', description: 'Create', action: createTag },
-    { label: 'k', description: 'Delete', action: deleteTag },
-    // { label: 'p', description: 'Prune', action: pruneTags }
+    { label: 't', description: 'Create', icon: 'add', action: createTag },
+    { label: 'k', description: 'Delete', icon: 'remove', action: deleteTag },
+    // { label: 'p', description: 'Prune', icon: 'trash', action: pruneTags }
   ]
 };
 
 export async function tagging(repository: MagitRepository) {
 
   const switches = [
-    { key: '-a', name: '--annotate', description: 'Annotate' },
-    { key: '-f', name: '--force', description: 'Force' },
-    // { key: '-s', name: '--sign', description: 'Sign' }
+    { key: '-a', name: '--annotate', description: 'Annotate', icon: 'edit' },
+    { key: '-f', name: '--force', description: 'Force', icon: 'eye-closed' },
+    // { key: '-s', name: '--sign', description: 'Sign', icon: 'law' }
   ];
 
   return MenuUtil.showMenu(taggingMenu, { repository, switches });

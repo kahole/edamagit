@@ -7,9 +7,9 @@ import * as Commit from '../commands/commitCommands';
 const whileRevertingMenu = {
   title: 'Reverting',
   commands: [
-    { label: 'V', description: 'Continue', action: continueRevert },
-    { label: 's', description: 'Skip', action: (state: MenuState) => revertControlCommand(state, '--skip') },
-    { label: 'a', description: 'Abort', action: (state: MenuState) => revertControlCommand(state, '--abort') }
+    { label: 'V', description: 'Continue', icon: 'debug-continue', action: continueRevert },
+    { label: 's', description: 'Skip', icon: 'debug-skip-over', action: (state: MenuState) => revertControlCommand(state, '--skip') },
+    { label: 'a', description: 'Abort', icon: 'debug-stop', action: (state: MenuState) => revertControlCommand(state, '--abort') }
   ]
 };
 
