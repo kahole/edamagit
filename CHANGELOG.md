@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.18]
+- Adds --no-verify switch to commit.
+- Bugfix in highlighting (tausbn)
+
 ## [0.6.17]
 - Support untrusted workspaces
 - Adds command for toggling folding of all changes in a change section. (magit.toggle-all-folds-in-change-section-at-point)
