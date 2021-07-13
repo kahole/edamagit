@@ -32,6 +32,7 @@ export async function magitCommit(repository: MagitRepository) {
     { key: '-a', name: '--all', description: 'Stage all modified and deleted files' },
     { key: '-e', name: '--allow-empty', description: 'Allow empty commit' },
     { key: '-s', name: '--signoff', description: 'Add Signed-off-by line' },
+    { key: '-n', name: '--no-verify', description: 'Disable hooks' },
   ];
 
   return MenuUtil.showMenu(commitMenu, { repository, switches });
