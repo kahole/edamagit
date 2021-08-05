@@ -103,17 +103,26 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
           };
         }) : [];
 
-  const workingTreeChangesTasks = Promise.all(workingTreeChanges_NoUntracked
-    .map(async change => {
-      const diff = await repository.diffWithHEAD(change.uri.fsPath);
-      return toMagitChange(repository, change, diff);
-    }));
 
-  const indexChangesTasks = Promise.all(repository.state.indexChanges
-    .map(async change => {
-      const diff = await repository.diffIndexWithHEAD(change.uri.fsPath);
-      return toMagitChange(repository, change, diff);
-    }));
+  const workingTreeChangesTasks = gitRun(repository, ['diff'])
+    .then(diff => {
+      let diffs = diff.stdout.split(/(?=^diff [-][-]git.*$)/gm);
+
+      return Promise.all(diffs.map(d => {
+        let change = workingTreeChanges_NoUntracked.find(c => d.startsWith('diff --git a/' + FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri)))!;
+        return toMagitChange(repository, change, d);
+      }));
+    });
+
+  const indexChangesTasks = gitRun(repository, ['diff', '--cached'])
+    .then(diff => {
+      let diffs = diff.stdout.split(/(?=^diff [-][-]git.*$)/gm);
+
+      return Promise.all(diffs.map(d => {
+        let change = repository.state.indexChanges.find(c => d.startsWith('diff --git a/' + FilePathUtils.uriPathRelativeTo(c.uri, repository.rootUri)))!;
+        return toMagitChange(repository, change, d);
+      }));
+    });
 
   const mergeChangesTasks = Promise.all(repository.state.mergeChanges
     .map(async change => {
