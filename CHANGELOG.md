@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.20]
+- When pressing enter on directory listing, edamagit will now reveal them in the file explorer instead of throwing error.
+
 ## [0.6.18]
 - Adds --no-verify switch to commit.
 - Bugfix in highlighting (tausbn)
