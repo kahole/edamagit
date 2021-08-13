@@ -1,5 +1,4 @@
-import { window, workspace, TextEditorRevealType, Range, Position, Selection } from 'vscode';
-import MagitUtils from '../utils/magitUtils';
+import { window, workspace, TextEditorRevealType, Range, Position, Selection, commands } from 'vscode';
 import { MagitRepository } from '../models/magitRepository';
 import { CommitItemView } from '../views/commits/commitSectionView';
 import { DocumentView } from '../views/general/documentView';
@@ -19,6 +18,7 @@ import { IssueItemView } from '../views/forge/issueSectionView';
 import { IssueView } from '../views/forge/issueView';
 import { PullRequestItemView } from '../views/forge/pullRequestSectionView';
 import { PullRequestView } from '../views/forge/pullRequestView';
+import { sep } from 'path';
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 
@@ -37,7 +37,13 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
     if (change.hunks?.length) {
       return visitHunk(selectedView.subViews.find(v => v instanceof HunkView) as HunkView);
     } else {
-      return workspace.openTextDocument(change.uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewUtils.showDocumentColumn(), preview: false }));
+
+      // Check if change path is a directory. Reveal directories in file explorer
+      if (change.relativePath?.endsWith(sep)) {
+        return commands.executeCommand('revealInExplorer', change.uri);
+      } else {
+        return workspace.openTextDocument(change.uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewUtils.showDocumentColumn(), preview: false }));
+      }
     }
   }
   else if (selectedView instanceof HunkView) {
