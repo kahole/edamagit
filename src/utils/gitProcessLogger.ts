@@ -20,8 +20,8 @@ export default class GitProcessLogger {
   }
 
   public static logGitError(error: any, entry: MagitProcessLogEntry) {
-    const errorMsg = error.stderr ?? error.message;
-    entry.stderr = errorMsg;
+    entry.stdout = error.stdout;
+    entry.stderr = error.stderr ?? error.message;
     entry.exitCode = error.exitCode !== undefined ? error.exitCode : 1;
   }
 }
