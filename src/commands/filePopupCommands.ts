@@ -5,6 +5,7 @@ import * as Commit from './commitCommands';
 import * as Staging from './stagingCommands';
 import * as Blaming from './blamingCommands';
 import * as Diffing from './diffingCommands';
+import * as Logging from './loggingCommands';
 
 const filePopupMenu = {
   title: 'File Actions',
@@ -15,7 +16,7 @@ const filePopupMenu = {
     // { label: 'D', description: 'Diff...', action: () => { } },
     { label: 'd', description: 'Diff', action: ({ repository, data }: MenuState) => Diffing.diffFile(repository, data as Uri) },
     // { label: 'L', description: 'Log...', action: () => { } },
-    // { label: 'l', description: 'log', action: ({ repository, data }: MenuState) => logFile(repository, data as Uri)  },
+    { label: 'l', description: 'log', action: ({ repository, data }: MenuState) => Logging.logFile(repository, data as Uri)  },
     // { label: 't', description: 'trace', action: () => { } },
     // { label: 'B', description: 'Blame...', action: () => { } },
     { label: 'b', description: 'Blame', action: ({ repository, data }: MenuState) => Blaming.blameFile(repository, data as Uri) },

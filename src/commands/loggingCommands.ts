@@ -1,4 +1,4 @@
-import { window } from 'vscode';
+import { Uri, window } from 'vscode';
 import { StatusMessageDisplayTimeout } from '../common/constants';
 import { MenuState, MenuUtil, Switch, Option } from '../menu/menu';
 import { MagitBranch } from '../models/magitBranch';
@@ -82,8 +82,18 @@ async function logReferences(repository: MagitRepository, head: MagitBranch, swi
   await log(repository, args, revs);
 }
 
-async function log(repository: MagitRepository, args: string[], revs: string[]) {
-  const output = await gitRun(repository.gitRepository, args.concat(revs), {}, LogLevel.Error);
+export async function logFile(repository: MagitRepository, fileUri: Uri) {
+  const incompatible_switch_keys = ['-g'];
+  const compatible_switches = switches.map(x => (
+    incompatible_switch_keys.includes(x.key) ? {...x, activated: false} : {...x}
+  ));
+  let args = createLogArgs(compatible_switches, options);
+  args.push('--follow');
+  await log(repository, args, ['HEAD'], [fileUri.fsPath]);
+}
+
+async function log(repository: MagitRepository, args: string[], revs: string[], paths: string[] = []) {
+  const output = await gitRun(repository.gitRepository, args.concat(revs, ['--'], paths), {}, LogLevel.Error);
   const logEntries = parseLog(output.stdout);
   const revName = revs.join(' ');
   const uri = LogView.encodeLocation(repository);
