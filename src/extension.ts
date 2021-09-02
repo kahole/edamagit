@@ -24,7 +24,7 @@ import { merging } from './commands/mergingCommands';
 import { rebasing } from './commands/rebasingCommands';
 import { filePopup } from './commands/filePopupCommands';
 import { remoting } from './commands/remotingCommands';
-import { logging } from './commands/loggingCommands';
+import { logging, logFile } from './commands/loggingCommands';
 import { MagitProcessLogEntry } from './models/magitProcessLogEntry';
 import { processView } from './commands/processCommands';
 import { resetting, resetMixed, resetHard } from './commands/resettingCommands';
@@ -155,6 +155,7 @@ export function activate(context: ExtensionContext) {
     commands.registerTextEditorCommand('magit.file-popup', CommandPrimer.primeFileCommand(filePopup, false)),
     commands.registerTextEditorCommand('magit.blame-file', CommandPrimer.primeFileCommand(blameFile, false)),
     commands.registerTextEditorCommand('magit.diff-file', CommandPrimer.primeFileCommand(diffFile, false)),
+    commands.registerTextEditorCommand('magit.log-file', CommandPrimer.primeFileCommand(logFile, false)),
     commands.registerTextEditorCommand('magit.stage-file', CommandPrimer.primeFileCommand(stageFile)),
     commands.registerTextEditorCommand('magit.unstage-file', CommandPrimer.primeFileCommand(unstageFile)),
 

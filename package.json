@@ -63,11 +63,12 @@
     "onCommand:magit.process-log",
     "onCommand:magit.file-popup",
     "onCommand:magit.blame-file",
+    "onCommand:magit.diff-file",
+    "onCommand:magit.log-file",
     "onCommand:magit.stage-file",
     "onCommand:magit.stage-all",
     "onCommand:magit.unstage-file",
     "onCommand:magit.unstage-all",
-    "onCommand:magit.diff-file",
     "onCommand:magit.save-and-close-editor",
     "onCommand:magit.clear-and-abort-editor"
   ],
@@ -213,6 +214,10 @@
       {
         "command": "magit.diff-file",
         "title": "Magit Diff File"
+      },
+      {
+        "command": "magit.log-file",
+        "title": "Magit Log File"
       },
       {
         "command": "magit.stage-file",
