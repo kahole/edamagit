@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.21]
+- implement commit log for single file/path [Nam Nguyen @Namburgesas]
+- show stdout in addition to stderr on error [Nam Nguyen @Namburgesas]
+
 ## [0.6.20]
 - When pressing enter on directory listing, edamagit will now reveal them in the file explorer instead of throwing error.
 
