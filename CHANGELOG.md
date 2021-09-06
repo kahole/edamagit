@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.22]
+- Bugfix: Make prompt asking to stage changes not abort empty commits. (Empty commits are sometimes valid)
+
 ## [0.6.21]
 - implement commit log for single file/path [Nam Nguyen @Namburgesas]
 - show stdout in addition to stderr on error [Nam Nguyen @Namburgesas]
