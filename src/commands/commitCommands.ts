@@ -45,8 +45,6 @@ export async function commit({ repository, switches }: MenuState, commitArgs: st
   if (repository.indexChanges.length === 0 && !stageAllSwitch?.activated && stageAllSwitch) {
     if (await MagitUtils.confirmAction('Nothing staged. Stage and commit all unstaged changes?')) {
       stageAllSwitch.activated = true;
-    } else {
-      return;
     }
   }
 
