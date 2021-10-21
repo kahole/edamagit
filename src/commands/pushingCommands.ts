@@ -116,10 +116,8 @@ async function pushSetUpstream({ repository, ...rest }: MenuState) {
 
     if (remote && name) {
 
-      await Promise.all([
-        GitUtils.setConfigVariable(repository, `branch.${ref}.merge`, `refs/heads/${name}`),
-        GitUtils.setConfigVariable(repository, `branch.${ref}.remote`, remote)
-      ]);
+      await GitUtils.setConfigVariable(repository, `branch.${ref}.merge`, `refs/heads/${name}`);
+      await GitUtils.setConfigVariable(repository, `branch.${ref}.remote`, remote);
 
       repository.HEAD!.upstreamRemote = { name, remote };
 
