@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.23]
+- Bugfix: Remove concurrent file access bug when pushing upstream
+
 ## [0.6.22]
 - Bugfix: Make prompt asking to stage changes not abort empty commits. (Empty commits are sometimes valid)
 
