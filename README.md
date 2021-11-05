@@ -107,6 +107,15 @@ remove the default edamagit bindings and the collisions with the Vim extension.
   
   ```json
     {
+       "key": "g g",
+       "command": "cursorTop",
+       "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/" 
+    },
+    { "key": "g r",
+       "command": "magit.refresh",
+       "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/" 
+    },
+    {
       "key": "tab",
       "command": "extension.vim_tab",
       "when": "editorFocus && vim.active && !inDebugRepl && vim.mode != 'Insert' && editorLangId != 'magit'"
