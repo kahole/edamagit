@@ -5,6 +5,7 @@ import { MagitBranch } from '../models/magitBranch';
 import { MagitLogEntry } from '../models/magitLogCommit';
 import { MagitRepository } from '../models/magitRepository';
 import { gitRun, LogLevel } from '../utils/gitRawRunner';
+import MagitUtils from '../utils/magitUtils';
 import ViewUtils from '../utils/viewUtils';
 import LogView from '../views/logView';
 
@@ -85,7 +86,7 @@ async function logReferences(repository: MagitRepository, head: MagitBranch, swi
 export async function logFile(repository: MagitRepository, fileUri: Uri) {
   const incompatible_switch_keys = ['-g'];
   const compatible_switches = switches.map(x => (
-    incompatible_switch_keys.includes(x.key) ? {...x, activated: false} : {...x}
+    incompatible_switch_keys.includes(x.key) ? { ...x, activated: false } : { ...x }
   ));
   let args = createLogArgs(compatible_switches, options);
   args.push('--follow');
@@ -101,15 +102,10 @@ async function log(repository: MagitRepository, args: string[], revs: string[], 
 }
 
 async function getRevs(repository: MagitRepository) {
-  // TODO: Auto complete branches and tags
-  const placeHolder = repository.HEAD?.name;
-  const input = await window.showInputBox({ prompt: 'Log rev,s:', placeHolder });
+  const input = await MagitUtils.chooseRef(repository, 'Log rev,s:', false, false, true);
   if (input && input.length > 0) {
     // split space or commas
     return input.split(/[, ]/g).filter(r => r.length > 0);
-  } else if (placeHolder) {
-    // if user didn't enter anything, but placeholder exist
-    return [placeHolder];
   }
 
   window.setStatusBarMessage('Nothing selected', StatusMessageDisplayTimeout);

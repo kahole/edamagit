@@ -182,7 +182,7 @@ export default class MagitUtils {
 
     const commitPicker = repository.log.map(commit => ({
       label: GitTextUtils.shortHash(commit.hash),
-      description: commit.message.concat(' ').concat(commit.hash),
+      description: commit.message,
       meta: commit.hash
     })) ?? [];
 
