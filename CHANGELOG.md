@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.24] - 2021-11-11
+- Removes noisy full hash from commit picker menu
+- Use refs as suggestions for `Log other`
+- Adds spacemacs keybinding suggestion (Jeremy Huffman)
+
 ## [0.6.23]
 - Bugfix: Remove concurrent file access bug when pushing upstream
 
