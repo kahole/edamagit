@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.25] - 2022-01-25
+- Adds `--prune` switch to pulling commands
+
 ## [0.6.24] - 2021-11-11
 - Removes noisy full hash from commit picker menu
 - Use refs as suggestions for `Log other`
