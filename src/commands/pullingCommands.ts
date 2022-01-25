@@ -23,6 +23,7 @@ function generatePullingMenu(repository: MagitRepository) {
 export async function pulling(repository: MagitRepository): Promise<any> {
   const switches = [
     { key: '-r', name: '--rebase', description: 'Rebase local commits' },
+    { key: '-p', name: '--prune', description: 'Prune deleted branches' }
   ];
 
   return MenuUtil.showMenu(generatePullingMenu(repository), { repository, switches });
