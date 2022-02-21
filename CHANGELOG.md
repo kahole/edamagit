@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.27] - 2022-01-25
+- Bugfix: Fix stashIndex when commit hook fails (Rasmus Wriedt Larsen @RasmusWL)
+
 ## [0.6.25] - 2022-01-25
 - Adds `--prune` switch to pulling commands
 
