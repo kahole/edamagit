@@ -81,7 +81,7 @@ async function stashIndex({ repository, switches }: MenuState) {
 
     if (message !== undefined) {
 
-      const intermediaryCommitArgs = ['commit', '--message', 'intermediary stash commit'];
+      const intermediaryCommitArgs = ['commit', '--no-verify', '--message', 'intermediary stash commit'];
       const stashWorktree = ['stash', 'push', '--message', 'intermediary stash'];
       const resetCommitArgs = ['reset', '--soft', repository.HEAD?.commit];
       const popIntermediateStashArgs = ['stash', 'pop', '--index', 'stash@{1}'];
