@@ -33,6 +33,7 @@ export async function magitCommit(repository: MagitRepository) {
     { key: '-e', name: '--allow-empty', description: 'Allow empty commit' },
     { key: '-s', name: '--signoff', description: 'Add Signed-off-by line' },
     { key: '-n', name: '--no-verify', description: 'Disable hooks' },
+    { key: '-S', name: '--gpg-sign', description: 'GPG-sign commit' },
   ];
 
   return MenuUtil.showMenu(commitMenu, { repository, switches });
