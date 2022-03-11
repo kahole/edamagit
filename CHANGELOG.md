@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.28] - 2022-03-11
+- Adds GPG-sign commit option switch (Xinyu @X140Yu)
+
 ## [0.6.27] - 2022-01-25
 - Bugfix: Fix stashIndex when commit hook fails (Rasmus Wriedt Larsen @RasmusWL)
 
