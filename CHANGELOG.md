@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.29] - 2022-04-01
+- Swap `i` and `w` stash actions to match emacs-magit
+
 ## [0.6.28] - 2022-03-11
 - Adds GPG-sign commit option switch (Xinyu @X140Yu)
 
