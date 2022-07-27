@@ -122,10 +122,10 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
       stagedEditorTask = Diffing.showDiffSection(repository, Section.Staged, true);
     }
 
-    const env: NodeJS.ProcessEnv = { 'GIT_EDITOR': `"${codePath}" --wait` };
+    const env: NodeJS.ProcessEnv = { 'GIT_EDITOR': `"${codePath}" -w` };
 
     if (editor) {
-      env[editor] = `"${codePath}" --wait`;
+      env[editor] = `"${codePath}" -w`;
     }
 
     const commitSuccessMessageTask = gitRun(repository.gitRepository, args, { env });
