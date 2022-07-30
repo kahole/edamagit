@@ -16,7 +16,11 @@ interface BaseRepository {
 // vscode/extension/git/src/api/api1.ts
 declare module '../typings/git' {
   export interface Repository {
+    // Breaking change in VSCode: https://github.com/microsoft/vscode/pull/154555/files#diff-b7c16e46aefbf6182f8be03b099e5c407da09bd345ff2908abddd6bfe90c34aaL65-R65
+    // Going from this
     readonly _repository: BaseRepository;
+    // to this:
+    readonly repository: BaseRepository;
   }
 }
 

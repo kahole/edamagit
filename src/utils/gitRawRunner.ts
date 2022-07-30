@@ -16,7 +16,9 @@ export async function gitRun(repository: Repository, args: string[], spawnOption
   }
 
   try {
-    let result = await repository._repository.repository.exec!(args, spawnOptions);
+    // Protect against coming breaking change in VSCode: https://github.com/microsoft/vscode/pull/154555/files#diff-b7c16e46aefbf6182f8be03b099e5c407da09bd345ff2908abddd6bfe90c34aaL65-R65
+    const baseRepository = repository._repository ?? repository.repository;
+    let result = await baseRepository.repository.exec!(args, spawnOptions);
 
     if (logLevel === LogLevel.Detailed && logEntry) {
       GitProcessLogger.logGitResult(result, logEntry);
