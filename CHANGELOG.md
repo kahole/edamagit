@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.31] - 2022-07-30
+- Rename, and swap, `i` and `w` stash actions to match emacs-magit (#218)
+
 ## [0.6.30] - 2022-07-30
 - defend against incoming breaking change in internal git extension (#217)
 
