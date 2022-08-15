@@ -11,8 +11,8 @@ const stashingMenu = {
     { label: 'p', description: 'Pop', action: popStash },
     { label: 'a', description: 'Apply', action: applyStash },
     { label: 'k', description: 'Drop', action: dropStash },
-    { label: 'i', description: 'Save index', action: stashWorktree },
-    { label: 'w', description: 'Save worktree', action: stashIndex },
+    { label: 'i', description: 'Stash index', action: stashIndex },
+    { label: 'w', description: 'Stash worktree', action: stashWorktree },
     { label: 'x', description: 'Save keeping index', action: (menuState: MenuState) => stash(menuState, ['--keep-index']) },
   ]
 };
