@@ -5,7 +5,6 @@ import { Section } from './general/sectionHeader';
 import { DocumentView } from './general/documentView';
 import { StashSectionView } from './stashes/stashSectionView';
 import { CommitSectionView } from './commits/commitSectionView';
-import { TextView } from './general/textView';
 import { LineBreakView } from './general/lineBreakView';
 import { Uri } from 'vscode';
 import { BranchHeaderSectionView } from './branches/branchHeaderSectionView';
@@ -19,6 +18,7 @@ import { MagitBranch } from '../models/magitBranch';
 import { getLatestGitError } from '../commands/commandPrimer';
 import { PullRequestSectionView } from './forge/pullRequestSectionView';
 import { IssueSectionView } from './forge/issueSectionView';
+import { ErrorMessageView } from './errorMessageView';
 
 export default class MagitStatusView extends DocumentView {
 
@@ -36,7 +36,7 @@ export default class MagitStatusView extends DocumentView {
 
     let latestGitError = getLatestGitError(magitState);
     if (latestGitError) {
-      this.addSubview(new TextView(`GitError! ${latestGitError.split(Constants.LineSplitterRegex)[0]} [ $ for detailed log ]`));
+        this.addSubview(new ErrorMessageView(latestGitError));
     }
 
     this.addSubview(new BranchHeaderSectionView(magitState.HEAD));

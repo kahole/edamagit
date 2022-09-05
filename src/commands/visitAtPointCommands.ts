@@ -19,6 +19,8 @@ import { IssueView } from '../views/forge/issueView';
 import { PullRequestItemView } from '../views/forge/pullRequestSectionView';
 import { PullRequestView } from '../views/forge/pullRequestView';
 import { sep } from 'path';
+import { ErrorMessageView } from '../views/errorMessageView';
+import { processView } from './processCommands';
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 
@@ -84,6 +86,8 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
 
     return ViewUtils.showView(uri, pullRequestView);
 
+  } else if (selectedView instanceof ErrorMessageView) {
+    return processView(repository);
   } else {
     window.setStatusBarMessage('There is no thing at point that could be visited', Constants.StatusMessageDisplayTimeout);
   }
