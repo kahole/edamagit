@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.32] - 2022-09-05
+- Fixes rebase error message offset and makes error header visitable
+
+Some git error messages included a single carriage return making a the
+visting "click" logic off by one. This is now fixed by pruning these 
+characters. The error header is now also visitable by pressing enter.
+
 ## [0.6.31] - 2022-07-30
 - Rename, and swap, `i` and `w` stash actions to match emacs-magit (#218)
 
