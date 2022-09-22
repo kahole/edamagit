@@ -34,9 +34,6 @@
 
 ## Keyboard driven Git interface
 ![Usage](https://github.com/kahole/edamagit/raw/5ebf38107c6130cc16a23f18d84aeecc21f09fe8/magit_commit_demo.gif)
-
-## Sub hunk staging
-![Usage](https://github.com/kahole/edamagit/raw/5ebf38107c6130cc16a23f18d84aeecc21f09fe8/sub_hunk_staging.gif)
 (Theme: [Dracula](https://draculatheme.com/))
 
 ## Usage
