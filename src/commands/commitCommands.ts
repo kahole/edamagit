@@ -82,7 +82,7 @@ async function instantFixup({ repository, switches = [] }: MenuState) {
   if (sha) {
     let shortHash = GitTextUtils.shortHash(sha);
 
-    await gitRun(repository.gitRepository, ['commit', '--no-gpg-sign', '--no-edit', `--fixup=${shortHash}`, '--']);
+    await gitRun(repository.gitRepository, ['commit', '--no-gpg-sign', '--no-edit', ...MenuUtil.switchesToArgs(switches), `--fixup=${shortHash}`, '--']);
 
     const args = ['rebase', '-i', '--autosquash', '--autostash', shortHash + '~'];
 
