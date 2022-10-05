@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.33] - 2022-10-05
+- Apply active switches to "instant fixup" command
+
 ## [0.6.32] - 2022-09-05
 - Fixes rebase error message offset and makes error header visitable
 
