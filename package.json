@@ -234,6 +234,10 @@
       {
         "command": "magit.copy-buffer-revision",
         "title": "Magit Copy Buffer Revision"
+      },
+      {
+        "command": "magit.toggle-fold",
+        "title": "Magit Toggle Fold"
       }
     ],
     "menus": {
@@ -390,6 +394,10 @@
         },
         {
           "command": "magit.copy-buffer-revision",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.toggle-fold",
           "when": "editorLangId == magit"
         }
       ]
