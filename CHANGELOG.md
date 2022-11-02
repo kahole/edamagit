@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.34] - 2022-11-02
+- add --staged switch to stashing (aldum @aldum)
+- expose toggle fold command in command pallete, fixing #229
+
 ## [0.6.33] - 2022-10-05
 - Apply active switches to "instant fixup" command
 
