@@ -22,8 +22,7 @@ function generatePullingMenu(repository: MagitRepository) {
 
 export async function pulling(repository: MagitRepository): Promise<any> {
   const switches = [
-    { key: '-r', name: '--rebase', description: 'Rebase local commits' },
-    { key: '-p', name: '--prune', description: 'Prune deleted branches' }
+    { key: '-r', name: '--rebase', description: 'Rebase local commits' }
   ];
 
   return MenuUtil.showMenu(generatePullingMenu(repository), { repository, switches });
@@ -55,7 +54,7 @@ async function pullFromElsewhere({ repository, switches }: MenuState) {
   if (chosenElse) {
     const idx = chosenElse.indexOf('/');
     const remote = chosenElse.slice(0, idx);
-    const branch = chosenElse.slice(idx+1);
+    const branch = chosenElse.slice(idx + 1);
     const args = ['pull', ...MenuUtil.switchesToArgs(switches), remote, branch];
     return gitRun(repository.gitRepository, args);
   }
