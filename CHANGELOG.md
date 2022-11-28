@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.35] - 2022-11-28
+- removed prune switch on pull commands
+
 ## [0.6.34] - 2022-11-02
 - add --staged switch to stashing (aldum @aldum)
 - expose toggle fold command in command pallete, fixing #229
