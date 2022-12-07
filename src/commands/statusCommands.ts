@@ -17,7 +17,7 @@ import { MagitRevertingState } from '../models/magitRevertingState';
 import { Stash } from '../models/stash';
 import { MagitRepository } from '../models/magitRepository';
 import ViewUtils from '../utils/viewUtils';
-import { forgeStatus } from '../forge';
+import { scheduleForgeStatusAsync, forgeStatusCached } from '../forge';
 
 export async function magitRefresh() { }
 
@@ -54,6 +54,7 @@ export async function magitStatus(): Promise<any> {
   }
 
   if (repository) {
+    scheduleForgeStatusAsync(repository);
     const uri = MagitStatusView.encodeLocation(repository);
     return ViewUtils.showView(uri, ViewUtils.createOrUpdateView(repository, uri, () => new MagitStatusView(uri, repository!)));
   }
@@ -165,7 +166,7 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
       remoteBranch.name !== remote.name + '/HEAD') // filter out uninteresting remote/HEAD element
   }));
 
-  let forgeTask = forgeStatus(remotes);
+  const forgeState = forgeStatusCached(remotes);
 
   return {
     uri: repository.rootUri,
@@ -186,7 +187,7 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
     refs: repository.state.refs,
     submodules: repository.state.submodules,
     gitRepository: repository,
-    forgeState: await forgeTask,
+    forgeState: forgeState,
   };
 }
 

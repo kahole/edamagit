@@ -2,6 +2,8 @@ import { MagitRemote } from '../models/magitRemote';
 import { ForgeState } from './model/forgeState';
 import { getGithubForgeState } from './github';
 import { magitConfig } from '../extension';
+import { MagitRepository } from '../models/magitRepository';
+import MagitUtils from '../utils/magitUtils';
 
 const REFRESH_INTERVAL_DURATION_MS = 2 * 60 * 1000;
 const INACTIVITY_TRESHOLD_DURATION_MS = 25 * 60 * 1000;
@@ -12,7 +14,7 @@ const cached = new Map<string, { state: ForgeState, updatedAt: number, refresh: 
 
 export let forgeRefreshInterval: NodeJS.Timeout | undefined;
 
-function setSelfHydratingCacheEntry(remoteUrl: string, state: ForgeState, factory: GetForgeState) {
+function setAutoUpdatingCacheEntry(remoteUrl: string, state: ForgeState, factory: GetForgeState) {
 
   cached.set(remoteUrl, {
     state,
@@ -68,7 +70,7 @@ function getCached(remoteUrl: string) {
   return undefined;
 }
 
-export async function forgeStatus(remotes: MagitRemote[]): Promise<ForgeState | undefined> {
+export function forgeStatusCached(remotes: MagitRemote[]): ForgeState | undefined {
 
   if (magitConfig.forgeEnabled !== true) {
     return undefined;
@@ -83,23 +85,35 @@ export async function forgeStatus(remotes: MagitRemote[]): Promise<ForgeState | 
     if (cachedState) {
       return cachedState;
     }
+  }
+}
 
-    let getForgeState = selectForgeType(forgeRemote.fetchUrl);
+export async function scheduleForgeStatusAsync(repository: MagitRepository): Promise<void> {
 
-    if (getForgeState) {
+  if (magitConfig.forgeEnabled !== true) {
+    return undefined;
+  }
 
-      try {
-        let forgeState = await getForgeState(forgeRemote.fetchUrl);
+  let forgeRemote = repository.remotes.find(v => v.name === 'upstream') ?? repository.remotes.find(v => v.name === 'origin');
+  if (forgeRemote?.fetchUrl !== undefined) {
 
-        setSelfHydratingCacheEntry(forgeRemote.fetchUrl, forgeState, getForgeState);
+    let cachedState = getCached(forgeRemote.fetchUrl);
 
-        return forgeState;
+    if (!cachedState) {
+      let getForgeState = selectForgeType(forgeRemote.fetchUrl);
 
-      } catch (error) {
+      if (getForgeState) {
 
-        // TODO: procsess-Log / display error
-        console.error(error);
-        return undefined;
+        try {
+          const forgeState = await getForgeState(forgeRemote.fetchUrl);
+          setAutoUpdatingCacheEntry(forgeRemote.fetchUrl, forgeState, getForgeState);
+          // Trigger update
+          MagitUtils.magitStatusAndUpdate(repository);
+
+        } catch (error) {
+          // TODO: procsess-Log / display error
+          console.error(error);
+        }
       }
     }
   }
