@@ -3,7 +3,7 @@ import { MenuUtil, MenuState } from '../menu/menu';
 import { window, workspace, Uri } from 'vscode';
 import { gitRun, LogLevel } from '../utils/gitRawRunner';
 import * as ProcessCommands from './processCommands';
-import { SpawnOptions } from 'child_process';
+import { SpawnOptions } from '../utils/commandRunner/command';
 
 const runningMenu = {
   title: 'Running',

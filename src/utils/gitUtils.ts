@@ -1,6 +1,6 @@
 import { MagitRepository } from '../models/magitRepository';
+import { IExecutionResult } from './commandRunner/command';
 import { gitRun } from './gitRawRunner';
-import { IExecutionResult } from '../common/gitApiExtensions';
 
 export default class GitUtils {
 

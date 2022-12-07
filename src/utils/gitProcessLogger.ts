@@ -1,6 +1,6 @@
 import { processLog } from '../extension';
 import { MagitProcessLogEntry } from '../models/magitProcessLogEntry';
-import { IExecutionResult } from '../common/gitApiExtensions';
+import { IExecutionResult } from './commandRunner/command';
 
 export default class GitProcessLogger {
 

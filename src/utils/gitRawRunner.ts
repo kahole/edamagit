@@ -1,5 +1,5 @@
-import { SpawnOptions } from '../common/gitApiExtensions';
 import { Repository } from '../typings/git';
+import { run, SpawnOptions } from './commandRunner/command';
 import GitProcessLogger from './gitProcessLogger';
 
 export enum LogLevel {
@@ -16,9 +16,11 @@ export async function gitRun(repository: Repository, args: string[], spawnOption
   }
 
   try {
-    // Protect against coming breaking change in VSCode: https://github.com/microsoft/vscode/pull/154555/files#diff-b7c16e46aefbf6182f8be03b099e5c407da09bd345ff2908abddd6bfe90c34aaL65-R65
-    const baseRepository = repository._repository ?? repository.repository;
-    let result = await baseRepository.repository.exec!(args, spawnOptions);
+    let spawnOptionsWCwd = { ...spawnOptions };
+    if (!spawnOptionsWCwd.cwd) {
+      spawnOptionsWCwd.cwd = repository.rootUri;
+    }
+    let result = await run(args, spawnOptionsWCwd);
 
     if (logLevel === LogLevel.Detailed && logEntry) {
       GitProcessLogger.logGitResult(result, logEntry);
