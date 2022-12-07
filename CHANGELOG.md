@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.36] - 2022-12-07
+- Make forge status fully async as to not block the git status buffer
+- Move away from private vscode APIs that are to be removed soon
+
 ## [0.6.35] - 2022-11-28
 - removed prune switch on pull commands
 
