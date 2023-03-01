@@ -5,7 +5,7 @@ import FilePathUtils from '../utils/filePathUtils';
 import GitTextUtils from '../utils/gitTextUtils';
 import MagitUtils from '../utils/magitUtils';
 import MagitStatusView from '../views/magitStatusView';
-import { Status, Commit, RefType, Repository, Change } from '../typings/git';
+import { Status, Commit, RefType, Repository, Change, Ref } from '../typings/git';
 import { MagitBranch, MagitUpstreamRef } from '../models/magitBranch';
 import { gitRun, LogLevel } from '../utils/gitRawRunner';
 import * as Constants from '../common/constants';
@@ -132,16 +132,18 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
 
   const HEAD = repository.state.HEAD as MagitBranch | undefined;
 
+  const refs = await getRefs(repository);
+
   if (HEAD?.commit) {
     HEAD.commitDetails = await getCommit(repository, HEAD.commit);
 
-    HEAD.tag = repository.state.refs.find(r => HEAD?.commit === r.commit && r.type === RefType.Tag);
+    HEAD.tag = refs.find(r => HEAD?.commit === r.commit && r.type === RefType.Tag);
 
     try {
       if (HEAD.upstream?.remote) {
         const upstreamRemote = HEAD.upstream.remote;
 
-        const upstreamRemoteCommit = repository.state.refs.find(ref => ref.remote === upstreamRemote && ref.name === `${upstreamRemote}/${HEAD.upstream?.name}`)?.commit;
+        const upstreamRemoteCommit = refs.find(ref => ref.remote === upstreamRemote && ref.name === `${upstreamRemote}/${HEAD.upstream?.name}`)?.commit;
         const upstreamRemoteCommitDetails = upstreamRemoteCommit ? getCommit(repository, upstreamRemoteCommit) : undefined;
 
         const isRebaseUpstream = repository.getConfig(`branch.${HEAD.upstream.name}.rebase`);
@@ -157,7 +159,7 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
     HEAD.pushRemote = await pushRemoteStatus(repository);
   }
 
-  const remoteBranches = repository.state.refs.filter(ref => ref.type === RefType.RemoteHead);
+  const remoteBranches = refs.filter(ref => ref.type === RefType.RemoteHead);
 
   const remotes: MagitRemote[] = repository.state.remotes.map(remote => ({
     ...remote,
@@ -181,10 +183,10 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
     mergingState: await mergingStateTask,
     cherryPickingState: await cherryPickingStateTask,
     revertingState: await revertingStateTask,
-    branches: repository.state.refs.filter(ref => ref.type === RefType.Head),
+    branches: refs.filter(ref => ref.type === RefType.Head),
     remotes,
-    tags: repository.state.refs.filter(ref => ref.type === RefType.Tag),
-    refs: repository.state.refs,
+    tags: refs.filter(ref => ref.type === RefType.Tag),
+    refs,
     submodules: repository.state.submodules,
     gitRepository: repository,
     forgeState: forgeState,
@@ -212,7 +214,8 @@ async function pushRemoteStatus(repository: Repository): Promise<MagitUpstreamRe
       const commitsAhead = await Promise.all(commitsAheadPushRemote.map(c => getCommit(repository, c)));
       const commitsBehind = await Promise.all(commitsBehindPushRemote.map(c => getCommit(repository, c)));
 
-      const pushRemoteCommit = repository.state.refs.find(ref => ref.remote === pushRemote && ref.name === `${pushRemote}/${HEAD.name}`)?.commit;
+      const refs = await getRefs(repository);
+      const pushRemoteCommit = refs.find(ref => ref.remote === pushRemote && ref.name === `${pushRemote}/${HEAD.name}`)?.commit;
       const pushRemoteCommitDetails = pushRemoteCommit ? getCommit(repository, pushRemoteCommit) : Promise.resolve(undefined);
 
       return { remote: pushRemote, name: HEAD.name, commit: await pushRemoteCommitDetails, commitsAhead, commitsBehind };
@@ -306,7 +309,8 @@ async function rebasingStatus(repository: Repository, dotGitPath: string, logTas
       }
 
       let ontoCommit = await getCommit(repository, await rebaseOntoPathFileTask!);
-      let ontoBranch = repository.state.refs.find(ref => ref.commit === ontoCommit.hash && ref.type !== RefType.RemoteHead);
+      const refs = await getRefs(repository);
+      let ontoBranch = refs.find(ref => ref.commit === ontoCommit.hash && ref.type !== RefType.RemoteHead);
 
       let onto = {
         name: ontoBranch?.name ?? GitTextUtils.shortHash(ontoCommit.hash),
@@ -403,4 +407,14 @@ async function getStashes(repository: Repository): Promise<Stash[]> {
   } catch {
     return [];
   }
+}
+
+async function getRefs(repository: Repository): Promise<Ref[]> {
+  // `repository.getRefs` is not available on older versions and we should 
+  // just use `repository.state.refs` on those versions.
+  if (typeof repository.getRefs !== 'function') {
+    return repository.state.refs;
+  }
+
+  return await repository.getRefs({});
 }
