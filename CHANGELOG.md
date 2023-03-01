@@ -1,5 +1,6 @@
 # Changelog
 
+## [0.6.38]
 ## [0.6.37] - 2023-03-01
 - Switch from `--preserve-merges` to newer `--rebase-merges` in rebasing options
 - Upgrade to newer refs api to fix breakage on coming VSCode versions (Burak @unexge)
