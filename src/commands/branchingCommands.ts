@@ -116,7 +116,7 @@ async function deleteBranch({ repository }: MenuState) {
   if (ref) {
     try {
       await gitRun(repository.gitRepository, ['branch', '--delete', ref]);
-    } catch (error) {
+    } catch (error: any) {
       if (error.gitErrorCode === GitErrorCodes.BranchNotFullyMerged) {
         if (await MagitUtils.confirmAction(`Delete unmerged branch ${ref}?`)) {
           return await gitRun(repository.gitRepository, ['branch', '--delete', '--force', ref]);

@@ -118,7 +118,7 @@ async function discard(repository: MagitRepository, selection: Selection, select
       if (await MagitUtils.confirmAction(`Delete branch ${branch.name}?`)) {
         try {
           await gitRun(repository.gitRepository, ['branch', '--delete', branch.name]);
-        } catch (error) {
+        } catch (error: any) {
           if (error.gitErrorCode === GitErrorCodes.BranchNotFullyMerged) {
             if (await MagitUtils.confirmAction(`Delete unmerged branch ${branch.name}?`)) {
               return gitRun(repository.gitRepository, ['branch', '--delete', '--force', branch.name]);
@@ -137,7 +137,7 @@ async function discard(repository: MagitRepository, selection: Selection, select
       if (await MagitUtils.confirmAction(`Delete branch ${branch.name} at REMOTE ${remote} (push --delete)?`)) {
         try {
           await gitRun(repository.gitRepository, ['push', '--delete', remote, name]);
-        } catch (error) {
+        } catch (error: any) {
           if (error.gitErrorCode === GitErrorCodes.BranchNotFullyMerged) {
             if (await MagitUtils.confirmAction(`Delete unmerged branch ${branch.name}?`)) {
               return gitRun(repository.gitRepository, ['push', '--delete', remote, name]);

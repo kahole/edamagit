@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.37] - 2023-03-01
+- Upgrade to newer refs api to fix breakage on coming VSCode versions (Burak @unexge)
+- Upgrade dependencies
+
 ## [0.6.36] - 2022-12-07
 - Make forge status fully async as to not block the git status buffer
 - Move away from private vscode APIs that are to be removed soon

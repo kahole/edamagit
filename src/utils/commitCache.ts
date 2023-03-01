@@ -4,6 +4,7 @@ const commitCache: { [hash: string]: Promise<Commit>; } = {};
 
 export function getCommit(repository: Repository, hash: string): Promise<Commit> {
 
+  //@ts-expect-error TS2801
   if (commitCache[hash]) {
     return commitCache[hash];
   }
