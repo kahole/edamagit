@@ -23,7 +23,7 @@ export async function rebasing(repository: MagitRepository) {
 
     const switches = [
       { key: '-k', name: '--keep-empty', description: 'Keep empty commits' },
-      { key: '-p', name: '--preserve-merges', description: 'Preserve merges' },
+      { key: '-p', name: '--rebase-merges', description: 'Rebase merges' },
       { key: '-c', name: '--committer-date-is-author-date', description: 'Lie about committer date' },
       { key: '-a', name: '--autosquash', description: 'Autosquash' },
       { key: '-A', name: '--autostash', description: 'Autostash' },
