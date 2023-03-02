@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.39]
+- fix activation crash on load before internal git extension (#238)
+
 ## [0.6.38]
 ## [0.6.37] - 2023-03-01
 - Switch from `--preserve-merges` to newer `--rebase-merges` in rebasing options
