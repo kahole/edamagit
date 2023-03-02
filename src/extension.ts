@@ -72,10 +72,18 @@ function readHiddenStatusSections(configEntry: any): Set<string> {
   }
 }
 
-export function activate(context: ExtensionContext) {
+export async function activate(context: ExtensionContext) {
 
-  const gitExtension = extensions.getExtension<GitExtension>('vscode.git')!.exports;
-  if (!gitExtension.enabled) {
+  const gitExtension = extensions.getExtension<GitExtension>('vscode.git')!;
+  if (!gitExtension.isActive) {
+    // Activate vscode internal git extension
+    await gitExtension.activate();
+    // and give it some time to load some state
+    await new Promise(r => setTimeout(r, 1000));
+  }
+
+  const gitExtensionExports = gitExtension.exports;
+  if (!gitExtensionExports.enabled) {
     throw new Error('vscode.git Git extension not enabled');
   }
 
@@ -86,13 +94,13 @@ export function activate(context: ExtensionContext) {
     }
   });
 
-  context.subscriptions.push(gitExtension.onDidChangeEnablement(enabled => {
+  context.subscriptions.push(gitExtensionExports.onDidChangeEnablement(enabled => {
     if (!enabled) {
       throw new Error('vscode.git Git extension was disabled');
     }
   }));
 
-  gitApi = gitExtension.getAPI(1);
+  gitApi = gitExtensionExports.getAPI(1);
   logPath = context.logUri.fsPath;
 
   context.subscriptions.push(gitApi.onDidCloseRepository(repository => {
