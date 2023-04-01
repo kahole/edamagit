@@ -423,6 +423,11 @@
           "type": "boolean",
           "default": false,
           "description": "Enable automatic confirm for switch menu after enabling a switch (e.g. --force)"
+        },
+        "magit.win-git-path": {
+          "type": "string",
+          "default": "",
+          "description": "Specify path to windows git installation (parent folder to the 'Git' folder). Necesarry if git is installed in a custom path on windows"
         }
       }
     },
@@ -717,7 +722,7 @@
     "ts-loader": "^9.4.2",
     "typescript": "^4.9.5",
     "vscode-test": "^1.4.1",
-    "webpack": "^5.75.0",
+    "webpack": "^5.77.0",
     "webpack-cli": "^5.0.1"
   },
   "dependencies": {
