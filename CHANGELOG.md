@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.40]
+- fix windows git folder issue by providing an extension setting
+named `win-git-path` to override (#243) (@rhoeberg)
+
 ## [0.6.39]
 - fix activation crash on load before internal git extension (#238)
 
