@@ -48,7 +48,7 @@ export const processLog: MagitProcessLogEntry[] = [];
 
 export let gitApi: API;
 export let logPath: string;
-export let magitConfig: { displayBufferSameColumn?: boolean, forgeEnabled?: boolean, hiddenStatusSections: Set<string>, quickSwitchEnabled?: boolean, winGitPath?: string };
+export let magitConfig: { displayBufferSameColumn?: boolean, forgeEnabled?: boolean, hiddenStatusSections: Set<string>, quickSwitchEnabled?: boolean, gitPath?: string };
 
 function loadConfig() {
   let workspaceConfig = workspace.getConfiguration('magit');
@@ -58,7 +58,7 @@ function loadConfig() {
     forgeEnabled: workspaceConfig.get('forge-enabled'),
     hiddenStatusSections: readHiddenStatusSections(workspaceConfig.get('hide-status-sections')),
     quickSwitchEnabled: workspaceConfig.get('quick-switch-enabled'),
-    winGitPath: workspaceConfig.get('win-git-path')
+    gitPath: workspaceConfig.get('git-path')
   };
 
   let configCodePath: string | undefined = workspaceConfig.get('code-path');

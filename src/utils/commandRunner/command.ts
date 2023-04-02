@@ -1,8 +1,10 @@
 import * as cp from 'child_process';
 import { CancellationToken, Disposable, Event, Uri } from 'vscode';
+import * as path from 'path';
 import { findGit } from './findGit';
 import * as iconv from '@vscode/iconv-lite-umd';
 import { dispose, IDisposable, toDisposable } from './disposable';
+import { magitConfig } from '../../extension';
 
 const canceledName = 'Canceled';
 class CancellationError extends Error {
@@ -171,7 +173,12 @@ async function exec(child: cp.ChildProcess, cancellationToken?: CancellationToke
 
 async function _exec(args: string[], options: SpawnOptions = {}): Promise<IExecutionResult<string>> {
 
-  const git = await findGit([], () => true);
+  let pathHints = Array.isArray(magitConfig.gitPath) ? magitConfig.gitPath : magitConfig.gitPath ? [magitConfig.gitPath] : [];
+  if (pathHints.length !== 0) {
+    pathHints = pathHints.filter(p => path.isAbsolute(p));  
+  }
+    
+  const git = await findGit(pathHints, () => true);
   const child = spawn(git.path, args, options);
 
   // options.onSpawn?.(child);
