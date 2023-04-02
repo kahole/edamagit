@@ -424,10 +424,14 @@
           "default": false,
           "description": "Enable automatic confirm for switch menu after enabling a switch (e.g. --force)"
         },
-        "magit.win-git-path": {
-          "type": "string",
+        "magit.git-path": {
+          "type": [
+            "string",
+            "null",
+            "array"
+          ],
           "default": "",
-          "description": "Specify path to windows git installation (parent folder to the 'Git' folder). Necesarry if git is installed in a custom path on windows"
+          "description": "Like `git.path`. Path and filename of the git executable, e.g. C:\\Program Files\\Git\\bin\\git.exe' (Windows). This can also be an array of string values containing multiple paths to look up."
         }
       }
     },

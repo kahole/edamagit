@@ -2,7 +2,6 @@ import * as cp from 'child_process';
 import { cpErrorHandler } from './command';
 import path = require('path');
 import * as which from 'which';
-import { magitConfig } from '../../extension';
 
 export interface IGit {
   path: string;
@@ -86,7 +85,6 @@ function findGitWin32InPath(onValidate: (path: string) => boolean): Promise<IGit
 
 function findGitWin32(onValidate: (path: string) => boolean): Promise<IGit> {
   return findSystemGitWin32(process.env['ProgramW6432'] as string, onValidate)
-  .then(undefined, () => findSystemGitWin32(magitConfig.winGitPath || '', onValidate))
     .then(undefined, () => findSystemGitWin32(process.env['ProgramFiles(x86)'] as string, onValidate))
     .then(undefined, () => findSystemGitWin32(process.env['ProgramFiles'] as string, onValidate))
     .then(undefined, () => findSystemGitWin32(path.join(process.env['LocalAppData'] as string, 'Programs'), onValidate))
