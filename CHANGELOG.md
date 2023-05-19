@@ -173,7 +173,8 @@ add this to your `settings.json`:
     "[magit]": {
         "editor.lineHeight": 15
     },
-```(@stevenguh (Steven Guh)
+```
+(@stevenguh (Steven Guh)
 
 ## [0.5.0] - 2020-10-12
 - Fixes issue where stash list was showing 1 entry even when there are none.
