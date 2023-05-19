@@ -730,5 +730,6 @@
     "date-fns": "^2.16.1",
     "jsonc-parser": "^3.0.0",
     "which": "^3.0.0"
-  }
+  },
+  "extensionDependencies": ["vscode.git"]
 }
