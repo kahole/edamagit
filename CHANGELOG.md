@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.41]
+- Truncate large behind-upstream list to fix issue (#255) where the extension would grind to a halt. (@bjackman
+Brendan Jackman)
+- Change `win-git-path` config to `git-path` for consistency (@ShuguangSun)
+- Minor fixes
+
 ## [0.6.40]
 - fix windows git folder issue by providing an extension setting
 named `win-git-path` to override (#243) (@rhoeberg)
