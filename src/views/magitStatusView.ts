@@ -77,19 +77,19 @@ export default class MagitStatusView extends DocumentView {
 
     const refs = magitState.remotes.reduce((prev, remote) => remote.branches.concat(prev), magitState.branches.concat(magitState.tags));
 
-    if (magitState.HEAD?.upstreamRemote?.ahead?.commits.length && !magitConfig.hiddenStatusSections.has('unmerged')) {
-      this.addSubview(new UnsourcedCommitSectionView(Section.UnmergedInto, magitState.HEAD.upstreamRemote, magitState.HEAD.upstreamRemote.ahead, refs));
-    } else if (magitState.HEAD?.pushRemote?.ahead?.commits.length && !magitConfig.hiddenStatusSections.has('unpushed')) {
-      this.addSubview(new UnsourcedCommitSectionView(Section.UnpushedTo, magitState.HEAD.pushRemote, magitState.HEAD.pushRemote.ahead, refs));
+    if (magitState.HEAD?.upstreamRemote?.commitsAhead?.length && !magitConfig.hiddenStatusSections.has('unmerged')) {
+      this.addSubview(new UnsourcedCommitSectionView(Section.UnmergedInto, magitState.HEAD.upstreamRemote, magitState.HEAD.upstreamRemote.commitsAhead, refs));
+    } else if (magitState.HEAD?.pushRemote?.commitsAhead?.length && !magitConfig.hiddenStatusSections.has('unpushed')) {
+      this.addSubview(new UnsourcedCommitSectionView(Section.UnpushedTo, magitState.HEAD.pushRemote, magitState.HEAD.pushRemote.commitsAhead, refs));
     }
-    if (magitState.log.length > 0 && !magitState.HEAD?.upstreamRemote?.ahead?.commits.length && !magitConfig.hiddenStatusSections.has('recent commits')) {
+    if (magitState.log.length > 0 && !magitState.HEAD?.upstreamRemote?.commitsAhead?.length && !magitConfig.hiddenStatusSections.has('recent commits')) {
       this.addSubview(new CommitSectionView(Section.RecentCommits, magitState.log.slice(0, 10), refs));
     }
 
-    if (magitState.HEAD?.upstreamRemote?.behind?.commits.length && !magitConfig.hiddenStatusSections.has('unpulled')) {
-      this.addSubview(new UnsourcedCommitSectionView(Section.UnpulledFrom, magitState.HEAD.upstreamRemote, magitState.HEAD.upstreamRemote.behind, refs));
-    } else if (magitState.HEAD?.pushRemote?.behind?.commits.length) {
-      this.addSubview(new UnsourcedCommitSectionView(Section.UnpulledFrom, magitState.HEAD.pushRemote, magitState.HEAD.pushRemote.behind, refs));
+    if (magitState.HEAD?.upstreamRemote?.commitsBehind?.length && !magitConfig.hiddenStatusSections.has('unpulled')) {
+      this.addSubview(new UnsourcedCommitSectionView(Section.UnpulledFrom, magitState.HEAD.upstreamRemote, magitState.HEAD.upstreamRemote.commitsBehind, refs));
+    } else if (magitState.HEAD?.pushRemote?.commitsBehind?.length) {
+      this.addSubview(new UnsourcedCommitSectionView(Section.UnpulledFrom, magitState.HEAD.pushRemote, magitState.HEAD.pushRemote.commitsBehind, refs));
     }
 
     if (magitState.forgeState?.pullRequests?.length && !magitConfig.hiddenStatusSections.has('pull requests')) {

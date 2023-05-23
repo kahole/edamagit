@@ -6,7 +6,7 @@ import GitTextUtils from '../utils/gitTextUtils';
 import MagitUtils from '../utils/magitUtils';
 import MagitStatusView from '../views/magitStatusView';
 import { Status, Commit, RefType, Repository, Change, Ref } from '../typings/git';
-import { MagitBranch, MagitCommitList, MagitUpstreamRef } from '../models/magitBranch';
+import { MagitBranch, MagitUpstreamRef } from '../models/magitBranch';
 import { gitRun, LogLevel } from '../utils/gitRawRunner';
 import * as Constants from '../common/constants';
 import { getCommit } from '../utils/commitCache';
@@ -18,8 +18,6 @@ import { Stash } from '../models/stash';
 import { MagitRepository } from '../models/magitRepository';
 import ViewUtils from '../utils/viewUtils';
 import { scheduleForgeStatusAsync, forgeStatusCached } from '../forge';
-
-const maxCommitsAheadBehind = 50;
 
 export async function magitRefresh() { }
 
@@ -72,18 +70,18 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
 
   const logTask = repository.state.HEAD?.commit ? repository.log({ maxEntries: 100 }) : Promise.resolve([]);
 
-  let ahead, behind: Promise<MagitCommitList> | undefined;
-
-  const ref = repository.state.HEAD?.name;
-  const upstream = `${ref}@{u}`;
-  // We actually must have a named ref if there is "ahead"/"behind"; you can't
-  // have an "upstream" without being on a named branch. So the && ref is just
-  // to satisfy the type checker.
-  if (repository.state.HEAD?.ahead && ref) {
-    ahead = getCommitRange(repository, upstream, ref, maxCommitsAheadBehind);
+  if (repository.state.HEAD?.commit) {
+    getCommit(repository, repository.state.HEAD?.commit);
   }
-  if (repository.state.HEAD?.behind && ref) {
-    behind = getCommitRange(repository, ref, upstream, maxCommitsAheadBehind);
+
+  let commitsAheadUpstream: string[] = [], commitsBehindUpstream: string[] = [];
+  if (repository.state.HEAD?.ahead || repository.state.HEAD?.behind) {
+    const ref = repository.state.HEAD.name;
+    const args = ['rev-list', '--left-right', `${ref}...${ref}@{u}`];
+    const res = (await gitRun(repository, args, {}, LogLevel.None)).stdout;
+    [commitsAheadUpstream, commitsBehindUpstream] = GitTextUtils.parseRevListLeftRight(res);
+    commitsAheadUpstream.map(c => getCommit(repository, c));
+    commitsBehindUpstream.map(c => getCommit(repository, c));
   }
 
   const workingTreeChanges_NoUntracked = repository.state.workingTreeChanges
@@ -152,12 +150,8 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
 
         HEAD.upstreamRemote = HEAD.upstream;
         HEAD.upstreamRemote.commit = await upstreamRemoteCommitDetails;
-        if (ahead) {
-          HEAD.upstreamRemote.ahead = await ahead;
-        }
-        if (behind) {
-          HEAD.upstreamRemote.behind = await behind;
-        }
+        HEAD.upstreamRemote.commitsAhead = await Promise.all(commitsAheadUpstream.map(hash => getCommit(repository, hash)));
+        HEAD.upstreamRemote.commitsBehind = await Promise.all(commitsBehindUpstream.map(hash => getCommit(repository, hash)));
         HEAD.upstreamRemote.rebase = (await isRebaseUpstream) === 'true';
       }
     } catch { }
@@ -207,22 +201,6 @@ function toMagitChange(repository: Repository, change: Change, diff?: string): M
   return magitChange;
 }
 
-async function getCommitRange(repository: Repository, from: string, to: string, maxResults: number): Promise<MagitCommitList> {
-  const args = ['log', '--format=format:%H',  `${from}...${to}`, '-n', `${Math.trunc(maxResults) + 1}`];
-  let result;
-  try {
-    result = await gitRun(repository, args, {}, LogLevel.Error);
-  } catch (error) {
-    return {commits: [], truncated: false};
-  }
-  // Slice removes empty string after final newline.
-  const hashes = result.stdout.trim().split(Constants.LineSplitterRegex);
-  return {
-    commits: await Promise.all(hashes.slice(0, maxResults).map(hash => getCommit(repository, hash))),
-    truncated: hashes.length > maxResults,
-  };
-}
-
 async function pushRemoteStatus(repository: Repository): Promise<MagitUpstreamRef | undefined> {
   try {
     const HEAD = repository.state.HEAD;
@@ -230,20 +208,17 @@ async function pushRemoteStatus(repository: Repository): Promise<MagitUpstreamRe
 
     if (HEAD?.name && pushRemote) {
 
-      const ahead = getCommitRange(repository, `${pushRemote}/${HEAD.name}`, HEAD.name, maxCommitsAheadBehind);
-      const behind = getCommitRange(repository, HEAD.name, `${pushRemote}/${HEAD.name}`, maxCommitsAheadBehind);
+      const args = ['rev-list', '--left-right', `${HEAD.name}...${pushRemote}/${HEAD.name}`];
+      const res = (await gitRun(repository, args, {}, LogLevel.None)).stdout;
+      const [commitsAheadPushRemote, commitsBehindPushRemote] = GitTextUtils.parseRevListLeftRight(res);
+      const commitsAhead = await Promise.all(commitsAheadPushRemote.map(c => getCommit(repository, c)));
+      const commitsBehind = await Promise.all(commitsBehindPushRemote.map(c => getCommit(repository, c)));
 
       const refs = await getRefs(repository);
       const pushRemoteCommit = refs.find(ref => ref.remote === pushRemote && ref.name === `${pushRemote}/${HEAD.name}`)?.commit;
       const pushRemoteCommitDetails = pushRemoteCommit ? getCommit(repository, pushRemoteCommit) : Promise.resolve(undefined);
 
-      return { 
-        remote: pushRemote, 
-        name: HEAD.name, 
-        commit: await pushRemoteCommitDetails, 
-        ahead: await ahead,
-        behind: await behind,
-      };
+      return { remote: pushRemote, name: HEAD.name, commit: await pushRemoteCommitDetails, commitsAhead, commitsBehind };
     }
   } catch { }
 }

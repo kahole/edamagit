@@ -7,13 +7,9 @@ export interface MagitBranch extends Branch {
   tag?: Ref;
 }
 
-export interface MagitCommitList {
-  commits: Commit[];
-  truncated: boolean;
-}
 export interface MagitUpstreamRef extends UpstreamRef {
   commit?: Commit;
-  ahead?: MagitCommitList;
-  behind?: MagitCommitList;
+  commitsAhead?: Commit[];
+  commitsBehind?: Commit[];
   rebase?: boolean;
 }
