@@ -24,7 +24,8 @@ const loggingMenu = {
 const switches: Switch[] = [
   { key: '-D', name: '--simplify-by-decoration', description: 'Simplify by decoration' },
   { key: '-g', name: '--graph', description: 'Show graph', activated: true },
-  { key: '-d', name: '--decorate', description: 'Show refnames', activated: true }
+  { key: '-d', name: '--decorate', description: 'Show refnames', activated: true },
+  { key: '-p', name: '--first-parent', description: 'First parent', activated: false },
 ];
 
 const options: Option[] = [
@@ -125,6 +126,9 @@ function createLogArgs(switches: Switch[], options: Option[]) {
   }
   if (switchMap['-g'].activated) {
     args.push(switchMap['-g'].name);
+  }
+  if (switchMap['-p'].activated) {
+    args.push(switchMap['-p'].name);
   }
   return args;
 }
