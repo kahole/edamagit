@@ -10,6 +10,11 @@ import { PickMenuItem, PickMenuUtil } from '../menu/pickMenu';
 import GitTextUtils from '../utils/gitTextUtils';
 import * as Constants from '../common/constants';
 
+export interface Selection {
+  key: string;
+  description: string;
+}
+
 export default class MagitUtils {
 
   public static getMagitRepoThatContainsFile(uri: Uri): MagitRepository | undefined {
@@ -225,6 +230,52 @@ export default class MagitUtils {
         if (resolveOnHide) {
           window.setStatusBarMessage('Abort', Constants.StatusMessageDisplayTimeout);
           resolve(false);
+        }
+      });
+
+      _inputBox.show();
+    });
+  }
+
+  public static async selectAction(prompt: string, options: Selection[]): Promise<string | undefined> {
+
+    const optionsStr = options.reduce((acc, current) => {
+      const { description } = current;
+      if (acc !== '') {
+        return acc.concat(', ', description);
+      } else {
+        return acc.concat(description);
+      }
+    }, '');
+    let renderedPrompt = `${prompt}: Select one of ${optionsStr} or [q] to abort`;
+
+    return new Promise(resolve => {
+
+      let resolveOnHide = true;
+      let selection = options[0].key;
+
+      const _inputBox = window.createInputBox();
+      _inputBox.validationMessage = renderedPrompt;
+
+      let changeListener = _inputBox.onDidChangeValue(e => {
+        const input = e.toLocaleLowerCase();
+        let found = options.find((selection) => selection.key === input);
+        if (found) {
+          resolveOnHide = false;
+          _inputBox.hide();
+          resolve(found.key);
+        } else if (e.toLowerCase().includes('q')) {
+          _inputBox.hide();
+        }
+      });
+
+      let onHideListener = _inputBox.onDidHide(() => {
+        _inputBox.dispose();
+        changeListener.dispose();
+        onHideListener.dispose();
+        if (resolveOnHide) {
+          window.setStatusBarMessage('Abort', Constants.StatusMessageDisplayTimeout);
+          resolve(undefined);
         }
       });
 
