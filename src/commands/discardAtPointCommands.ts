@@ -18,6 +18,7 @@ import { RemoteBranchListingView } from '../views/remotes/remoteBranchListingVie
 import * as Constants from '../common/constants';
 import ViewUtils from '../utils/viewUtils';
 import { View } from '../views/general/view';
+import { IExecutionResult } from '../utils/commandRunner/command';
 
 
 export async function magitDiscardAtPoint(repository: MagitRepository, currentView: DocumentView): Promise<any> {
@@ -54,7 +55,47 @@ async function discard(repository: MagitRepository, selection: Selection, select
 
         if (changeView.section === Section.Unstaged) {
           const args = ['checkout', '--', change.uri.fsPath];
-          return gitRun(repository.gitRepository, args);
+          try {
+            let result = await gitRun(repository.gitRepository, args);
+            return result;
+          } catch (err: unknown) {
+            const error = err as IExecutionResult<string>;
+            // Ask to checkout our stage, their stage, or to leave conflicts for manual resolving
+            if (error.stderr.includes(`is unmerged`)) {
+              let selection = await MagitUtils.selectAction(`For ${change.relativePath} checkout`, [
+                { key: 'o', description: '[o]ur stage' },
+                { key: 't', description: '[t]heir stage' },
+                { key: 'c', description: '[c]onflict' }
+              ]);
+              let which = '';
+              // Also run `git add` when taking our or their stage
+              let addAfter = false;
+              switch (selection) {
+                case undefined:
+                  return error;
+                case 'o':
+                  which = '--ours';
+                  addAfter = true;
+                  break;
+                case 't':
+                  which = '--theirs';
+                  addAfter = true;
+                  break;
+                case 'c':
+                  which = '--merge';
+                  break;
+              }
+              const args = ['checkout', which, '--', change.uri.fsPath];
+              await gitRun(repository.gitRepository, args);
+
+              if (addAfter) {
+                const addArgs = ['add', '-u', '--', change.uri.fsPath];
+                return gitRun(repository.gitRepository, addArgs);
+              } else {
+                return;
+              }
+            }
+          }
         } else {
           if (!changeView.change.diff) {
             return;
