@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.43]
+- When discarding a file change fails because of resolved conflicts (e.g. during merge) prompt to checkout our stage,
+their stage or to leave conflicts for manual resolving. @tzemanovic (Tomas Zemanovic)
+
 ## [0.6.41]
 - Truncate large behind-upstream list to fix issue (#255) where the extension would grind to a halt. (@bjackman
 Brendan Jackman)
