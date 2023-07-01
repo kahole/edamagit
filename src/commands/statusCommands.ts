@@ -208,7 +208,7 @@ function toMagitChange(repository: Repository, change: Change, diff?: string): M
 }
 
 async function getCommitRange(repository: Repository, from: string, to: string, maxResults: number): Promise<MagitCommitList> {
-  const args = ['log', '--format=format:%H',  `${from}...${to}`, '-n', `${Math.trunc(maxResults) + 1}`];
+  const args = ['log', '--format=format:%H',  `${from}..${to}`, '-n', `${Math.trunc(maxResults) + 1}`];
   let result;
   try {
     result = await gitRun(repository, args, {}, LogLevel.Error);
