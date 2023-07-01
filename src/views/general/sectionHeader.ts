@@ -22,7 +22,7 @@ export enum Section {
 
 export class SectionHeaderView extends UnclickableTextView {
 
-  constructor(section: Section, count?: number, extraText?: string) {
-    super(`${section.valueOf()}${extraText ? ' ' + extraText + '' : ''}${count ? ' (' + count + ')' : ''}`);
+  constructor(section: Section, count?: number, extraText?: string, truncated=false) {
+    super(`${section.valueOf()}${extraText ? ' ' + extraText : ''}${count ? ` (${count}${truncated ? '+': ''})` : ''}`);
   }
 }
