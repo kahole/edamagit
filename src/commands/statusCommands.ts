@@ -215,8 +215,8 @@ async function getCommitRange(repository: Repository, from: string, to: string, 
   } catch (error) {
     return {commits: [], truncated: false};
   }
-  // Slice removes empty string after final newline.
-  const hashes = result.stdout.trim().split(Constants.LineSplitterRegex);
+  const out = result.stdout.trim();
+  const hashes = out ? out.split(Constants.LineSplitterRegex) : [];
   return {
     commits: await Promise.all(hashes.slice(0, maxResults).map(hash => getCommit(repository, hash))),
     truncated: hashes.length > maxResults,
