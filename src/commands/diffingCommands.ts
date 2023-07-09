@@ -3,6 +3,7 @@ import { MagitRepository } from '../models/magitRepository';
 import { gitRun } from '../utils/gitRawRunner';
 import { DiffView } from '../views/diffView';
 import { MenuUtil, MenuState } from '../menu/menu';
+import GitTextUtils from '../utils/gitTextUtils';
 import { PickMenuUtil, PickMenuItem } from '../menu/pickMenu';
 import { StashDetailView } from '../views/stashDetailView';
 import MagitUtils from '../utils/magitUtils';
@@ -14,6 +15,7 @@ import { Status } from '../typings/git';
 import { MagitChange } from '../models/magitChange';
 import { Stash } from '../models/stash';
 import ViewUtils from '../utils/viewUtils';
+import { constants } from 'buffer';
 
 const diffingMenu = {
   title: 'Diffing',
@@ -102,9 +104,51 @@ async function showStash({ repository }: MenuState) {
   }
 }
 
+function toMagitChange(nameStatusText: string, diff: string): MagitChange[] {
+  const DIFF_PREFIX = 'diff --git';
+  const filesWithStatus = nameStatusText.split(Constants.LineSplitterRegex).filter(t => t !== '').map(s => s.split('\t'));
+  const diffs = diff.split(DIFF_PREFIX).filter(r => r !== '');
+
+  if (filesWithStatus.length !== diffs.length) {
+    return [];
+  }
+
+  return diffs.map((diff, idx) => {
+    const [status, ...paths] = filesWithStatus[idx];
+    const uri = Uri.file(paths[paths.length - 1]);
+    const fileStatus = getStatusFromString(status);
+    return {
+      diff,
+      uri,
+      originalUri: uri,
+      status: fileStatus,
+      renameUri: undefined,
+      relativePath: paths.join(' -> '),
+      hunks: diff ? GitTextUtils.diffToHunks(diff, uri) : undefined,
+    };
+  });
+}
+
+function getStatusFromString(status: String): number {
+  switch (status.charAt(0)) {
+    case 'A':
+      return Status.INDEX_ADDED;
+    case 'C':
+      return Status.INDEX_COPIED ;
+    case 'D':
+      return Status.DELETED;
+    case 'R' :
+      return Status.INDEX_RENAMED;
+    case 'M':
+    default:
+      return Status.MODIFIED;
+  }
+}
+
 export async function showStashDetail(repository: MagitRepository, stash: Stash) {
   const uri = StashDetailView.encodeLocation(repository, stash);
 
+  const nameStatusTask = gitRun(repository.gitRepository, ['stash', 'show', '--name-status', `stash@{${stash.index}}`]);
   const stashShowTask = gitRun(repository.gitRepository, ['stash', 'show', '-p', `stash@{${stash.index}}`]);
   let stashUntrackedFiles: MagitChange[] = [];
   try {
@@ -124,9 +168,10 @@ export async function showStashDetail(repository: MagitRepository, stash: Stash)
 
   } catch { }
 
+  const nameStatusText = (await nameStatusTask).stdout;
   const stashDiff = (await stashShowTask).stdout;
 
-  return ViewUtils.showView(uri, new StashDetailView(uri, stash, stashDiff, stashUntrackedFiles));
+  return ViewUtils.showView(uri, new StashDetailView(uri, stash, toMagitChange(nameStatusText, stashDiff), stashUntrackedFiles));
 }
 
 async function showCommit({ repository }: MenuState) {
