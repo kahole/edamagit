@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.44]
+- Improved performance of status view and fix commit ahead/behind list for very out-of-sync repos (@bjackman Brendan Jackman)
+- add a switch for log --first-parent (@tzemanovic Tomas Zemanovic)
+- Fold/unfold diff hunks in stash detail view (@vbh Bindu)
+
 ## [0.6.43]
 - When discarding a file change fails because of resolved conflicts (e.g. during merge) prompt to checkout our stage,
 their stage or to leave conflicts for manual resolving. @tzemanovic (Tomas Zemanovic)
