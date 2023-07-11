@@ -18,6 +18,7 @@ export enum Section {
   Tags = 'Tags',
   PullRequests = 'Pull Requests',
   Issues = 'Issues',
+  Changes='Changes',
 }
 
 export class SectionHeaderView extends UnclickableTextView {
