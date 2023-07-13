@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.45]
+- Fix resolution of user keybindings for help-view (`?` view)
+
 ## [0.6.44]
 - Improved performance of status view and fix commit ahead/behind list for very out-of-sync repos (@bjackman Brendan Jackman)
 - add a switch for log --first-parent (@tzemanovic Tomas Zemanovic)

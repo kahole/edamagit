@@ -7,7 +7,7 @@
   "author": {
     "name": "Kristian Andersen Hole"
   },
-  "version": "0.6.44",
+  "version": "0.6.45",
   "engines": {
     "vscode": "^1.50.0"
   },
