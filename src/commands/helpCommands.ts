@@ -15,7 +15,7 @@ export async function magitDispatch(repository: MagitRepository) {
 }
 
 async function openHelpView(repository: MagitRepository) {
-  let keybindingsPath = path.join(logPath, '..', '..', '..', '..', 'User', 'keybindings.json');
+  let keybindingsPath = path.join(logPath, '..', '..', '..', '..', '..', 'User', 'keybindings.json');
   let userKeyBindings = [];
 
   try {
