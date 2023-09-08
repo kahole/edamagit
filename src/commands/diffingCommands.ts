@@ -12,7 +12,7 @@ import * as VisitAtPoint from './visitAtPointCommands';
 import * as Constants from '../common/constants';
 import { Section } from '../views/general/sectionHeader';
 import { Status } from '../typings/git';
-import { MagitChange } from '../models/magitChange';
+import { ContextualMagitChange, MagitChange } from '../models/magitChange';
 import { Stash } from '../models/stash';
 import ViewUtils from '../utils/viewUtils';
 import { constants } from 'buffer';
@@ -104,7 +104,7 @@ async function showStash({ repository }: MenuState) {
   }
 }
 
-function stashToMagitChanges(nameStatusText: string, diff: string): MagitChange[] {
+export function stashToMagitChanges(repository: MagitRepository, contextId: string, nameStatusText: string, diff: string): ContextualMagitChange[] {
   const DIFF_PREFIX = 'diff --git';
   const filesWithStatus = nameStatusText.split(Constants.LineSplitterRegex).filter(t => t !== '').map(s => s.split('\t'));
   const diffs = diff.split(DIFF_PREFIX).filter(r => r !== '');
@@ -115,11 +115,12 @@ function stashToMagitChanges(nameStatusText: string, diff: string): MagitChange[
 
   return diffs.map((diff, idx) => {
     const [status, ...paths] = filesWithStatus[idx];
-    const uri = Uri.file(paths[paths.length - 1]);
+    const uri = Uri.parse(repository.gitRepository.rootUri + '/' + paths[paths.length - 1]);
     const fileStatus = getStatusFromString(status);
     return {
       diff,
       uri,
+      contextId,
       originalUri: uri,
       status: fileStatus,
       renameUri: undefined,
@@ -171,7 +172,7 @@ export async function showStashDetail(repository: MagitRepository, stash: Stash)
   const nameStatusText = (await nameStatusTask).stdout;
   const stashDiff = (await stashShowTask).stdout;
 
-  return ViewUtils.showView(uri, new StashDetailView(uri, stash, stashToMagitChanges(nameStatusText, stashDiff), stashUntrackedFiles));
+  return ViewUtils.showView(uri, new StashDetailView(uri, stash, stashToMagitChanges(repository, `stash@{${stash.index}}`, nameStatusText, stashDiff), stashUntrackedFiles));
 }
 
 async function showCommit({ repository }: MenuState) {

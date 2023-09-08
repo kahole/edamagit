@@ -6,3 +6,7 @@ export interface MagitChange extends Change {
   diff?: string;
   relativePath?: string;
 }
+
+export interface ContextualMagitChange extends MagitChange {
+  contextId: string
+}
