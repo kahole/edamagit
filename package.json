@@ -454,6 +454,16 @@
         "description": "Name of a git ref from a remote."
       },
       {
+        "id": "magit-head-name",
+        "superType": "label",
+        "description": "Name of the (local) HEAD git ref."
+      },
+      {
+        "id": "magit-remote-head-name",
+        "superType": "label",
+        "description": "Name of a HEAD git ref on a remote repo."
+      },
+      {
         "id": "magit-tag-name",
         "superType": "label",
         "description": "Name of a git tag."
@@ -467,6 +477,12 @@
           ],
           "magit-remote-ref-name": [
             "variable.other.constant"
+          ],
+          "magit-head-name": [
+            "entity.name.tag"
+          ],
+          "magit-remote-head-name": [
+            "variable.object.property"
           ],
           "magit-tag-name": [
             "string.highlight"
