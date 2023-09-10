@@ -99,7 +99,16 @@ async function log(repository: MagitRepository, args: string[], revs: string[], 
   const logEntries = parseLog(output.stdout);
   const revName = revs.join(' ');
   const uri = LogView.encodeLocation(repository);
-  return ViewUtils.showView(uri, new LogView(uri, { entries: logEntries, revName }));
+
+  let defaultBranches: { [remoteName: string]: string } = {};
+  for await (const remote of repository.remotes) {
+    try {
+      let defaultBranch = await gitRun(repository.gitRepository, ['symbolic-ref', `refs/remotes/${remote.name}/HEAD`], undefined, LogLevel.Error);
+      defaultBranches[remote.name] = defaultBranch.stdout.replace(`refs/remotes/${remote.name}/`, '').trimEnd();
+    } catch { } // gitRun will throw an error if remote/HEAD doesn't exist - we do not need to do anything in this case
+  }
+
+  return ViewUtils.showView(uri, new LogView(uri, { entries: logEntries, revName }, repository, defaultBranches));
 }
 
 async function getRevs(repository: MagitRepository) {
