@@ -10,17 +10,21 @@ import { DocumentView } from './general/documentView';
 import { TextView } from './general/textView';
 import { Token } from './general/semanticTextView';
 import { SemanticTokenTypes } from '../common/constants';
+import { Ref, RefType } from '../typings/git';
+import ViewUtils from '../utils/viewUtils';
+import { MagitRemote } from '../models/magitRemote';
 
 export default class LogView extends DocumentView {
 
   static UriPath: string = 'log.magit';
 
-  constructor(uri: Uri, log: MagitLog) {
+  constructor(uri: Uri, log: MagitLog, magitState: MagitRepository, defaultBranches?: { [remoteName: string]: string }) {
     super(uri);
+    const refs = magitState.remotes.reduce((prev, remote) => remote.branches.concat(prev), magitState.branches.concat(magitState.tags));
 
     this.subViews = [
       new TextView(`Commits in ${log.revName}`),
-      ...log.entries.map(entry => new CommitLongFormItemView(entry)),
+      ...log.entries.map(entry => new CommitLongFormItemView(entry, refs, magitState.HEAD?.name, defaultBranches)),
     ];
   }
 
@@ -34,8 +38,8 @@ export default class LogView extends DocumentView {
 
 export class CommitLongFormItemView extends CommitItemView {
 
-  constructor(public logEntry: MagitLogEntry) {
-    super(logEntry.commit);
+  constructor(public logEntry: MagitLogEntry, refs?: Ref[], headName?: string, defaultBranches?: { [remoteName: string]: string }) {
+    super(logEntry.commit, undefined, refs);
 
     const timeDistance = formatDistanceToNowStrict(logEntry.time);
     const hash = `${GitTextUtils.shortHash(logEntry.commit.hash)} `;
@@ -46,16 +50,8 @@ export class CommitLongFormItemView extends CommitItemView {
     const msg = GitTextUtils.shortCommitMessage(logEntry.commit.message);
     this.content.push(`${hash}${graph}`);
 
-    const refTokens: Token[] = logEntry.refs.map(ref => new Token(ref, SemanticTokenTypes.RefName));
-    if (refTokens.length) {
-
-      this.content.push(' (');
-      refTokens.forEach(refToken => {
-        this.content.push(refToken, ' ');
-      });
-      this.content.pop();
-
-      this.content.push(') ');
+    if (logEntry.refs.length) {
+      this.content.push(...ViewUtils.generateRefTokensLine(logEntry.commit.hash, refs, headName, defaultBranches));
     }
 
     const availableMsgWidth = 70 - this.content.reduce((prev, v) => prev + v.length, 0);
