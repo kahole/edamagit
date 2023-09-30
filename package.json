@@ -206,6 +206,14 @@
       {
         "command": "magit.toggle-fold",
         "title": "Magit Toggle Fold"
+      },
+      {
+        "command": "magit.toggle-all-folds-in-change-section-at-point",
+        "title": "Magit Toggle All Folds in Change Section at Point"
+      },
+      {
+        "command": "magit.toggle-all-folds-for-change-views",
+        "title": "Magit Toggle All Folds for Change Views"
       }
     ],
     "menus": {
@@ -366,6 +374,14 @@
         },
         {
           "command": "magit.toggle-fold",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.toggle-all-folds-in-change-section-at-point",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.toggle-all-folds-for-change-views",
           "when": "editorLangId == magit"
         }
       ]
