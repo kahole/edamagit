@@ -4,7 +4,6 @@ import { ChangeSectionView } from '../views/changes/changesSectionView';
 import { ChangeView } from '../views/changes/changeView';
 import { DocumentView } from '../views/general/documentView';
 import { View } from '../views/general/view';
-import { ChangeView } from '../views/changes/changeView';
 import { HunkView } from '../views/changes/hunkView';
 
 export async function saveClose() {
