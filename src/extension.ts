@@ -9,7 +9,23 @@ import { magitVisitAtPoint } from './commands/visitAtPointCommands';
 import { MagitRepository } from './models/magitRepository';
 import { magitCommit, setCodePath } from './commands/commitCommands';
 import { magitStage, magitStageAll, magitUnstageAll, magitUnstage, stageFile, unstageFile } from './commands/stagingCommands';
-import { saveClose, clearSaveClose, quitMagitView, toggleAllFoldsForChangeViews, toggleAllFoldsInChangeSection, moveToPreviousEntity, moveToNextEntity } from './commands/macros';
+import {
+  saveClose,
+  clearSaveClose,
+  quitMagitView,
+  toggleAllFoldsForChangeViews,
+  toggleAllFoldsInChangeSection,
+  moveToPreviousEntity,
+  moveToNextEntity,
+  moveToNextSection,
+  moveToPreviousSection,
+  moveToNextChange,
+  moveToPreviousChange,
+  moveToNextHunk,
+  moveToPreviousHunk,
+  moveToUnstagedChanges,
+  moveToStagedChanges,
+} from './commands/macros';
 import HighlightProvider from './providers/highlightProvider';
 import SemanticTokensProvider from './providers/semanticTokensProvider';
 import { CommandPrimer } from './commands/commandPrimer';
@@ -178,6 +194,15 @@ export function activate(context: ExtensionContext) {
 
   context.subscriptions.push(commands.registerTextEditorCommand('magit.move-next-entity', CommandPrimer.primeRepoAndView(moveToNextEntity, false)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.move-previous-entity', CommandPrimer.primeRepoAndView(moveToPreviousEntity, false)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.move-next-section', CommandPrimer.primeRepoAndView(moveToNextSection, false)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.move-previous-section', CommandPrimer.primeRepoAndView(moveToPreviousSection, false)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.move-next-change', CommandPrimer.primeRepoAndView(moveToNextChange, false)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.move-previous-change', CommandPrimer.primeRepoAndView(moveToPreviousChange, false)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.move-next-hunk', CommandPrimer.primeRepoAndView(moveToNextHunk, false)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.move-previous-hunk', CommandPrimer.primeRepoAndView(moveToPreviousHunk, false)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.move-to-unstaged-changes', CommandPrimer.primeRepoAndView(moveToUnstagedChanges, false)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.move-to-staged-changes', CommandPrimer.primeRepoAndView(moveToStagedChanges, false)));
+
   context.subscriptions.push(commands.registerTextEditorCommand('magit.toggle-all-folds-in-change-section-at-point', CommandPrimer.primeRepoAndView(toggleAllFoldsInChangeSection, true)));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.toggle-all-folds-for-change-views', CommandPrimer.primeRepoAndView(toggleAllFoldsForChangeViews, true)));
 

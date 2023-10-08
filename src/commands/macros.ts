@@ -4,6 +4,7 @@ import { ChangeSectionView } from '../views/changes/changesSectionView';
 import { ChangeView } from '../views/changes/changeView';
 import { DocumentView } from '../views/general/documentView';
 import { View } from '../views/general/view';
+import { HunkView } from '../views/changes/hunkView';
 
 export async function saveClose() {
   await commands.executeCommand('workbench.action.files.save');
@@ -58,11 +59,43 @@ const subViewDepthSearchFlatten = (view: View, depth: number = 0): View[] => {
 };
 
 export async function moveToNextEntity(repo: MagitRepository, view: DocumentView) {
-  moveToEntity(view, 'next');
+  moveToNextPreviousEntity(view, 'next', 'entity');
 }
 
 export async function moveToPreviousEntity(repo: MagitRepository, view: DocumentView) {
-  moveToEntity(view, 'previous');
+  moveToNextPreviousEntity(view, 'previous', 'entity');
+}
+
+export async function moveToNextSection(repo: MagitRepository, view: DocumentView) {
+  moveToNextPreviousEntity(view, 'next', 'section');
+}
+
+export async function moveToPreviousSection(repo: MagitRepository, view: DocumentView) {
+  moveToNextPreviousEntity(view, 'previous', 'section');
+}
+
+export async function moveToNextChange(repo: MagitRepository, view: DocumentView) {
+  moveToNextPreviousEntity(view, 'next', 'change');
+}
+
+export async function moveToPreviousChange(repo: MagitRepository, view: DocumentView) {
+  moveToNextPreviousEntity(view, 'previous', 'change');
+}
+
+export async function moveToNextHunk(repo: MagitRepository, view: DocumentView) {
+  moveToNextPreviousEntity(view, 'next', 'hunk');
+}
+
+export async function moveToPreviousHunk(repo: MagitRepository, view: DocumentView) {
+  moveToNextPreviousEntity(view, 'previous', 'hunk');
+}
+
+export async function moveToUnstagedChanges(repo: MagitRepository, view: DocumentView) {
+  moveToTargetEntity(view, 'unstaged-changes');
+}
+
+export async function moveToStagedChanges(repo: MagitRepository, view: DocumentView) {
+  moveToTargetEntity(view, 'staged-changes');
 }
 
 function moveCursorAndReveal(position: Position) {
@@ -70,12 +103,44 @@ function moveCursorAndReveal(position: Position) {
   window.activeTextEditor!.revealRange(new Selection(position, position), TextEditorRevealType.Default);
 }
 
-function moveToEntity(view: View, direction: 'next' | 'previous') {
+function moveToTargetEntity(view: View, target: 'unstaged-changes' | 'staged-changes') {
+  let views = (
+    [view, ...subViewDepthSearchFlatten(view)]
+    .filter(v =>
+      target === 'unstaged-changes' ? v instanceof ChangeSectionView && v.section === 'Unstaged changes' :
+      target === 'staged-changes' ? v instanceof ChangeSectionView && v.section === 'Staged changes' :
+      false // Unreachable
+    )
+  );
+
+  let targetView = views[0];
+  if (targetView) {
+    let nextLocation = targetView.range.start;
+    moveCursorAndReveal(nextLocation);
+  }
+}
+
+function moveToNextPreviousEntity(
+  view: View,
+  direction: 'next' | 'previous',
+  filter: 'entity' | 'section' | 'change' | 'hunk',
+) {
   const selectedView = view.click(window.activeTextEditor!.selection.active);
 
   if (selectedView) {
 
-    let foldableViews = [view, ...subViewDepthSearchFlatten(view)];
+    let foldableViews = (
+      [view, ...subViewDepthSearchFlatten(view)]
+      .filter(v =>
+        v === selectedView || (
+          filter === 'entity' ? true :
+          filter === 'section' ? v.constructor.name.endsWith('SectionView') :
+          filter === 'change' ? v instanceof ChangeView :
+          filter === 'hunk' ? v instanceof HunkView :
+          false // Unreachable
+        )
+      )
+    );
 
     if (direction === 'previous') {
       foldableViews = foldableViews.reverse();
@@ -94,15 +159,16 @@ function moveToEntity(view: View, direction: 'next' | 'previous') {
       }
     }
 
-    // Avoid standing still and getting stuck
-    if (direction === 'next') {
-      let newPos = selectedView.range.end.with({ line: selectedView.range.end.line });
-      moveCursorAndReveal(newPos);
-    } else if (direction === 'previous') {
-      if (selectedView.range.start.line > 0) {
-        let newPos = selectedView.range.start.with({ line: selectedView.range.start.line - 1 });
+    if (filter === 'entity') {
+      // Avoid standing still and getting stuck
+      if (direction === 'next') {
+        let newPos = selectedView.range.end.with({ line: selectedView.range.end.line });
         moveCursorAndReveal(newPos);
-
+      } else if (direction === 'previous') {
+        if (selectedView.range.start.line > 0) {
+          let newPos = selectedView.range.start.with({ line: selectedView.range.start.line - 1 });
+          moveCursorAndReveal(newPos);
+        }
       }
     }
   }
