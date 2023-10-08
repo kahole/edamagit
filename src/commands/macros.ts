@@ -1,6 +1,7 @@
 import { commands, TextEditor, Range, window, Selection, TextEditorRevealType, Position } from 'vscode';
 import { MagitRepository } from '../models/magitRepository';
 import { ChangeSectionView } from '../views/changes/changesSectionView';
+import { ChangeView } from '../views/changes/changeView';
 import { DocumentView } from '../views/general/documentView';
 import { View } from '../views/general/view';
 
@@ -34,6 +35,17 @@ export async function toggleAllFoldsInChangeSection(repo: MagitRepository, view:
     for (let i = 1; i < changeSectionView.subViews.length - 1; i++) {
       changeSectionView.subViews[i].folded = newFoldState;
     }
+  }
+}
+
+export async function toggleAllFoldsForChangeViews(repo: MagitRepository, view: DocumentView) {
+  let changeViews = Array.from(view.walkAllSubViews()).filter(x => x instanceof ChangeView);
+  if (changeViews.length === 0) {
+    return;
+  }
+  const newFoldState = !changeViews[0].folded;
+  for (let changeView of changeViews) {
+    changeView.folded = newFoldState;
   }
 }
 

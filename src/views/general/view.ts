@@ -85,4 +85,11 @@ export abstract class View {
   addSubview(...views: View[]) {
     this.subViews.push(...views);
   }
+
+  *walkAllSubViews(): Generator<View> {
+    for (let subView of this.subViews) {
+      yield subView;
+      yield* subView.walkAllSubViews();
+    }
+  }
 }
