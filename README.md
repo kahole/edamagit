@@ -26,7 +26,7 @@
 
 <h3 align="center">
   <a href="#usage">Usage</a> •
-  <a href="https://hole.dev/articles/edamagit-introduction/">Tutorial</a> •
+  <a href="https://kahole.github.io/hole.dev/articles/edamagit-introduction/">Tutorial</a> •
   <a href="#settings">Settings</a> •
   <a href="#vim-support-vscodevim">Vim Bindings</a> •
   <a href="#roadmap">Roadmap</a>
@@ -77,7 +77,7 @@ Essential commands
   ctrl+k Move cursor to previous entity
 ```
 
-## [[ See also the edamagit tutorial ]](https://hole.dev/articles/edamagit-introduction/)
+## [[ See also the edamagit tutorial ]](https://kahole.github.io/hole.dev/articles/edamagit-introduction/)
 ---
 
 

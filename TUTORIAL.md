@@ -20,11 +20,11 @@ Once in the status view, press `Tab` to fold and unfold sections, files, and cha
 
 Place the cursor on a section
 
-![](https://hole.dev/images/edamagit_introduction/tab_closed.jpg)
+![](https://kahole.github.io/hole.dev/images/edamagit_introduction/tab_closed.jpg)
 
 press `Tab` to unfold/fold:
 
-![](https://hole.dev/images/edamagit_introduction/tab_open.jpg)
+![](https://kahole.github.io/hole.dev/images/edamagit_introduction/tab_open.jpg)
 
 #### Staging
 
@@ -32,11 +32,11 @@ Pressing `s` and `u` allows you to stage and unstage changes under the cursor. E
 
 From
 
-![](https://hole.dev/images/edamagit_introduction/unstaged_file.jpg)
+![](https://kahole.github.io/hole.dev/images/edamagit_introduction/unstaged_file.jpg)
 
 pressing `s` will stage the file:
 
-![](https://hole.dev/images/edamagit_introduction/staged_file.jpg)
+![](https://kahole.github.io/hole.dev/images/edamagit_introduction/staged_file.jpg)
 
 #### Other status view actions
 
@@ -51,7 +51,7 @@ From the status view press `?` to bring up the help view.
 This shows you the available edamagit menus and which key to press to invoke them.
 For example, pressing `b` brings up the `Branching`-menu.
 
-![](https://hole.dev/images/edamagit_introduction/help_view.jpg)
+![](https://kahole.github.io/hole.dev/images/edamagit_introduction/help_view.jpg)
 
 This menu-system is based on a modified version of VSCode's QuickPick selection menu.
 
@@ -59,15 +59,15 @@ Similarly to the help view, the entries in this menu show a key and which action
 
 From here, a single press of `c` invokes the action `Checkout new branch`.
 
-![](https://hole.dev/images/edamagit_introduction/branching_menu_1.jpg)
+![](https://kahole.github.io/hole.dev/images/edamagit_introduction/branching_menu_1.jpg)
 
 Choose a branch to base the new branch on. Search and/or select with arrow keys. Confirm choice with `Enter`.
 
-![](https://hole.dev/images/edamagit_introduction/branching_menu_2.jpg)
+![](https://kahole.github.io/hole.dev/images/edamagit_introduction/branching_menu_2.jpg)
 
 Give the new branch a name and press `Enter`
 
-![](https://hole.dev/images/edamagit_introduction/branching_menu_3.jpg)
+![](https://kahole.github.io/hole.dev/images/edamagit_introduction/branching_menu_3.jpg)
 
 ### Committing
 
@@ -76,7 +76,7 @@ Press `c` to bring up committing menu, and `c` once again to start a normal comm
 
 This brings up the commit view where you will write a commit message. Next to an editor showing which changes you are committing is shown.
 
-![](https://hole.dev/images/edamagit_introduction/committing.jpg)
+![](https://kahole.github.io/hole.dev/images/edamagit_introduction/committing.jpg)
 
 Once you have written a commit-message press `ctrl+c ctrl+c` to finish the commit.
 Or manually save and close the commit-message editor, this has the same effect.
@@ -90,19 +90,19 @@ E.g. `push --force`
 
 Many of the edamagit command menus have a switches menu which can be activated by pressing `-`.
 
-![](https://hole.dev/images/edamagit_introduction/switches_1.jpg)
+![](https://kahole.github.io/hole.dev/images/edamagit_introduction/switches_1.jpg)
 
 Toggle a switch by pressing its letter. E.g. `F` (uppercase) for `--force`.
 
-![](https://hole.dev/images/edamagit_introduction/switches_2.jpg)
+![](https://kahole.github.io/hole.dev/images/edamagit_introduction/switches_2.jpg)
 
 Press `Enter` to confirm the switch selection.
 
-![](https://hole.dev/images/edamagit_introduction/switches_3.jpg)
+![](https://kahole.github.io/hole.dev/images/edamagit_introduction/switches_3.jpg)
 
 Now you'll see the active switches listed in the 'Switches' menu entry.
 
-![](https://hole.dev/images/edamagit_introduction/switches_4.jpg)
+![](https://kahole.github.io/hole.dev/images/edamagit_introduction/switches_4.jpg)
 
 ### Tips & Tricks
 - Using the vscode command palette and typing `Magit ` will show you all available magit actions from where you currently are.
