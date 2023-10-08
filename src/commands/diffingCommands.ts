@@ -104,7 +104,7 @@ async function showStash({ repository }: MenuState) {
   }
 }
 
-function stashToMagitChanges(nameStatusText: string, diff: string): MagitChange[] {
+export function stashToMagitChanges(nameStatusText: string, diff: string): MagitChange[] {
   const DIFF_PREFIX = 'diff --git';
   const filesWithStatus = nameStatusText.split(Constants.LineSplitterRegex).filter(t => t !== '').map(s => s.split('\t'));
   const diffs = diff.split(DIFF_PREFIX).filter(r => r !== '');
@@ -134,7 +134,7 @@ function getStatusFromString(status: String): number {
     case 'A':
       return Status.INDEX_ADDED;
     case 'C':
-      return Status.INDEX_COPIED ;
+      return Status.INDEX_COPIED;
     case 'D':
       return Status.DELETED;
     case 'R' :

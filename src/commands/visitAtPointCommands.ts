@@ -21,6 +21,7 @@ import { PullRequestView } from '../views/forge/pullRequestView';
 import { sep } from 'path';
 import { ErrorMessageView } from '../views/errorMessageView';
 import { processView } from './processCommands';
+import { stashToMagitChanges } from './diffingCommands';
 
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 
@@ -141,9 +142,11 @@ async function visitHunk(selectedView: HunkView, activePosition?: Position) {
 }
 
 export async function visitCommit(repository: MagitRepository, commitHash: string) {
-  const result = await gitRun(repository.gitRepository, ['show', commitHash]);
+  const nameStatus = await gitRun(repository.gitRepository, ['show', '--name-status', '--pretty=format:', commitHash]);
+  const header = await gitRun(repository.gitRepository, ['show', '-s', '--shortstat', commitHash]);
+  const diffs = await gitRun(repository.gitRepository, ['show', '--pretty=format:', commitHash]);
   const commit: MagitCommit = { hash: commitHash, message: '', parents: [] };
 
   const uri = CommitDetailView.encodeLocation(repository, commit.hash);
-  return ViewUtils.showView(uri, new CommitDetailView(uri, commit, result.stdout));
+  return ViewUtils.showView(uri, new CommitDetailView(uri, commit, header.stdout, stashToMagitChanges(nameStatus.stdout, diffs.stdout)));
 }
