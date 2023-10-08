@@ -13,6 +13,7 @@ import {
   saveClose,
   clearSaveClose,
   quitMagitView,
+  toggleAllFoldsForChangeViews,
   toggleAllFoldsInChangeSection,
   moveToPreviousEntity,
   moveToNextEntity,
@@ -203,6 +204,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(commands.registerTextEditorCommand('magit.move-to-staged-changes', CommandPrimer.primeRepoAndView(moveToStagedChanges, false)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('magit.toggle-all-folds-in-change-section-at-point', CommandPrimer.primeRepoAndView(toggleAllFoldsInChangeSection, true)));
+  context.subscriptions.push(commands.registerTextEditorCommand('magit.toggle-all-folds-for-change-views', CommandPrimer.primeRepoAndView(toggleAllFoldsForChangeViews, true)));
 
   context.subscriptions.push(commands.registerTextEditorCommand('magit.save-and-close-editor', saveClose));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.clear-and-abort-editor', clearSaveClose));

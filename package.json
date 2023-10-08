@@ -206,6 +206,14 @@
       {
         "command": "magit.toggle-fold",
         "title": "Magit Toggle Fold"
+      },
+      {
+        "command": "magit.toggle-all-folds-in-change-section-at-point",
+        "title": "Magit Toggle All Folds in Change Section at Point"
+      },
+      {
+        "command": "magit.toggle-all-folds-for-change-views",
+        "title": "Magit Toggle All Folds for Change Views"
       }
     ],
     "menus": {
@@ -367,6 +375,14 @@
         {
           "command": "magit.toggle-fold",
           "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.toggle-all-folds-in-change-section-at-point",
+          "when": "editorLangId == magit"
+        },
+        {
+          "command": "magit.toggle-all-folds-for-change-views",
+          "when": "editorLangId == magit"
         }
       ]
     },
@@ -454,6 +470,16 @@
         "description": "Name of a git ref from a remote."
       },
       {
+        "id": "magit-head-name",
+        "superType": "label",
+        "description": "Name of the (local) HEAD git ref."
+      },
+      {
+        "id": "magit-remote-head-name",
+        "superType": "label",
+        "description": "Name of a HEAD git ref on a remote repo."
+      },
+      {
         "id": "magit-tag-name",
         "superType": "label",
         "description": "Name of a git tag."
@@ -467,6 +493,12 @@
           ],
           "magit-remote-ref-name": [
             "variable.other.constant"
+          ],
+          "magit-head-name": [
+            "entity.name.tag"
+          ],
+          "magit-remote-head-name": [
+            "variable.object.property"
           ],
           "magit-tag-name": [
             "string.highlight"

@@ -81,7 +81,7 @@ export default class ViewUtils {
     return selectedViews;
   }
 
-  public static generateRefTokensLine(commitHash: string, refs?: Ref[]): (string | Token)[] {
+  public static generateRefTokensLine(commitHash: string, refs?: Ref[], headName?: string, defaultBranches?: { [remoteName: string]: string }): (string | Token)[] {
 
     const matchingRefs = (refs ?? [])
       .filter(ref => ref.commit === commitHash)
@@ -103,7 +103,19 @@ export default class ViewUtils {
         let m = matchingRefs.find(other => other.name === namePart && other.type === RefType.Head);
         if (m && m.name) {
           hasMatchingRemoteBranch[m.name!] = true;
-          refsContent.push(new Token(remotePart + '/', SemanticTokenTypes.RemoteRefName), new Token(m.name ?? '', SemanticTokenTypes.RefName));
+
+          // Determine if local or remote branches are HEADs
+          let remoteRefTokenType = SemanticTokenTypes.RemoteRefName;
+          if (defaultBranches && ref.remote && defaultBranches[ref.remote] === namePart) {
+            remoteRefTokenType = SemanticTokenTypes.RemoteHeadName;
+          }
+
+          let refTokenType = SemanticTokenTypes.RefName;
+          if (m.name === headName) {
+            refTokenType = SemanticTokenTypes.HeadName;
+          }
+
+          refsContent.push(new Token(remotePart + '/', remoteRefTokenType), new Token(m.name ?? '', refTokenType));
           refsContent.push(' ');
           return;
         }
@@ -114,8 +126,13 @@ export default class ViewUtils {
 
       let refTokenType = SemanticTokenTypes.RefName;
 
-      if (ref.remote) {
+      if (ref.name === headName) {
+        refTokenType = SemanticTokenTypes.HeadName;
+      } else if (ref.remote) {
         refTokenType = SemanticTokenTypes.RemoteRefName;
+        if (defaultBranches && ref.remote && ref.remote + '/' + defaultBranches[ref.remote] === ref.name) {
+          refTokenType = SemanticTokenTypes.RemoteHeadName;
+        }
       } else if (ref.type === RefType.Tag) {
         refTokenType = SemanticTokenTypes.TagName;
       }

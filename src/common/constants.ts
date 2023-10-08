@@ -14,5 +14,7 @@ export const MagitDocumentSelector: DocumentSelector = { scheme: MagitUriScheme,
 export enum SemanticTokenTypes {
   RefName = 'magit-ref-name',
   RemoteRefName = 'magit-remote-ref-name',
+  HeadName = 'magit-head-name',
+  RemoteHeadName = 'magit-remote-head-name',
   TagName = 'magit-tag-name',
 }
