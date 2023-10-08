@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.46]
+- Show running git command in git status message: @Rutherther, Rutherther
+- More move commands: @jdanbrown, Dan Brown
+- Add command toggle-all-folds-for-change-views: @jdanbrown, Dan Brown
+- Concise log decorate: @evannjohnson
+- Support fold/unfold diff hunks in commit detail view: @Rutherther, Rutherther
+
+
 ## [0.6.45]
 - Fix resolution of user keybindings for help-view (`?` view)
 
