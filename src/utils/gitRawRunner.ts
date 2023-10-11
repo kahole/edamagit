@@ -1,6 +1,6 @@
 import { Repository } from '../typings/git';
 import { run, SpawnOptions } from './commandRunner/command';
-import { window } from 'vscode';
+import { Disposable, window } from 'vscode';
 import GitProcessLogger from './gitProcessLogger';
 import * as Constants from '../common/constants';
 
@@ -11,8 +11,9 @@ export enum LogLevel {
 }
 
 export async function gitRun(repository: Repository, args: string[], spawnOptions?: SpawnOptions, logLevel = LogLevel.Detailed, showStatus: boolean = true) {
+  let runningStatus: Disposable | undefined = undefined;
   if (showStatus) {
-    window.setStatusBarMessage(`Running git ${args.join(' ')}...`);
+    runningStatus = window.setStatusBarMessage(`Running git ${args.join(' ')}...`);
   }
 
   let logEntry;
@@ -41,8 +42,12 @@ export async function gitRun(repository: Repository, args: string[], spawnOption
     }
 
     if (showStatus) {
-      window.setStatusBarMessage(error.message);
+      window.setStatusBarMessage(error.message, Constants.StatusMessageDisplayTimeout);
     }
     throw error;
+  } finally {
+    if (runningStatus) {
+      runningStatus.dispose();
+    }
   }
 }

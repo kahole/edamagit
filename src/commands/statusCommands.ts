@@ -91,7 +91,7 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
 
   const untrackedFiles: MagitChange[] =
     repository.state.workingTreeChanges.length > workingTreeChanges_NoUntracked.length ?
-      (await gitRun(repository, ['ls-files', '--others', '--exclude-standard', '--directory', '--no-empty-directory'], {}, LogLevel.None))
+      (await gitRun(repository, ['ls-files', '--others', '--exclude-standard', '--directory', '--no-empty-directory'], {}, LogLevel.None, false))
         .stdout
         .replace(Constants.FinalLineBreakRegex, '')
         .split(Constants.LineSplitterRegex)
@@ -211,7 +211,7 @@ async function getCommitRange(repository: Repository, from: string, to: string, 
   const args = ['log', '--format=format:%H',  `${from}..${to}`, '-n', `${Math.trunc(maxResults) + 1}`];
   let result;
   try {
-    result = await gitRun(repository, args, {}, LogLevel.Error);
+    result = await gitRun(repository, args, {}, LogLevel.Error, false);
   } catch (error) {
     return {commits: [], truncated: false};
   }
@@ -265,7 +265,7 @@ async function mergingStatus(repository: Repository, dotGitPath: string): Promis
       if (parsedMergeState) {
         const [mergeHeadCommit, mergingBranches] = parsedMergeState;
 
-        const mergeCommitsText = (await gitRun(repository, ['rev-list', `HEAD..${mergeHeadCommit}`], {}, LogLevel.None)).stdout;
+        const mergeCommitsText = (await gitRun(repository, ['rev-list', `HEAD..${mergeHeadCommit}`], {}, LogLevel.None, false)).stdout;
         const mergeCommits = mergeCommitsText
           .replace(Constants.FinalLineBreakRegex, '')
           .split(Constants.LineSplitterRegex);
@@ -417,7 +417,7 @@ async function getStashes(repository: Repository): Promise<Stash[]> {
   let args = ['stash', 'list'];
 
   try {
-    let stashesList = await gitRun(repository, args, {}, LogLevel.None);
+    let stashesList = await gitRun(repository, args, {}, LogLevel.None, false);
     let stashOut = stashesList.stdout;
 
     if (stashOut.length === 0) {
