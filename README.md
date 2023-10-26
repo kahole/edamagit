@@ -1,5 +1,3 @@
-### [ Seeking maintainer. Contact edamagit@hole.priv.no ]
-
 <h1 align="center">
   <br>
   <a href="https://marketplace.visualstudio.com/items?itemName=kahole.magit">
