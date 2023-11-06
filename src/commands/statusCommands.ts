@@ -96,7 +96,7 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
         .replace(Constants.FinalLineBreakRegex, '')
         .split(Constants.LineSplitterRegex)
         .map(untrackedPath => {
-          const uri = Uri.parse(repository.rootUri.path + '/' + untrackedPath);
+          const uri = Uri.from({ ...repository.rootUri, path: repository.rootUri.path + '/' + untrackedPath });
           return {
             originalUri: uri,
             renameUri: uri,
