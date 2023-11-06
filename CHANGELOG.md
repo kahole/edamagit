@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.48]
+- Fixed issue where pound symbol in untracked file caused those files to not show up.
+
 ## [0.6.47]
 - Fixed issue with stuck status bar messages. And disabled status messages for magit status.
 
