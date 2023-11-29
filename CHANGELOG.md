@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.49]
+- Fixed issue with folding in commit-detail-view
+
 ## [0.6.48]
 - Fixed issue where pound symbol in untracked file caused those files to not show up.
 
