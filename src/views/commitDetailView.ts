@@ -17,7 +17,7 @@ export class CommitDetailView extends DocumentView {
   constructor(uri: Uri, public commit: MagitCommit, header: string, diffChanges: MagitChange[]) {
     super(uri);
 
-    const commitTextView = new ChangeSectionView(Section.Changes, diffChanges);
+    const commitTextView = new ChangeSectionView(Section.Changes, diffChanges, `-commitDetail@${commit.hash}`);
     const headerView = new TextView(header);
     headerView.isHighlightable = false;
 
