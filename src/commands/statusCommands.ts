@@ -44,7 +44,7 @@ export async function magitStatus(): Promise<any> {
       if (editor?.document.uri.path === MagitStatusView.UriPath) {
         return;
       }
-      return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewUtils.showDocumentColumn(), preview: false }));
+      return workspace.openTextDocument(view.uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewUtils.showDocumentColumn(doc), preview: false }));
     }
 
     repository = await internalMagitStatus(repository.gitRepository);
