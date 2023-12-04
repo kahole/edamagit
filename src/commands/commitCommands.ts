@@ -206,7 +206,7 @@ function findCodePath(): string {
   if (isDarwin) {
     codePath = execPath.split(/(?<=\.app)/)[0] + '/Contents/Resources/app/bin/' + codePath;
   } else {
-    codePath = path.join(path.dirname(execPath), 'bin', codePath);
+    codePath = path.join(path.dirname(execPath), 'bin', (isRemote ? 'remote-cli' : ''), codePath);
   }
 
   if (!fs.existsSync(codePath)) {
