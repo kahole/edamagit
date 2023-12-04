@@ -1,12 +1,16 @@
 import { MagitRepository } from '../models/magitRepository';
 import { View } from '../views/general/view';
-import { Selection, Position, Uri, workspace, window, TextDocumentShowOptions, ViewColumn } from 'vscode';
+import { Selection, Position, Uri, workspace, window, TextDocumentShowOptions, ViewColumn, TextDocument } from 'vscode';
 import { Ref, RefType } from '../typings/git';
 import { Token } from '../views/general/semanticTextView';
 import { SemanticTokenTypes } from '../common/constants';
 import GitTextUtils from './gitTextUtils';
 import { DocumentView } from '../views/general/documentView';
 import { magitConfig, views } from '../extension';
+
+function hasUri(obj: unknown): obj is { uri: Uri } {
+  return typeof obj === 'object' && obj !== null && 'uri' in obj && obj.uri instanceof Uri;
+}
 
 export default class ViewUtils {
 
@@ -26,7 +30,16 @@ export default class ViewUtils {
     return window.showTextDocument(doc, { viewColumn: ViewUtils.showDocumentColumn(), ...textDocumentShowOptions });
   }
 
-  public static showDocumentColumn(): ViewColumn {
+  public static showDocumentColumn(doc?: TextDocument): ViewColumn {
+    if (doc) {
+      for (const tabGroup of window.tabGroups.all) {
+        for (const tab of tabGroup.tabs) {
+          if (hasUri(tab.input) && tab.input.uri.toString() === doc.uri.toString()) {
+            return tabGroup.viewColumn;
+          }
+        }
+      }
+    }
     const activeColumn = window.activeTextEditor?.viewColumn;
 
     if (magitConfig.displayBufferSameColumn) {
