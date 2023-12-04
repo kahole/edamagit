@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.50]
+- Show commit hash under cursor when checkout (@bzy-debug Bao Zhiyuan)
+- Fix vscode-insiders path for the remote environment (@ianic Igor Anić)
+- Check all editors when computing viewColumn, so that one magit status buffer won't be open in different editors (@bzy-debug
+Bao Zhiyuan)
+
 ## [0.6.49]
 - Fixed issue with folding in commit-detail-view
 
