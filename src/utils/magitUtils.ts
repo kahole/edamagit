@@ -150,7 +150,28 @@ export default class MagitUtils {
 
   public static async chooseRef(repository: MagitRepository, prompt: string, showCurrent = false, showHEAD = false, allowFreeform = true, remoteOnly = false): Promise<string> {
 
+    const getCursorCommitHash: () => PickMenuItem<string> | undefined = () => {
+      const activeEditor = vscode.window.activeTextEditor;
+      if (activeEditor === undefined) {
+        return;
+      }
+      const document = activeEditor.document;
+      const selection = activeEditor.selection;
+      const hashWordRange = document.getWordRangeAtPosition(selection.active, /[0-9a-z]{7}/);
+      if (hashWordRange === undefined) {
+        return;
+      }
+      const hash = document.getText(hashWordRange);
+      return { label: hash, meta: hash };
+    };
+
     const refs: PickMenuItem<string>[] = [];
+
+    const cursorCommitHash = getCursorCommitHash();
+
+    if (cursorCommitHash) {
+      refs.push(cursorCommitHash);
+    }
 
     if (showCurrent && repository.HEAD?.name) {
       refs.push({
