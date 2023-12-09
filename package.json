@@ -7,12 +7,13 @@
   "author": {
     "name": "Kristian Andersen Hole"
   },
-  "version": "0.6.50",
+  "version": "0.6.51",
   "engines": {
     "vscode": "^1.50.0"
   },
   "icon": "images/edamagit_logo.png",
   "categories": [
+    "SCM Providers",
     "Other"
   ],
   "keywords": [

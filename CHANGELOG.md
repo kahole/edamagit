@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.51]
+- Make commit and stash detail view update on changes (fixes #282)
+
 ## [0.6.50]
 - Show commit hash under cursor when checkout (@bzy-debug Bao Zhiyuan)
 - Fix vscode-insiders path for the remote environment (@ianic Igor Anić)
