@@ -11,7 +11,6 @@ import { Stash } from '../models/stash';
 export class StashDetailView extends DocumentView {
 
   static UriPath: string = 'stash.magit';
-  needsUpdate = false;
 
   constructor(public uri: Uri, stash: Stash, diffChanges: MagitChange[], untrackedFiles: MagitChange[] ) {
     super(uri);
@@ -24,8 +23,6 @@ export class StashDetailView extends DocumentView {
 
     this.addSubview(new ChangeSectionView(Section.Changes, diffChanges, `-stashDetail@{${stash.index}}`));
   }
-
-  public update(state: MagitRepository): void { }
 
   static index = 0;
   static encodeLocation(repository: MagitRepository, stash: Stash): Uri {

@@ -13,7 +13,9 @@ export abstract class DocumentView extends View {
     super();
   }
 
-  public abstract update(state: MagitRepository): void;
+  public update(state: MagitRepository): void {
+    this.triggerUpdate();
+  }
 
   public triggerUpdate() {
     if (this.emitter) {

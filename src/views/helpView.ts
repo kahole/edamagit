@@ -20,8 +20,6 @@ export class HelpView extends DocumentView {
     this.addSubview(diffTextView);
   }
 
-  public update(state: MagitRepository): void { }
-
   static encodeLocation(repository: MagitRepository): Uri {
     return Uri.parse(`${Constants.MagitUriScheme}:${HelpView.UriPath}?${repository.uri.path}#help`);
   }

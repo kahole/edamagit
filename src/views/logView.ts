@@ -8,15 +8,13 @@ import GitTextUtils from '../utils/gitTextUtils';
 import { CommitItemView } from './commits/commitSectionView';
 import { DocumentView } from './general/documentView';
 import { TextView } from './general/textView';
-import { Token } from './general/semanticTextView';
-import { SemanticTokenTypes } from '../common/constants';
-import { Ref, RefType } from '../typings/git';
+import { Ref } from '../typings/git';
 import ViewUtils from '../utils/viewUtils';
-import { MagitRemote } from '../models/magitRemote';
 
 export default class LogView extends DocumentView {
 
   static UriPath: string = 'log.magit';
+  needsUpdate = false;
 
   constructor(uri: Uri, log: MagitLog, magitState: MagitRepository, defaultBranches?: { [remoteName: string]: string }) {
     super(uri);
@@ -27,8 +25,6 @@ export default class LogView extends DocumentView {
       ...log.entries.map(entry => new CommitLongFormItemView(entry, refs, magitState.HEAD?.name, defaultBranches)),
     ];
   }
-
-  public update(state: MagitRepository): void { }
 
   static index = 0;
   static encodeLocation(repository: MagitRepository): Uri {

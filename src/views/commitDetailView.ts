@@ -12,7 +12,6 @@ export class CommitDetailView extends DocumentView {
 
   static UriPath: string = 'commit.magit';
   isHighlightable = false;
-  needsUpdate = false;
 
   constructor(uri: Uri, public commit: MagitCommit, header: string, diffChanges: MagitChange[]) {
     super(uri);
@@ -24,8 +23,6 @@ export class CommitDetailView extends DocumentView {
     this.addSubview(headerView);
     this.addSubview(commitTextView);
   }
-
-  public update(state: MagitRepository): void { }
 
   static encodeLocation(repository: MagitRepository, commitHash: string): Uri {
     return Uri.parse(`${Constants.MagitUriScheme}:${CommitDetailView.UriPath}?${repository.uri.fsPath}#${commitHash}`);
