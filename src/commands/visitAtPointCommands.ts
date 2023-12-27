@@ -148,5 +148,5 @@ export async function visitCommit(repository: MagitRepository, commitHash: strin
   const commit: MagitCommit = { hash: commitHash, message: '', parents: [] };
 
   const uri = CommitDetailView.encodeLocation(repository, commit.hash);
-  return ViewUtils.showView(uri, new CommitDetailView(uri, commit, header.stdout, stashToMagitChanges(nameStatus.stdout, diffs.stdout)));
+  return ViewUtils.showView(uri, new CommitDetailView(uri, commit, header.stdout, stashToMagitChanges(repository, nameStatus.stdout, diffs.stdout)));
 }

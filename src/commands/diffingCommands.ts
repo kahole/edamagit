@@ -104,7 +104,7 @@ async function showStash({ repository }: MenuState) {
   }
 }
 
-export function stashToMagitChanges(nameStatusText: string, diff: string): MagitChange[] {
+export function stashToMagitChanges(repository: MagitRepository, nameStatusText: string, diff: string): MagitChange[] {
   const DIFF_PREFIX = 'diff --git';
   const filesWithStatus = nameStatusText.split(Constants.LineSplitterRegex).filter(t => t !== '').map(s => s.split('\t'));
   const diffs = diff.split(DIFF_PREFIX).filter(r => r !== '');
@@ -115,7 +115,7 @@ export function stashToMagitChanges(nameStatusText: string, diff: string): Magit
 
   return diffs.map((diff, idx) => {
     const [status, ...paths] = filesWithStatus[idx];
-    const uri = Uri.file(paths[paths.length - 1]);
+    const uri = Uri.from({ ...repository.gitRepository.rootUri, path: repository.gitRepository.rootUri.path + '/' + paths[paths.length - 1] });
     const fileStatus = getStatusFromString(status);
     return {
       diff,
@@ -171,7 +171,7 @@ export async function showStashDetail(repository: MagitRepository, stash: Stash)
   const nameStatusText = (await nameStatusTask).stdout;
   const stashDiff = (await stashShowTask).stdout;
 
-  return ViewUtils.showView(uri, new StashDetailView(uri, stash, stashToMagitChanges(nameStatusText, stashDiff), stashUntrackedFiles));
+  return ViewUtils.showView(uri, new StashDetailView(uri, stash, stashToMagitChanges(repository, nameStatusText, stashDiff), stashUntrackedFiles));
 }
 
 async function showCommit({ repository }: MenuState) {
