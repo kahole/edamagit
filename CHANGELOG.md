@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.54]
+- Fixes "visit change" for commit and stash detail views
+
 ## [0.6.51]
 - Make commit and stash detail view update on changes (fixes #282)
 
