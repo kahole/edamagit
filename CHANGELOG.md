@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.55]
+- Fixes loss of fold functionality with CommitDetail due to overwriting the registered view
+
 ## [0.6.54]
 - Fixes "visit change" for commit and stash detail views
 
