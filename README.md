@@ -119,8 +119,7 @@ remove the default edamagit bindings and the collisions with the Vim extension.
     },
     {
       "key": "tab",
-      "command": "-extension.vim_tab",
-      "when": "editorTextFocus && vim.active && !inDebugRepl && vim.mode != 'Insert'"
+      "command": "-extension.vim_tab"
     },
     {
       "key": "x",
