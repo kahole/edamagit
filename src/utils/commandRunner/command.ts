@@ -5,6 +5,7 @@ import { findGit } from './findGit';
 import * as iconv from '@vscode/iconv-lite-umd';
 import { dispose, IDisposable, toDisposable } from './disposable';
 import { magitConfig } from '../../extension';
+import { GitConfigOverrideArgs } from '../../common/constants';
 
 const canceledName = 'Canceled';
 class CancellationError extends Error {
@@ -177,9 +178,9 @@ async function _exec(args: string[], options: SpawnOptions = {}): Promise<IExecu
   if (pathHints.length !== 0) {
     pathHints = pathHints.filter(p => path.isAbsolute(p));  
   }
-    
+
   const git = await findGit(pathHints, () => true);
-  const child = spawn(git.path, args, options);
+  const child = spawn(git.path, [...GitConfigOverrideArgs, ...args], options);
 
   // options.onSpawn?.(child);
 

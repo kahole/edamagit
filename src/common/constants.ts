@@ -18,3 +18,5 @@ export enum SemanticTokenTypes {
   RemoteHeadName = 'magit-remote-head-name',
   TagName = 'magit-tag-name',
 }
+
+export const GitConfigOverrideArgs = ['-c', 'diff.noprefix=false'];
