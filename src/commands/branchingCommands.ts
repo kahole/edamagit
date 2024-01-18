@@ -1,3 +1,4 @@
+import * as Constants from '../common/constants';
 import { ViewColumn, window } from 'vscode';
 import { MenuState, MenuUtil } from '../menu/menu';
 import { PickMenuUtil } from '../menu/pickMenu';
@@ -195,7 +196,8 @@ async function _createBranch({ repository }: MenuState, checkout: boolean) {
       return gitRun(repository.gitRepository, args);
 
     } else {
-      throw new Error('No name given for new branch');
+
+      window.setStatusBarMessage('No name given for new branch', Constants.StatusMessageDisplayTimeout);
     }
   }
 }

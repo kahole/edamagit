@@ -29,6 +29,7 @@ export async function merging(repository: MagitRepository) {
   const switches = [
     { key: '-f', name: '--ff-only', description: 'Fast-forward only' },
     { key: '-n', name: '--no-ff', description: 'No fast-forward' },
+    { key: '-n', name: '--no-verify', description: 'Disable hooks' },
   ];
 
   if (repository.mergingState) {
