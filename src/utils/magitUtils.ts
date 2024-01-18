@@ -9,6 +9,7 @@ import { RefType, Repository } from '../typings/git';
 import { PickMenuItem, PickMenuUtil } from '../menu/pickMenu';
 import GitTextUtils from '../utils/gitTextUtils';
 import * as Constants from '../common/constants';
+import { getCommit } from './commitCache';
 
 export interface Selection {
   key: string;
@@ -150,24 +151,31 @@ export default class MagitUtils {
 
   public static async chooseRef(repository: MagitRepository, prompt: string, showCurrent = false, showHEAD = false, allowFreeform = true, remoteOnly = false): Promise<string> {
 
-    const getCursorCommitHash: () => PickMenuItem<string> | undefined = () => {
+    const getCursorCommitHash: () => Promise<PickMenuItem<string> | undefined> = async () => {
       const activeEditor = vscode.window.activeTextEditor;
       if (activeEditor === undefined) {
-        return;
+        return undefined;
       }
       const document = activeEditor.document;
       const selection = activeEditor.selection;
       const hashWordRange = document.getWordRangeAtPosition(selection.active, /[0-9a-z]{7}/);
       if (hashWordRange === undefined) {
-        return;
+        return undefined;
       }
       const hash = document.getText(hashWordRange);
+
+      try {
+        await getCommit(repository.gitRepository, hash);        
+      } catch (error) {
+        return undefined;
+      }
+
       return { label: hash, meta: hash };
     };
 
     const refs: PickMenuItem<string>[] = [];
 
-    const cursorCommitHash = getCursorCommitHash();
+    const cursorCommitHash = await getCursorCommitHash();
 
     if (cursorCommitHash) {
       refs.push(cursorCommitHash);
