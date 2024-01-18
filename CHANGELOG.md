@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.56]
+- adds `git -c diff.noprefix=false` to raw commands (adressing #276)
+- check cursor-word chooseRef is actually a commit, otherwise throw away
+- develop adds `no verify` switch to merging commands
+
 ## [0.6.55]
 - Fixes loss of fold functionality with CommitDetail due to overwriting the registered view
 
