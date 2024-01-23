@@ -31,11 +31,14 @@ export async function merging(repository: MagitRepository) {
     { key: '-n', name: '--no-ff', description: 'No fast-forward' },
     { key: '-n', name: '--no-verify', description: 'Disable hooks' },
   ];
+  const whileMergingSwitches = [
+    { key: '-n', name: '--no-verify', description: 'Disable hooks' },
+  ];
 
   if (repository.mergingState) {
-    return MenuUtil.showMenu(whileMergingMenu, { repository });
+    return MenuUtil.showMenu(whileMergingMenu, { repository, switches });
   } else {
-    return MenuUtil.showMenu(mergingMenu, { repository, switches });
+    return MenuUtil.showMenu(mergingMenu, { repository, switches: whileMergingSwitches });
   }
 }
 
