@@ -36,9 +36,9 @@ export async function merging(repository: MagitRepository) {
   ];
 
   if (repository.mergingState) {
-    return MenuUtil.showMenu(whileMergingMenu, { repository, switches });
+    return MenuUtil.showMenu(whileMergingMenu, { repository, switches: whileMergingSwitches });
   } else {
-    return MenuUtil.showMenu(mergingMenu, { repository, switches: whileMergingSwitches });
+    return MenuUtil.showMenu(mergingMenu, { repository, switches });
   }
 }
 
