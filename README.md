@@ -86,6 +86,16 @@ Essential commands
 - `Hide-status-sections`: Hide listed sections from status view.
 - `Quick-switch-enabled`: Automatically confirm switch menu after enabling a switch (e.g. --force)
 
+## Monorepo support
+
+When used in a monorepo, you need to make sure that the subdirectory can detect the parent's `.git`.
+
+```json
+{
+  "git.openRepositoryInParentFolders": "always",
+}
+```
+
 ## Vim support (VSCodeVim)
 
 All edamagit keybindings are customizable using VSCode's built-in `keybindings.json`.
