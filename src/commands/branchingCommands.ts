@@ -15,7 +15,7 @@ const branchingCommands = [
   { label: 'c', description: 'Checkout new branch', action: checkoutNewBranch },
   // { label: "w", description: "Checkout new worktree", action: checkout },
   // { label: "y", description: "Checkout pull-request", action: checkout },
-  // { label: "s", description: "Create new spin-off", action: createNewSpinoff },
+  { label: 's', description: 'Create new spin-off', action: createNewSpinoff },
   { label: 'n', description: 'Create new branch', action: createNewBranch },
   // { label: "W", description: "Create new worktree", action: checkout },
   // { label: "Y", description: "Create from pull-request", action: checkout },
@@ -199,5 +199,21 @@ async function _createBranch({ repository }: MenuState, checkout: boolean) {
 
       window.setStatusBarMessage('No name given for new branch', Constants.StatusMessageDisplayTimeout);
     }
+  }
+}
+
+async function createNewSpinoff({ repository }: MenuState) {
+  const newBranchName = await window.showInputBox({
+    prompt: 'Name for new branch',
+  });
+
+  if (newBranchName && newBranchName.length > 0) {
+    const args = ['checkout', '-B', newBranchName];
+    return gitRun(repository.gitRepository, args);
+  } else {
+    window.setStatusBarMessage(
+      'No name given for new branch',
+      Constants.StatusMessageDisplayTimeout
+    );
   }
 }
