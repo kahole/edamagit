@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.60]
+- Set --no-ext-diff when running git diff, supporting configs with other diff tools (#228). (@garymm Gary Miguel)
+- Adds `magit-branch-spinoff` command (@bezbac Ben Bachem)
+
 ## [0.6.56]
 - adds `git -c diff.noprefix=false` to raw commands (adressing #276)
 - check cursor-word chooseRef is actually a commit, otherwise throw away
