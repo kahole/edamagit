@@ -748,6 +748,11 @@
         "command": "magit.bisect",
         "key": "shift+b",
         "when": "editorTextFocus && editorLangId == 'magit' && vim.mode =~ /^(?!SearchInProgressMode|CommandlineInProgress).*$/"
+      },
+      {
+        "command": "workbench.action.closeActiveEditor",
+        "key": "q",
+        "when": "editorTextFocus && resourceScheme == 'magit' && resourcePath =~ /^Blame\\.magit@/"
       }
     ]
   },
