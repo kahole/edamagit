@@ -147,14 +147,7 @@ function parseLog(stdout: string): MagitLogEntry[] {
   // Split stdout lines
   const lines = stdout.match(/[^\r\n]+/g);
   // regex to parse line
-  const lineRe = new RegExp(
-    '^([/|\\-_* .o]+)?' + // Graph
-    '([a-f0-9]{40})' + // Sha
-    '( \\(([^()]+)\\))?' + // Refs
-    '( \\[([^\\[\\]]+)\\])' + // Author
-    '( \\[([^\\[\\]]+)\\])' + // Time
-    '(.*)$', // Message
-    'g');
+  const lineRe = /^(?<graph>[/|\-_* .o]+)?(?<sha>[a-f0-9]{40})(?: \((?<refs>[^()]+)\))?(?: \[(?<author>(?:[^[\]]*\[[^\]]*\])?[^\]]*)\])(?: \[(?<time>[^[\]]+)\])(?<msg>.*)$/g;
   // regex to match graph only line
   const graphRe = /^[/|\\-_* .o]+$/g;
 
@@ -163,17 +156,17 @@ function parseLog(stdout: string): MagitLogEntry[] {
       // Add to previous commits
       commits[commits.length - 1]?.graph?.push(l);
     } else {
-      const matches = l.matchAll(lineRe).next().value;
-      if (matches && matches.length > 0) {
-        const graph = matches[1]; // undefined if graph doesn't exist
-        const log = {
+      const matches = lineRe.exec(l)?.groups;
+      if (matches) {
+        const graph = matches.graph; // undefined if graph doesn't exist
+        const log: MagitLogEntry = {
           graph: graph ? [graph] : undefined,
-          refs: (matches[4] ?? '').split(', ').filter((m: string) => m),
-          author: matches[6],
-          time: new Date(Number(matches[8]) * 1000), // convert seconds to milliseconds
+          refs: (matches.refs ?? '').split(', ').filter((m: string) => m),
+          author: matches.author,
+          time: new Date(Number(matches.time) * 1000), // convert seconds to milliseconds
           commit: {
-            hash: matches[2],
-            message: matches[9],
+            hash: matches.sha,
+            message: matches.msg,
             parents: [],
             authorEmail: undefined
           }
