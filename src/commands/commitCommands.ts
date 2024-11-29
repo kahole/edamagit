@@ -194,7 +194,9 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
           const stagedEditorViewColumn = ViewUtils.showDocumentColumn();
           await vscode.window.showTextDocument(stagedEditor.document, { viewColumn: stagedEditorViewColumn, preview: false });
           await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
-          vscode.commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === vscode.ViewColumn.One ? 'Right' : 'Left'}`);
+          if (! magitConfig.displayBufferSameColumn) {
+            vscode.commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === vscode.ViewColumn.One ? 'Right' : 'Left'}`);
+          }
         }
       }
     }
