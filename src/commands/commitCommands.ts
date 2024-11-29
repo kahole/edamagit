@@ -215,7 +215,7 @@ function findCodePath(): string {
   if (isCodium && !isDarwin) {
     codePath = 'codium';
   }
-  
+
   if (isInsiders && !isDarwin) {
     // On Mac the binary for the Insiders build is still called `code`
     codePath += '-insiders';
@@ -223,7 +223,7 @@ function findCodePath(): string {
 
   if (isCursor && isRemote) {
     // Cursor remote-server does not symlink to code but to cursor.
-    codePath = 'cursor'; 
+    codePath = 'cursor';
   }
 
   if (isWindows && isRemote) {
