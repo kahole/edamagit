@@ -127,12 +127,18 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
     // `--reuse-window` forces VSCode to open COMMIT_EDITMSG in the current
     // workspace even if the file is more closely related to a different
     // window/workspace.
-    // 
+    //
     // https://github.com/kahole/edamagit/issues/301
-    let currentInstancePath = '';
-    if (vscode.workspace.workspaceFolders?.at(0)) {
-      currentInstancePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
-    }
+    //
+    // It's important that the workspace file is preferred over the folder
+    // (given that it's in use) as the workspace will otherwise be closed
+    // and reopened.
+    //
+    // https://github.com/kahole/edamagit/issues/316
+    const currentInstancePath =
+      vscode.workspace.workspaceFile?.fsPath ??
+      vscode.workspace.workspaceFolders?.at(0)?.uri.fsPath ??
+      '';
 
     const cmd = `"${codePath}" --wait --reuse-window ${currentInstancePath} `;
 
