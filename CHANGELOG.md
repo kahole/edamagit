@@ -1,6 +1,9 @@
 # Changelog
 
 ## [0.6.65]
+- bugfix: get rid of false git error message when running "status"
+
+## [0.6.65]
 - Avoid closing workspace when using workspace file (@christianharrington Christian Harrington)
 
 ## [0.6.64]
