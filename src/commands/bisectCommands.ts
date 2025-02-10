@@ -65,7 +65,7 @@ function matchWithFallback(log: string, primaryPattern: RegExp, fallbackPattern:
 
 export async function bisectingStatus(repository: Repository): Promise<MagitBisectState> {
   try {
-    const output = await gitRun(repository, ['bisect', 'log'], undefined, LogLevel.None);
+    const output = await gitRun(repository, ['bisect', 'log'], undefined, LogLevel.None, false);
     const bisectLog = output.stdout.split('\n').reverse().join('\n');
 
     const goodPattern = /good: \[([a-f0-9]{40})\]/;
