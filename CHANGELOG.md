@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.65]
+- Avoid closing workspace when using workspace file (@christianharrington Christian Harrington)
+
 ## [0.6.64]
 - Bisect
 - Window re-use logic for mono repos
