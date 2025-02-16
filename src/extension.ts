@@ -1,6 +1,7 @@
-import { workspace, extensions, commands, ExtensionContext, Disposable, languages, window } from 'vscode';
+/// <reference types="node" />
+import { workspace, extensions, commands, ExtensionContext, Disposable, languages, window, Uri, ConfigurationChangeEvent, FileSystemWatcher } from 'vscode';
 import ContentProvider from './providers/contentProvider';
-import { GitExtension, API } from './typings/git';
+import { GitExtension, API, Repository } from './typings/git';
 import { pushing } from './commands/pushingCommands';
 import { branching, showRefs } from './commands/branchingCommands';
 import { magitDispatch, magitHelp } from './commands/helpCommands';
@@ -58,6 +59,7 @@ import { copyBufferRevisionCommands } from './commands/copyBufferRevisionCommand
 import { submodules } from './commands/submodulesCommands';
 import { forgeRefreshInterval } from './forge';
 import { bisecting } from './commands/bisectCommands';
+import MagitUtils from './utils/magitUtils';
 
 export const magitRepositories: Map<string, MagitRepository> = new Map<string, MagitRepository>();
 export const views: Map<string, DocumentView> = new Map<string, DocumentView>();
@@ -66,6 +68,146 @@ export const processLog: MagitProcessLogEntry[] = [];
 export let gitApi: API;
 export let logPath: string;
 export let magitConfig: { displayBufferSameColumn?: boolean, forgeEnabled?: boolean, hiddenStatusSections: Set<string>, quickSwitchEnabled?: boolean, gitPath?: string };
+
+// Debouncing Implementation:
+// When multiple git operations or file changes occur in rapid succession,
+// we want to avoid overwhelming the system with status updates.
+// This debouncing mechanism ensures that:
+// 1. We wait for a cluster of changes to complete before updating
+// 2. We maintain a minimum time between updates (MIN_UPDATE_INTERVAL)
+// 3. We cancel pending updates if new changes come in
+// 
+// The implementation uses two maps:
+// - updateTimeouts: Tracks pending update timeouts for each repo
+// - lastUpdateTime: Records when each repo was last updated
+// This allows us to both debounce rapid changes and enforce a minimum
+// interval between updates, improving performance while keeping the
+// display responsive.
+let updateTimeouts: Map<string, NodeJS.Timeout> = new Map();
+let lastUpdateTime: Map<string, number> = new Map();
+const MIN_UPDATE_INTERVAL = 1000; // 1 second minimum between updates
+
+// State Tracking Implementation:
+// To avoid unnecessary updates, we track meaningful changes in git repository state.
+// This mechanism:
+// 1. Tracks counts of working tree, index, and merge changes
+// 2. Only triggers updates when these counts actually change
+// 3. Maintains the last known state for comparison
+// 
+// The implementation uses a Map to track state per repository:
+// - lastKnownStates: Stores the last known count of changes for each type
+// This prevents updates when only file contents change but not their status,
+// significantly reducing unnecessary refreshes while ensuring important
+// changes are reflected immediately.
+let lastKnownStates: Map<string, {
+  workingTreeCount: number,
+  indexCount: number,
+  mergeCount: number
+}> = new Map();
+
+function hasSignificantStateChange(repo: Repository): boolean {
+  const repoPath = repo.rootUri.fsPath;
+  const currentState = {
+    workingTreeCount: repo.state.workingTreeChanges.length,
+    indexCount: repo.state.indexChanges.length,
+    mergeCount: repo.state.mergeChanges?.length || 0
+  };
+  
+  const lastState = lastKnownStates.get(repoPath);
+  if (!lastState) {
+    lastKnownStates.set(repoPath, currentState);
+    return true;
+  }
+
+  // Only consider it significant if the counts actually changed
+  const hasChanged = lastState.workingTreeCount !== currentState.workingTreeCount ||
+                    lastState.indexCount !== currentState.indexCount ||
+                    lastState.mergeCount !== currentState.mergeCount;
+
+  if (hasChanged) {
+    lastKnownStates.set(repoPath, currentState);
+  }
+  return hasChanged;
+}
+
+// File Change Filtering Implementation:
+// Not all file changes should trigger a status update. This system
+// intelligently filters file changes to:
+// 1. Ignore temporary and lock files that don't affect repository state
+// 2. Handle git internal files carefully - ignoring routine changes
+//    but catching important ones like HEAD and refs
+// 3. Prevent update loops from our own status refresh operations
+// 
+// The filtering uses a path-based approach to:
+// - Skip temp files (.tmp, ~, .swp, .lock)
+// - Ignore routine git internals (config, logs, hooks)
+// - Allow critical git files (HEAD, refs/heads, refs/tags)
+// This ensures we stay responsive to important changes while
+// avoiding unnecessary updates.
+function shouldTriggerUpdate(uri: Uri): boolean {
+  const path = uri.path.toLowerCase();
+  
+  // Always ignore these files
+  if (path.endsWith('.tmp') ||
+      path.endsWith('~') ||
+      path.endsWith('.swp') ||
+      path.endsWith('.lock')) {
+    return false;
+  }
+
+  // Git-related paths to ignore
+  if (path.includes('/.git/')) {
+    // Ignore most git internal files
+    if (path.includes('/config') ||    // git config changes
+        path.includes('/index') ||     // git index changes
+        path.includes('/logs/') ||     // git logs
+        path.includes('/hooks/') ||    // git hooks
+        path.includes('/info/')) {     // git info
+      return false;
+    }
+
+    // But allow updates for some important git files
+    if (path.endsWith('/head') ||          // HEAD changes
+        path.includes('/refs/heads/') ||    // branch changes
+        path.includes('/refs/tags/')) {     // tag changes
+      return true;
+    }
+
+    return false;
+  }
+
+  return true;
+}
+
+function debouncedUpdate(repoPath: string, magitRepo: MagitRepository) {
+  // Don't update if we're in the middle of a commit or other git operation
+  const activeEditor = window.activeTextEditor;
+  if (activeEditor?.document.uri.path.endsWith('COMMIT_EDITMSG') ||
+      activeEditor?.document.uri.path.includes('/.git/')) {
+    return;
+  }
+
+  // Check if we've updated too recently
+  const now = Date.now();
+  const lastUpdate = lastUpdateTime.get(repoPath) || 0;
+  if (now - lastUpdate < MIN_UPDATE_INTERVAL) {
+    // If an update is already scheduled, let it handle this change
+    if (updateTimeouts.has(repoPath)) {
+      return;
+    }
+  }
+
+  const existing = updateTimeouts.get(repoPath);
+  if (existing) {
+    clearTimeout(existing);
+  }
+
+  updateTimeouts.set(repoPath, setTimeout(() => {
+    MagitUtils.magitStatusAndUpdate(magitRepo);
+    updateTimeouts.delete(repoPath);
+    lastUpdateTime.set(repoPath, Date.now());
+  }, 1000)); // 1 second debounce
+}
 
 function loadConfig() {
   let workspaceConfig = workspace.getConfiguration('magit');
@@ -91,30 +233,134 @@ function readHiddenStatusSections(configEntry: any): Set<string> {
 }
 
 export function activate(context: ExtensionContext) {
-
   const gitExtension = extensions.getExtension<GitExtension>('vscode.git')!;
-  const gitExtensionExports = gitExtension.exports;
-  if (!gitExtensionExports.enabled) {
-    throw new Error('vscode.git Git extension not enabled');
-  }
+
+  // Set up git repository state change watchers
+  gitExtension.exports.getAPI(1).repositories.forEach((repo: Repository) => {
+    context.subscriptions.push(
+      repo.state.onDidChange(() => {
+        const magitRepo = magitRepositories.get(repo.rootUri.fsPath);
+        if (magitRepo) {
+          // Only trigger update if there are actual changes to file counts
+          if (hasSignificantStateChange(repo)) {
+            debouncedUpdate(repo.rootUri.fsPath, magitRepo);
+          }
+        }
+      })
+    );
+
+    // Add file system watchers for the repository
+    const fsWatcher = workspace.createFileSystemWatcher(
+      repo.rootUri.fsPath + '/**',
+      true,  // Ignore changes to dot files (like .git/)
+      false, // Don't ignore file creation
+      false  // Don't ignore file deletion
+    );
+
+    context.subscriptions.push(
+      fsWatcher,
+      fsWatcher.onDidChange((uri: Uri) => {
+        if (shouldTriggerUpdate(uri)) {
+          const magitRepo = magitRepositories.get(repo.rootUri.fsPath);
+          if (magitRepo) {
+            debouncedUpdate(repo.rootUri.fsPath, magitRepo);
+          }
+        }
+      }),
+      fsWatcher.onDidCreate((uri: Uri) => {
+        if (shouldTriggerUpdate(uri)) {
+          const magitRepo = magitRepositories.get(repo.rootUri.fsPath);
+          if (magitRepo) {
+            debouncedUpdate(repo.rootUri.fsPath, magitRepo);
+          }
+        }
+      }),
+      fsWatcher.onDidDelete((uri: Uri) => {
+        if (shouldTriggerUpdate(uri)) {
+          const magitRepo = magitRepositories.get(repo.rootUri.fsPath);
+          if (magitRepo) {
+            debouncedUpdate(repo.rootUri.fsPath, magitRepo);
+          }
+        }
+      })
+    );
+  });
+
+  // Watch for new repositories being opened
+  context.subscriptions.push(
+    gitExtension.exports.getAPI(1).onDidOpenRepository((repo: Repository) => {
+      context.subscriptions.push(
+        repo.state.onDidChange(() => {
+          const magitRepo = magitRepositories.get(repo.rootUri.fsPath);
+          if (magitRepo) {
+            // Only trigger update if there are actual changes to file counts
+            if (hasSignificantStateChange(repo)) {
+              debouncedUpdate(repo.rootUri.fsPath, magitRepo);
+            }
+          }
+        })
+      );
+
+      // Add file system watchers for new repositories
+      const fsWatcher = workspace.createFileSystemWatcher(
+        repo.rootUri.fsPath + '/**',
+        true,  // Ignore changes to dot files (like .git/)
+        false, // Don't ignore file creation
+        false  // Don't ignore file deletion
+      );
+
+      context.subscriptions.push(
+        fsWatcher,
+        fsWatcher.onDidChange((uri: Uri) => {
+          if (shouldTriggerUpdate(uri)) {
+            const magitRepo = magitRepositories.get(repo.rootUri.fsPath);
+            if (magitRepo) {
+              debouncedUpdate(repo.rootUri.fsPath, magitRepo);
+            }
+          }
+        }),
+        fsWatcher.onDidCreate((uri: Uri) => {
+          if (shouldTriggerUpdate(uri)) {
+            const magitRepo = magitRepositories.get(repo.rootUri.fsPath);
+            if (magitRepo) {
+              debouncedUpdate(repo.rootUri.fsPath, magitRepo);
+            }
+          }
+        }),
+        fsWatcher.onDidDelete((uri: Uri) => {
+          if (shouldTriggerUpdate(uri)) {
+            const magitRepo = magitRepositories.get(repo.rootUri.fsPath);
+            if (magitRepo) {
+              debouncedUpdate(repo.rootUri.fsPath, magitRepo);
+            }
+          }
+        })
+      );
+    })
+  );
 
   loadConfig();
-  workspace.onDidChangeConfiguration(configChangedEvent => {
+  workspace.onDidChangeConfiguration((configChangedEvent: ConfigurationChangeEvent) => {
     if (configChangedEvent.affectsConfiguration('magit')) {
       loadConfig();
     }
   });
 
-  context.subscriptions.push(gitExtensionExports.onDidChangeEnablement(enabled => {
+  context.subscriptions.push(gitExtension.exports.onDidChangeEnablement((enabled: boolean) => {
     if (!enabled) {
       throw new Error('vscode.git Git extension was disabled');
     }
   }));
 
-  gitApi = gitExtensionExports.getAPI(1);
+  gitApi = gitExtension.exports.getAPI(1);
   logPath = context.logUri.fsPath;
 
-  context.subscriptions.push(gitApi.onDidCloseRepository(repository => {
+  gitApi.repositories.forEach((repository: Repository) => {
+    // Initialize repositories without creating MagitRepository instances yet
+    magitRepositories.set(repository.rootUri.fsPath, null as unknown as MagitRepository);
+  });
+
+  context.subscriptions.push(gitApi.onDidCloseRepository((repository: Repository) => {
     magitRepositories.delete(repository.rootUri.fsPath);
   }));
 
@@ -211,11 +457,18 @@ export function activate(context: ExtensionContext) {
 
   context.subscriptions.push(commands.registerTextEditorCommand('magit.save-and-close-editor', saveClose));
   context.subscriptions.push(commands.registerTextEditorCommand('magit.clear-and-abort-editor', clearSaveClose));
+
+  if (forgeRefreshInterval) {
+    clearInterval(forgeRefreshInterval as NodeJS.Timeout);
+  }
 }
 
 export function deactivate() {
-
+  updateTimeouts.forEach(timeout => clearTimeout(timeout));
+  updateTimeouts.clear();
+  lastUpdateTime.clear();
+  lastKnownStates.clear();  // Clean up state tracking
   if (forgeRefreshInterval) {
-    clearInterval(forgeRefreshInterval);
+    global.clearInterval(forgeRefreshInterval as NodeJS.Timeout);
   }
 }
