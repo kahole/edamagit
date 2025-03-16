@@ -221,6 +221,11 @@ function findCodePath(): string {
     codePath += '-insiders';
   }
 
+  if (isWindsurf) {
+    // Windsurf : executable is called 'windsurf'
+    codePath = 'windsurf';
+  }
+
   if (isCursor && isRemote) {
     // Cursor remote-server does not symlink to code but to cursor.
     codePath = 'cursor'; 
@@ -229,10 +234,6 @@ function findCodePath(): string {
   if (isWindows && isRemote) {
     // On window remote server, 'code' alias doesn't exist
     codePath += '.cmd';
-  }
-  if (isWindsurf && isDarwin) {
-    // Windsurf on Mac: is called 'windsurf'
-    codePath = 'windsurf';
   }
 
   // Find the code binary on different platforms.
