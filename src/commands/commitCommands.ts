@@ -209,6 +209,7 @@ function findCodePath(): string {
   let isWindsurf = vscode.env.appName.includes('Windsurf');
   let isDarwin = process.platform === 'darwin';
   let isWindows = process.platform === 'win32';
+  let isLinux = process.platform === 'linux';
   let isRemote = !!vscode.env.remoteName;
 
   let codePath = 'code';
@@ -230,7 +231,7 @@ function findCodePath(): string {
     // On window remote server, 'code' alias doesn't exist
     codePath += '.cmd';
   }
-  if (isWindsurf && isDarwin) {
+  if (isWindsurf &&  (isDarwin || isLinux)) {
     // Windsurf on Mac: is called 'windsurf'
     codePath = 'windsurf';
   }
