@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.6.65]
+## [0.6.66]
 - bugfix: get rid of false git error message when running "status"
 
 ## [0.6.65]
