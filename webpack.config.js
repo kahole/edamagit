@@ -33,7 +33,7 @@ const config = {
           {
             options: {
               eslintPath: require.resolve('eslint'),
-    
+
             },
             loader: require.resolve('eslint-loader'),
           },

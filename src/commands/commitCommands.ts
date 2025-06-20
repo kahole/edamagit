@@ -194,7 +194,9 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
           const stagedEditorViewColumn = ViewUtils.showDocumentColumn();
           await vscode.window.showTextDocument(stagedEditor.document, { viewColumn: stagedEditorViewColumn, preview: false });
           await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
-          vscode.commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === vscode.ViewColumn.One ? 'Right' : 'Left'}`);
+          if (! magitConfig.displayBufferSameColumn) {
+            vscode.commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === vscode.ViewColumn.One ? 'Right' : 'Left'}`);
+          }
         }
       }
     }
@@ -216,7 +218,7 @@ function findCodePath(): string {
   if (isCodium && !isDarwin) {
     codePath = 'codium';
   }
-  
+
   if (isInsiders && !isDarwin) {
     // On Mac the binary for the Insiders build is still called `code`
     codePath += '-insiders';
@@ -224,7 +226,7 @@ function findCodePath(): string {
 
   if (isCursor && isRemote) {
     // Cursor remote-server does not symlink to code but to cursor.
-    codePath = 'cursor'; 
+    codePath = 'cursor';
   }
 
   if (isWindows && isRemote) {
