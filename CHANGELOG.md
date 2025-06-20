@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.67]
+- fix: do not switch focus after commits if same-column is set
+- Allow push elsewhere to push to different branches (Aaron Renner <aaron.renner@gmail.com>)
+- Fixed Windsurf detection on Linux (Gerry <git@caulfield.me>)
+- Update README for NES (Next Edit Suggestions) support (Florian Bruhin <me@the-compiler.org>)
+
 ## [0.6.66]
 - bugfix: get rid of false git error message when running "status"
 
