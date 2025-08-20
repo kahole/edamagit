@@ -3,6 +3,7 @@ import { views } from '../extension';
 import * as Constants from '../common/constants';
 import FilePathUtils from '../utils/filePathUtils';
 import MagitUtils from '../utils/magitUtils';
+import DecorationUtils from '../utils/decorateUtils';
 
 export default class ContentProvider implements vscode.TextDocumentContentProvider {
 
@@ -35,7 +36,13 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
               }
             }
           }
-        }));
+        }),
+      vscode.workspace.onDidChangeTextDocument(event => {
+        const editor = vscode.window.activeTextEditor;
+        if (editor && event.document === editor.document) {
+          DecorationUtils.decorateWordLevelDiff(editor);
+        }
+      }));
   }
 
   dispose() {

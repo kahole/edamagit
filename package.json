@@ -765,6 +765,7 @@
     "@types/which": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "@typescript-eslint/parser": "^5.54.0",
+    "diff": "^8.0.0",
     "eslint": "^7.16.0",
     "eslint-loader": "^4.0.2",
     "glob": "^7.1.6",
