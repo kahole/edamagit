@@ -7,11 +7,11 @@ const hunkHeaderDecoration = vscode.window.createTextEditorDecorationType({
 });
 
 const addedDecoration = vscode.window.createTextEditorDecorationType({
-  backgroundColor: '#21702f',
+  backgroundColor: '#4a714f',
 });
 
 const removedDecoration = vscode.window.createTextEditorDecorationType({
-  backgroundColor: '#911619',
+  backgroundColor: '#714545',
 });
 
 export default class DecorationUtils {
