@@ -12,6 +12,8 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
 
   private _subscriptions: vscode.Disposable;
 
+  private _decoratedEditors: Set<vscode.TextEditor> = new Set();
+
   constructor() {
 
     this.onDidChange = this.viewUpdatedEmitter.event;
@@ -42,11 +44,22 @@ export default class ContentProvider implements vscode.TextDocumentContentProvid
         if (editor && event.document === editor.document) {
           DecorationUtils.decorateWordLevelDiff(editor);
         }
+      }),
+      vscode.window.onDidChangeVisibleTextEditors(editors => {
+        for (const editor of editors) {
+          if (editor && editor.document.uri.scheme === Constants.MagitUriScheme) {
+            if (!this._decoratedEditors.has(editor)) {
+              this._decoratedEditors.add(editor);
+              DecorationUtils.decorateWordLevelDiff(editor);
+            }
+          }
+        }
       }));
   }
 
   dispose() {
     this._subscriptions.dispose();
+    this._decoratedEditors.clear();
     this.viewUpdatedEmitter.dispose();
   }
 
