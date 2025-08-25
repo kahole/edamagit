@@ -6,11 +6,21 @@ const hunkHeaderDecoration = vscode.window.createTextEditorDecorationType({
   isWholeLine: true,
 });
 
-const addedDecoration = vscode.window.createTextEditorDecorationType({
+const insertedLineDecor = vscode.window.createTextEditorDecorationType({
+  backgroundColor: '#304135',
+  isWholeLine: true,
+});
+
+const deletedLineDecor = vscode.window.createTextEditorDecorationType({
+  backgroundColor: '#3f3239',
+  isWholeLine: true,
+});
+
+const insertedWordDecor = vscode.window.createTextEditorDecorationType({
   backgroundColor: '#4a714f',
 });
 
-const removedDecoration = vscode.window.createTextEditorDecorationType({
+const deletedWordDecor = vscode.window.createTextEditorDecorationType({
   backgroundColor: '#714545',
 });
 
@@ -22,16 +32,20 @@ export default class DecorationUtils {
 
     // First, clear all existing decorations
     editor.setDecorations(hunkHeaderDecoration, []);
-    editor.setDecorations(addedDecoration, []);
-    editor.setDecorations(removedDecoration, []);
+    editor.setDecorations(insertedLineDecor, []);
+    editor.setDecorations(deletedLineDecor, []);
+    editor.setDecorations(insertedWordDecor, []);
+    editor.setDecorations(deletedWordDecor, []);
 
     // Now, start to find the added and removed ranges
     const text = editor.document.getText();
     const lines = text.split('\n');
 
     const hunkHeaderRanges: vscode.Range[] = [];
-    const addedTextRanges: vscode.Range[] = [];
-    const removedTextRanges: vscode.Range[] = [];
+    const insertedLineRanges: vscode.Range[] = [];
+    const deletedLineRanges: vscode.Range[] = [];
+    const insertedWordRanges: vscode.Range[] = [];
+    const deletedWordRanges: vscode.Range[] = [];
 
     let i = 0;
     while (i < lines.length) {
@@ -40,28 +54,31 @@ export default class DecorationUtils {
         hunkHeaderRanges.push(new vscode.Range(i, 0, i, 0));
         i++;
       } else if (lines[i].startsWith('-')) {
-        // Decorate hunk
-        const removedBlock: { text: string; line: number }[] = [];
-        const addedBlock: { text: string; line: number }[] = [];
+        // Decorate deleted and inserted words and lines
 
-        // collect removed lines
+        const deletedBlock: { text: string; line: number }[] = [];
+        const insertedBlock: { text: string; line: number }[] = [];
+
+        // collect deleted lines
         while (i < lines.length && lines[i].startsWith('-')) {
-          removedBlock.push({ text: lines[i].slice(1), line: i });
+          deletedLineRanges.push(new vscode.Range(i, 0, i, 0));
+          deletedBlock.push({ text: lines[i].slice(1), line: i });
           i++;
         }
 
-        // collect added lines
+        // collect inserted lines
         while (i < lines.length && lines[i].startsWith('+')) {
-          addedBlock.push({ text: lines[i].slice(1), line: i });
+          insertedLineRanges.push(new vscode.Range(i, 0, i, 0));
+          insertedBlock.push({ text: lines[i].slice(1), line: i });
           i++;
         }
 
-        const pairCount = Math.min(removedBlock.length, addedBlock.length);
+        const pairCount = Math.min(deletedBlock.length, insertedBlock.length);
 
         // word-level diff for matched pairs
         for (let j = 0; j < pairCount; j++) {
-          const oldLine = removedBlock[j];
-          const newLine = addedBlock[j];
+          const oldLine = deletedBlock[j];
+          const newLine = insertedBlock[j];
 
           const changes = diffWordsWithSpace(oldLine.text, newLine.text);
 
@@ -75,7 +92,7 @@ export default class DecorationUtils {
                 oldOffset
               );
               if (start !== -1) {
-                removedTextRanges.push(
+                deletedWordRanges.push(
                   new vscode.Range(
                     oldLine.line,
                     start,
@@ -91,7 +108,7 @@ export default class DecorationUtils {
                 newOffset
               );
               if (start !== -1) {
-                addedTextRanges.push(
+                insertedWordRanges.push(
                   new vscode.Range(
                     newLine.line,
                     start,
@@ -107,6 +124,12 @@ export default class DecorationUtils {
             }
           }
         }
+      } else if (lines[i].startsWith('+')) {
+        // collect inserted lines
+        while (i < lines.length && lines[i].startsWith('+')) {
+          insertedLineRanges.push(new vscode.Range(i, 0, i, 0));
+          i++;
+        }
       } else {
         // No decoration
         i++;
@@ -115,7 +138,9 @@ export default class DecorationUtils {
 
     // Highlight the changes
     editor.setDecorations(hunkHeaderDecoration, hunkHeaderRanges);
-    editor.setDecorations(addedDecoration, addedTextRanges);
-    editor.setDecorations(removedDecoration, removedTextRanges);
+    editor.setDecorations(insertedLineDecor, insertedLineRanges);
+    editor.setDecorations(deletedLineDecor, deletedLineRanges);
+    editor.setDecorations(insertedWordDecor, insertedWordRanges);
+    editor.setDecorations(deletedWordDecor, deletedWordRanges);
   }
 }
