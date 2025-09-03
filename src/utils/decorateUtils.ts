@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { diffWordsWithSpace } from 'diff';
+import * as Constants from '../common/constants';
 
 const hunkHeaderDecoration = vscode.window.createTextEditorDecorationType({
   backgroundColor: '#1f3e4e',
@@ -26,7 +27,7 @@ const deletedWordDecor = vscode.window.createTextEditorDecorationType({
 
 export default class DecorationUtils {
   public static decorateWordLevelDiff(editor: vscode.TextEditor) {
-    if (!editor) {
+    if (!editor || editor.document.uri.scheme !== Constants.MagitUriScheme) {
       return;
     }
 
