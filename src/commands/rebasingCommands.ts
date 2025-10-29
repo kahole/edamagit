@@ -29,6 +29,7 @@ export async function rebasing(repository: MagitRepository) {
       { key: '-A', name: '--autostash', description: 'Autostash' },
       { key: '-i', name: '--interactive', description: 'Interactive' },
       { key: '-h', name: '--no-verify', description: 'Disable hooks' },
+      { key: '-u', name: '--update-refs', description: 'Update any branches that point to commits being rebased' },
     ];
 
     const HEAD = repository.HEAD;
