@@ -1,6 +1,6 @@
 
 ## Debugging
-There is a VSCode task `Run Extension` defined in `launch.json` which builds the extension and opens a VSCode instance in extension debugging mode. This puts your editor (with the edamagit project open) in debug mode and allows you to test and debug during development.
+There is a VSCode task `Run Extension` defined in `.vscode/launch.json` which builds the extension and opens a VSCode instance in extension debugging mode. This puts your editor (with the edamagit project open) in debug mode and allows you to test and debug during development.
 
 ## Build
 `npm run vscode:prepublish` - create a production build
@@ -19,6 +19,7 @@ There is a VSCode task `Run Extension` defined in `launch.json` which builds the
 ## CD pipeline
 
 There is a Github action pipeline set up with a trigger on a new tag with the prefix `v`.
+The pipeline is defined by the files in `.github/workflows/`.
 
 This pipeline runs actions for building and publishing to `OpenVSX` and `Visual Studio Marketplace`.
 
