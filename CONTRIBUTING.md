@@ -1,6 +1,6 @@
 
 ## Debugging
-There is a VSCode task `Run Extension` defined in `.vscode/launch.json` which builds the extension and opens a VSCode instance in extension debugging mode. This puts your editor (with the edamagit project open) in debug mode and allows you to test and debug during development.
+There is a VSCode task `Run Extension` defined in `.vscode/launch.json` which builds the extension, opens a VSCode instance in extension debugging mode with the newly built extensions installed. This puts your editor (with the edamagit project open) in debug mode and allows you to test and debug during development.
 
 ## Build
 `npm run vscode:prepublish` - create a production build
