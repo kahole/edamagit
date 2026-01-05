@@ -1,0 +1,26 @@
+root = true
+
+[*]
+indent_style = space
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+end_of_line = lf
+
+[Makefile]
+indent_style = tab
+
+[*.json]
+indent_size = 4
+
+[package.json]
+indent_size = 2
+
+[launch.json]
+indent_style = tab
+
+[*.ts]
+indent_size = 2
+
+[*.js]
+indent_size = 2

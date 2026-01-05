@@ -165,7 +165,7 @@ export default class MagitUtils {
       const hash = document.getText(hashWordRange);
 
       try {
-        await getCommit(repository.gitRepository, hash);        
+        await getCommit(repository.gitRepository, hash);
       } catch (error) {
         return undefined;
       }

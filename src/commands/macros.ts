@@ -106,11 +106,11 @@ function moveCursorAndReveal(position: Position) {
 function moveToTargetEntity(view: View, target: 'unstaged-changes' | 'staged-changes') {
   let views = (
     [view, ...subViewDepthSearchFlatten(view)]
-    .filter(v =>
-      target === 'unstaged-changes' ? v instanceof ChangeSectionView && v.section === 'Unstaged changes' :
-      target === 'staged-changes' ? v instanceof ChangeSectionView && v.section === 'Staged changes' :
-      false // Unreachable
-    )
+      .filter(v =>
+        target === 'unstaged-changes' ? v instanceof ChangeSectionView && v.section === 'Unstaged changes' :
+          target === 'staged-changes' ? v instanceof ChangeSectionView && v.section === 'Staged changes' :
+            false // Unreachable
+      )
   );
 
   let targetView = views[0];
@@ -131,15 +131,15 @@ function moveToNextPreviousEntity(
 
     let foldableViews = (
       [view, ...subViewDepthSearchFlatten(view)]
-      .filter(v =>
-        v === selectedView || (
-          filter === 'entity' ? true :
-          filter === 'section' ? v.constructor.name.endsWith('SectionView') :
-          filter === 'change' ? v instanceof ChangeView :
-          filter === 'hunk' ? v instanceof HunkView :
-          false // Unreachable
+        .filter(v =>
+          v === selectedView || (
+            filter === 'entity' ? true :
+              filter === 'section' ? v.constructor.name.endsWith('SectionView') :
+                filter === 'change' ? v instanceof ChangeView :
+                  filter === 'hunk' ? v instanceof HunkView :
+                    false // Unreachable
+          )
         )
-      )
     );
 
     if (direction === 'previous') {

@@ -137,7 +137,7 @@ function getStatusFromString(status: String): number {
       return Status.INDEX_COPIED;
     case 'D':
       return Status.DELETED;
-    case 'R' :
+    case 'R':
       return Status.INDEX_RENAMED;
     case 'M':
     default:

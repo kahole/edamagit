@@ -38,7 +38,7 @@ export default class MagitStatusView extends DocumentView {
 
     let latestGitError = getLatestGitError(magitState);
     if (latestGitError) {
-        this.addSubview(new ErrorMessageView(latestGitError));
+      this.addSubview(new ErrorMessageView(latestGitError));
     }
 
     this.addSubview(new BranchHeaderSectionView(magitState.HEAD));

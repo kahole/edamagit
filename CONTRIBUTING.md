@@ -1,4 +1,9 @@
 
+## Formatting
+
+Please VS Code's built-in formatter for Typescript/Javascript code. For other files, your editor should also respect the `.editorconfig` file.
+
+
 ## Debugging
 There is a VSCode task `Run Extension` defined in `.vscode/launch.json` which builds the extension, opens a VSCode instance in extension debugging mode with the newly built extensions installed. This puts your editor (with the edamagit project open) in debug mode and allows you to test and debug during development.
 
