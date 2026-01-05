@@ -57,4 +57,14 @@ suite('logging commands', () => {
     const entry = entries[0];
     assert.strictEqual(entry.commit.message, ' [Fix] issue #123: "critical" bug');
   });
+
+  test('parseLog - brackets in author', () => {
+    const stdout = `6c14d032e1a0b04df3b5aabd62a0a3a8a0e1a2b1 [renovate[bot]] [1717171717][Fix] Commit message`;
+    const entries = parseLog(stdout);
+    assert.strictEqual(entries.length, 1);
+    const entry = entries[0];
+    assert.strictEqual(entry.author, 'renovate[bot]');
+    assert.strictEqual(entry.commit.message, '[Fix] Commit message');
+  });
+
 });
