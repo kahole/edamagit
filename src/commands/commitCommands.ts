@@ -140,7 +140,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
       vscode.workspace.workspaceFolders?.at(0)?.uri.fsPath ??
       '';
 
-    const cmd = `"${codePath}" --wait --reuse-window ${currentInstancePath} `;
+    const cmd = `"${codePath}" --wait --reuse-window "${currentInstancePath}" `;
 
     const env: NodeJS.ProcessEnv = { 'GIT_EDITOR': cmd };
 
