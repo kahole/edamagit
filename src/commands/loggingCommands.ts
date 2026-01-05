@@ -184,3 +184,8 @@ function parseLog(stdout: string): MagitLogEntry[] {
   });
   return commits;
 }
+
+// Exports for testing
+export const _private = {
+  parseLog
+};
