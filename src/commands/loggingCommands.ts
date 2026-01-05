@@ -147,9 +147,9 @@ function parseLog(stdout: string): MagitLogEntry[] {
   // Split stdout lines
   const lines = stdout.match(/[^\r\n]+/g);
   // regex to parse line
-  const lineRe = /^(?<graph>[/|\-_* .o]+)?(?<sha>[a-f0-9]{40})(?: \((?<refs>[^()]+)\))?(?: \[(?<author>(?:[^[\]]*\[[^\]]*\])?[^\]]*)\])(?: \[(?<time>[^[\]]+)\])(?<msg>.*)$/g;
+  const lineRe = /^(?<graph>[/|\-_* .o]+)?(?<sha>[a-f0-9]{40})(?: \((?<refs>[^()]+)\))?(?: \[(?<author>(?:[^[\]]*\[[^\]]*\])?[^\]]*)\])(?: \[(?<time>[^[\]]+)\])(?<msg>.*)$/;
   // regex to match graph only line
-  const graphRe = /^[/|\\-_* .o]+$/g;
+  const graphRe = /^[/|\\-_* .o]+$/;
 
   lines?.forEach(l => {
     if (l.match(graphRe)) { //graph only

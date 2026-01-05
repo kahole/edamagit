@@ -67,4 +67,15 @@ suite('logging commands', () => {
     assert.strictEqual(entry.commit.message, '[Fix] Commit message');
   });
 
+  test('parseLog - stacked branches', () => {
+    const stdout = `* 1ecd4d86541061443256f182c66e50dd41149dc4 (HEAD -> master) [John Doe] [1767627918]More on master
+| * a87ae81140bd5e67b09e48898ccd6574e6d7eb14 (branch_1_a) [John Doe] [1767627879]A line from branch_1_a
+| * 1f2d2f198ba7455e61368987d8f6192af3022cea (branch_1) [John Doe] [1767627835]branch 1 commit
+|/
+* 9b1e93cc66e93107d71627dd1fe8eb708f540e08 [John Doe] [1767627194]Edit`
+
+    const entries = parseLog(stdout);
+    assert.strictEqual(entries.length, 4);
+  });
+
 });
