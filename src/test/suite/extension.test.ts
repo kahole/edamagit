@@ -9,39 +9,7 @@ const TEST_REPO_FILE2 = '/another.txt';
 
 suite('Extension Test Suite', () => {
   vscode.window.showInformationMessage('Start all tests.');
-
+  // TODO - integration tests for the extension can go here.
   test('Magit Status View render test', async () => {
-
-    // const expected = `Head:     somebranch ok\n`;
-
-    // const magitState: MagitState = {
-    //   refs: [],
-    //   uri: vscode.Uri.parse(''),
-    //   indexChanges: [],
-    //   log: [],
-    //   mergeChanges: [],
-    //   stashes: [],
-    //   untrackedFiles: [],
-    //   workingTreeChanges: [],
-    //   branches: [],
-    //   remotes: [],
-    //   tags: [],
-    //   submodules: [],
-    //   HEAD: {
-    //     name: 'somebranch',
-    //     type: RefType.Head,
-    //     commitDetails: {
-    //       hash: '1111111111',
-    //       message: 'ok',
-    //       parents: []
-    //     }
-    //   },
-    // };
-
-    // const statusView = new MagitStatusView(vscode.Uri.parse(''), magitState);
-
-    // const result = statusView.render(0).join('\n');
-
-    // assert.strictEqual(result, expected);
   });
 });
