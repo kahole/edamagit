@@ -7,15 +7,15 @@ import { CommitDetailView } from '../views/commitDetailView';
 
 export async function copyBufferRevisionCommands(repository: MagitRepository, currentView: DocumentView) {
 
-    let sectionValue: string | undefined;
-    if (currentView instanceof MagitStatusView) {
-        sectionValue = currentView.HEAD?.commit;
-    } else if (currentView instanceof CommitDetailView) {
-        sectionValue = currentView.commit.hash;
-    }
+  let sectionValue: string | undefined;
+  if (currentView instanceof MagitStatusView) {
+    sectionValue = currentView.HEAD?.commit;
+  } else if (currentView instanceof CommitDetailView) {
+    sectionValue = currentView.commit.hash;
+  }
 
-    if (sectionValue) {
-        await env.clipboard.writeText(sectionValue);
-        window.setStatusBarMessage(sectionValue, Constants.StatusMessageDisplayTimeout);
-    }
+  if (sectionValue) {
+    await env.clipboard.writeText(sectionValue);
+    window.setStatusBarMessage(sectionValue, Constants.StatusMessageDisplayTimeout);
+  }
 }

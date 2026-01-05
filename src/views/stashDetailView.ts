@@ -12,7 +12,7 @@ export class StashDetailView extends DocumentView {
 
   static UriPath: string = 'stash.magit';
 
-  constructor(public uri: Uri, stash: Stash, diffChanges: MagitChange[], untrackedFiles: MagitChange[] ) {
+  constructor(public uri: Uri, stash: Stash, diffChanges: MagitChange[], untrackedFiles: MagitChange[]) {
     super(uri);
 
     this.addSubview(new TextView(`Stash@{${stash.index}} ${stash.description}`));

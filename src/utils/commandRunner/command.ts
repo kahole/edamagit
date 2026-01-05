@@ -176,7 +176,7 @@ async function _exec(args: string[], options: SpawnOptions = {}): Promise<IExecu
 
   let pathHints = Array.isArray(magitConfig.gitPath) ? magitConfig.gitPath : magitConfig.gitPath ? [magitConfig.gitPath] : [];
   if (pathHints.length !== 0) {
-    pathHints = pathHints.filter(p => path.isAbsolute(p));  
+    pathHints = pathHints.filter(p => path.isAbsolute(p));
   }
 
   const git = await findGit(pathHints, () => true);

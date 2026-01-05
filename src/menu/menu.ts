@@ -142,10 +142,10 @@ export class MenuUtil {
   private static showSwitchesMenu(menuState: MenuState): Promise<Switch[]> {
 
     let getUpdatedSwitches = (quickPick: QuickPick<QuickPickItem>, { switches }: MenuState) => switches!.map(s =>
-      ({
-        ...s,
-        activated: quickPick.selectedItems.find(item => item.label === s.key) !== undefined
-      })
+    ({
+      ...s,
+      activated: quickPick.selectedItems.find(item => item.label === s.key) !== undefined
+    })
     );
 
     let items = menuState.switches!.map(s => ({ label: s.key, detail: s.name, description: `\t${s.description}`, picked: s.activated }));

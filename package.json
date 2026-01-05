@@ -755,6 +755,9 @@
     "vscode:prepublish": "webpack --mode production",
     "build": "webpack --mode development",
     "watch": "webpack --mode development --watch",
+    "vscode-test": "vscode-test",
+    "test": "npm-run-all test-compile vscode-test",
+    "watch-test": "tsc --watch -p ./",
     "test-compile": "tsc -p ./"
   },
   "devDependencies": {
@@ -765,10 +768,13 @@
     "@types/which": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "@typescript-eslint/parser": "^5.54.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
     "eslint": "^7.16.0",
     "eslint-loader": "^4.0.2",
     "glob": "^7.1.6",
     "mocha": "^10.1.0",
+    "npm-run-all": "^4.1.5",
     "ts-loader": "^9.4.2",
     "typescript": "^4.9.5",
     "vscode-test": "^1.4.1",
@@ -781,5 +787,7 @@
     "jsonc-parser": "^3.0.0",
     "which": "^3.0.0"
   },
-  "extensionDependencies": ["vscode.git"]
+  "extensionDependencies": [
+    "vscode.git"
+  ]
 }

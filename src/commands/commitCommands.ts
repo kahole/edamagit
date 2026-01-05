@@ -194,7 +194,7 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
           const stagedEditorViewColumn = ViewUtils.showDocumentColumn();
           await vscode.window.showTextDocument(stagedEditor.document, { viewColumn: stagedEditorViewColumn, preview: false });
           await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
-          if (! magitConfig.displayBufferSameColumn) {
+          if (!magitConfig.displayBufferSameColumn) {
             vscode.commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === vscode.ViewColumn.One ? 'Right' : 'Left'}`);
           }
         }
@@ -233,7 +233,7 @@ function findCodePath(): string {
     // On window remote server, 'code' alias doesn't exist
     codePath += '.cmd';
   }
-  if (isWindsurf &&  (isDarwin || isLinux)) {
+  if (isWindsurf && (isDarwin || isLinux)) {
     // Windsurf on Mac: is called 'windsurf'
     codePath = 'windsurf';
   }

@@ -18,12 +18,12 @@ export enum Section {
   Tags = 'Tags',
   PullRequests = 'Pull Requests',
   Issues = 'Issues',
-  Changes='Changes',
+  Changes = 'Changes',
 }
 
 export class SectionHeaderView extends UnclickableTextView {
 
-  constructor(section: Section, count?: number, extraText?: string, truncated=false) {
-    super(`${section.valueOf()}${extraText ? ' ' + extraText : ''}${count ? ` (${count}${truncated ? '+': ''})` : ''}`);
+  constructor(section: Section, count?: number, extraText?: string, truncated = false) {
+    super(`${section.valueOf()}${extraText ? ' ' + extraText : ''}${count ? ` (${count}${truncated ? '+' : ''})` : ''}`);
   }
 }
