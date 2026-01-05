@@ -442,7 +442,12 @@
         "magit.hide-status-sections": {
           "type": "array",
           "default": [],
-          "description": "Array of section names to be hidden in status view. The section names that may be hidden are: 'issues', 'pull requests', 'recent commits', 'staged', 'stashes', 'unmerged', 'unpulled', 'unpushed', 'unstaged', 'untracked'."
+          "description": "Section names to be hidden in status view.",
+          "items": {
+            "type": "string",
+            "enum": ["issues", "pull requests", "recent commits", "staged", "stashes", "unmerged", "unpulled", "unpushed", "unstaged", "untracked"],
+            "uniqueItems": true
+          }
         },
         "magit.quick-switch-enabled": {
           "type": "boolean",
