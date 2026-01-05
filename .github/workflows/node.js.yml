@@ -27,4 +27,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
+    - run: xvfb-run -a npm test
     - run: npm run vscode:prepublish
