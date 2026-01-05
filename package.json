@@ -7,7 +7,7 @@
   "author": {
     "name": "Kristian Andersen Hole"
   },
-  "version": "0.6.67",
+  "version": "0.6.68",
   "engines": {
     "vscode": "^1.50.0"
   },
@@ -445,7 +445,18 @@
           "description": "Section names to be hidden in status view.",
           "items": {
             "type": "string",
-            "enum": ["issues", "pull requests", "recent commits", "staged", "stashes", "unmerged", "unpulled", "unpushed", "unstaged", "untracked"],
+            "enum": [
+              "issues",
+              "pull requests",
+              "recent commits",
+              "staged",
+              "stashes",
+              "unmerged",
+              "unpulled",
+              "unpushed",
+              "unstaged",
+              "untracked"
+            ],
             "uniqueItems": true
           }
         },
