@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.69]
+
+- fix: Buffer named with number opens when committing - fixes #346 (danmilon <i@danmilon.me>)
+- fix: Incorrect status shown when rebasing with deleted/renamed files - fixes #351
+
 ## [0.6.68]
 
 - Provide Intellisense and UI in settings for magit.hide-status-sections configuration option (George Garside <apps@georgegarside.com>)
