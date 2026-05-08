@@ -188,19 +188,28 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
 
     const stagedEditor = await stagedEditorTask;
     if (stagedEditor) {
-      for (const visibleEditor of vscode.window.visibleTextEditors) {
-        if (visibleEditor.document.uri === stagedEditor.document.uri) {
-          // This is a bit of a hack. Too bad about editor.hide() and editor.show() being deprecated.
-          const stagedEditorViewColumn = ViewUtils.showDocumentColumn();
-          await vscode.window.showTextDocument(stagedEditor.document, { viewColumn: stagedEditorViewColumn, preview: false });
-          await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
-          if (!magitConfig.displayBufferSameColumn) {
-            vscode.commands.executeCommand(`workbench.action.navigate${stagedEditorViewColumn === vscode.ViewColumn.One ? 'Right' : 'Left'}`);
-          }
-        }
-      }
+      await closeTabForDocument(stagedEditor.document);
     }
   }
+}
+
+function tabInputUri(input: unknown): vscode.Uri | undefined {
+  if (typeof input === 'object' && input !== null && 'uri' in input && input.uri instanceof vscode.Uri) {
+    return input.uri;
+  }
+}
+
+async function closeTabForDocument(document: vscode.TextDocument): Promise<boolean> {
+  const documentUri = document.uri.toString();
+
+  for (const tabGroup of vscode.window.tabGroups.all) {
+    const tab = tabGroup.tabs.find(tab => tabInputUri(tab.input)?.toString() === documentUri);
+    if (tab) {
+      return vscode.window.tabGroups.close(tab, true);
+    }
+  }
+
+  return false;
 }
 
 function findCodePath(): string {
