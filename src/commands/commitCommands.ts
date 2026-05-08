@@ -135,12 +135,21 @@ export async function runCommitLikeCommand(repository: MagitRepository, args: st
     // and reopened.
     //
     // https://github.com/kahole/edamagit/issues/316
-    const currentInstancePath =
-      vscode.workspace.workspaceFile?.fsPath ??
-      vscode.workspace.workspaceFolders?.at(0)?.uri.fsPath ??
-      '';
+    // If the workspace is unsaved (`workspaceFile` is set to `untitled:<timestamp>`)
+    // we can't pass a sensible value to --reuse-workspace, it only takes saved workspaces,
+    // so in that case don't pass a value at all and let vscode pick the window.
+    //
+    // https://github.com/kahole/edamagit/issues/346.
+    const workspaceFile = vscode.workspace.workspaceFile;
+    let currentInstancePath: string | undefined;
+    if (workspaceFile?.scheme === 'file') {
+      currentInstancePath = workspaceFile.fsPath;
+    } else if (workspaceFile === undefined) {
+      currentInstancePath = vscode.workspace.workspaceFolders?.at(0)?.uri.fsPath;
+    }
 
-    const cmd = `"${codePath}" --wait --reuse-window "${currentInstancePath}" `;
+    const pathArg = currentInstancePath ? `"${currentInstancePath}" ` : '';
+    const cmd = `"${codePath}" --wait --reuse-window ${pathArg}`;
 
     const env: NodeJS.ProcessEnv = { 'GIT_EDITOR': cmd };
 
