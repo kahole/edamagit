@@ -473,6 +473,11 @@
           ],
           "default": "",
           "description": "Like `git.path`. Path and filename of the git executable, e.g. C:\\Program Files\\Git\\bin\\git.exe' (Windows). This can also be an array of string values containing multiple paths to look up."
+        },
+        "magit.forge.gitlab-token": {
+          "type": "string",
+          "default": "",
+          "description": "Personal access token for Gitlab. Required for Forge functionality."
         }
       }
     },

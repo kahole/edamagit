@@ -1,6 +1,7 @@
 import { MagitRemote } from '../models/magitRemote';
 import { ForgeState } from './model/forgeState';
 import { getGithubForgeState } from './github';
+import { getGitlabForgeState } from './gitlab';
 import { magitConfig } from '../extension';
 import { MagitRepository } from '../models/magitRepository';
 import MagitUtils from '../utils/magitUtils';
@@ -124,6 +125,9 @@ function selectForgeType(remoteUrl: string): GetForgeState | undefined {
   if (remoteUrl.includes('github.com')) {
 
     return getGithubForgeState;
+  } else if (remoteUrl.includes('gitlab.com')) {
+
+    return getGitlabForgeState;
   }
 
   return;
