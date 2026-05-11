@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { MagitRepository } from '../models/magitRepository';
 import { magitRepositories, views, gitApi } from '../extension';
-import { window, Uri, commands } from 'vscode';
+import { window, Uri, commands, workspace, RelativePattern } from 'vscode';
 import * as Status from '../commands/statusCommands';
 import { DocumentView } from '../views/general/documentView';
 import FilePathUtils from './filePathUtils';
@@ -138,6 +138,63 @@ export default class MagitUtils {
   }
 
   public static async magitStatusAndUpdate(repository: MagitRepository) {
+    // Smart Status Update Implementation:
+    // This system carefully manages when to update the magit status display
+    // to ensure accuracy while preventing update loops or conflicts.
+    // The implementation:
+    // 1. Checks for active git operations that might be disrupted
+    // 2. Verifies repository state validity
+    // 3. Handles special cases like merges and index changes safely
+    // 4. Manages concurrent access to git files
+    // 
+    // Key features:
+    // - Skips updates during rebase operations
+    // - Safely handles merge states by checking for lock files
+    // - Protects git config access during updates
+    // - Gracefully handles errors without disrupting git state
+    // 
+    // This ensures the status display stays accurate while avoiding
+    // interference with ongoing git operations.
+
+    // Don't update if we're in the middle of a git operation
+    const state = repository.gitRepository.state;
+    
+    // Skip update if there's no meaningful state
+    if (!state || !state.HEAD || state.HEAD.commit === undefined) {
+      return;
+    }
+
+    // Skip update during potentially conflicting operations
+    if (state.rebaseCommit) {
+      return;
+    }
+
+    // Allow updates during merge/index changes, but only if there are no lock files
+    if (state.mergeChanges?.length > 0 || state.indexChanges.length > 0) {
+      try {
+        const lockFiles = await workspace.findFiles(
+          new RelativePattern(repository.gitRepository.rootUri.fsPath, '.git/*.lock')
+        );
+        if (lockFiles.length > 0) {
+          return;
+        }
+      } catch (error) {
+        // If we can't check lock files, better to skip the update
+        return;
+      }
+    }
+
+    // Don't update if git config is being accessed
+    try {
+      const configLockFile = Uri.joinPath(repository.gitRepository.rootUri, '.git', 'config.lock');
+      const configLockExists = await workspace.fs.stat(configLockFile).then(() => true, () => false);
+      if (configLockExists) {
+        return;
+      }
+    } catch (error) {
+      // Ignore error and proceed with update
+    }
+
     let updatedRepository = await Status.internalMagitStatus(repository.gitRepository);
     magitRepositories.set(updatedRepository.uri.fsPath, updatedRepository);
     views.forEach(view => view.needsUpdate && view.uri.query === updatedRepository.uri.fsPath ? view.update(updatedRepository) : undefined);

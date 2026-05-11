@@ -64,7 +64,7 @@ export async function magitStatus(): Promise<any> {
 }
 
 export async function internalMagitStatus(repository: Repository): Promise<MagitRepository> {
-
+  // Use LogLevel.Error for most git operations
   await repository.status();
 
   const dotGitPath = repository.rootUri + '/.git/';
@@ -92,7 +92,7 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
 
   const untrackedFiles: MagitChange[] =
     repository.state.workingTreeChanges.length > workingTreeChanges_NoUntracked.length ?
-      (await gitRun(repository, ['ls-files', '--others', '--exclude-standard', '--directory', '--no-empty-directory'], {}, LogLevel.None, false))
+      (await gitRun(repository, ['ls-files', '--others', '--exclude-standard', '--directory', '--no-empty-directory'], {}, LogLevel.Error, false))
         .stdout
         .replace(Constants.FinalLineBreakRegex, '')
         .split(Constants.LineSplitterRegex)
@@ -269,7 +269,7 @@ async function mergingStatus(repository: Repository, dotGitPath: string): Promis
       if (parsedMergeState) {
         const [mergeHeadCommit, mergingBranches] = parsedMergeState;
 
-        const mergeCommitsText = (await gitRun(repository, ['rev-list', `HEAD..${mergeHeadCommit}`], {}, LogLevel.None, false)).stdout;
+        const mergeCommitsText = (await gitRun(repository, ['rev-list', `HEAD..${mergeHeadCommit}`], {}, LogLevel.Error, false)).stdout;
         const mergeCommits = mergeCommitsText
           .replace(Constants.FinalLineBreakRegex, '')
           .split(Constants.LineSplitterRegex);
@@ -421,7 +421,7 @@ async function getStashes(repository: Repository): Promise<Stash[]> {
   let args = ['stash', 'list'];
 
   try {
-    let stashesList = await gitRun(repository, args, {}, LogLevel.None, false);
+    let stashesList = await gitRun(repository, args, {}, LogLevel.Error, false);
     let stashOut = stashesList.stdout;
 
     if (stashOut.length === 0) {
