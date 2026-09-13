@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.6.70]
+- Add a configurable command option for diff rendering. (@dandavison)
+
 ## [0.6.69]
 
 - fix: Buffer named with number opens when committing - fixes #346 (danmilon <i@danmilon.me>)
