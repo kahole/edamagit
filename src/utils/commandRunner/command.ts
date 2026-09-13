@@ -172,6 +172,20 @@ async function exec(child: cp.ChildProcess, cancellationToken?: CancellationToke
   }
 }
 
+let cachedGitPath: string | undefined;
+let cachedGitPathHintsKey: string | undefined;
+
+async function resolveGitPath(pathHints: string[]): Promise<string> {
+  const hintsKey = pathHints.join('\0');
+  if (cachedGitPath && cachedGitPathHintsKey === hintsKey) {
+    return cachedGitPath;
+  }
+  const git = await findGit(pathHints, () => true);
+  cachedGitPath = git.path;
+  cachedGitPathHintsKey = hintsKey;
+  return git.path;
+}
+
 async function _exec(args: string[], options: SpawnOptions = {}): Promise<IExecutionResult<string>> {
 
   let pathHints = Array.isArray(magitConfig.gitPath) ? magitConfig.gitPath : magitConfig.gitPath ? [magitConfig.gitPath] : [];
@@ -179,8 +193,8 @@ async function _exec(args: string[], options: SpawnOptions = {}): Promise<IExecu
     pathHints = pathHints.filter(p => path.isAbsolute(p));
   }
 
-  const git = await findGit(pathHints, () => true);
-  const child = spawn(git.path, [...GitConfigOverrideArgs, ...args], options);
+  const gitPath = await resolveGitPath(pathHints);
+  const child = spawn(gitPath, [...GitConfigOverrideArgs, ...args], options);
 
   // options.onSpawn?.(child);
 
