@@ -801,7 +801,7 @@
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "@typescript-eslint/parser": "^5.54.0",
     "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2",
+    "@vscode/test-electron": "^3.1.0",
     "eslint": "^7.16.0",
     "eslint-loader": "^4.0.2",
     "glob": "^7.1.6",

@@ -37,7 +37,9 @@ function walkVisible(view: View, out: HunkView[]): void {
 export function groupDecorationsByStyle(decorations: DecorationRange[]): DecorationGroup[] {
   const map = new Map<string, DecorationGroup>();
   for (const d of decorations) {
-    if (!d.foreground && !d.background) continue;
+    if (!d.foreground && !d.background) {
+      continue;
+    }
     const key = `${d.foreground ?? ''}|${d.background ?? ''}`;
     let group = map.get(key);
     if (!group) {
@@ -53,13 +55,19 @@ export async function applyDecorations(
   editor: TextEditor,
   view: DocumentView,
 ): Promise<Disposable[]> {
-  if (!magitConfig.useDiffRenderer || magitConfig.diffRendererCommand.length === 0) return [];
+  if (!magitConfig.useDiffRenderer || magitConfig.diffRendererCommand.length === 0) {
+    return [];
+  }
 
   const hunkViews = collectHunkViews(view);
-  if (hunkViews.length === 0) return [];
+  if (hunkViews.length === 0) {
+    return [];
+  }
 
   const decorations = await getDocumentDecorations(hunkViews, magitConfig.diffRendererCommand);
-  if (decorations.length === 0) return [];
+  if (decorations.length === 0) {
+    return [];
+  }
 
   const groups = groupDecorationsByStyle(decorations);
   const disposables: Disposable[] = [];
@@ -80,8 +88,12 @@ export async function applyDecorations(
 }
 
 function withAlpha(color: string | undefined, alpha: string): string | undefined {
-  if (!color) return undefined;
-  if (color.length === 7 && color[0] === '#') return color + alpha;
+  if (!color) {
+    return undefined;
+  }
+  if (color.length === 7 && color[0] === '#') {
+    return color + alpha;
+  }
   return color;
 }
 

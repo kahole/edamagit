@@ -8,7 +8,8 @@
   npm ci
   ```
 
-  (This requires the Node and npm are already installed)
+  (This requires the Node and npm are already installed. Node 22 or newer is required by the
+  test tooling.)
 
 - Start VS Code
 - Use "Open folder" to open the folder containing the checkout
