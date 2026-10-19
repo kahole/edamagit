@@ -1,4 +1,4 @@
-import { window, workspace, TextEditorRevealType, Range, Position, Selection, commands } from 'vscode';
+import { window, workspace, TextEditorRevealType, Range, Position, Selection, commands, Uri } from 'vscode';
 import { MagitRepository } from '../models/magitRepository';
 import { CommitItemView } from '../views/commits/commitSectionView';
 import { DocumentView } from '../views/general/documentView';
@@ -23,6 +23,21 @@ import { ErrorMessageView } from '../views/errorMessageView';
 import { processView } from './processCommands';
 import { stashToMagitChanges } from './diffingCommands';
 
+/** Open a file, with fallback to vscode.open when the editor wrongly reports the 50MB extension-host limit. Returns the TextEditor when available (for reveal/selection). */
+async function openFileWithFallback(uri: Uri): Promise<ReturnType<typeof window.showTextDocument> | undefined> {
+  try {
+    const doc = await workspace.openTextDocument(uri);
+    return await window.showTextDocument(doc, { viewColumn: ViewUtils.showDocumentColumn(), preview: false });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    if (msg.includes('50MB') || msg.includes('cannot be synchronized')) {
+      await commands.executeCommand('vscode.open', uri);
+      return window.visibleTextEditors.find(e => e.document.uri.toString() === uri.toString()) ?? window.activeTextEditor;
+    }
+    throw err;
+  }
+}
+
 export async function magitVisitAtPoint(repository: MagitRepository, currentView: DocumentView) {
 
   const activePosition = window.activeTextEditor?.selection.active;
@@ -45,7 +60,7 @@ export async function magitVisitAtPoint(repository: MagitRepository, currentView
       if (change.relativePath?.endsWith(sep)) {
         return commands.executeCommand('revealInExplorer', change.uri);
       } else {
-        return workspace.openTextDocument(change.uri).then(doc => window.showTextDocument(doc, { viewColumn: ViewUtils.showDocumentColumn(), preview: false }));
+        return openFileWithFallback(change.uri);
       }
     }
   }
@@ -98,8 +113,10 @@ async function visitHunk(selectedView: HunkView, activePosition?: Position) {
 
   const changeHunk = selectedView.changeHunk;
 
-  const doc = await workspace.openTextDocument(changeHunk.uri);
-  const editor = await window.showTextDocument(doc, { viewColumn: ViewUtils.showDocumentColumn(), preview: false });
+  const editor = await openFileWithFallback(changeHunk.uri);
+  if (!editor) {
+    return;
+  }
 
   try {
     const startLineMatches = changeHunk.diff.match(/(?<=\+)\d+(?=,)/g);
