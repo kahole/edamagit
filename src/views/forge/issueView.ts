@@ -37,7 +37,12 @@ export class IssueView extends DocumentView {
   }
 
   static encodeLocation(repository: MagitRepository, issue: Issue): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${IssueView.UriPath}?${repository.uri.fsPath}#${issue.number}`);
+    return Uri.from({
+      scheme: Constants.MagitUriScheme,
+      path: `/${IssueView.UriPath}`,
+      query: repository.uri.fsPath,
+      fragment: String(issue.number),
+    });
   }
 }
 

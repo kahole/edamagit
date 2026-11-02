@@ -25,6 +25,11 @@ export class CommitDetailView extends DocumentView {
   }
 
   static encodeLocation(repository: MagitRepository, commitHash: string): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${CommitDetailView.UriPath}?${repository.uri.fsPath}#${commitHash}`);
+    return Uri.from({
+      scheme: Constants.MagitUriScheme,
+      path: `/${CommitDetailView.UriPath}`,
+      query: repository.uri.fsPath,
+      fragment: commitHash,
+    });
   }
 }

@@ -37,7 +37,12 @@ export class PullRequestView extends DocumentView {
   }
 
   static encodeLocation(repository: MagitRepository, pullRequest: PullRequest): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${PullRequestView.UriPath}?${repository.uri.fsPath}#${pullRequest.number}`);
+    return Uri.from({
+      scheme: Constants.MagitUriScheme,
+      path: `/${PullRequestView.UriPath}`,
+      query: repository.uri.fsPath,
+      fragment: String(pullRequest.number),
+    });
   }
 }
 

@@ -25,6 +25,10 @@ export default class SubmoduleListView extends DocumentView {
   }
 
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${SubmoduleListView.UriPath}?${repository.uri.fsPath}`);
+    return Uri.from({
+      scheme: Constants.MagitUriScheme,
+      path: `/${SubmoduleListView.UriPath}`,
+      query: repository.uri.fsPath,
+    });
   }
 }

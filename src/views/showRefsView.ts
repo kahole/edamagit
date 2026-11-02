@@ -32,6 +32,10 @@ export default class ShowRefsView extends DocumentView {
   }
 
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${ShowRefsView.UriPath}?${repository.uri.fsPath}`);
+    return Uri.from({
+      scheme: Constants.MagitUriScheme,
+      path: `/${ShowRefsView.UriPath}`,
+      query: repository.uri.fsPath,
+    });
   }
 }
