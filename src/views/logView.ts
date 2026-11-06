@@ -34,7 +34,12 @@ export default class LogView extends DocumentView {
 
   static index = 0;
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${LogView.UriPath}?${repository.uri.fsPath}#${LogView.index++}`);
+    return Uri.from({
+      scheme: Constants.MagitUriScheme,
+      path: `/${LogView.UriPath}`,
+      query: repository.uri.fsPath,
+      fragment: String(LogView.index++),
+    });
   }
 }
 

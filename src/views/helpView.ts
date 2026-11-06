@@ -21,7 +21,12 @@ export class HelpView extends DocumentView {
   }
 
   static encodeLocation(repository: MagitRepository): Uri {
-    return Uri.parse(`${Constants.MagitUriScheme}:${HelpView.UriPath}?${repository.uri.path}#help`);
+    return Uri.from({
+      scheme: Constants.MagitUriScheme,
+      path: `/${HelpView.UriPath}`,
+      query: repository.uri.path,
+      fragment: 'help',
+    });
   }
 
   private static joinTexts(spacing: number, texts: string[]) {
