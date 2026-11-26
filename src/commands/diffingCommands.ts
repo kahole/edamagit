@@ -9,7 +9,6 @@ import { StashDetailView } from '../views/stashDetailView';
 import MagitUtils from '../utils/magitUtils';
 import SectionDiffView from '../views/sectionDiffView';
 import * as VisitAtPoint from './visitAtPointCommands';
-import * as Constants from '../common/constants';
 import { Section } from '../views/general/sectionHeader';
 import { Status } from '../typings/git';
 import { MagitChange } from '../models/magitChange';
@@ -106,7 +105,15 @@ async function showStash({ repository }: MenuState) {
 
 export function stashToMagitChanges(repository: MagitRepository, nameStatusText: string, diff: string): MagitChange[] {
   const DIFF_HEADER = /^diff --git /m;
-  const filesWithStatus = nameStatusText.split(Constants.LineSplitterRegex).filter(t => t !== '').map(s => s.split('\t'));
+  // nameStatusText is `--name-status -z` output: a status field, then one path (two for renames and copies)
+  const fields = nameStatusText.split('\0');
+  const filesWithStatus: string[][] = [];
+  for (let i = 0; i < fields.length && fields[i] !== '';) {
+    const status = fields[i++];
+    const pathCount = /^[RC]/.test(status) ? 2 : 1;
+    filesWithStatus.push([status, ...fields.slice(i, i + pathCount)]);
+    i += pathCount;
+  }
   const diffs = diff.split(DIFF_HEADER).filter(r => r !== '');
 
   if (filesWithStatus.length !== diffs.length) {
@@ -148,14 +155,13 @@ function getStatusFromString(status: String): number {
 export async function showStashDetail(repository: MagitRepository, stash: Stash) {
   const uri = StashDetailView.encodeLocation(repository, stash);
 
-  const nameStatusTask = gitRun(repository.gitRepository, ['stash', 'show', '--name-status', `stash@{${stash.index}}`]);
+  const nameStatusTask = gitRun(repository.gitRepository, ['stash', 'show', '--name-status', '-z', `stash@{${stash.index}}`]);
   const stashShowTask = gitRun(repository.gitRepository, ['stash', 'show', '-p', `stash@{${stash.index}}`]);
   let stashUntrackedFiles: MagitChange[] = [];
   try {
-    let untracked = await gitRun(repository.gitRepository, ['ls-tree', '-r', 'stash@{0}^3', '--name-only']);
+    let untracked = await gitRun(repository.gitRepository, ['ls-tree', '-r', '-z', 'stash@{0}^3', '--name-only']);
 
-    let untrackedList = untracked.stdout.split(Constants.LineSplitterRegex);
-    untrackedList = untrackedList.slice(0, untrackedList.length - 1);
+    const untrackedList = untracked.stdout.split('\0').filter(fileName => fileName !== '');
 
     stashUntrackedFiles = untrackedList.map(fileName => ({
       uri: Uri.parse(fileName),
