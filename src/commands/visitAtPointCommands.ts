@@ -142,7 +142,7 @@ async function visitHunk(selectedView: HunkView, activePosition?: Position) {
 }
 
 export async function visitCommit(repository: MagitRepository, commitHash: string) {
-  const nameStatus = await gitRun(repository.gitRepository, ['show', '--name-status', '--pretty=format:', commitHash]);
+  const nameStatus = await gitRun(repository.gitRepository, ['show', '--name-status', '-z', '--pretty=format:', commitHash]);
   const header = await gitRun(repository.gitRepository, ['show', '-s', '--shortstat', commitHash]);
   const diffs = await gitRun(repository.gitRepository, ['show', '--pretty=format:', commitHash]);
   const commit: MagitCommit = { hash: commitHash, message: '', parents: [] };

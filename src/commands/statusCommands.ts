@@ -92,10 +92,10 @@ export async function internalMagitStatus(repository: Repository): Promise<Magit
 
   const untrackedFiles: MagitChange[] =
     repository.state.workingTreeChanges.length > workingTreeChanges_NoUntracked.length ?
-      (await gitRun(repository, ['ls-files', '--others', '--exclude-standard', '--directory', '--no-empty-directory'], {}, LogLevel.None, false))
+      (await gitRun(repository, ['ls-files', '--others', '--exclude-standard', '--directory', '--no-empty-directory', '-z'], {}, LogLevel.None, false))
         .stdout
-        .replace(Constants.FinalLineBreakRegex, '')
-        .split(Constants.LineSplitterRegex)
+        .split('\0')
+        .filter(untrackedPath => untrackedPath !== '')
         .map(untrackedPath => {
           const uri = Uri.from({ ...repository.rootUri, path: repository.rootUri.path + '/' + untrackedPath });
           return {
